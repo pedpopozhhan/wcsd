@@ -2,9 +2,9 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { BasicFormRoute } from './routes/basic-form';
-import { BasicFormSuccessRoute } from './routes/basic-form-success';
-import { HomeRoute } from './routes/home';
+
+import { Home } from './routes/home';
+import Utilization from './routes/utilization';
 import App from './App';
 
 import './App.css';
@@ -14,10 +14,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="basic-form-success" element={<BasicFormSuccessRoute />} />
-          <Route path="basic-form" element={<BasicFormRoute />} />
-          <Route path="/" element={<HomeRoute />} />
+         <Route path="/" element={<App />}>
+         <Route path="/" element={<Home />} />
+         <Route path="utilization" element={<Utilization />} />          
         </Route>
       </Routes>
     </Router>

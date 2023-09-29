@@ -1,12 +1,12 @@
 import { GoABadge, GoAContainer, GoAGrid, GoASpacer } from '@abgov/react-components'
 import { Link } from 'react-router-dom'
 
-export const HomeRoute = () => {
+export const Home = () => {
 
   return (
     <main>
-      <h1>Design system templates</h1>
-      <h3>
+      <h1>Wildfire Support</h1>
+      {/* <h3>
         A showcase of the design system components, pages, and other resources for service teams.  
       </h3>
 
@@ -53,7 +53,7 @@ export const HomeRoute = () => {
         title={<h2>Design system support</h2> }        
       >
         Get in touch with the design system team on Slack <a href="https://goa-dio.slack.com/archives/C02PLLT9HQ9">#design-system-support</a>
-      </GoAContainer>
+      </GoAContainer> */}
     </main>
   )
 }

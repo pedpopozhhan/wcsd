@@ -1,34 +1,43 @@
 import {
-  GoAAppHeader,
-  GoAMicrositeHeader,
-  GoAAppFooter,
-  GoAPageBlock,
-  GoAAppFooterMetaSection,
-  GoAOneColumnLayout,
-} from '@abgov/react-components';
-import { Outlet } from 'react-router-dom';
+    GoAAppHeader,
+    GoAMicrositeHeader,
+    GoAAppFooter,
+    GoAPageBlock,
+    GoAAppFooterMetaSection,
+    GoAOneColumnLayout,
+} from "@abgov/react-components";
+import { Outlet } from "react-router-dom";
 
 export function App() {
-  return (
-    <GoAOneColumnLayout>
-      <section slot="header">
-        <GoAMicrositeHeader
-          type="beta"
-          version="React 1.0"
-          feedbackUrl="https://github.com/GovAlta/ui-components/issues/new/choose"
-        />
-        <GoAAppHeader
-          url="/"
-          heading="Design system templates"
-          maxContentWidth="100%"
-        />
-      </section>
+    const headerTitle = "Wildfire Support";
+    const menuItems = [
+        { href: "/", text: "Home" },
+        { href: "utilization", text: "Utilization" },
+        { href: "/", text: "Invoicing" },
+    ].map((item) => <a href={item.href}>{item.text}</a>);
 
-      <GoAPageBlock width="904px">
-        <Outlet />
-      </GoAPageBlock>
+    return (
+        <GoAOneColumnLayout>
+            <section slot="header">
+                <GoAMicrositeHeader
+                    type="beta"
+                    version="React 1.0"
+                    feedbackUrl="https://github.com/GovAlta/ui-components/issues/new/choose"
+                />
+                <GoAAppHeader
+                    url="/"
+                    heading={headerTitle}
+                    maxContentWidth="100%"
+                >
+                    {menuItems}
+                </GoAAppHeader>
+            </section>
 
-      <section slot="footer">
+            <GoAPageBlock width="904px">
+                <Outlet />
+            </GoAPageBlock>
+
+            {/* <section slot="footer">
         <GoAAppFooter maxContentWidth="100%">
           <GoAAppFooterMetaSection>
             <a href="https://goa-dio.slack.com/archives/C02PLLT9HQ9">
@@ -42,9 +51,9 @@ export function App() {
             </a>
           </GoAAppFooterMetaSection>
         </GoAAppFooter>
-      </section>
-    </GoAOneColumnLayout>
-  );
+      </section> */}
+        </GoAOneColumnLayout>
+    );
 }
 
 export default App;
