@@ -14,7 +14,11 @@ export function App() {
         { href: "/", text: "Home" },
         { href: "utilization", text: "Utilization" },
         { href: "/", text: "Invoicing" },
-    ].map((item) => <a href={item.href}>{item.text}</a>);
+    ].map((item, idx) => (
+        <a key={idx} href={item.href}>
+            {item.text}
+        </a>
+    ));
 
     return (
         <GoAOneColumnLayout>
@@ -36,22 +40,6 @@ export function App() {
             <GoAPageBlock width="904px">
                 <Outlet />
             </GoAPageBlock>
-
-            {/* <section slot="footer">
-        <GoAAppFooter maxContentWidth="100%">
-          <GoAAppFooterMetaSection>
-            <a href="https://goa-dio.slack.com/archives/C02PLLT9HQ9">
-              Get help
-            </a>
-            <a href="https://goa-dio.atlassian.net/wiki/spaces/DS/pages/2342813697/Design+System+Drop-in+hours">
-              Drop-in Hours
-            </a>
-            <a href="https://github.com/GovAlta/ui-components/issues/new/choose">
-              Contribute
-            </a>
-          </GoAAppFooterMetaSection>
-        </GoAAppFooter>
-      </section> */}
         </GoAOneColumnLayout>
     );
 }
