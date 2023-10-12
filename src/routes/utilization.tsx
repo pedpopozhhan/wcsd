@@ -3,8 +3,10 @@ import {
   GoADropdown,
   GoADropdownItem,
   GoAIcon,
+  GoAInput,
   GoAInputSearch,
   GoAInputText,
+  GoATable,
 } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +14,8 @@ import searchService from '@/services/search-service';
 import styles from './utilization.module.scss';
 import { PagingRequest } from '@/models/paging-request';
 import { ContractType } from '@/types/contract-type';
+import SearchResults from '@/components/search-results';
+import { SearchResponse } from '@/models/search-response';
 
 let { search } = styles;
 
@@ -21,7 +25,7 @@ export default function Utilization() {
   const header = 'Contract Utilization';
   const [contractType, setContractType] = useState('Both');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [searchResponse, setSearchResponse] = useState(new SearchResponse());
   const typeItems: { value: ContractType; label: string }[] = [
     { value: 'Both', label: 'All Types' },
     { value: 'Casual', label: 'Casual Only' },
@@ -45,10 +49,7 @@ export default function Utilization() {
   function onSearchTermChange(name: string, term: string) {
     setSearchTerm(term);
   }
-  function onChangeContractType(
-    name: string,
-    type: ContractType | ContractType[]
-  ) {
+  function onChangeContractType(name: string, type: string | string[]) {
     setContractType(type as string);
     performSearch();
   }
@@ -64,8 +65,8 @@ export default function Utilization() {
         contractType: contractType as ContractType,
         ...paging,
       })
-      .then((fetchedData) => {
-        console.dir(fetchedData);
+      .then((fetchedData: SearchResponse) => {
+        setSearchResponse(fetchedData);
       })
       .catch((err) => {
         console.error(err);
@@ -75,12 +76,13 @@ export default function Utilization() {
     <main>
       <h2>{header}</h2>
       <div className={search}>
-        <GoAInputText
+        <GoAInput
           id='searchInput'
           leadingIcon='search'
           onChange={onSearchTermChange}
           value={searchTerm}
           name='searchInput'
+          type='search'
         />
       </div>
 
@@ -93,6 +95,8 @@ export default function Utilization() {
           <GoADropdownItem key={idx} value={type.value} label={type.label} />
         ))}
       </GoADropdown>
+
+      <SearchResults searchResponse={searchResponse}></SearchResults>
     </main>
   );
 }
