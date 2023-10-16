@@ -14,3 +14,5 @@ Vite is used for bundling, buidling etc.
 Api is located in the wcds-web-functions repo, dev branch.
 
 Should be read to go by just running the debugger in visual studio code.
+
+TEST
