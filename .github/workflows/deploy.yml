@@ -16,6 +16,7 @@ jobs:
  # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
   build:
     runs-on: ubuntu-latest
+    environment: dev
 
     steps:
       - uses: actions/checkout@v3
@@ -48,8 +49,6 @@ jobs:
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
       ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
-      ARM_SKIP_PROVIDER_REGISTRATION: true
-      TF_VERSION: 1.5.7
  
     steps:
       - name: Download artifact from build job
@@ -69,7 +68,7 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstorageweb --auth-mode login -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsstorageweb --auth-mode key -d '$web' -s .
       
       # - name: Purge CDN endpoint
       #   uses: azure/CLI@v1
