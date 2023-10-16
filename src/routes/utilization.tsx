@@ -31,7 +31,7 @@ export default function Utilization() {
     { value: 'Casual', label: 'Casual Only' },
     { value: 'LongTerm', label: 'Long-Term Only' },
   ];
-  const paging = new PagingRequest();
+  //   const paging = new PagingRequest();
   // Intent is to use this until goa input allows keydown handling
   useEffect(() => {
     const element = document.querySelector('#searchInput');
@@ -63,7 +63,6 @@ export default function Utilization() {
       .search({
         searchTerm: searchTerm,
         contractType: contractType as ContractType,
-        ...paging,
       })
       .then((fetchedData: SearchResponse) => {
         setSearchResponse(fetchedData);

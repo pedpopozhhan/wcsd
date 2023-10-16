@@ -1,23 +1,16 @@
-# React product template
+# WCDS app
 
-To help get teams up and running sooner, this product template to DDD product teams to showcase the ui-components and provide a starting point for teams building DDD products.
+Front end
+repo: wcds-web dev branch
+To run the app, `npm run dev`
+See package.json for the scripts.
 
-## Usage
+Vite is used for bundling, buidling etc.
 
-To use the templates, follow these steps:
-
-1. Click the green **Use this template** button
-2. Select **Create a new repository**
-3. Select an owner and give the repo a suitable name for your project
-4. Select either Public or Private
-5. Click the button **Create repository from template**
-6. Clone the repo onto your machine
-7. Using a terminal of some kind, go into the directory you created and run the following commands (in order):
-   1. `npm i`
-   2. `npm upgrade --save`
-   3. `npm run dev`
-8. Go to the listed port number of your localhost
-
----
+.env.local is for local dev, do not check in. (it is excluded in the .gitignore)
 
 [Visit Design System](https://ui-components.alberta.ca)
+
+Api is located in the wcds-web-functions repo, dev branch.
+
+Should be read to go by just running the debugger in visual studio code.
