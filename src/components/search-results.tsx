@@ -1,5 +1,5 @@
 import { SearchResponse } from '@/models/search-response';
-import { SearchResult } from '@/models/search-result';
+import { SearchResult, searchResultColumns } from '@/models/search-result';
 import { GoATable, GoATableSortHeader } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 
@@ -29,15 +29,21 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     <GoATable onSort={sortData}>
       <thead>
         <tr>
-          <th>
-            <GoATableSortHeader name='vendor'>Vendor</GoATableSortHeader>
-          </th>
+          {searchResultColumns.map((column, idx) => (
+            <th key={idx}>
+              <GoATableSortHeader name={column.value}>
+                {column.label}
+              </GoATableSortHeader>
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
         {results?.map((result, idx) => (
           <tr key={idx}>
-            <td>{result.vendor}</td>
+            {searchResultColumns.map((column, idx) => (
+              <td key={idx}>{result[column.value as keyof SearchResult]}</td>
+            ))}
           </tr>
         ))}
       </tbody>
