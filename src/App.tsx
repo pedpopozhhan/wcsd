@@ -10,24 +10,25 @@ import { Outlet } from 'react-router-dom';
 
 export function App() {
   const headerTitle = 'Wildfire Support';
-  const menuItems = [
-    { href: '/', text: 'Home' },
-    { href: 'utilization', text: 'Utilization' },
-    { href: '/', text: 'Invoicing' },
-  ].map((item, idx) => (
-    <a key={idx} href={item.href}>
-      {item.text}
-    </a>
-  ));
+  const menuItems: any[] = [];
+  //   const menuItems = [
+  //     { href: '/', text: 'Home' },
+  //     // { href: 'utilization', text: 'Utilization' },
+  //     // { href: '/', text: 'Invoicing' },
+  //   ].map((item, idx) => (
+  //     <a key={idx} href={item.href}>
+  //       {item.text}
+  //     </a>
+  //   ));
 
   return (
     <GoAOneColumnLayout>
       <section slot='header'>
-        <GoAMicrositeHeader
+        {/* <GoAMicrositeHeader
           type='beta'
           version='React 1.0'
           feedbackUrl='https://github.com/GovAlta/ui-components/issues/new/choose'
-        />
+        /> */}
         <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
           {menuItems}
         </GoAAppHeader>
