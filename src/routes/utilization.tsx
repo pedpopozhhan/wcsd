@@ -115,4 +115,56 @@ type in 123, suggests 1234568 - Catlike Flying, clicking that suggestion inputs
 
 Upon deletion of Search Field (clicking ‘X' inside of field), returns to default (alpha numeric || numeric alpha)
 
-Alternatively deleting input characters with backspace will only clear field, not reset query. If they click enter on an empty search field will query default list*/
+Alternatively deleting input characters with backspace will only clear field, not reset query. If they click enter on an empty search field will query default list
+
+import Select from "react-select"; <====== it is this!
+
+Line 439 
+https://github.com/GovAlta-EMU/wmtt-aviation-reporting/blob/0e076ace73b0cc8219bab095b665fdd0f70e5806/src/pages/flightReport/EditFlightReportSummary.tsx
+<Select
+                name="selContractRegistration"
+                options={contractRegistrationOptions}
+                placeholder="--Select--"
+                className="width100"
+                isDisabled={!formValues.flightReportDate}
+                value={contractRegistrationOptions.find(
+                  (t) => t.value === formValues.contractRegistration?.id
+                )}
+                onChange={async (value: any) => {
+                  if (value) {
+                    var contractRegistration = getContractRegistration(
+                      aircraftDetails,
+                      value.value
+                    );
+
+                    if (contractRegistration && contractRegistration.staId)
+                      var vendor: any = await VendorService.getByStackholderId(
+                        contractRegistration.staId
+                      );
+
+                    onPropertyChange({
+                      contractRegistration: contractRegistration ?? undefined,
+                      contractRegistrationId: value.value,
+                      vendor: vendor?.data[0],
+                      vendorId: vendor?.data[0].vendorId,
+                      flyingRegistration: contractRegistration ?? undefined,
+                      flyingRegistrationId: value.value,
+                    });
+                    onChildDataValidityChange(
+                      validate(
+                        ruleCode,
+                        "selContractRegistration",
+                        "onChange",
+                        value
+                      )
+                    );
+                  }
+                }}
+                onInputChange={(value: any) => {
+                  if (value)
+                    contractRegistrationOptions.find((t) => t.value === value);
+                }}
+                isSearchable={true}
+              />
+
+*/

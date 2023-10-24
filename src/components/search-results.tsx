@@ -81,7 +81,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     return typeItems.find((x) => x.value === type.toString())?.label;
   }
   if (!results || results.length === 0) {
-    return;
+    return <React.Fragment></React.Fragment>;
   }
   return (
     <>
