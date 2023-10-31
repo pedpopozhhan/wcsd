@@ -1,15 +1,7 @@
 import { SearchResult } from '@/models/search-result';
 import { GoAIcon, GoAIconButton } from '@abgov/react-components';
-import { useState, useRef, forwardRef, useEffect } from 'react';
-import Select, {
-  ControlProps,
-  InputAction,
-  InputActionMeta,
-  Options,
-  SelectInstance,
-  components,
-  createFilter,
-} from 'react-select';
+import { useState, useRef, useEffect } from 'react';
+
 import styles from './search-suggestion.module.scss';
 let {
   search,
@@ -43,7 +35,6 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
 
   // local array of filtered options for when 'enter' is pressed
   let filteredSuggestions: ISearchOption[] = [];
-  let currentInput: string = '';
 
   useEffect(() => {
     setAllSuggestions(
