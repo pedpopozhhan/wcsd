@@ -67,6 +67,12 @@ jobs:
             -p "${{ secrets.ARM_CLIENT_SECRET }}" \
             --tenant "${{ secrets.ARM_TENANT_ID }}"
   
+      - name: Purge blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob delete-batch --account-name wcdsstorageweb --auth-mode key -d '$web' -s .
+            
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
