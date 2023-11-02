@@ -25,6 +25,9 @@
 
     .closeButton {
       display: inline-flex;
+      margin-right: $goa-space-xs;
+      &:active {
+      }
     }
     & .container {
       .highlight {

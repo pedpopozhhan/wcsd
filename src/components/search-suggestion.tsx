@@ -111,13 +111,6 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     setSelectedIndex(index);
     setInputValue(filteredSuggestions[index].label);
     handleOnEnter([filteredSuggestions[index]]);
-    // const splits = filteredSuggestions[index].label.split(separator);
-    // const foundIdx = props.allData.findIndex(
-    //   (x) => x.vendor === splits[0] && x.businessId.toString() === splits[1]
-    // );
-    // if (foundIdx > -1) {
-    //   props.onEnter([props.allData[foundIdx]]);
-    // }
   }
 
   function handleOnEnter(filtered: ISearchOption[]) {
@@ -140,18 +133,12 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         // enter selected without pressing arrows
         setArrowKeyPressed(false);
         setMenuIsOpen(false);
-        // console.log('only enter');
-        // console.dir(filteredSuggestions);
-        // props.onEnter(filteredSuggestions);
         handleOnEnter(filteredSuggestions);
       } else {
         // arrow pressed and enter selected
         if (filteredSuggestions[currentIndex]) {
           setSelectedIndex(currentIndex);
           setInputValue(filteredSuggestions[currentIndex].label);
-          console.log('arrow pressed and enter');
-          console.dir(filteredSuggestions);
-          //   props.onEnter(filteredSuggestions[currentIndex].label);
           handleOnEnter([filteredSuggestions[currentIndex]]);
         }
       }
@@ -188,6 +175,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   }
 
   function resetInput() {
+    filteredSuggestions = [];
     setInputValue('');
     setCurrentIndex(0);
     setSelectedIndex(-1);
@@ -205,7 +193,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleInputKeyDown}
           ></input>
-          <div className={closeButton} onClick={(e) => alert('boo')}>
+          <div className={closeButton} onClick={(e) => resetInput()}>
             <GoAIcon type='close' />
           </div>
         </div>
@@ -221,72 +209,3 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   );
 };
 export default SearchSuggestion;
-
-/*Search Field pre-emptively suggests for input follows ‘aviations' search component
-
-Search Field pre-emptively suggests for input translation of Business IDs to Vendor Name
-concatenated
-
-type in Cat, suggests Catlike Flying - 1234568, clicking that suggestion inputs Catlike Flying
-
-type in 123, suggests 1234568 - Catlike Flying, clicking that suggestion inputs 
-1234568
-
-
-type in Cat and hit enter, should select all the ones in the suggestions?
-
-Upon deletion of Search Field (clicking ‘X' inside of field), returns to default (alpha numeric || numeric alpha)
-
-Alternatively deleting input characters with backspace will only clear field, not reset query. If they click enter on an empty search field will query default list
-
-import Select from "react-select"; <====== it is this!
-
-Line 439 
-https://github.com/GovAlta-EMU/wmtt-aviation-reporting/blob/0e076ace73b0cc8219bab095b665fdd0f70e5806/src/pages/flightReport/EditFlightReportSummary.tsx
-<Select
-                name="selContractRegistration"
-                options={contractRegistrationOptions}
-                placeholder="--Select--"
-                className="width100"
-                isDisabled={!formValues.flightReportDate}
-                value={contractRegistrationOptions.find(
-                  (t) => t.value === formValues.contractRegistration?.id
-                )}
-                onChange={async (value: any) => {
-                  if (value) {
-                    var contractRegistration = getContractRegistration(
-                      aircraftDetails,
-                      value.value
-                    );
-
-                    if (contractRegistration && contractRegistration.staId)
-                      var vendor: any = await VendorService.getByStackholderId(
-                        contractRegistration.staId
-                      );
-
-                    onPropertyChange({
-                      contractRegistration: contractRegistration ?? undefined,
-                      contractRegistrationId: value.value,
-                      vendor: vendor?.data[0],
-                      vendorId: vendor?.data[0].vendorId,
-                      flyingRegistration: contractRegistration ?? undefined,
-                      flyingRegistrationId: value.value,
-                    });
-                    onChildDataValidityChange(
-                      validate(
-                        ruleCode,
-                        "selContractRegistration",
-                        "onChange",
-                        value
-                      )
-                    );
-                  }
-                }}
-                onInputChange={(value: any) => {
-                  if (value)
-                    contractRegistrationOptions.find((t) => t.value === value);
-                }}
-                isSearchable={true}
-              />
-
-*/
