@@ -7,6 +7,7 @@ let {
   search,
   searchInput,
   searchInputWrapper,
+  highlight,
   closeButton,
   container,
   item,
@@ -65,6 +66,24 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     return () => window.removeEventListener('click', handleOffMenuClick);
   }, [menuIsOpen, setMenuIsOpen]);
 
+  function highlightLabel(label: string) {
+    const regex = new RegExp(inputValue, 'gi');
+    const parts = label.split(regex);
+    const matches = label.match(regex) || [];
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < matches.length && (
+              <span className={highlight}>{matches[index]}</span>
+            )}
+          </span>
+        ))}
+      </>
+    );
+  }
+
   function filterSuggestions() {
     const filtered = allSuggestions.filter((x) => {
       const upCase = inputValue.toUpperCase();
@@ -82,7 +101,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         onClick={(e) => setSelection(index)}
         key={index}
       >
-        {data.label}
+        {highlightLabel(data.label)}
       </div>
     ));
   }

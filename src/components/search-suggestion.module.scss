@@ -27,6 +27,9 @@
       display: inline-flex;
     }
     & .container {
+      .highlight {
+        font-weight: bold;
+      }
       position: absolute;
       background-color: $goa-color-greyscale-white;
       max-height: 200px;
