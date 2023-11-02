@@ -6,6 +6,8 @@ import styles from './search-suggestion.module.scss';
 let {
   search,
   searchInput,
+  searchInputWrapper,
+  closeButton,
   container,
   item,
   active,
@@ -20,6 +22,8 @@ interface ISearchOption {
 }
 interface ISearchResultsProps {
   allData: SearchResult[];
+  //   optionDef: (data:SearchResult)=>ISearchOption;
+  onEnter: (results: SearchResult[]) => any;
 }
 const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   const [inputValue, setInputValue] = useState('');
@@ -83,10 +87,32 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     ));
   }
 
+  // option click handler
   function setSelection(index: number) {
-    // setCurrentIndex(index);
     setSelectedIndex(index);
     setInputValue(filteredSuggestions[index].label);
+    handleOnEnter([filteredSuggestions[index]]);
+    // const splits = filteredSuggestions[index].label.split(separator);
+    // const foundIdx = props.allData.findIndex(
+    //   (x) => x.vendor === splits[0] && x.businessId.toString() === splits[1]
+    // );
+    // if (foundIdx > -1) {
+    //   props.onEnter([props.allData[foundIdx]]);
+    // }
+  }
+
+  function handleOnEnter(filtered: ISearchOption[]) {
+    const results = filtered.map((x) => {
+      const splits = x.label.split(separator);
+      const foundIdx = props.allData.findIndex(
+        (x) => x.vendor === splits[0] && x.businessId.toString() === splits[1]
+      );
+      //   if (foundIdx > -1) {
+      return props.allData[foundIdx];
+      //   }
+    });
+
+    props.onEnter(results);
   }
 
   function handleInputKeyDown(e: any) {
@@ -95,11 +121,19 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         // enter selected without pressing arrows
         setArrowKeyPressed(false);
         setMenuIsOpen(false);
+        // console.log('only enter');
+        // console.dir(filteredSuggestions);
+        // props.onEnter(filteredSuggestions);
+        handleOnEnter(filteredSuggestions);
       } else {
         // arrow pressed and enter selected
         if (filteredSuggestions[currentIndex]) {
           setSelectedIndex(currentIndex);
           setInputValue(filteredSuggestions[currentIndex].label);
+          console.log('arrow pressed and enter');
+          console.dir(filteredSuggestions);
+          //   props.onEnter(filteredSuggestions[currentIndex].label);
+          handleOnEnter([filteredSuggestions[currentIndex]]);
         }
       }
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -145,18 +179,18 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   return (
     <div className={search}>
       <div className={searchInput}>
-        <GoAIcon type='search' ml='xs' />
-        <input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleInputKeyDown}
-        ></input>
-        <GoAIconButton
-          icon='close'
-          mr='xs'
-          onClick={resetInput}
-          variant='dark'
-        />
+        <div className={searchInputWrapper}>
+          <GoAIcon type='search' ml='xs' />
+          <input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleInputKeyDown}
+          ></input>
+          <div className={closeButton} onClick={(e) => alert('boo')}>
+            <GoAIcon type='close' />
+          </div>
+        </div>
+
         <div
           className={`${container} ${menuIsOpen ? showMenu : hideMenu}`}
           ref={containerRef}

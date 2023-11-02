@@ -2,15 +2,18 @@ import { SearchRequest } from '@/models/search-request';
 
 class SearchService {
   private baseUrl: string;
+  private functionsKey: string;
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
+    this.functionsKey = import.meta.env.VITE_API_KEY_CODE;
   }
 
   getAll() {
-    return fetch(this.baseUrl + 'FlightReportAll', {
+    return fetch(this.baseUrl + '/FlightReportAll', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'x-functions-key': this.functionsKey,
       },
     }).then((response) => {
       if (!response.ok) {
@@ -20,7 +23,7 @@ class SearchService {
     });
   }
   search(query: SearchRequest) {
-    return fetch(this.baseUrl + 'FlightReportSearch', {
+    return fetch(this.baseUrl + '/FlightReportSearch', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

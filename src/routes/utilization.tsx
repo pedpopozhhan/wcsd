@@ -111,12 +111,19 @@ export default function Utilization() {
     //   });
   }
 
+  function handleOnEnter(results: SearchResult[]) {
+    setSearchResults(results);
+  }
+
   // can we turn off the auto selection when typing? type, then select from menu with enter or click, but
   return (
     <main>
       <h2>{header}</h2>
       <div className={search}>
-        <SearchSuggestion allData={allData}></SearchSuggestion>
+        <SearchSuggestion
+          allData={allData}
+          onEnter={handleOnEnter}
+        ></SearchSuggestion>
       </div>
 
       <GoADropdown

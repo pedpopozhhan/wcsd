@@ -4,16 +4,37 @@
   min-width: 300px;
   .searchInput {
     position: relative;
+    &Wrapper {
+      display: flex;
+      border-radius: 4px;
+      border: 1px solid $goa-color-greyscale-700;
+      background: $goa-color-greyscale-white;
+      &:focus-within {
+        outline: solid $goa-border-width-l $goa-color-interactive-focus;
+      }
+      input {
+        border: none;
+        &:focus {
+          outline: none;
+        }
+        flex: 1;
+        margin-left: $goa-space-xs;
+        min-height: 42px;
+      }
+    }
 
+    .closeButton {
+      display: inline-flex;
+    }
     & .container {
       position: absolute;
-      z-index: 9999999;
       background-color: $goa-color-greyscale-white;
       max-height: 200px;
       overflow-x: hidden;
       overflow-y: auto;
       border-radius: $goa-border-radius-m;
       scrollbar-width: thin;
+      z-index: 999999;
       &::-webkit-scrollbar {
         width: 5px;
       }
@@ -23,11 +44,9 @@
       &::-webkit-scrollbar-thumb {
         background: $goa-color-greyscale-200;
       }
-      // scrollbar color --goa-color-greyscale-200
-      //scrollbar width 5px
+
       /* Drop shadow/Popover */
       box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.25);
-      //   top: 0px;
       &.showMenu {
         visibility: visible;
       }
@@ -45,59 +64,8 @@
           background: $goa-color-interactive-default;
           color: $goa-color-greyscale-white;
         }
-        // hover background background: $goa-color-greyscale-100;
-        //  display: flex;
-        // padding: 10px --goa-spacing-s $goa-space-xs $goa-space-xs;
-        // align-items: flex-start;
-        // gap: --goa-spacing-xs;
-        // align-self: stretch;
-
-        // &.active {
-        //   background-color: red;
-        // }
         padding: $goa-space-s;
-        // min-height: 42px;
-        // border-color: var(--goa-color-text-default);
-        // &:hover {
-        //   box-shadow: 0 0 0 3px var(--goa-color-interactive-hover);
-        // }
-        // &:active,
-        // &.active {
-        //   box-shadow: 0 0 0 3px var(--goa-color-interactive-focus);
-        //   border-color: var(--goa-color-interactive-focus);
-        // }
       }
-    }
-  }
-  // https://react-select.com/styles#inner-components
-  &Menu {
-    z-index: 99999999;
-    width: auto;
-  }
-  &MenuList {
-    overflow-x: hidden;
-    width: auto;
-  }
-  &Option {
-    white-space: nowrap;
-  }
-  &Placeholder {
-    color: var(--goa-color-text-default);
-  }
-  &IndicatorsContainer,
-  &ClearIndicator {
-    color: var(--goa-color-text-default);
-  }
-
-  &Control {
-    min-height: 42px !important;
-    border-color: var(--goa-color-text-default);
-    &:hover {
-      box-shadow: 0 0 0 3px var(--goa-color-interactive-hover);
-    }
-    &:active {
-      box-shadow: 0 0 0 3px var(--goa-color-interactive-focus);
-      border-color: var(--goa-color-interactive-focus);
     }
   }
 }
