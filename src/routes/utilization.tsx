@@ -1,9 +1,10 @@
 import {
   GoADropdown,
   GoADropdownItem,
+  GoAIcon,
   GoAInput,
 } from '@abgov/react-components';
-import { useEffect, useState } from 'react';
+import { SetStateAction, forwardRef, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import searchService from '@/services/search-service';
 import styles from './utilization.module.scss';
@@ -11,6 +12,7 @@ import { typeItems } from '@/types/contract-type';
 import SearchResults from '@/components/search-results';
 import { SearchResponse } from '@/models/search-response';
 import { SearchResult } from '@/models/search-result';
+import SearchSuggestion from '@/components/search-suggestion';
 
 let { search } = styles;
 
@@ -20,12 +22,12 @@ export default function Utilization() {
   let searchTerm = '';
 
   const [searchResults, setSearchResults] = useState([] as SearchResult[]);
+  const [allData, setAllData] = useState([] as SearchResult[]);
 
   // Intent is to use this until goa input allows keydown handling
   useEffect(() => {
-    const element = document.querySelector('#searchInput');
+    const element = document.querySelector('#searchInput') as HTMLInputElement;
     if (element) {
-      console.log('element exists');
       element.addEventListener('keydown', onKeyDown);
     }
     return () => {
@@ -34,6 +36,10 @@ export default function Utilization() {
       }
     };
   });
+
+  useEffect(() => {
+    gatherItems();
+  }, [JSON.stringify(allData)]);
 
   function onSearchTermChange(name: string, term: string) {
     searchTerm = term;
@@ -44,44 +50,80 @@ export default function Utilization() {
     performSearch();
   }
 
-  function onKeyDown(event: any) {
-    if (event.keyCode === 13) {
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.code === 'Enter') {
       performSearch();
     }
   }
 
-  function performSearch() {
+  function gatherItems() {
     searchService
       .getAll()
       .then((fetchedData: SearchResponse) => {
-        // filter on search term, contract type
-        let filtered = fetchedData.searchResults?.filter(
-          (x) => contractType === '0' || x.type.toString() === contractType
-        );
-        setSearchResults(
-          filtered.filter(
-            (x) =>
-              x.businessId.toString().includes(searchTerm) ||
-              x.vendor.toUpperCase().includes(searchTerm.toUpperCase())
-          )
-        );
+        const data = fetchedData.searchResults.slice();
+
+        // sort descending
+        data.sort((a, b) => {
+          return a.numTimeReports > b.numTimeReports
+            ? -1
+            : a.numTimeReports < b.numTimeReports
+            ? 1
+            : 0;
+        });
+
+        setAllData(data);
+        setSearchResults(data);
+        // // filter on search term, contract type
+        // let filtered = fetchedData.searchResults?.filter(
+        //   (x) => contractType === '0' || x.type.toString() === contractType
+        // );
+        // setSearchResults(
+        //   filtered.filter(
+        //     (x) =>
+        //       x.businessId.toString().includes(searchTerm) ||
+        //       x.vendor.toUpperCase().includes(searchTerm.toUpperCase())
+        //   )
+        // );
       })
       .catch((err) => {
         console.error(err);
       });
   }
+
+  function performSearch() {
+    // searchService
+    //   .getAll()
+    //   .then((fetchedData: SearchResponse) => {
+    //     // filter on search term, contract type
+    //     let filtered = fetchedData.searchResults?.filter(
+    //       (x) => contractType === '0' || x.type.toString() === contractType
+    //     );
+    //     setSearchResults(
+    //       filtered.filter(
+    //         (x) =>
+    //           x.businessId.toString().includes(searchTerm) ||
+    //           x.vendor.toUpperCase().includes(searchTerm.toUpperCase())
+    //       )
+    //     );
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
+  }
+
+  function handleOnEnter(results: SearchResult[]) {
+    setSearchResults(results);
+  }
+
+  // can we turn off the auto selection when typing? type, then select from menu with enter or click, but
   return (
     <main>
       <h2>{header}</h2>
       <div className={search}>
-        <GoAInput
-          id='searchInput'
-          leadingIcon='search'
-          onChange={onSearchTermChange}
-          value={searchTerm}
-          name='searchInput'
-          type='search'
-        />
+        <SearchSuggestion
+          allData={allData}
+          onEnter={handleOnEnter}
+        ></SearchSuggestion>
       </div>
 
       <GoADropdown
@@ -102,69 +144,3 @@ export default function Utilization() {
     </main>
   );
 }
-
-/*Search Field pre-emptively suggests for input follows ‘aviations' search component
-
-Search Field pre-emptively suggests for input translation of Business IDs to Vendor Name
-concatenated
-
-type in Cat, suggests Catlike Flying - 1234568, clicking that suggestion inputs Catlike Flying
-
-type in 123, suggests 1234568 - Catlike Flying, clicking that suggestion inputs 
-1234568
-
-Upon deletion of Search Field (clicking ‘X' inside of field), returns to default (alpha numeric || numeric alpha)
-
-Alternatively deleting input characters with backspace will only clear field, not reset query. If they click enter on an empty search field will query default list
-
-import Select from "react-select"; <====== it is this!
-
-Line 439 
-https://github.com/GovAlta-EMU/wmtt-aviation-reporting/blob/0e076ace73b0cc8219bab095b665fdd0f70e5806/src/pages/flightReport/EditFlightReportSummary.tsx
-<Select
-                name="selContractRegistration"
-                options={contractRegistrationOptions}
-                placeholder="--Select--"
-                className="width100"
-                isDisabled={!formValues.flightReportDate}
-                value={contractRegistrationOptions.find(
-                  (t) => t.value === formValues.contractRegistration?.id
-                )}
-                onChange={async (value: any) => {
-                  if (value) {
-                    var contractRegistration = getContractRegistration(
-                      aircraftDetails,
-                      value.value
-                    );
-
-                    if (contractRegistration && contractRegistration.staId)
-                      var vendor: any = await VendorService.getByStackholderId(
-                        contractRegistration.staId
-                      );
-
-                    onPropertyChange({
-                      contractRegistration: contractRegistration ?? undefined,
-                      contractRegistrationId: value.value,
-                      vendor: vendor?.data[0],
-                      vendorId: vendor?.data[0].vendorId,
-                      flyingRegistration: contractRegistration ?? undefined,
-                      flyingRegistrationId: value.value,
-                    });
-                    onChildDataValidityChange(
-                      validate(
-                        ruleCode,
-                        "selContractRegistration",
-                        "onChange",
-                        value
-                      )
-                    );
-                  }
-                }}
-                onInputChange={(value: any) => {
-                  if (value)
-                    contractRegistrationOptions.find((t) => t.value === value);
-                }}
-                isSearchable={true}
-              />
-
-*/

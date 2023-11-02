@@ -1,5 +1,6 @@
-@import "@abgov/design-tokens/dist/tokens.scss";
+@import '@abgov/design-tokens/dist/tokens.scss';
 .search {
-    display: inline;
-    margin-right: $goa-space-m;
+  display: inline-block;
+  margin-right: $goa-space-m;
+  vertical-align: top;
 }

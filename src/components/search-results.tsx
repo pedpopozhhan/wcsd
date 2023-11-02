@@ -23,7 +23,6 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   const [pageResults, setPageResults] = useState<SearchResult[]>([]);
   let totalPages = 0;
   useEffect(() => {
-    console.log('count: ' + props.searchResults?.length);
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
   }, [props.searchResults]);
