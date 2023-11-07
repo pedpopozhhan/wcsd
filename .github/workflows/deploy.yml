@@ -71,13 +71,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name wcdsstorageweb --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name wcdsstoragewebdev --auth-mode key -s '$web'
             
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstorageweb --auth-mode key -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsstoragewebdev --auth-mode key -d '$web' -s .
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
@@ -85,9 +85,9 @@ jobs:
           inlineScript: |
               az cdn endpoint purge --subscription "a9b1d048-a7f6-4d5c-ba63-a917e07892b7" \
               --content-paths  "/*" \
-              --profile-name "wcds-web-cdn-profile" \
-              --name "wcds-web-cdn" \
-              --resource-group "wcds-web"
+              --profile-name "wcds-web-profile-dev" \
+              --name "wcds-web-dev" \
+              --resource-group "wcds-web-dev"
 
   # Azure logout
       - name: logout
