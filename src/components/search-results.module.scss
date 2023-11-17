@@ -11,6 +11,9 @@
 th {
   vertical-align: middle;
 }
+.number {
+  font-family: $goa-font-family-number;
+}
 .div {
   flex-direction: row;
   justify-content: space-between;
