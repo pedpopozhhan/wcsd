@@ -10,6 +10,7 @@ let {
   searchInputWrapper,
   highlight,
   closeButton,
+  closeButtonActive,
   container,
   item,
   active,
@@ -62,6 +63,10 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
       setInputValue(newValue);
     }
     props.onChange(newValue);
+
+    if (!newValue) {
+      setMenuIsOpen(false);
+    }
   }
 
   function highlightLabel(label: string) {
@@ -173,8 +178,12 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
             value={inputValue}
             onChange={(e) => handleValueChanging(e.target.value)}
             onKeyDown={handleInputKeyDown}
+            placeholder='Search by Vendor or Contract ID'
           ></input>
-          <div className={closeButton} onClick={(e) => resetInput()}>
+          <div
+            className={`${closeButton} ${inputValue ? closeButtonActive : ''}`}
+            onClick={(e) => resetInput()}
+          >
             <GoAIcon type='close' />
           </div>
         </div>

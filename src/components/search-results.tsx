@@ -25,6 +25,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
+    setPage(1);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
