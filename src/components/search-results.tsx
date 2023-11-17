@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
 import { typeItems } from '@/types/contract-type';
-let { link, chevron } = styles;
+let { link, chevron, number } = styles;
 interface ISearchResultsProps {
   searchResults: SearchResult[];
 }
@@ -80,9 +80,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   function convertType(type: number) {
     return typeItems.find((x) => x.value === type.toString())?.label;
   }
-  if (!results || results.length === 0) {
-    return <React.Fragment></React.Fragment>;
-  }
+  //   if (!results || results.length === 0) {
+  //     return <React.Fragment></React.Fragment>;
+  //   }
   return (
     <>
       <GoATable onSort={sortData} mb='xl'>
@@ -108,11 +108,12 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               {searchResultColumns[3].label}
               {/* </GoATableSortHeader> */}
             </th>
-            <th className={link}>
+            {/* Hide this for now
+             <th className={link}>
               <GoATableSortHeader name={searchResultColumns[4].value}>
                 {searchResultColumns[4].label}
               </GoATableSortHeader>
-            </th>
+            </th> */}
 
             <th></th>
           </tr>
@@ -121,13 +122,13 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
               <td>{result.vendor}</td>
-              <td>{result.businessId}</td>
-              <td>{result.contractId}</td>
+              <td className={number}>{result.businessId}</td>
+              <td className={number}>{result.contractId}</td>
               <td>{convertType(result.type)}</td>
+              {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
-              </td>
-
+              </td> */}
               <td>
                 <div className={chevron}>
                   <a>
