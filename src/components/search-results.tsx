@@ -80,9 +80,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   function convertType(type: number) {
     return typeItems.find((x) => x.value === type.toString())?.label;
   }
-  //   if (!results || results.length === 0) {
-  //     return <React.Fragment></React.Fragment>;
-  //   }
+
   return (
     <>
       <GoATable onSort={sortData} mb='xl'>
