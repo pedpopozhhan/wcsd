@@ -25,6 +25,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
+    setPage(1);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
@@ -129,7 +130,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
 
               <td>
                 <div className={chevron}>
-                  <GoAIcon type='chevron-forward' />
+                  <a>
+                    <GoAIcon type='chevron-forward' />
+                  </a>
                 </div>
               </td>
             </tr>
@@ -137,30 +140,19 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
         </tbody>
       </GoATable>
       <GoABlock alignment='center'>
-        <GoABlock mb='m' alignment='center' gap='m'>
-          <span>Show</span>
-          <GoADropdown onChange={changePerPage} value='10' width='8ch'>
-            <GoADropdownItem value='10'></GoADropdownItem>
-            <GoADropdownItem value='20'></GoADropdownItem>
-            <GoADropdownItem value='30'></GoADropdownItem>
-          </GoADropdown>
+        <div style={{ display: 'flex', alignSelf: 'center' }}>
           <span style={{ whiteSpace: 'nowrap' }}>
-            of {results?.length} items
+            Page {page} of {getTotalPages()}
           </span>
-        </GoABlock>
+        </div>
         <GoASpacer hSpacing='fill' />
         <GoABlock mb='m' alignment='center' gap='m'>
-          {/* <div className={div}> */}
-          <div style={{ display: 'flex', alignSelf: 'center' }}>
-            <span style={{ whiteSpace: 'nowrap' }}>
-              Page {page} of {getTotalPages()}
-            </span>
-          </div>
           <GoABlock>
             <GoAButton
               type='tertiary'
               leadingIcon='arrow-back'
               onClick={previous}
+              disabled={page === 1}
             >
               Previous
             </GoAButton>
@@ -168,11 +160,11 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               type='tertiary'
               trailingIcon='arrow-forward'
               onClick={next}
+              disabled={page === getTotalPages()}
             >
               Next
             </GoAButton>
           </GoABlock>
-          {/* </div> */}
         </GoABlock>
       </GoABlock>
     </>
