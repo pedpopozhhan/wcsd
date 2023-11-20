@@ -8,7 +8,7 @@ import {
 
 const VendorTimeReportsSidePanel = () => {
   return (
-    <div>
+    <div style={{minWidth: '20%'}}>
       <GoASpacer></GoASpacer>
       <GoAContainer>
         <GoAFormItem label='Contracts' />

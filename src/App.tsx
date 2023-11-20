@@ -34,7 +34,7 @@ export function App() {
         </GoAAppHeader>
       </section>
 
-      <GoAPageBlock width='904px'>
+      <GoAPageBlock width="100%">
         <Outlet />
       </GoAPageBlock>
     </GoAOneColumnLayout>

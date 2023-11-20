@@ -30,39 +30,39 @@ import {
   import React from 'react';
   //import DashboardGridColumns from 'report-table-component/src/model/enum/DashboardGridColumns';
   //import FlightReportStatus from 'report-table-component/src/model/enum/FlightReportStatus';
-  //import { FlightReportService } from 'report-table-component/src/services/FlightReportService';
+  import { FlightReportDashboardService } from '../services/FlightReportDashboardService';
  // import { DomainService } from 'report-table-component/src/services/DomainService';
-import SignedOffTabDetails from '@/components/VendorTimeReports/signed-off-tab-details';
-import { SignedOffTabResults } from '@/models/signed-off-tab-result';
-import VendorTimeReportsSidePanel from '@/components/VendorTimeReports/vendor-time-reports-side-panel';
+import SignedOffTabDetails from '@/components/vendorTimeReports/signed-off-tab-details';
+import VendorTimeReportsSidePanel from '@/components/vendorTimeReports/vendor-time-reports-side-panel';
+//import SignedOffTabDetails from '@/components/vendorTimeReports/signed-off-tab-details';
   
   let { search } = styles;
   
   export default function VendorTimeReports() {
-  //   (async () => {
-  //     await aviationReportingAuthenticate();
-  //     await domainServiceAuthenticate();
-  //   })();
+    (async () => {
+      await aviationReportingAuthenticate();
+    //  await domainServiceAuthenticate();
+    })();
   
-  //   async function aviationReportingAuthenticate() {
-  //     await FlightReportService.getAuthenticate()
-  //       .then((res) => {
-  //         sessionStorage.setItem('api_token', res.data);
-  //       })
-  //       .catch((err) => {
-  //         console.log('error', err);
-  //       });
-  //   }
+    async function aviationReportingAuthenticate() {
+      await FlightReportDashboardService.getAuthenticate()
+        .then((res) => {
+          sessionStorage.setItem('api_token', res.data);
+        })
+        .catch((err) => {
+          console.log('error', err);
+        });
+    }
   
-  //   async function domainServiceAuthenticate() {
-  //     await DomainService.getAuthenticate()
-  //       .then((res) => {
-  //         sessionStorage.setItem('domainService_token', res.data);
-  //       })
-  //       .catch((err) => {
-  //         console.log('error', err);
-  //       });
-  //   }
+    // async function domainServiceAuthenticate() {
+    //   await DomainService.getAuthenticate()
+    //     .then((res) => {
+    //       sessionStorage.setItem('domainService_token', res.data);
+    //     })
+    //     .catch((err) => {
+    //       console.log('error', err);
+    //     });
+    // }
   
     const navigate = useNavigate();
     //const [searchResults, setSearchResults] = useState([] as SignedOffTabResults[]);
@@ -72,12 +72,12 @@ import VendorTimeReportsSidePanel from '@/components/VendorTimeReports/vendor-ti
   
     return (
       <GoABlock gap='none' alignment='start'>
-        <div>
+        <div style={{minWidth: '80%'}}>
           <GoAContainer>
             <h2>{header}</h2>
             <GoATabs>
               <GoATab heading='Signed-off'>
-               {/* <SignedOffTabDetails searchResults={searchResults}/> */}
+               <SignedOffTabDetails/>
               </GoATab>
               <GoATab heading='Approved'></GoATab>
               <GoATab heading='Invoiced'></GoATab>
