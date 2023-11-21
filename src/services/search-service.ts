@@ -1,6 +1,6 @@
-import { SearchRequest } from '@/models/search-request';
-import { SearchResponse } from '@/models/search-response';
-import { SearchResult } from '@/models/search-result';
+import { SearchRequest } from '@/routes/utilization/search-request';
+import { SearchResponse } from '@/routes/utilization/search-response';
+import { SearchResult } from '@/routes/utilization/search-result';
 
 class SearchService {
   private baseUrl: string;

@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import searchService from '@/services/search-service';
 import styles from './utilization.module.scss';
 import { typeItems } from '@/types/contract-type';
-import SearchResults from '@/components/search-results';
-import { SearchResponse } from '@/models/search-response';
-import { SearchResult } from '@/models/search-result';
-import SearchSuggestion from '@/components/search-suggestion';
-import { SearchOption } from '@/models/search-option';
+import SearchResults from '@/routes/utilization/search-results';
+import { SearchResponse } from '@/routes/utilization/search-response';
+import { SearchResult } from '@/routes/utilization/search-result';
+import SearchSuggestion from '@/routes/utilization/search-suggestion';
+import { SearchOption } from '@/routes/utilization/search-option';
 
-let { search } = styles;
+let { top, search } = styles;
 
 export default function Utilization() {
   const header = 'Contract Utilization';
@@ -29,13 +29,10 @@ export default function Utilization() {
       .then((fetchedData: SearchResponse) => {
         const data = fetchedData.searchResults.slice();
 
-        // sort descending
+        // sort ascending
+
         data.sort((a, b) => {
-          return a.numTimeReports > b.numTimeReports
-            ? -1
-            : a.numTimeReports < b.numTimeReports
-            ? 1
-            : 0;
+          return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
         });
 
         setAllData(data);
@@ -115,29 +112,31 @@ export default function Utilization() {
 
   return (
     <main>
-      <h2>{header}</h2>
-      <div className={search}>
-        <SearchSuggestion
-          options={createOptions()}
-          filterPredicate={filterPredicate}
-          onEnter={handleOnEnter}
-          onChange={handleOnChange}
-        ></SearchSuggestion>
-      </div>
+      <div className={top}>
+        <h2>{header}</h2>
+        <div className={search}>
+          <SearchSuggestion
+            options={createOptions()}
+            filterPredicate={filterPredicate}
+            onEnter={handleOnEnter}
+            onChange={handleOnChange}
+          ></SearchSuggestion>
+        </div>
 
-      <GoADropdown
-        name='contractType'
-        value={contractType}
-        onChange={onChangeContractType}
-      >
-        {typeItems.map((type, idx) => (
-          <GoADropdownItem
-            key={idx}
-            value={type.value.toString()}
-            label={type.label}
-          />
-        ))}
-      </GoADropdown>
+        <GoADropdown
+          name='contractType'
+          value={contractType}
+          onChange={onChangeContractType}
+        >
+          {typeItems.map((type, idx) => (
+            <GoADropdownItem
+              key={idx}
+              value={type.value.toString()}
+              label={type.label}
+            />
+          ))}
+        </GoADropdown>
+      </div>
 
       <SearchResults searchResults={searchResults}></SearchResults>
     </main>
