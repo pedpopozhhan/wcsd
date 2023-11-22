@@ -3,10 +3,10 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { Home } from './routes/home';
-import Utilization from './routes/utilization';
+import Utilization from './routes/utilization/utilization';
 import App from './App';
 
-import './App.scss';
+// import './App.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

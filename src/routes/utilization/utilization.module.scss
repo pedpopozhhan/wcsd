@@ -4,3 +4,9 @@
   margin-right: $goa-space-m;
   vertical-align: top;
 }
+main {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}

@@ -8,6 +8,18 @@
     text-decoration: underline;
   }
 }
+table {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $goa-color-greyscale-white;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $goa-color-greyscale-200;
+  }
+}
 th {
   vertical-align: middle;
 }

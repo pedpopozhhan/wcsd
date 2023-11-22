@@ -2,7 +2,7 @@ import { GoAIcon } from '@abgov/react-components';
 import { useState, useRef, useEffect } from 'react';
 
 import styles from './search-suggestion.module.scss';
-import { SearchOption } from '@/models/search-option';
+import { SearchOption } from '@/routes/utilization/search-option';
 
 let {
   search,

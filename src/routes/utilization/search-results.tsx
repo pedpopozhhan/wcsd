@@ -1,5 +1,8 @@
-import { SearchResponse } from '@/models/search-response';
-import { SearchResult, searchResultColumns } from '@/models/search-result';
+import { SearchResponse } from '@/routes/utilization/search-response';
+import {
+  SearchResult,
+  searchResultColumns,
+} from '@/routes/utilization/search-result';
 import {
   GoABlock,
   GoAButton,
@@ -14,7 +17,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
 import { typeItems } from '@/types/contract-type';
-let { link, chevron, number } = styles;
+let { link, table, chevron, number } = styles;
 interface ISearchResultsProps {
   searchResults: SearchResult[];
 }
@@ -44,7 +47,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   }
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(20);
 
   function changePage(newPage: any) {
     if (newPage) {
@@ -83,6 +86,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
 
   return (
     <>
+      {/* <div className={table}> */}
       <GoATable onSort={sortData} mb='xl'>
         <thead>
           <tr>
@@ -138,6 +142,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
           ))}
         </tbody>
       </GoATable>
+      {/* </div> */}
       <GoABlock alignment='center'>
         <div style={{ display: 'flex', alignSelf: 'center' }}>
           <span style={{ whiteSpace: 'nowrap' }}>
