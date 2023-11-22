@@ -9,6 +9,7 @@ import {
   GoADropdown,
   GoADropdownItem,
   GoAIcon,
+  GoAIconButton,
   GoAPagination,
   GoASpacer,
   GoATable,
@@ -18,6 +19,8 @@ import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
 import { typeItems } from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
+import { useNavigate } from 'react-router-dom';
+
 interface ISearchResultsProps {
   searchResults: SearchResult[];
 }
@@ -48,6 +51,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
+  const navigate = useNavigate();
 
   function changePage(newPage: any) {
     if (newPage) {
@@ -69,6 +73,14 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     let num = results ? Math.ceil(results.length / perPage) : 0;
 
     return num;
+  }
+
+  function timeReportsClick(contractId?: number) {
+    if (contractId) {
+        navigate(`/VendorTimeReports/${contractId}`, {
+          state: contractId,
+        });
+    }
   }
 
   function previous() {
@@ -133,9 +145,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               </td> */}
               <td>
                 <div className={chevron}>
-                  <a>
-                    <GoAIcon type='chevron-forward' />
-                  </a>
+                  <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result.contractId)}/>
                 </div>
               </td>
             </tr>
