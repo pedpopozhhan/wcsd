@@ -14,13 +14,13 @@ import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
-import { IFlightReportDashboard } from '../flight-report-dashboard/interfaces/IFlightReportDashboard';
-import { IForestArea } from '../flight-report-dashboard/interfaces/ICorporateRegion';
-import { IFilter } from '../flight-report-dashboard/interfaces/IFilter';
-import { IPagination } from '../flight-report-dashboard/interfaces/IPagination';
-import { IPaginationResult } from '../flight-report-dashboard/interfaces/IPaginationResult';
-import { ISearch } from '../flight-report-dashboard/interfaces/ISearch';
-import { FlightReportDashboardService } from '../flight-report-dashboard/services/FlightReportDashboardService';
+import { IPaginationResult } from '@/interfaces/flight-report-dashboard/pagination-result.interface';
+import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
+import { IForestArea } from '@/interfaces/flight-report-dashboard/corporate-region.interface';
+import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
+import { IPagination } from '@/interfaces/flight-report-dashboard/pagination.interface';
+import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
+import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 
 interface IFlightReportAllProps {
   contractId: string | undefined;
@@ -80,7 +80,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     searchValue,
     sortCol,
     sortDir,
-    contractId
+    contractId,
   ]);
 
   function onRefreshFlightReport() {
@@ -115,14 +115,14 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       perPage: perPage,
       page: page,
     };
- 
+
     //const testContractid = 81804
     let objIFilter: IFilter = {
       columnName: 'status',
       columnValue: "['Signed off']",
       reportDateFrom: null,
       reportDateTo: null,
-      corporateRegions: objForestArea
+      corporateRegions: objForestArea,
     };
 
     let objISearch: ISearch = {
@@ -278,8 +278,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
             >
               {paginationResults?.data && paginationResults.data.length > 0 ? (
                 paginationResults.data.map((record: any, index: any) => (
-                 // {filteredData && filteredData.length > 0 ? (
-               // filteredData.map((record: any, index: any) => (
+                  // {filteredData && filteredData.length > 0 ? (
+                  // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
                     <td>
                       {moment(record.flightReportDate).format('yyyy-MM-DD')}
@@ -354,7 +354,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
             <GoAPagination
               itemCount={paginationResults?.paginationInfo.total || 10}
-             // itemCount={filteredData?.length || 10}
+              // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
               pageNumber={page}
               onChange={changePage}
