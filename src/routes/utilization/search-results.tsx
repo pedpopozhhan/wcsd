@@ -1,5 +1,8 @@
-import { SearchResponse } from '@/models/search-response';
-import { SearchResult, searchResultColumns } from '@/models/search-result';
+import { SearchResponse } from '@/routes/utilization/search-response';
+import {
+  SearchResult,
+  searchResultColumns,
+} from '@/routes/utilization/search-result';
 import {
   GoABlock,
   GoAButton,
@@ -15,8 +18,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
 import { typeItems } from '@/types/contract-type';
+let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
-let { link, chevron } = styles;
+
 interface ISearchResultsProps {
   searchResults: SearchResult[];
 }
@@ -27,6 +31,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
+    setPage(1);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
@@ -45,7 +50,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   }
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(20);
   const navigate = useNavigate();
 
   function changePage(newPage: any) {
@@ -90,11 +95,10 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   function convertType(type: number) {
     return typeItems.find((x) => x.value === type.toString())?.label;
   }
-  if (!results || results.length === 0) {
-    return <React.Fragment></React.Fragment>;
-  }
+
   return (
     <>
+      {/* <div className={table}> */}
       <GoATable onSort={sortData} mb='xl'>
         <thead>
           <tr>
@@ -118,11 +122,12 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               {searchResultColumns[3].label}
               {/* </GoATableSortHeader> */}
             </th>
-            <th className={link}>
+            {/* Hide this for now
+             <th className={link}>
               <GoATableSortHeader name={searchResultColumns[4].value}>
                 {searchResultColumns[4].label}
               </GoATableSortHeader>
-            </th>
+            </th> */}
 
             <th></th>
           </tr>
@@ -131,13 +136,13 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
               <td>{result.vendor}</td>
-              <td>{result.businessId}</td>
-              <td>{result.contractId}</td>
+              <td className={number}>{result.businessId}</td>
+              <td className={number}>{result.contractId}</td>
               <td>{convertType(result.type)}</td>
+              {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
-              </td>
-
+              </td> */}
               <td>
                 <div className={chevron}>
                   <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result.contractId)}/>
@@ -147,31 +152,21 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
           ))}
         </tbody>
       </GoATable>
+      {/* </div> */}
       <GoABlock alignment='center'>
-        <GoABlock mb='m' alignment='center' gap='m'>
-          <span>Show</span>
-          <GoADropdown onChange={changePerPage} value='10' width='8ch'>
-            <GoADropdownItem value='10'></GoADropdownItem>
-            <GoADropdownItem value='20'></GoADropdownItem>
-            <GoADropdownItem value='30'></GoADropdownItem>
-          </GoADropdown>
+        <div style={{ display: 'flex', alignSelf: 'center' }}>
           <span style={{ whiteSpace: 'nowrap' }}>
-            of {results?.length} items
+            Page {page} of {getTotalPages()}
           </span>
-        </GoABlock>
+        </div>
         <GoASpacer hSpacing='fill' />
         <GoABlock mb='m' alignment='center' gap='m'>
-          {/* <div className={div}> */}
-          <div style={{ display: 'flex', alignSelf: 'center' }}>
-            <span style={{ whiteSpace: 'nowrap' }}>
-              Page {page} of {getTotalPages()}
-            </span>
-          </div>
           <GoABlock>
             <GoAButton
               type='tertiary'
               leadingIcon='arrow-back'
               onClick={previous}
+              disabled={page === 1}
             >
               Previous
             </GoAButton>
@@ -179,11 +174,11 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               type='tertiary'
               trailingIcon='arrow-forward'
               onClick={next}
+              disabled={page === getTotalPages()}
             >
               Next
             </GoAButton>
           </GoABlock>
-          {/* </div> */}
         </GoABlock>
       </GoABlock>
     </>

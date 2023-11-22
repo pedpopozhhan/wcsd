@@ -1,0 +1,13 @@
+@import '@abgov/web-components/index.css';
+@import '@abgov/design-tokens/dist/tokens.scss';
+
+.mainContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.outletContainer {
+  flex: 1;
+  overflow-y: auto;
+}

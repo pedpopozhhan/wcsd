@@ -1,0 +1,32 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+.chevron,
+.link {
+  text-align: right;
+  a {
+    color: $goa-color-interactive-default;
+    margin-right: $goa-space-2xl;
+    text-decoration: underline;
+  }
+}
+table {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $goa-color-greyscale-white;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $goa-color-greyscale-200;
+  }
+}
+th {
+  vertical-align: middle;
+}
+.number {
+  font-family: $goa-font-family-number;
+}
+.div {
+  flex-direction: row;
+  justify-content: space-between;
+}

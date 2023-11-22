@@ -1,14 +1,16 @@
-import { SearchResult } from '@/models/search-result';
-import { GoAIcon, GoAIconButton } from '@abgov/react-components';
+import { GoAIcon } from '@abgov/react-components';
 import { useState, useRef, useEffect } from 'react';
 
 import styles from './search-suggestion.module.scss';
+import { SearchOption } from '@/routes/utilization/search-option';
+
 let {
   search,
   searchInput,
   searchInputWrapper,
   highlight,
   closeButton,
+  closeButtonActive,
   container,
   item,
   active,
@@ -17,39 +19,29 @@ let {
   hideMenu,
 } = styles;
 
-interface ISearchOption {
-  value: string;
-  label: string;
-}
 interface ISearchResultsProps {
-  allData: SearchResult[];
-  //   optionDef: (data:SearchResult)=>ISearchOption;
-  onEnter: (results: SearchResult[]) => any;
+  options: SearchOption[];
+  filterPredicate: (candidate: SearchOption, inputValue: string) => boolean;
+  onEnter: (results: SearchOption[]) => any;
+  onChange: (inputValue: string | SearchOption) => any;
 }
 const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
-  const [allSuggestions, setAllSuggestions] = useState([] as ISearchOption[]);
+  const [allSuggestions, setAllSuggestions] = useState([] as SearchOption[]);
   const [arrowKeyPressed, setArrowKeyPressed] = useState(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const containerRef: any = useRef(null);
-  const separator = ' - ';
 
   // local array of filtered options for when 'enter' is pressed
-  let filteredSuggestions: ISearchOption[] = [];
+  let filteredSuggestions: SearchOption[] = [];
 
   useEffect(() => {
-    setAllSuggestions(
-      props.allData.map((x) => {
-        // TODO: value might be an identifier from aviation api
-        const val = `${x.vendor}${separator}${x.businessId}`;
-        return { value: val, label: val };
-      })
-    );
-  }, [props.allData]);
+    setAllSuggestions(props.options);
+  }, [props.options]);
 
   // remember to handle clicking off the menu or input
   useEffect(() => {
@@ -65,6 +57,17 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     }
     return () => window.removeEventListener('click', handleOffMenuClick);
   }, [menuIsOpen, setMenuIsOpen]);
+
+  function handleValueChanging(newValue: string | SearchOption) {
+    if (typeof newValue == 'string') {
+      setInputValue(newValue);
+    }
+    props.onChange(newValue);
+
+    if (!newValue) {
+      setMenuIsOpen(false);
+    }
+  }
 
   function highlightLabel(label: string) {
     const regex = new RegExp(inputValue, 'gi');
@@ -86,10 +89,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
 
   function filterSuggestions() {
     const filtered = allSuggestions.filter((x) => {
-      const upCase = inputValue.toUpperCase();
-      const splits = x.label.split(separator);
-      const found = splits.some((x) => x.toUpperCase().startsWith(upCase));
-      return found;
+      return props.filterPredicate(x, inputValue);
     });
     // save the filteredSuggestions
     filteredSuggestions = filtered.slice();
@@ -109,22 +109,8 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   // option click handler
   function setSelection(index: number) {
     setSelectedIndex(index);
-    setInputValue(filteredSuggestions[index].label);
-    handleOnEnter([filteredSuggestions[index]]);
-  }
-
-  function handleOnEnter(filtered: ISearchOption[]) {
-    const results = filtered.map((x) => {
-      const splits = x.label.split(separator);
-      const foundIdx = props.allData.findIndex(
-        (x) => x.vendor === splits[0] && x.businessId.toString() === splits[1]
-      );
-      //   if (foundIdx > -1) {
-      return props.allData[foundIdx];
-      //   }
-    });
-
-    props.onEnter(results);
+    handleValueChanging(filteredSuggestions[index]);
+    props.onEnter([filteredSuggestions[index]]);
   }
 
   function handleInputKeyDown(e: any) {
@@ -133,13 +119,13 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         // enter selected without pressing arrows
         setArrowKeyPressed(false);
         setMenuIsOpen(false);
-        handleOnEnter(filteredSuggestions);
+        props.onEnter(filteredSuggestions);
       } else {
         // arrow pressed and enter selected
         if (filteredSuggestions[currentIndex]) {
           setSelectedIndex(currentIndex);
-          setInputValue(filteredSuggestions[currentIndex].label);
-          handleOnEnter([filteredSuggestions[currentIndex]]);
+          handleValueChanging(filteredSuggestions[currentIndex]);
+          props.onEnter([filteredSuggestions[currentIndex]]);
         }
       }
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -176,7 +162,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
 
   function resetInput() {
     filteredSuggestions = [];
-    setInputValue('');
+    handleValueChanging('');
     setCurrentIndex(0);
     setSelectedIndex(-1);
     setMenuIsOpen(false);
@@ -190,10 +176,14 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
           <GoAIcon type='search' ml='xs' />
           <input
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => handleValueChanging(e.target.value)}
             onKeyDown={handleInputKeyDown}
+            placeholder='Search by Vendor or Contract ID'
           ></input>
-          <div className={closeButton} onClick={(e) => resetInput()}>
+          <div
+            className={`${closeButton} ${inputValue ? closeButtonActive : ''}`}
+            onClick={(e) => resetInput()}
+          >
             <GoAIcon type='close' />
           </div>
         </div>
