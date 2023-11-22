@@ -12,7 +12,7 @@ import { SearchOption } from '@/routes/utilization/search-option';
 let { top, search } = styles;
 
 export default function Utilization() {
-  const header = 'Contract Utilization';
+  const header = 'Invoice Reconciliation';
 
   const [searchResults, setSearchResults] = useState([] as SearchResult[]);
   const [allData, setAllData] = useState([] as SearchResult[]);
