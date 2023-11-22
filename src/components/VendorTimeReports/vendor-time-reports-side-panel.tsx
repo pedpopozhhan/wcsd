@@ -34,10 +34,9 @@ const VendorTimeReportsSidePanel = () => {
             </tr>
           </tbody>
         </GoATable>
-      </GoAContainer>
-      <GoAContainer testId='tbl-contact-info-side-panel-container'>
+        <br/> <br/>
         <GoAFormItem label='Contact Info' />
-        <GoATable testId='tbl-contact-info-side-panel-table'>
+        <GoATable testId='tbl-contact-info-side-panel-table' >
           <tbody>
             <tr>
               <td style={{ borderBottom: 'none' }}>
