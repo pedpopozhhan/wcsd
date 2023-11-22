@@ -1,7 +1,7 @@
-import {httpAviationReporting, httpAviationReportingAuthentication} from "../../../../services/http-common";
-import { IFlightReportDashboard } from "../interfaces/IFlightReportDashboard" ;
-import { IPaginationResult } from "../interfaces//IPaginationResult";
-import { ISearch } from "../interfaces/ISearch";
+import {httpAviationReporting, httpAviationReportingAuthentication} from "./http-common";
+import { IFlightReportDashboard } from "../interfaces/flight-report-dashboard/IFlightReportDashboard" ;
+import { IPaginationResult } from "../interfaces/flight-report-dashboard//IPaginationResult";
+import { ISearch } from "../interfaces/flight-report-dashboard/ISearch";
 
 
 const getAuthenticate = async () => {
