@@ -1,6 +1,7 @@
 import {
     GoAAppHeader,
     GoABlock,
+    GoAButton,
     GoAContainer,
     GoADropdown,
     GoADropdownItem,
@@ -19,7 +20,7 @@ import {
     GoATwoColumnLayout,
   } from '@abgov/react-components';
   import { useEffect, useState } from 'react';
-  import { useNavigate } from 'react-router-dom';
+  import { useNavigate, useParams } from 'react-router-dom';
   import searchService from '@/services/search-service';
   import styles from './utilization.module.scss';
   import { PagingRequest } from '@/models/paging-request';
@@ -38,7 +39,8 @@ import VendorTimeReportsSidePanel from '@/components/vendorTimeReports/vendor-ti
   
   let { search } = styles;
   
-  export default function VendorTimeReports() {
+ const VendorTimeReports = () => {
+  const { contractId } = useParams();
     (async () => {
       await aviationReportingAuthenticate();
     //  await domainServiceAuthenticate();
@@ -63,21 +65,30 @@ import VendorTimeReportsSidePanel from '@/components/vendorTimeReports/vendor-ti
     //       console.log('error', err);
     //     });
     // }
-  
     const navigate = useNavigate();
     //const [searchResults, setSearchResults] = useState([] as SignedOffTabResults[]);
   
-    const header = 'Time Reports';
+    const header = "[Vendor's] Time Reports";
+
+    function BackToContractUtilizationClick(){
+      navigate('/utilization');
+    }
 
   
     return (
       <GoABlock gap='none' alignment='start'>
         <div style={{minWidth: '80%'}}>
           <GoAContainer>
+          <GoAButton {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+                        size='compact'
+                        type='tertiary'
+                        onClick={() => BackToContractUtilizationClick()}
+                      > {`< Back`}
+                      </GoAButton>
             <h2>{header}</h2>
             <GoATabs>
               <GoATab heading='Signed-off'>
-               <SignedOffTabDetails/>
+               <SignedOffTabDetails contractId={contractId}/>
               </GoATab>
               <GoATab heading='Approved'></GoATab>
               <GoATab heading='Invoiced'></GoATab>
@@ -90,4 +101,6 @@ import VendorTimeReportsSidePanel from '@/components/vendorTimeReports/vendor-ti
       </GoABlock>
     );
   }
+
+  export default VendorTimeReports
   

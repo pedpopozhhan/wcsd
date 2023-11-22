@@ -18,6 +18,7 @@ root.render(
           <Route key='1' path='/' element={<Utilization />} />
           <Route key='2' path='utilization' element={<Utilization />} />
           <Route key='3' path='VendorTimeReports' element={<VendorTimeReports />} />
+          <Route key='3' path='VendorTimeReports/:contractId' element={<VendorTimeReports />} />
         </Route>
       </Routes>
     </Router>

@@ -13,7 +13,7 @@ import {
 import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageLoader from '../page-loader';
+import PageLoader from '../../components/page-loader';
 import { IFlightReportDashboard } from '../../models/flightReportDashboard/IFlightReportDashboard';
 import { IForestArea } from '../../models/flightReportDashboard/ICorporateRegion';
 import { IFilter } from '../../models/flightReportDashboard/IFilter';
@@ -23,6 +23,7 @@ import { ISearch } from '../../models/flightReportDashboard/ISearch';
 import { FlightReportDashboardService } from '../../services/FlightReportDashboardService';
 
 interface IFlightReportAllProps {
+  contractId: string | undefined;
   forestAreaSelected?: never[];
   startDate?: string;
   endDate?: string;
@@ -31,6 +32,7 @@ interface IFlightReportAllProps {
 }
 
 const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
+  contractId,
   forestAreaSelected,
   startDate,
   endDate,
@@ -61,6 +63,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [sortDir, setSortDir] = React.useState(-1);
   const [isSorting, setIsSorting] = React.useState(false);
 
+  //const filteredData = paginationResults?.data;
+
   //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
 
   React.useEffect(() => {
@@ -76,6 +80,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     searchValue,
     sortCol,
     sortDir,
+    contractId
   ]);
 
   function onRefreshFlightReport() {
@@ -110,15 +115,14 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       perPage: perPage,
       page: page,
     };
-
+ 
+    //const testContractid = 81804
     let objIFilter: IFilter = {
-     //columnName: 'status',
-     //columnValue: "['Signed off']",
-     columnName: '',
-     columnValue: '',
-      reportDateFrom:  null,
-      reportDateTo:  null,
-      corporateRegions: objForestArea,
+      columnName: 'status',
+      columnValue: "['Signed off']",
+      reportDateFrom: null,
+      reportDateTo: null,
+      corporateRegions: objForestArea
     };
 
     let objISearch: ISearch = {
@@ -244,28 +248,27 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           <GoATable onSort={sortData}>
             <thead>
               <tr>
-                <th style={{maxWidth: '40%'}}>
+                <th style={{ maxWidth: '40%' }}>
                   <GoATableSortHeader name='flightReportDate'>
                     Report Date
                   </GoATableSortHeader>
                 </th>
-                <th style={{maxWidth: '15%'}}>
+                <th style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="flightReportId"> */}
                   Report No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{maxWidth: '15%'}}>
+                <th style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="ao02Number"> */}
                   AO-02 No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{maxWidth: '15%'}}>
+                <th style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="contractRegistrationName"> */}
                   Registration No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{maxWidth: '15%'}}></th>
-                
+                <th style={{ maxWidth: '15%' }}></th>
               </tr>
             </thead>
 
@@ -275,6 +278,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
             >
               {paginationResults?.data && paginationResults.data.length > 0 ? (
                 paginationResults.data.map((record: any, index: any) => (
+                 // {filteredData && filteredData.length > 0 ? (
+               // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
                     <td>
                       {moment(record.flightReportDate).format('yyyy-MM-DD')}
@@ -340,30 +345,16 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                 of {paginationResults?.paginationInfo.total} items
               </span>
             </GoABlock> */}
-              <div style={{ display: 'flex', alignSelf: 'center' }}>
-            <span style={{ whiteSpace: 'nowrap' }}>
-              Page {page} of {paginationResults?.paginationInfo.totalPages}
-            </span>
-          </div>
+            <div style={{ display: 'flex', alignSelf: 'center' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>
+                Page {page} of {paginationResults?.paginationInfo.totalPages}
+              </span>
+            </div>
             <GoASpacer hSpacing='fill' />
-            {/* <GoABlock>
-            <GoAButton
-              type='tertiary'
-              leadingIcon='arrow-back'
-              onClick={() => changePage}
-            >
-              Previous
-            </GoAButton>
-            <GoAButton
-              type='tertiary'
-              trailingIcon='arrow-forward'
-              onClick={() => changePage}
-            >
-              Next
-            </GoAButton>
-          </GoABlock> */}
+
             <GoAPagination
               itemCount={paginationResults?.paginationInfo.total || 10}
+             // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
               pageNumber={page}
               onChange={changePage}

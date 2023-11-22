@@ -8,59 +8,60 @@ import {
 
 const VendorTimeReportsSidePanel = () => {
   return (
-    <div style={{minWidth: '20%'}}>
+    <div style={{ minWidth: '20%' }}>
       <GoASpacer></GoASpacer>
       <GoAContainer>
-        <GoAFormItem label='Contracts' />
-        <GoATable>
+        <GoAFormItem label='Contract' />
+        <GoATable testId='times-report-side-panel'>
           <tbody>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='business'></GoAIcon>
               </td>
-              <td>John Wick</td>
+              <td style={{ borderBottom: 'none' }}>Test Vendor</td>
             </tr>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='document-text'></GoAIcon>
               </td>
-              <td>111222333</td>
+              <td style={{ borderBottom: 'none' }}>12345680</td>
             </tr>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='pricetag'></GoAIcon>
               </td>
-              <td>Casual</td>
+              <td style={{ borderBottom: 'none' }}>Casual</td>
             </tr>
           </tbody>
         </GoATable>
       </GoAContainer>
-      <GoAContainer>
-        <GoATable>
+      <GoAContainer testId='tbl-contact-info-side-panel-container'>
+        <GoAFormItem label='Contact Info' />
+        <GoATable testId='tbl-contact-info-side-panel-table'>
           <tbody>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='person'></GoAIcon>
               </td>
-              <td>[Rep Name]</td>
+              <td style={{ borderBottom: 'none' }}>Viral Patel</td>
             </tr>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='location'></GoAIcon>
               </td>
-              <td>[Location]</td>
+              <td style={{ borderBottom: 'none' }}>Toronto</td>
             </tr>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='call'></GoAIcon>
               </td>
-              <td>[Phone Number]</td>
+              <td style={{ borderBottom: 'none' }}>111-222-3333</td>
             </tr>
             <tr>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <GoAIcon type='mail'></GoAIcon>
               </td>
-              <td>[Email]</td>
+              <td style={{ borderBottom: 'none' }}>abc@xyz.com</td>
             </tr>
           </tbody>
         </GoATable>
