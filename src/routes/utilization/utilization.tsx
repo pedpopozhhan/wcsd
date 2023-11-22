@@ -1,6 +1,6 @@
 import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import searchService from '@/services/search-service';
+import searchService from '@/routes/vendor-time-reports/flight-report-dashboard/services/search-service';
 import styles from './utilization.module.scss';
 import { typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/utilization/search-results';

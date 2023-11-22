@@ -6,7 +6,7 @@ import { Home } from './routes/home';
 import Utilization from './routes/utilization/utilization';
 import App from './App';
 
-import VendorTimeReports from './routes/vendor-time-reports';
+import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

@@ -13,14 +13,14 @@ import {
 import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageLoader from '../../components/page-loader';
-import { IFlightReportDashboard } from '../../models/flightReportDashboard/IFlightReportDashboard';
-import { IForestArea } from '../../models/flightReportDashboard/ICorporateRegion';
-import { IFilter } from '../../models/flightReportDashboard/IFilter';
-import { IPagination } from '../../models/flightReportDashboard/IPagination';
-import { IPaginationResult } from '../../models/flightReportDashboard/IPaginationResult';
-import { ISearch } from '../../models/flightReportDashboard/ISearch';
-import { FlightReportDashboardService } from '../../services/FlightReportDashboardService';
+import PageLoader from '../page-loader';
+import { IFlightReportDashboard } from '../flight-report-dashboard/interfaces/IFlightReportDashboard';
+import { IForestArea } from '../flight-report-dashboard/interfaces/ICorporateRegion';
+import { IFilter } from '../flight-report-dashboard/interfaces/IFilter';
+import { IPagination } from '../flight-report-dashboard/interfaces/IPagination';
+import { IPaginationResult } from '../flight-report-dashboard/interfaces/IPaginationResult';
+import { ISearch } from '../flight-report-dashboard/interfaces/ISearch';
+import { FlightReportDashboardService } from '../flight-report-dashboard/services/FlightReportDashboardService';
 
 interface IFlightReportAllProps {
   contractId: string | undefined;
