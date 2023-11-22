@@ -1,6 +1,5 @@
 import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import searchService from '@/routes/vendor-time-reports/flight-report-dashboard/services/search-service';
 import styles from './utilization.module.scss';
 import { typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/utilization/search-results';
@@ -8,11 +7,12 @@ import { SearchResponse } from '@/routes/utilization/search-response';
 import { SearchResult } from '@/routes/utilization/search-result';
 import SearchSuggestion from '@/routes/utilization/search-suggestion';
 import { SearchOption } from '@/routes/utilization/search-option';
+import searchService from '@/services/search.service';
 
 let { top, search } = styles;
 
 export default function Utilization() {
-  const header = 'Contract Utilization';
+  const header = 'Invoice Reconciliation';
 
   const [searchResults, setSearchResults] = useState([] as SearchResult[]);
   const [allData, setAllData] = useState([] as SearchResult[]);
