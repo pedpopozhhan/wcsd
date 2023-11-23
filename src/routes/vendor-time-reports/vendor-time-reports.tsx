@@ -23,7 +23,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from '../utilization/utilization.module.scss';
-import { PagingRequest } from '@/models/paging-request';
 import { ContractType } from '@/types/contract-type';
 import React from 'react';
 
