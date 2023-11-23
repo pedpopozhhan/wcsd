@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import React from 'react';
-import styles from '../../App.module.scss'
+import styles from  './vendor-time-reports.module.scss';
 
 // import { DomainService } from 'report-table-component/src/services/DomainService';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';

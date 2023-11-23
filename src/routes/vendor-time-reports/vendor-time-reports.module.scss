@@ -1,0 +1,30 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+
+
+.vendorTimeReportRoot {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin-left: 10px;
+}
+
+.vendorTimeReportMain {
+  height: 100%;
+  width: 75%;
+}
+
+.vendorTimeReportSidePanel {
+  height: 100%;
+  width: 25;
+  border-left: 1px lightgrey solid;
+  margin-left: 50px;
+}
+
+.vendorTimeReportSidePanelContract{
+  margin-left: 20px;
+  margin-top: 60px;
+}
+
+.vendorTimeReportSidePanelContactInfo{
+  margin-left: 20px;
+}
