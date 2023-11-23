@@ -11,3 +11,37 @@
   flex: 1;
   overflow-y: auto;
 }
+
+.vendorTimeReportRoot {
+  display: table;
+  height: 100%;
+  width: 100%;
+  margin-left: 10px;
+}
+
+.vendorTimeReportMain {
+  float: left;
+  height: 100%;
+  width: 75%;
+}
+
+.vendorTimeReportSidePanel {
+  float: left;
+  height: 100%;
+  width: 25%;
+}
+
+.vendorTimeReportSidePanelSection{
+  margin-left: 40px;
+  border-left: 1px lightgrey solid;
+  height: 100%;
+}
+
+.vendorTimeReportSidePanelContract{
+  margin-left: 20px;
+  margin-top: 60px;
+}
+
+.vendorTimeReportSidePanelContactInfo{
+  margin-left: 20px;
+}

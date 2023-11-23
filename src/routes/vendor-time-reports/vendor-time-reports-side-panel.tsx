@@ -1,16 +1,23 @@
 import {
+  GoABlock,
   GoAContainer,
   GoAFormItem,
   GoAIcon,
   GoASpacer,
   GoATable,
+  GoATwoColumnLayout,
 } from '@abgov/react-components';
+import styles from '../../App.module.scss'
 
 const VendorTimeReportsSidePanel = () => {
+  const {vendorTimeReportSidePanel, vendorTimeReportSidePanelSection, vendorTimeReportSidePanelContract, vendorTimeReportSidePanelContactInfo} = styles;
   return (
-    <div style={{ minWidth: '20%' }}>
+    <div className={vendorTimeReportSidePanel}>
       <GoASpacer></GoASpacer>
-      <GoAContainer>
+      <div className={vendorTimeReportSidePanelSection}>
+        <GoABlock gap="l"> 
+        <div></div>
+        <div className={vendorTimeReportSidePanelContract}>
         <GoAFormItem label='Contract' />
         <GoATable testId='times-report-side-panel'>
           <tbody>
@@ -33,10 +40,15 @@ const VendorTimeReportsSidePanel = () => {
               <td style={{ borderBottom: 'none' }}>Casual</td>
             </tr>
           </tbody>
-        </GoATable>
+        </GoATable></div></GoABlock>
+       
         <br/> <br/>
-        <GoAFormItem label='Contact Info' />
-        <GoATable testId='tbl-contact-info-side-panel-table' >
+    
+        <GoABlock gap="l">
+          <div></div>
+          <div className={vendorTimeReportSidePanelContactInfo}>
+          <GoAFormItem label='Contact Info'/>
+          <GoATable testId='tbl-contact-info-side-panel-table' >
           <tbody>
             <tr>
               <td style={{ borderBottom: 'none' }}>
@@ -64,7 +76,9 @@ const VendorTimeReportsSidePanel = () => {
             </tr>
           </tbody>
         </GoATable>
-      </GoAContainer>
+          </div>
+        </GoABlock>
+      </div>
     </div>
   );
 };

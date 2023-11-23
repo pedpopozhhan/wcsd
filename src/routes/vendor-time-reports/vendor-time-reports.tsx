@@ -22,17 +22,13 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import styles from '../utilization/utilization.module.scss';
-import { PagingRequest } from '@/models/paging-request';
-import { ContractType } from '@/types/contract-type';
 import React from 'react';
+import styles from '../../App.module.scss'
 
 // import { DomainService } from 'report-table-component/src/services/DomainService';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
-
-let { search } = styles;
 
 const VendorTimeReports = () => {
   const { contractId } = useParams();
@@ -64,14 +60,15 @@ const VendorTimeReports = () => {
 
   const header = "[Vendor's] Time Reports";
 
+  const {vendorTimeReportRoot, vendorTimeReportMain} = styles;
+
   function BackToContractUtilizationClick() {
     navigate('/utilization');
   }
 
   return (
-    <GoABlock gap='none' alignment='start'>
-      <div style={{ minWidth: '80%' }}>
-        <GoAContainer>
+     <div className={vendorTimeReportRoot} >
+      <div className={vendorTimeReportMain}>
           <GoAButton
             {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
             size='compact'
@@ -82,7 +79,7 @@ const VendorTimeReports = () => {
             {`< Back`}
           </GoAButton>
           <h2>{header}</h2>
-          <GoATabs>
+          <GoATabs initialTab={1}>
             <GoATab heading='Signed-off'>
               <SignedOffTabDetails contractId={contractId} />
             </GoATab>
@@ -90,11 +87,9 @@ const VendorTimeReports = () => {
             <GoATab heading='Invoiced'></GoATab>
             <GoATab heading='Processed'></GoATab>
           </GoATabs>
-        </GoAContainer>
       </div>
-      <GoASpacer />
       <VendorTimeReportsSidePanel />
-    </GoABlock>
+      </div>
   );
 };
 
