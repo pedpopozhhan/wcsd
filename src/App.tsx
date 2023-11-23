@@ -7,7 +7,7 @@ import {
   GoAOneColumnLayout,
 } from '@abgov/react-components';
 import { Outlet } from 'react-router-dom';
-import styles from './app.module.scss';
+import styles from './App.module.scss';
 let { mainContainer, outletContainer } = styles;
 
 export function App() {
