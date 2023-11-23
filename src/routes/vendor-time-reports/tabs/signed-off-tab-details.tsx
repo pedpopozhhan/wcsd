@@ -268,7 +268,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                   Registration No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%' }}></th>
+                <th style={{ maxWidth: '15%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 
@@ -298,7 +298,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                     </td>
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
-                    <td>
+                    <td style={{textAlign: 'right'}}>
                       <GoAIconButton
                         icon='chevron-forward'
                         onClick={() =>
