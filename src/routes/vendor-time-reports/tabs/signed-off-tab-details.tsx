@@ -352,7 +352,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
             </div>
             <GoASpacer hSpacing='fill' />
 
-            <GoAPagination
+            <GoAPagination 
+              variant="links-only" 
               itemCount={paginationResults?.paginationInfo.total || 10}
               // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
