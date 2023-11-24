@@ -3,7 +3,7 @@ import {
   httpAviationReportingAuthentication,
 } from './http-common';
 import { IFlightReportDashboard } from '../interfaces/flight-report-dashboard/flight-report-dashboard.interface';
-import { IPaginationResult } from '../interfaces/flight-report-dashboard/pagination-result.interface';
+import { IPaginationResult } from '../interfaces/pagination-result.interface';
 import { ISearch } from '../interfaces/flight-report-dashboard/search.interface';
 
 const getAuthenticate = async () => {

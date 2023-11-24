@@ -14,11 +14,11 @@ import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
-import { IPaginationResult } from '@/interfaces/flight-report-dashboard/pagination-result.interface';
+import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IForestArea } from '@/interfaces/flight-report-dashboard/corporate-region.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
-import { IPagination } from '@/interfaces/flight-report-dashboard/pagination.interface';
+import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 

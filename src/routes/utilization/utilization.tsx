@@ -7,7 +7,7 @@ import { SearchResponse } from '@/routes/utilization/search-response';
 import { SearchResult } from '@/routes/utilization/search-result';
 import SearchSuggestion from '@/routes/utilization/search-suggestion';
 import { SearchOption } from '@/routes/utilization/search-option';
-import searchService from '@/services/search.service';
+import searchService from '@/services/reconciliation-search.service';
 
 let { top, search } = styles;
 
@@ -20,28 +20,44 @@ export default function Utilization() {
   const [contractType, setContractType] = useState('0');
 
   useEffect(() => {
-    gatherItems();
+    // gatherItems();
+    const subscription = searchService.getAll().subscribe((searchResults) => {
+      const data = searchResults.slice();
+
+      // sort ascending
+
+      data.sort((a, b) => {
+        return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
+      });
+
+      setAllData(data);
+      setSearchResults(data);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [JSON.stringify(allData)]);
 
-  function gatherItems() {
-    searchService
-      .getAll()
-      .then((fetchedData: SearchResponse) => {
-        const data = fetchedData.searchResults.slice();
+  //   function gatherItems() {
+  //     searchService
+  //       .getAll()
+  //       .then((fetchedData: SearchResponse) => {
+  //         const data = fetchedData.searchResults.slice();
 
-        // sort ascending
+  //         // sort ascending
 
-        data.sort((a, b) => {
-          return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
-        });
+  //         data.sort((a, b) => {
+  //           return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
+  //         });
 
-        setAllData(data);
-        setSearchResults(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
+  //         setAllData(data);
+  //         setSearchResults(data);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   }
 
   function handleOnEnter(filtered: SearchOption[]) {
     const results = filtered.map((x) => {
