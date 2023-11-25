@@ -1,7 +1,7 @@
 import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './utilization.module.scss';
-import { typeItems } from '@/types/contract-type';
+import { ContractType, typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/utilization/search-results';
 import { SearchResponse } from '@/routes/utilization/search-response';
 import { SearchResult } from '@/routes/utilization/search-result';
@@ -17,7 +17,7 @@ export default function Utilization() {
   const [searchResults, setSearchResults] = useState([] as SearchResult[]);
   const [allData, setAllData] = useState([] as SearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
-  const [contractType, setContractType] = useState('0');
+  const [contractType, setContractType] = useState('all' as ContractType);
 
   useEffect(() => {
     // gatherItems();
@@ -27,7 +27,11 @@ export default function Utilization() {
       // sort ascending
 
       data.sort((a, b) => {
-        return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
+        return b.vendorName > a.vendorName
+          ? -1
+          : b.vendorName < a.vendorName
+          ? 1
+          : 0;
       });
 
       setAllData(data);
@@ -63,24 +67,25 @@ export default function Utilization() {
     const results = filtered.map((x) => {
       const splits = x.label.split(separator);
       const foundIdx = allData.findIndex(
-        (x) => x.vendor === splits[0] && x.businessId.toString() === splits[1]
+        (x) =>
+          x.vendorName === splits[0] && x.businessId.toString() === splits[1]
       );
       return allData[foundIdx];
     });
 
     setSearchResults(
       results.filter(
-        (x) => contractType === '0' || x.type.toString() === contractType
+        (x) => contractType === 'all' || x.contractType === contractType
       )
     );
   }
 
   function onChangeContractType(name: string, type: string | string[]) {
-    const _contractType = type as string;
-    setContractType(_contractType as string);
+    const _contractType = type as ContractType;
+    setContractType(_contractType as ContractType);
     // rerun the search, sometimes it is the term, sometimes it is an item with a separator
     let filtered = allData.filter(
-      (x) => _contractType === '0' || x.type.toString() === _contractType
+      (x) => _contractType === 'all' || x.contractType === _contractType
     );
 
     if (typeof searchTerm == 'string') {
@@ -89,13 +94,13 @@ export default function Utilization() {
         filtered.filter((x) => {
           return (
             x.businessId.toString().includes(term) ||
-            x.vendor.toUpperCase().includes(term.toUpperCase())
+            x.vendorName.toUpperCase().includes(term.toUpperCase())
           );
         })
       );
     } else {
       const splits = searchTerm.label.split(separator);
-      const result = filtered.find((x) => x.vendor === splits[0]);
+      const result = filtered.find((x) => x.vendorName === splits[0]);
       if (result) {
         setSearchResults([result]);
       } else {
@@ -114,7 +119,7 @@ export default function Utilization() {
   const separator = ' - ';
   function createOptions(): SearchOption[] {
     return allData.map((item) => {
-      const val = `${item.vendor}${separator}${item.businessId}`;
+      const val = `${item.vendorName}${separator}${item.businessId}`;
       return { value: val, label: val };
     });
   }
@@ -145,11 +150,7 @@ export default function Utilization() {
           onChange={onChangeContractType}
         >
           {typeItems.map((type, idx) => (
-            <GoADropdownItem
-              key={idx}
-              value={type.value.toString()}
-              label={type.label}
-            />
+            <GoADropdownItem key={idx} value={type.value} label={type.label} />
           ))}
         </GoADropdown>
       </div>

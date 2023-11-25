@@ -77,9 +77,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
 
   function timeReportsClick(contractId?: number) {
     if (contractId) {
-        navigate(`/VendorTimeReports/${contractId}`, {
-          state: contractId,
-        });
+      navigate(`/VendorTimeReports/${contractId}`, {
+        state: contractId,
+      });
     }
   }
 
@@ -92,8 +92,8 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     changePage(newPage);
   }
 
-  function convertType(type: number) {
-    return typeItems.find((x) => x.value === type.toString())?.label;
+  function convertType(type: string) {
+    return typeItems.find((x) => x.value === type)?.label;
   }
 
   return (
@@ -135,17 +135,20 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
-              <td>{result.vendor}</td>
+              <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>{result.contractId}</td>
-              <td>{convertType(result.type)}</td>
+              <td>{result.contractType}</td>
               {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
               </td> */}
               <td>
                 <div className={chevron}>
-                  <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result.contractId)}/>
+                  <GoAIconButton
+                    icon='chevron-forward'
+                    onClick={() => timeReportsClick(result.contractId)}
+                  />
                 </div>
               </td>
             </tr>
