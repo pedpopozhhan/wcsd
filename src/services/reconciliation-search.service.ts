@@ -44,6 +44,7 @@ class ReconciliationService {
         url: this.baseUrl + '/flight-report-dashboard/vendors/get',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         data: body,
       })
