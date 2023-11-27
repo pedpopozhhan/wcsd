@@ -27,6 +27,7 @@ import styles from  './vendor-time-reports.module.scss';
 
 // import { DomainService } from 'report-table-component/src/services/DomainService';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
+import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 
@@ -83,7 +84,9 @@ const VendorTimeReports = () => {
             <GoATab heading='Signed-off'>
               <SignedOffTabDetails contractId={contractId} />
             </GoATab>
-            <GoATab heading='Approved'></GoATab>
+            <GoATab heading='Approved'>
+              <ApprovedTabDetails contractId={contractId}></ApprovedTabDetails>
+            </GoATab>
             <GoATab heading='Invoiced'></GoATab>
             <GoATab heading='Processed'></GoATab>
           </GoATabs>
