@@ -149,7 +149,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               <td className={number}>{result.businessId}</td>
               <td className={number}>
                 <a onClick={() => timeReportsClick(result.contractId)}>
-                  {result.contractId}
+                  {result.contractNumber}
                 </a>
               </td>
               <td>
