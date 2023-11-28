@@ -61,6 +61,8 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   function handleValueChanging(newValue: string | SearchOption) {
     if (typeof newValue == 'string') {
       setInputValue(newValue);
+    } else {
+      setInputValue(newValue.label);
     }
     props.onChange(newValue);
 
