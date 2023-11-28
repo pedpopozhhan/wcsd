@@ -17,7 +17,11 @@ import {
 } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
-import { typeItems } from '@/types/contract-type';
+import {
+  ContractType,
+  convertContractType,
+  typeItems,
+} from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
@@ -50,7 +54,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   }
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(10);
   const navigate = useNavigate();
 
   function changePage(newPage: any) {
@@ -75,6 +79,12 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     return num;
   }
 
+  function isNextDisabled() {
+    let num = results ? Math.ceil(results.length / perPage) : 0;
+
+    return !num || page === num;
+  }
+
   function timeReportsClick(contractId?: number) {
     if (contractId) {
       navigate(`/VendorTimeReports/${contractId}`, {
@@ -92,9 +102,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     changePage(newPage);
   }
 
-  function convertType(type: string) {
-    return typeItems.find((x) => x.value === type)?.label;
-  }
+  //   function convertContractType(type: string) {
+  //     return typeItems.find((x) => x.value === type)?.label;
+  //   }
 
   return (
     <>
@@ -137,8 +147,14 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
             <tr key={idx}>
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
-              <td className={number}>{result.contractId}</td>
-              <td>{result.contractType}</td>
+              <td className={number}>
+                <a onClick={() => timeReportsClick(result.contractId)}>
+                  {result.contractNumber}
+                </a>
+              </td>
+              <td>
+                {convertContractType(result.contractType as ContractType)}
+              </td>
               {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
@@ -177,7 +193,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               type='tertiary'
               trailingIcon='arrow-forward'
               onClick={next}
-              disabled={page === getTotalPages()}
+              disabled={isNextDisabled()}
             >
               Next
             </GoAButton>
