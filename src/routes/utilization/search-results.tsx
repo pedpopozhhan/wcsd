@@ -54,7 +54,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   }
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(10);
   const navigate = useNavigate();
 
   function changePage(newPage: any) {
@@ -77,6 +77,12 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     let num = results ? Math.ceil(results.length / perPage) : 0;
 
     return num;
+  }
+
+  function isNextDisabled() {
+    let num = results ? Math.ceil(results.length / perPage) : 0;
+
+    return !num || page === num;
   }
 
   function timeReportsClick(contractId?: number) {
@@ -187,7 +193,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               type='tertiary'
               trailingIcon='arrow-forward'
               onClick={next}
-              disabled={page === getTotalPages()}
+              disabled={isNextDisabled()}
             >
               Next
             </GoAButton>
