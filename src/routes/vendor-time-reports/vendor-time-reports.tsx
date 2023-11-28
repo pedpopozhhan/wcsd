@@ -80,7 +80,7 @@ const VendorTimeReports = () => {
             {`< Back`}
           </GoAButton>
           <h2>{header}</h2>
-          <GoATabs initialTab={1}>
+          <GoATabs initialTab={2}>
             <GoATab heading='Signed-off'>
               <SignedOffTabDetails contractId={contractId} />
             </GoATab>
