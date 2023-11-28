@@ -137,7 +137,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
             <tr key={idx}>
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
-              <td className={number}>{result.contractId}</td>
+              <td className={number}>
+                <a>{result.contractId}</a>
+              </td>
               <td>{result.contractType}</td>
               {/* Hide this for now
               <td className={link}>
