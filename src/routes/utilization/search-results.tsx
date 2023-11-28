@@ -17,7 +17,11 @@ import {
 } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
-import { typeItems } from '@/types/contract-type';
+import {
+  ContractType,
+  convertContractType,
+  typeItems,
+} from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
@@ -92,9 +96,9 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     changePage(newPage);
   }
 
-  function convertType(type: string) {
-    return typeItems.find((x) => x.value === type)?.label;
-  }
+  //   function convertContractType(type: string) {
+  //     return typeItems.find((x) => x.value === type)?.label;
+  //   }
 
   return (
     <>
@@ -138,9 +142,13 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>
-                <a>{result.contractId}</a>
+                <a onClick={() => timeReportsClick(result.contractId)}>
+                  {result.contractId}
+                </a>
               </td>
-              <td>{result.contractType}</td>
+              <td>
+                {convertContractType(result.contractType as ContractType)}
+              </td>
               {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
