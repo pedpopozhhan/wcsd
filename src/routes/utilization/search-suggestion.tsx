@@ -180,7 +180,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
             value={inputValue}
             onChange={(e) => handleValueChanging(e.target.value)}
             onKeyDown={handleInputKeyDown}
-            placeholder='Search by Vendor or Contract ID'
+            placeholder='Search by Vendor or Business No.'
           ></input>
           <div
             className={`${closeButton} ${inputValue ? closeButtonActive : ''}`}
