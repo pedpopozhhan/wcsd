@@ -1,4 +1,3 @@
-import { SearchResponse } from '@/routes/reconciliation/search-response';
 import {
   SearchResult,
   searchResultColumns,
@@ -6,22 +5,13 @@ import {
 import {
   GoABlock,
   GoAButton,
-  GoADropdown,
-  GoADropdownItem,
-  GoAIcon,
   GoAIconButton,
-  GoAPagination,
   GoASpacer,
   GoATable,
-  GoATableSortHeader,
 } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
-import {
-  ContractType,
-  convertContractType,
-  typeItems,
-} from '@/types/contract-type';
+import { ContractType, convertContractType } from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 

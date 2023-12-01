@@ -1,1 +1,12 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.content {
+  flex: 1;
+}
+.footer {
+}
