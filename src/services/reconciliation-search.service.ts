@@ -1,8 +1,8 @@
 import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
-import { SearchRequest } from '@/routes/utilization/search-request';
-import { SearchResponse } from '@/routes/utilization/search-response';
-import { SearchResult } from '@/routes/utilization/search-result';
+import { SearchRequest } from '@/routes/reconciliation/search-request';
+import { SearchResponse } from '@/routes/reconciliation/search-response';
+import { SearchResult } from '@/routes/reconciliation/search-result';
 import axios from 'axios-observable';
 import { Observable, concatMap, map, of } from 'rxjs';
 

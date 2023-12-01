@@ -1,17 +1,16 @@
 import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import styles from './utilization.module.scss';
+import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
-import SearchResults from '@/routes/utilization/search-results';
-import { SearchResponse } from '@/routes/utilization/search-response';
-import { SearchResult } from '@/routes/utilization/search-result';
-import SearchSuggestion from '@/routes/utilization/search-suggestion';
-import { SearchOption } from '@/routes/utilization/search-option';
+import SearchResults from '@/routes/reconciliation/search-results';
+import { SearchResult } from '@/routes/reconciliation/search-result';
+import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
+import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
 
 let { top, search } = styles;
 
-export default function Utilization() {
+export default function Reconciliation() {
   const header = 'Invoice Reconciliation';
 
   const [searchResults, setSearchResults] = useState([] as SearchResult[]);
@@ -20,7 +19,6 @@ export default function Utilization() {
   const [contractType, setContractType] = useState('all' as ContractType);
 
   useEffect(() => {
-    // gatherItems();
     const subscription = searchService.getAll().subscribe((searchResults) => {
       const data = searchResults.slice();
 
@@ -42,26 +40,6 @@ export default function Utilization() {
       subscription.unsubscribe();
     };
   }, [JSON.stringify(allData)]);
-
-  //   function gatherItems() {
-  //     searchService
-  //       .getAll()
-  //       .then((fetchedData: SearchResponse) => {
-  //         const data = fetchedData.searchResults.slice();
-
-  //         // sort ascending
-
-  //         data.sort((a, b) => {
-  //           return b.vendor > a.vendor ? -1 : b.vendor < a.vendor ? 1 : 0;
-  //         });
-
-  //         setAllData(data);
-  //         setSearchResults(data);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
 
   function handleOnEnter(filtered: SearchOption[]) {
     const results = filtered.map((x) => {
