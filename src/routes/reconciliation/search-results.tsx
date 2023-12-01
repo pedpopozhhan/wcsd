@@ -1,8 +1,8 @@
-import { SearchResponse } from '@/routes/utilization/search-response';
+import { SearchResponse } from '@/routes/reconciliation/search-response';
 import {
   SearchResult,
   searchResultColumns,
-} from '@/routes/utilization/search-result';
+} from '@/routes/reconciliation/search-result';
 import {
   GoABlock,
   GoAButton,

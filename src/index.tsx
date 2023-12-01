@@ -3,10 +3,11 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { Home } from './routes/home';
-import Utilization from './routes/utilization/utilization';
+import Reconciliation from './routes/reconciliation/reonciliation';
 
 import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports';
 import App from './App';
+import InvoiceDetails from './routes/invoice-details/invoice-details';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -14,12 +15,17 @@ root.render(
     <Router>
       <Routes>
         <Route path='/' element={<App />}>
-          <Route key='1' path='/' element={<Utilization />} />
-          <Route key='2' path='utilization' element={<Utilization />} />
+          <Route key='1' path='/' element={<Reconciliation />} />
+          <Route key='2' path='reconciliation' element={<Reconciliation />} />
           <Route
             key='3'
             path='VendorTimeReports/:contractId'
             element={<VendorTimeReports />}
+          />
+          <Route
+            key='4'
+            path='invoice/:invoiceId'
+            element={<InvoiceDetails />}
           />
         </Route>
       </Routes>
