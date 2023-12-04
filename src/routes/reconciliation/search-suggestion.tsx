@@ -177,12 +177,14 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         <div className={searchInputWrapper}>
           <GoAIcon type='search' ml='xs' />
           <input
+            data-cy='searchInput'
             value={inputValue}
             onChange={(e) => handleValueChanging(e.target.value)}
             onKeyDown={handleInputKeyDown}
             placeholder='Search by Vendor or Business No.'
           ></input>
           <div
+            data-cy='searchCancel'
             className={`${closeButton} ${inputValue ? closeButtonActive : ''}`}
             onClick={(e) => resetInput()}
           >
