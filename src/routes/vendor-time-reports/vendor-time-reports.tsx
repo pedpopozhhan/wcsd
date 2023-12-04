@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import React from 'react';
-import styles from  './vendor-time-reports.module.scss';
+import styles from './vendor-time-reports.module.scss';
 
 // import { DomainService } from 'report-table-component/src/services/DomainService';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
@@ -61,38 +61,38 @@ const VendorTimeReports = () => {
 
   const header = "[Vendor's] Time Reports";
 
-  const {vendorTimeReportRoot, vendorTimeReportMain} = styles;
+  const { vendorTimeReportRoot, vendorTimeReportMain } = styles;
 
-  function BackToContractUtilizationClick() {
-    navigate('/utilization');
+  function BackToContractReconciliationClick() {
+    navigate('/reconciliation');
   }
 
   return (
-     <div className={vendorTimeReportRoot} >
+    <div className={vendorTimeReportRoot}>
       <div className={vendorTimeReportMain}>
-          <GoAButton
-            {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
-            size='compact'
-            type='tertiary'
-            onClick={() => BackToContractUtilizationClick()}
-          >
-            {' '}
-            {`< Back`}
-          </GoAButton>
-          <h2>{header}</h2>
-          <GoATabs initialTab={2}>
-            <GoATab heading='Signed-off'>
-              <SignedOffTabDetails contractId={contractId} />
-            </GoATab>
-            <GoATab heading='Approved'>
-              <ApprovedTabDetails contractId={contractId}></ApprovedTabDetails>
-            </GoATab>
-            <GoATab heading='Invoiced'></GoATab>
-            <GoATab heading='Processed'></GoATab>
-          </GoATabs>
+        <GoAButton
+          {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+          size='compact'
+          type='tertiary'
+          onClick={() => BackToContractReconciliationClick()}
+        >
+          {' '}
+          {`< Back`}
+        </GoAButton>
+        <h2>{header}</h2>
+        <GoATabs initialTab={2}>
+          <GoATab heading='Signed-off'>
+            <SignedOffTabDetails contractId={contractId} />
+          </GoATab>
+          <GoATab heading='Approved'>
+            <ApprovedTabDetails contractId={contractId}></ApprovedTabDetails>
+          </GoATab>
+          <GoATab heading='Invoiced'></GoATab>
+          <GoATab heading='Processed'></GoATab>
+        </GoATabs>
       </div>
       <VendorTimeReportsSidePanel />
-      </div>
+    </div>
   );
 };
 
