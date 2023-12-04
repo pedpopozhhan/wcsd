@@ -1,1 +1,22 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+
+  .sideBar {
+    // flex: 1;
+  }
+  .main {
+    flex: 1;
+  }
+}
+.footer {
+}
