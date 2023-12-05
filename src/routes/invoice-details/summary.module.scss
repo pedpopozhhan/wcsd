@@ -1,6 +1,16 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 
 .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: $goa-space-m;
+  > div {
+    div:first-child() {
+      color: red;
+    }
+  }
+}
+.containeFlex {
   display: flex;
   flex-direction: column;
   > div {
