@@ -5,5 +5,5 @@ export const typeItems: { value: ContractType; label: string }[] = [
   { value: 'long', label: 'Long-Term Only' },
 ];
 export function convertContractType(value: ContractType) {
-  return value === 'long' ? 'Long Term' : 'Casual';
+  return value === 'long' ? 'Long-Term' : 'Casual';
 }
