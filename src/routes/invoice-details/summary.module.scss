@@ -5,8 +5,14 @@
   grid-template-columns: 1fr 1fr;
   row-gap: $goa-space-m;
   > div {
-    div:first-child() {
-      color: red;
+    div:first-child {
+      color: $goa-color-text-secondary;
+      font: $goa-typography-body-s;
+      line-height: $goa-line-height-1;
+    }
+    div:nth-child(2) {
+      color: $goa-color-info-default;
+      line-height: $goa-line-height-2;
     }
   }
 }
