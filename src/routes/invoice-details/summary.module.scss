@@ -7,30 +7,13 @@
   > div {
     div:first-child {
       color: $goa-color-text-secondary;
-      font: $goa-typography-body-s;
+      font: $goa-typography-body-xs;
       line-height: $goa-line-height-1;
     }
     div:nth-child(2) {
       color: $goa-color-info-default;
+      font: $goa-typography-body-s;
       line-height: $goa-line-height-2;
     }
   }
-}
-.containeFlex {
-  display: flex;
-  flex-direction: column;
-  > div {
-    display: flex;
-    flex-direction: row;
-    color: red;
-
-    div {
-      flex: 1;
-    }
-  }
-}
-.row {
-  //   display: flex;
-  //   flex-direction: column;
-  //   color: red;
 }

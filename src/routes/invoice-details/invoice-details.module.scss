@@ -12,13 +12,15 @@
   flex-direction: row;
 
   .sideBar {
-    // flex: 1;
+    flex-shrink: 0;
     width: 394px;
     padding: $goa-space-xl $goa-space-l;
   }
   .main {
-    flex: 1;
+    flex-grow: 0;
+    overflow-x: auto;
   }
 }
 .footer {
+  height: 80px;
 }

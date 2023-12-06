@@ -1,0 +1,21 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+.container {
+  //   display: flex;
+  //   flex-direction: column;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  overflow-x: auto;
+  @include thin-scrollbar;
+  th {
+    span {
+      white-space: nowrap;
+    }
+  }
+}
+.test {
+  background-color: red;
+  width: 2500px;
+  height: 100px;
+}
