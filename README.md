@@ -17,4 +17,8 @@ Api is located in the wcds-web-functions repo, dev branch.
 
 Should be read to go by just running the debugger in visual studio code.
 
-TEST
+Rules:
+Use scss modules. They prevent name collisions.
+Use scss tokens, as listed in node_modules\@abgov\design-tokens\dist\tokens.scss
+-note that tokens in Figma are frequently outdated, so you will have to find the new name!
+Use Flexbox or Grid instead of tables and floats.
