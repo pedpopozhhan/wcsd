@@ -1,4 +1,4 @@
-import styles from './summary.module.scss';
+import styles from './totalizer.module.scss';
 
 let { container } = styles;
 export default function Totalizer() {

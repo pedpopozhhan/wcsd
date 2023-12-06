@@ -1,0 +1,13 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@mixin thin-scrollbar {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $goa-color-greyscale-white;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $goa-color-greyscale-200;
+  }
+}
