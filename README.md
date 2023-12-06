@@ -13,8 +13,6 @@ VITE_API_KEY_CODE=<aviation token>
 
 [Visit Design System](https://ui-components.alberta.ca)
 
-Api is located in the wcds-web-functions repo, dev branch.
-
 Should be read to go by just running the debugger in visual studio code.
 
 Rules:
