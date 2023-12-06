@@ -21,7 +21,7 @@ export default function InvoiceDetails() {
         <div className={main}>
           <GoATabs initialTab={initialTab}>
             <GoATab heading='Details'>
-              <DetailsTable />
+              <DetailsTable data={[]} />
             </GoATab>
           </GoATabs>
         </div>

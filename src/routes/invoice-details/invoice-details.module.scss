@@ -11,13 +11,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: $goa-space-xs;
   .sideBar {
     @include thin-scrollbar;
     overflow-y: auto;
     background-color: $goa-color-greyscale-100;
     flex-shrink: 0;
-    width: 394px;
+    width: 394px; // from figma
     padding: $goa-space-xl $goa-space-l;
 
     .header {

@@ -20,7 +20,11 @@ export class DetailsTableRowData {
   internalOrder: string;
   fund: number;
 }
-export default function DetailsTable() {
+
+interface IDetailsTableProps {
+  data: DetailsTableRowData[];
+}
+const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
   const tableHeaders = [
     'Date',
     'Reg No.',
@@ -45,9 +49,31 @@ export default function DetailsTable() {
     );
   });
 
+  const dataRows = () => {
+    return props.data.map((x) => {
+      return (
+        <tr>
+          <td>{x.date}</td>
+          <td>{x.registrationNumber}</td>
+          <td>{x.reportNumber}</td>
+          <td>{x.aO02Number}</td>
+          <td>{x.rateType}</td>
+          <td>{x.numberOfUnits}</td>
+          <td>{x.rateUnit}</td>
+          <td>{x.ratePerUnit}</td>
+          <td>{x.cost}</td>
+          <td>{x.glAccountNumber}</td>
+          <td>{x.profitCentre}</td>
+          <td>{x.costCentre}</td>
+          <td>{x.fireNumber}</td>
+          <td>{x.internalOrder}</td>
+          <td>{x.fund}</td>
+        </tr>
+      );
+    });
+  };
   return (
     <div className={container}>
-      {/* <div className={test}></div> */}
       <GoATable>
         <thead>
           <tr>{tableHeaders}</tr>
@@ -67,4 +93,6 @@ export default function DetailsTable() {
       </GoATable>
     </div>
   );
-}
+};
+
+export default DetailsTable;
