@@ -32,7 +32,7 @@ import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-repor
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 
 const VendorTimeReports = () => {
-  const { contractId } = useParams();
+  const { contractNumber } = useParams();
   (async () => {
     await aviationReportingAuthenticate();
     //  await domainServiceAuthenticate();
@@ -82,10 +82,10 @@ const VendorTimeReports = () => {
         <h2>{header}</h2>
         <GoATabs initialTab={2}>
           <GoATab heading='Signed-off'>
-            <SignedOffTabDetails contractId={contractId} />
+            <SignedOffTabDetails contractNumber={contractNumber} />
           </GoATab>
           <GoATab heading='Approved'>
-            <ApprovedTabDetails contractId={contractId}></ApprovedTabDetails>
+            <ApprovedTabDetails contractNumber={contractNumber}></ApprovedTabDetails>
           </GoATab>
           <GoATab heading='Invoiced'></GoATab>
           <GoATab heading='Processed'></GoATab>

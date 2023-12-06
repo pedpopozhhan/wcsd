@@ -19,7 +19,7 @@ root.render(
           <Route key='2' path='reconciliation' element={<Reconciliation />} />
           <Route
             key='3'
-            path='VendorTimeReports/:contractId'
+            path='VendorTimeReports/:contractNumber'
             element={<VendorTimeReports />}
           />
           <Route

@@ -75,10 +75,10 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     return !num || page === num;
   }
 
-  function timeReportsClick(contractId?: number) {
-    if (contractId) {
-      navigate(`/VendorTimeReports/${contractId}`, {
-        state: contractId,
+  function timeReportsClick(contractNumber?: string) {
+    if (contractNumber) {
+      navigate(`/VendorTimeReports/${contractNumber}`, {
+        state: { contractNumber: contractNumber},
       });
     }
   }
@@ -138,7 +138,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>
-                <a onClick={() => timeReportsClick(result.contractId)}>
+                <a onClick={() => timeReportsClick(result.contractNumber)}>
                   {result.contractNumber}
                 </a>
               </td>
@@ -153,7 +153,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
                 <div className={chevron}>
                   <GoAIconButton
                     icon='chevron-forward'
-                    onClick={() => timeReportsClick(result.contractId)}
+                    onClick={() => timeReportsClick(result.contractNumber)}
                   />
                 </div>
               </td>
