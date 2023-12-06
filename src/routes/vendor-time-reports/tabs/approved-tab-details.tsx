@@ -2,11 +2,16 @@ import {
   GoATable,
   GoAButton,
   GoABlock,
+  GoADropdown,
+  GoADropdownItem,
   GoASpacer,
   GoAPagination,
   GoATableSortHeader,
+  GoABadge,
   GoAIconButton,
+  GoACheckbox,
 } from '@abgov/react-components';
+import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
@@ -17,22 +22,15 @@ import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
-import { yearMonthDay } from '@/common/dates';
 
 interface IFlightReportAllProps {
-  contractId: string | undefined;
-  forestAreaSelected?: never[];
-  startDate?: string;
-  endDate?: string;
+  contractNumber: string | undefined;
   searchValue?: string;
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
 const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
-  contractId,
-  forestAreaSelected,
-  startDate,
-  endDate,
+  contractNumber,
   searchValue,
   onClickFlightReport,
   ...props
@@ -69,16 +67,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     //console.log("endDate", endDate)
     onRefreshFlightReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    page,
-    perPage,
-    endDate,
-    forestAreaSelected,
-    searchValue,
-    sortCol,
-    sortDir,
-    contractId,
-  ]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function onRefreshFlightReport() {
     getFlightReports();
@@ -91,35 +80,15 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-    let startDt =
-      startDate === null || startDate === ''
-        ? null
-        : yearMonthDay(startDate as string);
-    let endDt =
-      endDate === null || startDate === ''
-        ? null
-        : yearMonthDay(endDate as string);
-    let objForestArea: IForestArea = {
-      corporateRegionId:
-        forestAreaSelected != null || forestAreaSelected !== undefined
-          ? forestAreaSelected.map((forestArea) => {
-              return forestArea['value'] as string;
-            })
-          : [],
-    };
 
     let objIPagination: IPagination = {
       perPage: perPage,
       page: page,
     };
 
-    //const testContractid = 81804
     let objIFilter: IFilter = {
-      columnName: 'status',
-      columnValue: "['Approved']",
-      reportDateFrom: null,
-      reportDateTo: null,
-      corporateRegions: objForestArea,
+      contractNumber: contractNumber,
+      status: 'approved',
     };
 
     let objISearch: ISearch = {

@@ -20,19 +20,13 @@ import { FlightReportDashboardService } from '@/services/flight-report-dashboard
 import { yearMonthDay } from '@/common/dates';
 
 interface IFlightReportAllProps {
-  contractId: string | undefined;
-  forestAreaSelected?: never[];
-  startDate?: string;
-  endDate?: string;
+  contractNumber: string | undefined;
   searchValue?: string;
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
 const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
-  contractId,
-  forestAreaSelected,
-  startDate,
-  endDate,
+  contractNumber,
   searchValue,
   onClickFlightReport,
   ...props
@@ -69,16 +63,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     //console.log("endDate", endDate)
     onRefreshFlightReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    page,
-    perPage,
-    endDate,
-    forestAreaSelected,
-    searchValue,
-    sortCol,
-    sortDir,
-    contractId,
-  ]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function onRefreshFlightReport() {
     getFlightReports();
@@ -88,25 +73,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   //Get flight reports data
   const getFlightReports = async () => {
     setIsLoading(true);
-
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-    let startDt =
-      startDate === null || startDate === ''
-        ? null
-        : yearMonthDay(startDate as string);
-    let endDt =
-      endDate === null || startDate === ''
-        ? null
-        : yearMonthDay(endDate as string);
-    let objForestArea: IForestArea = {
-      corporateRegionId:
-        forestAreaSelected != null || forestAreaSelected !== undefined
-          ? forestAreaSelected.map((forestArea) => {
-              return forestArea['value'] as string;
-            })
-          : [],
-    };
 
     let objIPagination: IPagination = {
       perPage: perPage,
@@ -115,11 +83,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
     //const testContractid = 81804
     let objIFilter: IFilter = {
-      columnName: 'status',
-      columnValue: "['Signed off']",
-      reportDateFrom: null,
-      reportDateTo: null,
-      corporateRegions: objForestArea,
+      contractNumber: contractNumber,
+      status: 'signed off',
     };
 
     let objISearch: ISearch = {
