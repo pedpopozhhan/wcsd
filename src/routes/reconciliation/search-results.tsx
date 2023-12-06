@@ -78,7 +78,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   function timeReportsClick(contractNumber?: string) {
     if (contractNumber) {
       navigate(`/VendorTimeReports/${contractNumber}`, {
-        state: { contractNumber: contractNumber},
+        state: contractNumber,
       });
     }
   }
