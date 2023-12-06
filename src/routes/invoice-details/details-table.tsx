@@ -1,5 +1,6 @@
 import { GoATable } from '@abgov/react-components';
 import styles from './details-table.module.scss';
+import { yearMonthDay } from '@/common/dates';
 
 let { container, test } = styles;
 
@@ -53,7 +54,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     return props.data.map((x) => {
       return (
         <tr>
-          <td>{x.date}</td>
+          <td>{yearMonthDay(x.date)}</td>
           <td>{x.registrationNumber}</td>
           <td>{x.reportNumber}</td>
           <td>{x.aO02Number}</td>
@@ -78,18 +79,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
         <thead>
           <tr>{tableHeaders}</tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Item 1</td>
-            <td className={test}>Item 2</td>
-            <td className='goa-table-number-column'>54</td>
-          </tr>
-          <tr>
-            <td>Item 4</td>
-            <td>Item 5</td>
-            <td className='goa-table-number-column'>5467</td>
-          </tr>
-        </tbody>
+        <tbody>{dataRows()}</tbody>
       </GoATable>
     </div>
   );
