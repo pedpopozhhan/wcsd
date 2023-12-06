@@ -1,4 +1,14 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 
-.container {
+.totalizerAmount{
+    color: var(--text-default, --goa-color-text-default);
+    font-family: Roboto Mono;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.totalizerAmountLabel{
+    margin-bottom: 10px;
 }
