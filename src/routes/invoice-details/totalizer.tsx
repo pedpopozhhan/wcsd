@@ -6,7 +6,7 @@ let { totalizerAmount, totalizerAmountLabel } = styles;
 export default function Totalizer() {
   return (
     <GoAContainer>
-      <div  className={totalizerAmountLabel}>Invoice Amount</div>
+      <div className={totalizerAmountLabel}>Invoice Amount</div>
       <div>
         <label className={totalizerAmount}>$27,000.00</label>
       </div>
