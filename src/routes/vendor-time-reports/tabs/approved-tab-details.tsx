@@ -295,7 +295,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
                     {/* <td>{record?.totalCost}</td> */}
-                    <td>999999</td>
+                    <td>{record?.totalCost}</td>
                     <td>
                       <GoAIconButton
                         icon='chevron-forward'
