@@ -2,15 +2,11 @@ import {
   GoATable,
   GoAButton,
   GoABlock,
-  GoADropdown,
-  GoADropdownItem,
   GoASpacer,
   GoAPagination,
   GoATableSortHeader,
-  GoABadge,
   GoAIconButton,
 } from '@abgov/react-components';
-import moment from 'moment';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
@@ -21,6 +17,7 @@ import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
+import { yearMonthDay } from '@/common/dates';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -66,14 +63,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     //console.log("endDate", endDate)
     onRefreshFlightReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    page,
-    perPage,
-    searchValue,
-    sortCol,
-    sortDir,
-    contractNumber,
-  ]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function onRefreshFlightReport() {
     getFlightReports();
@@ -83,8 +73,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   //Get flight reports data
   const getFlightReports = async () => {
     setIsLoading(true);
-     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
+    let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
+    let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
     let objIPagination: IPagination = {
       perPage: perPage,
@@ -94,7 +84,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     //const testContractid = 81804
     let objIFilter: IFilter = {
       contractNumber: contractNumber,
-      status: 'signed off'
+      status: 'signed off',
     };
 
     let objISearch: ISearch = {
@@ -253,9 +243,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                   // {filteredData && filteredData.length > 0 ? (
                   // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
-                    <td>
-                      {moment(record.flightReportDate).format('yyyy-MM-DD')}
-                    </td>
+                    <td>{yearMonthDay(record.flightReportDate as string)}</td>
                     <td>
                       <GoAButton
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
@@ -270,7 +258,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                     </td>
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
-                    <td style={{textAlign: 'right'}}>
+                    <td style={{ textAlign: 'right' }}>
                       <GoAIconButton
                         icon='chevron-forward'
                         onClick={() =>
@@ -324,8 +312,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
             </div>
             <GoASpacer hSpacing='fill' />
 
-            <GoAPagination 
-              variant="links-only" 
+            <GoAPagination
+              variant='links-only'
               itemCount={paginationResults?.paginationInfo.total || 10}
               // itemCount={filteredData?.length || 10}
               perPageCount={perPage}

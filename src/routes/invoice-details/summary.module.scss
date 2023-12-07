@@ -2,6 +2,7 @@
 
 .container {
   display: grid;
+  padding: 0 $goa-space-s;
   grid-template-columns: 1fr 1fr;
   row-gap: $goa-space-m;
   > div {

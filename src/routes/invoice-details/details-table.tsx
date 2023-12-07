@@ -1,5 +1,6 @@
 import { GoATable } from '@abgov/react-components';
 import styles from './details-table.module.scss';
+import { yearMonthDay } from '@/common/dates';
 
 let { container, test } = styles;
 
@@ -20,7 +21,11 @@ export class DetailsTableRowData {
   internalOrder: string;
   fund: number;
 }
-export default function DetailsTable() {
+
+interface IDetailsTableProps {
+  data: DetailsTableRowData[];
+}
+const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
   const tableHeaders = [
     'Date',
     'Reg No.',
@@ -45,26 +50,39 @@ export default function DetailsTable() {
     );
   });
 
+  const dataRows = () => {
+    return props.data.map((x) => {
+      return (
+        <tr>
+          <td>{yearMonthDay(x.date)}</td>
+          <td>{x.registrationNumber}</td>
+          <td>{x.reportNumber}</td>
+          <td>{x.aO02Number}</td>
+          <td>{x.rateType}</td>
+          <td>{x.numberOfUnits}</td>
+          <td>{x.rateUnit}</td>
+          <td>{x.ratePerUnit}</td>
+          <td>{x.cost}</td>
+          <td>{x.glAccountNumber}</td>
+          <td>{x.profitCentre}</td>
+          <td>{x.costCentre}</td>
+          <td>{x.fireNumber}</td>
+          <td>{x.internalOrder}</td>
+          <td>{x.fund}</td>
+        </tr>
+      );
+    });
+  };
   return (
     <div className={container}>
-      {/* <div className={test}></div> */}
       <GoATable>
         <thead>
           <tr>{tableHeaders}</tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Item 1</td>
-            <td className={test}>Item 2</td>
-            <td className='goa-table-number-column'>54</td>
-          </tr>
-          <tr>
-            <td>Item 4</td>
-            <td>Item 5</td>
-            <td className='goa-table-number-column'>5467</td>
-          </tr>
-        </tbody>
+        <tbody>{dataRows()}</tbody>
       </GoATable>
     </div>
   );
-}
+};
+
+export default DetailsTable;

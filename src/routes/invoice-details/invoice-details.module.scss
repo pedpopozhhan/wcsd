@@ -1,5 +1,5 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
-
+@import '@mixins/scrollbar.mixin.scss';
 .container {
   display: flex;
   flex-direction: column;
@@ -7,18 +7,35 @@
   width: 100%;
 }
 .content {
-  flex: 1;
+  flex-grow: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: row;
-
+  gap: $goa-space-xs;
   .sideBar {
+    @include thin-scrollbar;
+    overflow-y: auto;
+    background-color: $goa-color-greyscale-100;
     flex-shrink: 0;
-    width: 394px;
+    width: 394px; // from figma
     padding: $goa-space-xl $goa-space-l;
+
+    .header {
+      font: $goa-typography-heading-l;
+      line-height: $goa-line-height-6;
+      margin-bottom: $goa-space-l;
+    }
   }
   .main {
+    @include thin-scrollbar;
     flex-grow: 0;
     overflow-x: auto;
+    overflow-y: auto;
+
+    // hack because the goa components are closed
+    goa-tabs {
+      display: flex !important;
+    }
   }
 }
 .footer {
