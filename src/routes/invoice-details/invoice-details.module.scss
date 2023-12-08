@@ -19,7 +19,6 @@
     flex-shrink: 0;
     width: 394px; // from figma
     padding: $goa-space-xl $goa-space-l;
-
     .header {
       font: $goa-typography-heading-l;
       line-height: $goa-line-height-6;
@@ -28,10 +27,7 @@
   }
   .main {
     @include thin-scrollbar;
-    flex-grow: 0;
-    overflow-x: auto;
     overflow-y: auto;
-
     // hack because the goa components are closed
     goa-tabs {
       display: flex !important;
@@ -39,5 +35,6 @@
   }
 }
 .footer {
+  flex-shrink: 0;
   height: 80px;
 }

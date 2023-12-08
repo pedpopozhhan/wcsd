@@ -50,7 +50,10 @@ class ReconciliationService {
       })
       .pipe(
         map((x) => {
-          return x.data.data;
+          return x.data.data.map((y, index) => {
+            y.index = index;
+            return y;
+          });
         })
       );
     // return axios
@@ -72,10 +75,11 @@ class ReconciliationService {
 
 //     for (let i = 1; i <= 50; i++) {
 //       results.push({
-//         vendor: `Vendor${i}`,
+//         vendorName: `Vendor${i}`,
 //         businessId: 200 + i,
 //         contractId: 100 + i,
-//         type: i % 2 == 0 ? 1 : 2,
+//         contractType: i % 2 == 0 ? 'casual' : 'long',
+//         contractNumber: 'asdf',
 //         numTimeReports: i,
 //       });
 //     }

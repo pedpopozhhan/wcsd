@@ -6,10 +6,14 @@
   flex: 1;
   overflow-x: auto;
   @include thin-scrollbar;
+
   th {
     span {
       white-space: nowrap;
     }
+  }
+  td {
+    white-space: nowrap;
   }
 }
 .test {
