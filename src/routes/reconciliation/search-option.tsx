@@ -1,4 +1,4 @@
 export class SearchOption {
-  value: string;
+  value: number;
   label: string;
 }

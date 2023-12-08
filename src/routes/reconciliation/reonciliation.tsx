@@ -42,15 +42,13 @@ export default function Reconciliation() {
   }, [JSON.stringify(allData)]);
 
   function handleOnEnter(filtered: SearchOption[]) {
-    const results = filtered.map((x) => {
-      const splits = x.label.split(separator);
-      const foundIdx = allData.findIndex(
-        (x) =>
-          x.vendorName === splits[0] && x.businessId.toString() === splits[1]
-      );
-      return allData[foundIdx];
-    });
-
+    const results = allData.filter((x) =>
+      filtered.some((y) => y.value === x.index)
+    );
+    console.log(JSON.stringify(results));
+    console.log(
+      JSON.stringify(allData.filter((x) => x.vendorName.includes('MUSTANG')))
+    );
     setSearchResults(
       results.filter(
         (x) => contractType === 'all' || x.contractType === contractType
@@ -98,7 +96,7 @@ export default function Reconciliation() {
   function createOptions(): SearchOption[] {
     return allData.map((item) => {
       const val = `${item.vendorName}${separator}${item.businessId}`;
-      return { value: val, label: val };
+      return { value: item.index, label: val };
     });
   }
 

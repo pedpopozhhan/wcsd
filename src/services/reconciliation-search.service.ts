@@ -50,7 +50,10 @@ class ReconciliationService {
       })
       .pipe(
         map((x) => {
-          return x.data.data;
+          return x.data.data.map((y, index) => {
+            y.index = index;
+            return y;
+          });
         })
       );
     // return axios

@@ -1,0 +1,72 @@
+[
+  [
+    // SHOWS UP IN THE SEARCH RESULTS
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": null,
+      "contractType": "casual"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": null,
+      "contractType": "casual"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": null,
+      "contractType": "casual"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": null,
+      "contractType": "casual"
+    }
+  ],
+  [
+    // WHAT IS IN THE DATA
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": null,
+      "contractType": "casual"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 81804,
+      "contractNumber": "20AFD507",
+      "contractType": "casual"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 84335,
+      "contractNumber": null,
+      "contractType": "long"
+    },
+    {
+      "vendorId": "364a5b74-2b75-46b1-a594-503cd705956b",
+      "vendorName": "MUSTANG HELICOPTERS INC.",
+      "businessId": "0020039304",
+      "contractId": 84335,
+      "contractNumber": "23AFD227",
+      "contractType": "long"
+    }
+  ]
+]

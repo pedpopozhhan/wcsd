@@ -1,4 +1,5 @@
 export class SearchResult {
+  index: number;
   vendorName: string;
   businessId: number;
   contractId: number;
