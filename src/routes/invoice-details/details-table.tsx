@@ -1,41 +1,29 @@
-import { GoATable } from '@abgov/react-components';
+import { GoACheckbox, GoATable } from '@abgov/react-components';
 import styles from './details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
+import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
+import { useEffect, useState } from 'react';
 
-let { container, test } = styles;
-
-export class DetailsTableRowData {
-  date: Date;
-  registrationNumber: string;
-  reportNumber: number;
-  aO02Number: string;
-  rateType: string;
-  numberOfUnits: number;
-  rateUnit: string;
-  ratePerUnit: number; //with $0.00
-  cost: number; //with $0.00
-  glAccountNumber: number;
-  profitCentre: string;
-  costCentre: string;
-  fireNumber: string;
-  internalOrder: string;
-  fund: number;
-}
+let { container } = styles;
 
 interface IDetailsTableProps {
-  data: DetailsTableRowData[];
+  data: IDetailsTableRowData[];
 }
 const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
+  //   const [rowData, setRowData] = useState<IDetailsTableRowData[]>([]);
+  //   useEffect(() => {
+  //     setRowData(props.data.slice());
+  //   }, [props.data]);
   const tableHeaders = [
-    'Date',
+    'Date', //<GoATableSortHeader name={searchResultColumns[2].value}>
     'Reg No.',
     'Report No.',
     'AO02 No.',
     'Rate Type',
-    'No. of units',
+    'No. of units', //<GoATableSortHeader name={searchResultColumns[2].value}>
     'Rate Unit',
-    'Rate / unit',
-    'Cost',
+    'Rate / unit', //<GoATableSortHeader name={searchResultColumns[2].value}>
+    'Cost', //<GoATableSortHeader name={searchResultColumns[2].value}>
     'GL Account No.',
     'Profit Centre',
     'Cost Centre',
@@ -44,42 +32,39 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     'Fund',
   ].map((x, index) => {
     return (
-      <th key={index}>
+      <th key={index} style={index === 0 ? { position: 'sticky' } : {}}>
         <span>{x}</span>
       </th>
     );
   });
 
-  const dataRows = () => {
-    return props.data.map((x) => {
-      return (
-        <tr>
-          <td>{yearMonthDay(x.date)}</td>
-          <td>{x.registrationNumber}</td>
-          <td>{x.reportNumber}</td>
-          <td>{x.aO02Number}</td>
-          <td>{x.rateType}</td>
-          <td>{x.numberOfUnits}</td>
-          <td>{x.rateUnit}</td>
-          <td>{x.ratePerUnit}</td>
-          <td>{x.cost}</td>
-          <td>{x.glAccountNumber}</td>
-          <td>{x.profitCentre}</td>
-          <td>{x.costCentre}</td>
-          <td>{x.fireNumber}</td>
-          <td>{x.internalOrder}</td>
-          <td>{x.fund}</td>
-        </tr>
-      );
-    });
-  };
   return (
     <div className={container}>
       <GoATable>
         <thead>
           <tr>{tableHeaders}</tr>
         </thead>
-        <tbody>{dataRows()}</tbody>
+        <tbody>
+          {props.data.map((x, index) => (
+            <tr key={index}>
+              <td style={{ position: 'sticky' }}>{yearMonthDay(x.date)}</td>
+              <td>{x.registrationNumber}</td>
+              <td>{x.reportNumber}</td>
+              <td>{x.aO02Number}</td>
+              <td>{x.rateType}</td>
+              <td>{x.numberOfUnits}</td>
+              <td>{x.rateUnit}</td>
+              <td>{x.ratePerUnit}</td>
+              <td>{x.cost}</td>
+              <td>{x.glAccountNumber}</td>
+              <td>{x.profitCentre}</td>
+              <td>{x.costCentre}</td>
+              <td>{x.fireNumber}</td>
+              <td>{x.internalOrder}</td>
+              <td>{x.fund}</td>
+            </tr>
+          ))}
+        </tbody>
       </GoATable>
     </div>
   );

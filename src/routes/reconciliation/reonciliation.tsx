@@ -71,7 +71,7 @@ export default function Reconciliation() {
       setSearchResults(
         filtered.filter((x) => {
           return (
-            x.businessId.toString().includes(term) ||
+            x.businessId?.toString().includes(term) ||
             x.vendorName.toUpperCase().includes(term.toUpperCase())
           );
         })
