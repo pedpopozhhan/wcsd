@@ -1,6 +1,9 @@
 @import '@abgov/web-components/index.css';
 @import '@abgov/design-tokens/dist/tokens.scss';
 
+html {
+  overflow: hidden;
+}
 .mainContainer {
   height: 100vh;
   display: flex;

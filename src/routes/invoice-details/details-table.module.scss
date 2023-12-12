@@ -5,6 +5,7 @@
   width: 100%;
   flex: 1;
   overflow-x: auto;
+  display: flex;
   @include thin-scrollbar;
 
   th {
@@ -12,12 +13,20 @@
       white-space: nowrap;
     }
   }
-  td {
-    white-space: nowrap;
+  .checkboxColumn {
+    // goa checkbox has min height of 44 for the description
+    // goa th has a padding of 12px
+    // eliminating the bottom padding makes 32px (2rem)
+    padding-bottom: 0px;
+    .checkboxWrapper {
+      color: red;
+    }
   }
-}
-.test {
-  background-color: red;
-  width: 2500px;
-  height: 100px;
+  .row {
+    td {
+      // goa td has a bottom padding of .75 rem, 1 is needed to account for the goa components in other rows
+      padding-bottom: 1rem;
+      white-space: nowrap;
+    }
+  }
 }

@@ -1,7 +1,5 @@
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { IPaginationResult } from '@/interfaces/pagination-result.interface';
-import { SearchResult } from '@/routes/reconciliation/search-result';
-import axios from 'axios-observable';
+
 import { Observable, map, of } from 'rxjs';
 
 class InvoiceDetailsService {
