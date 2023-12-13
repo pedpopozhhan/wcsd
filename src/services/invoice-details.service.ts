@@ -21,7 +21,7 @@ export class SampleData {
     const date = Date.now();
     for (let i = 1; i <= 50; i++) {
       results.push({
-        date: new Date(date + 1000 * i),
+        date: new Date(date + 86400000 * i),
         registrationNumber: `${i}`,
         reportNumber: i,
         aO02Number: `${i}`,

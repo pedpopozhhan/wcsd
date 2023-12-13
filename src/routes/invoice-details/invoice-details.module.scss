@@ -26,29 +26,9 @@
     }
   }
   .main {
-    // @include thin-scrollbar;
     overflow-y: auto;
     overflow: hidden;
-    border: 1px solid green;
-    // hack because the goa components are closed
-    // goa-tabs {
-    //   display: flex !important;
-    // }
-    .testContainer {
-      height: 100%;
-      div {
-        background: linear-gradient(
-          45deg,
-          rgba(2, 0, 36, 1) 0%,
-          //   rgba(162, 9, 121, 1) 35%,
-          rgba(255, 0, 0, 1) 100%
-        );
-        height: 2000px;
-        width: 2000px;
-      }
-    }
     .tabGroupContainer {
-      border: 1px solid red;
       height: 100%;
       overflow: hidden;
       display: flex;
@@ -80,17 +60,7 @@
         }
       }
       .tabContainer {
-        overflow: auto;
-        div {
-          background: linear-gradient(
-            45deg,
-            rgba(2, 0, 36, 1) 0%,
-            //   rgba(162, 9, 121, 1) 35%,
-            rgba(255, 0, 0, 1) 100%
-          );
-          height: 2000px;
-          width: 2000px;
-        }
+        overflow: hidden;
       }
     }
   }

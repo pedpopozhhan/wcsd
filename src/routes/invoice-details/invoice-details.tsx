@@ -3,7 +3,6 @@ import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
 import DetailsTable from './details-table';
-import { GoATab, GoATabs } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
@@ -27,20 +26,9 @@ export default function InvoiceDetails() {
   const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
-  //   let allData = [] as IDetailsTableRowData[];
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
-
-      // sort ascending
-
-      //   data.sort((a, b) => {
-      //     return b.vendorName > a.vendorName
-      //       ? -1
-      //       : b.vendorName < a.vendorName
-      //       ? 1
-      //       : 0;
-      //   });
 
       setAllData(data);
     });
@@ -48,7 +36,6 @@ export default function InvoiceDetails() {
     return () => {
       subscription.unsubscribe();
     };
-    //   });
   }, [invoiceId]);
 
   return (
@@ -71,25 +58,19 @@ export default function InvoiceDetails() {
                 <span>Details</span>
               </button>
               <button
-                id='other'
+                id='Reconciled'
                 role='tab'
                 aria-selected={tabIndex === 2}
                 onClick={(e) => setTabIndex(2)}
               >
-                <span>other</span>
+                <span>Reconciled</span>
               </button>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <DetailsTable data={allData} />}
-              {tabIndex === 2 && <div></div>}
+              {tabIndex === 2 && <div>Coming Soon</div>}
             </div>
           </div>
-          {/* <GoATabs initialTab={initialTab}>
-            <GoATab heading='Details'>
-             
-              <DetailsTable data={allData} />
-            </GoATab>
-          </GoATabs> */}
         </div>
       </div>
       <div className={footer}>footer</div>
