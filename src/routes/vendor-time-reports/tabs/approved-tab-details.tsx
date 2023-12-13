@@ -7,7 +7,7 @@ import {
   GoATableSortHeader,
   GoAIconButton,
 } from '@abgov/react-components';
-import * as React from 'react';
+import { useEffect, useState }  from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
 import { IPaginationResult } from '@/interfaces/pagination-result.interface';
@@ -33,35 +33,35 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 }) => {
 
   //Object for the page data
-  const [pageData, setPageFlightReports] = React.useState<any>([]);
+  const [pageData, setPageFlightReports] = useState<any>([]);
   //Navigation
   const navigate = useNavigate();
   //Data set
-  const [paginationResults, setPaginationResult] = React.useState<IPaginationResult<IFlightReportDashboard>>();
+  const [paginationResults, setPaginationResult] = useState<IPaginationResult<IFlightReportDashboard>>();
   
   //Loader
-  const [loading, setIsLoading] = React.useState(true);
+  const [loading, setIsLoading] = useState(true);
 
   //Pagination
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   
   // page number
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
   //count per page
-  const [perPage, setPerPage] = React.useState(10);
+  const [perPage, setPerPage] = useState(10);
   const [previousSelectedPerPage, setPreviousSelectedPerPage] =
-    React.useState(10);
+    useState(10);
 
   //Sorting
-  const [sortCol, setSortCol] = React.useState('flightReportDate');
-  const [sortDir, setSortDir] = React.useState(-1);
-  const [isSorting, setIsSorting] = React.useState(false);
+  const [sortCol, setSortCol] = useState('flightReportDate');
+  const [sortDir, setSortDir] = useState(-1);
+  const [isSorting, setIsSorting] = useState(false);
 
   //const filteredData = paginationResults?.data;
 
   //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     //console.log("startDate", startDate)
     //console.log("endDate", endDate)
     onRefreshFlightReport();
