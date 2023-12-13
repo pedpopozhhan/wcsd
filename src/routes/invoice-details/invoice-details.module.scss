@@ -26,11 +26,42 @@
     }
   }
   .main {
-    @include thin-scrollbar;
     overflow-y: auto;
-    // hack because the goa components are closed
-    goa-tabs {
-      display: flex !important;
+    overflow: hidden;
+    .tabGroupContainer {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .tabList {
+        border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
+        display: flex;
+        gap: $goa-space-xl;
+
+        [role='tab'] {
+          padding: $goa-space-s $goa-space-m;
+
+          background: none;
+          overflow: hidden;
+          white-space: nowrap;
+          cursor: pointer;
+          border: none;
+          font: $goa-typography-body-m;
+          color: $goa-color-text-default;
+          letter-spacing: 0.03125rem;
+          border-bottom: 4px solid transparent;
+          &:hover:not([aria-selected='true']) {
+            border-bottom: 4px solid $goa-color-greyscale-200;
+          }
+          &[aria-selected='true'] {
+            border-bottom: 4px solid $goa-color-interactive-default;
+            font: $goa-typography-heading-s;
+          }
+        }
+      }
+      .tabContainer {
+        overflow: hidden;
+      }
     }
   }
 }

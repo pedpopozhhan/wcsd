@@ -1,7 +1,5 @@
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { IPaginationResult } from '@/interfaces/pagination-result.interface';
-import { SearchResult } from '@/routes/reconciliation/search-result';
-import axios from 'axios-observable';
+
 import { Observable, map, of } from 'rxjs';
 
 class InvoiceDetailsService {
@@ -23,7 +21,7 @@ export class SampleData {
     const date = Date.now();
     for (let i = 1; i <= 50; i++) {
       results.push({
-        date: new Date(date + 1000 * i),
+        date: new Date(date + 86400000 * i),
         registrationNumber: `${i}`,
         reportNumber: i,
         aO02Number: `${i}`,

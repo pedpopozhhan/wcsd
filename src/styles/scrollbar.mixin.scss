@@ -3,12 +3,14 @@
   scrollbar-width: thin;
   &::-webkit-scrollbar {
     width: 5px;
-    height: 5px;
+    height: 10px;
+    // cursor doesnt change...seems to be a bug
+    cursor: pointer;
   }
   &::-webkit-scrollbar-track {
     background: $goa-color-greyscale-white;
   }
   &::-webkit-scrollbar-thumb {
-    background: $goa-color-greyscale-200;
+    background: $goa-color-greyscale-400;
   }
 }

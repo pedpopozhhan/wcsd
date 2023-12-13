@@ -5,19 +5,46 @@
   width: 100%;
   flex: 1;
   overflow-x: auto;
+  display: flex;
   @include thin-scrollbar;
+  .checkboxWrapper {
+    // goa checkbox has a 32 wide by 44 high container, 24 is the size of the checkbox itself.
+    height: 24px;
+  }
+  .buttonWrapper {
+    // goa button is not legitimately customizable
+    width: 100px;
+    text-align: center;
+  }
 
-  th {
-    span {
+  .tableContainer {
+    overflow-x: auto;
+    max-width: 100%;
+    @include thin-scrollbar;
+
+    th,
+    td {
       white-space: nowrap;
     }
+
+    thead th {
+      position: sticky;
+      top: 0;
+    }
+
+    .stickyColumn {
+      position: sticky;
+      background-color: $goa-color-greyscale-white;
+      z-index: 1;
+      &.start {
+        left: 0;
+      }
+      &.end {
+        right: 0;
+      }
+      &.onTop {
+        z-index: 3;
+      }
+    }
   }
-  td {
-    white-space: nowrap;
-  }
-}
-.test {
-  background-color: red;
-  width: 2500px;
-  height: 100px;
 }

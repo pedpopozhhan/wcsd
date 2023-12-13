@@ -3,32 +3,32 @@ import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
 import DetailsTable from './details-table';
-import { GoATab, GoATabs } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 
-let { container, content, sideBar, main, footer, header, tabs, testdiv } =
-  styles;
+let {
+  container,
+  content,
+  sideBar,
+  main,
+  footer,
+  header,
+  tabs,
+  testdiv,
+  tabGroupContainer,
+  tabList,
+  tabContainer,
+} = styles;
 
 export default function InvoiceDetails() {
   const { invoiceId } = useParams();
   const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
-  //   let allData = [] as IDetailsTableRowData[];
+  const [tabIndex, setTabIndex] = useState<number>(1);
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
-
-      // sort ascending
-
-      //   data.sort((a, b) => {
-      //     return b.vendorName > a.vendorName
-      //       ? -1
-      //       : b.vendorName < a.vendorName
-      //       ? 1
-      //       : 0;
-      //   });
 
       setAllData(data);
     });
@@ -36,8 +36,8 @@ export default function InvoiceDetails() {
     return () => {
       subscription.unsubscribe();
     };
-    //   });
   }, [invoiceId]);
+
   return (
     <div className={container}>
       <div className={content}>
@@ -47,11 +47,30 @@ export default function InvoiceDetails() {
           <Summary />
         </div>
         <div className={main}>
-          <GoATabs initialTab={initialTab}>
-            <GoATab heading='Details'>
-              <DetailsTable data={allData} />
-            </GoATab>
-          </GoATabs>
+          <div className={tabGroupContainer}>
+            <div className={tabList}>
+              <button
+                id='Details'
+                role='tab'
+                aria-selected={tabIndex === 1}
+                onClick={(e) => setTabIndex(1)}
+              >
+                <span>Details</span>
+              </button>
+              <button
+                id='Reconciled'
+                role='tab'
+                aria-selected={tabIndex === 2}
+                onClick={(e) => setTabIndex(2)}
+              >
+                <span>Reconciled</span>
+              </button>
+            </div>
+            <div className={tabContainer}>
+              {tabIndex === 1 && <DetailsTable data={allData} />}
+              {tabIndex === 2 && <div>Coming Soon</div>}
+            </div>
+          </div>
         </div>
       </div>
       <div className={footer}>footer</div>
