@@ -8,6 +8,7 @@ import styles from './details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useEffect, useState } from 'react';
+import { convertToCurrency } from '@/common/currency';
 
 let {
   container,
@@ -122,8 +123,8 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                 <td>{x.data.rateType}</td>
                 <td>{x.data.numberOfUnits}</td>
                 <td>{x.data.rateUnit}</td>
-                <td>{x.data.ratePerUnit}</td>
-                <td>{x.data.cost}</td>
+                <td>{convertToCurrency(x.data.ratePerUnit)}</td>
+                <td>{convertToCurrency(x.data.cost)}</td>
                 <td>{x.data.glAccountNumber}</td>
                 <td>{x.data.profitCentre}</td>
                 <td>{x.data.costCentre}</td>
