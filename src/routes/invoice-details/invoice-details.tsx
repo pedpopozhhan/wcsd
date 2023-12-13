@@ -8,13 +8,25 @@ import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 
-let { container, content, sideBar, main, footer, header, tabs, testdiv } =
-  styles;
+let {
+  container,
+  content,
+  sideBar,
+  main,
+  footer,
+  header,
+  tabs,
+  testdiv,
+  tabGroupContainer,
+  tabList,
+  tabContainer,
+} = styles;
 
 export default function InvoiceDetails() {
   const { invoiceId } = useParams();
   const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
+  const [tabIndex, setTabIndex] = useState<number>(1);
   //   let allData = [] as IDetailsTableRowData[];
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
@@ -38,6 +50,7 @@ export default function InvoiceDetails() {
     };
     //   });
   }, [invoiceId]);
+
   return (
     <div className={container}>
       <div className={content}>
@@ -47,11 +60,36 @@ export default function InvoiceDetails() {
           <Summary />
         </div>
         <div className={main}>
-          <GoATabs initialTab={initialTab}>
+          <div className={tabGroupContainer}>
+            <div className={tabList}>
+              <button
+                id='Details'
+                role='tab'
+                aria-selected={tabIndex === 1}
+                onClick={(e) => setTabIndex(1)}
+              >
+                <span>Details</span>
+              </button>
+              <button
+                id='other'
+                role='tab'
+                aria-selected={tabIndex === 2}
+                onClick={(e) => setTabIndex(2)}
+              >
+                <span>other</span>
+              </button>
+            </div>
+            <div className={tabContainer}>
+              {tabIndex === 1 && <DetailsTable data={allData} />}
+              {tabIndex === 2 && <div></div>}
+            </div>
+          </div>
+          {/* <GoATabs initialTab={initialTab}>
             <GoATab heading='Details'>
+             
               <DetailsTable data={allData} />
             </GoATab>
-          </GoATabs>
+          </GoATabs> */}
         </div>
       </div>
       <div className={footer}>footer</div>

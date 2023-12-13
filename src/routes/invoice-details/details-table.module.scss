@@ -29,4 +29,42 @@
       white-space: nowrap;
     }
   }
+
+  .tableContainer {
+    overflow-x: auto;
+    max-width: 100%;
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 8px;
+      white-space: nowrap;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background-color: #f9f9f9;
+    }
+
+    .stickyColumn {
+      position: sticky;
+      background-color: #f9f9f9;
+      z-index: 1;
+    }
+
+    .stickyColumn.start {
+      left: 0;
+    }
+
+    .stickyColumn.end {
+      right: 0;
+    }
+  }
 }

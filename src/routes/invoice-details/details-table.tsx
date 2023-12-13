@@ -4,7 +4,16 @@ import { yearMonthDay } from '@/common/dates';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useEffect, useState } from 'react';
 
-let { container, checkboxColumn, checkboxWrapper, row } = styles;
+let {
+  container,
+  checkboxColumn,
+  checkboxWrapper,
+  row,
+  tableContainer,
+  stickyColumn,
+  start,
+  end,
+} = styles;
 class Row {
   index: number;
   data: IDetailsTableRowData;
@@ -54,7 +63,56 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
 
   return (
     <div className={container}>
-      <GoATable>
+      <div className={tableContainer}>
+        <table>
+          <thead>
+            <tr>
+              <th className={`${stickyColumn} ${start}`}></th>
+              <th>Date</th>
+              <th>Reg No.</th>
+              <th>Report No.</th>
+              <th>AO02 No.</th>
+              <th>Rate Type</th>
+              <th>No. of Units</th>
+              <th>Rate Unit</th>
+              <th>Rate / unit</th>
+              <th>Cast</th>
+              <th>GL Account No.</th>
+              <th>Profit Centre</th>
+              <th>Cost Centre</th>
+              <th>Fire No.</th>
+              <th>Internal Order</th>
+              <th>Fund</th>
+              <th className={`${stickyColumn} ${end}`}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rowData.map((x, index) => (
+              <tr className={row} key={index}>
+                <td className={`${stickyColumn} ${start}`}></td>
+                <td>{yearMonthDay(x.data.date)}</td>
+                <td>{x.data.registrationNumber}</td>
+                <td>{x.data.reportNumber}</td>
+                <td>{x.data.aO02Number}</td>
+                <td>{x.data.rateType}</td>
+                <td>{x.data.numberOfUnits}</td>
+                <td>{x.data.rateUnit}</td>
+                <td>{x.data.ratePerUnit}</td>
+                <td>{x.data.cost}</td>
+                <td>{x.data.glAccountNumber}</td>
+                <td>{x.data.profitCentre}</td>
+                <td>{x.data.costCentre}</td>
+                <td>{x.data.fireNumber}</td>
+                <td>{x.data.internalOrder}</td>
+                <td>{x.data.fund}</td>
+                <td className={`${stickyColumn} ${end}`}>asdf</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* <GoATable>
         <thead>
           <tr>
             <th className={checkboxColumn}>
@@ -117,7 +175,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
             </tr>
           ))}
         </tbody>
-      </GoATable>
+      </GoATable> */}
     </div>
   );
 };

@@ -26,11 +26,72 @@
     }
   }
   .main {
-    @include thin-scrollbar;
+    // @include thin-scrollbar;
     overflow-y: auto;
+    overflow: hidden;
+    border: 1px solid green;
     // hack because the goa components are closed
-    goa-tabs {
-      display: flex !important;
+    // goa-tabs {
+    //   display: flex !important;
+    // }
+    .testContainer {
+      height: 100%;
+      div {
+        background: linear-gradient(
+          45deg,
+          rgba(2, 0, 36, 1) 0%,
+          //   rgba(162, 9, 121, 1) 35%,
+          rgba(255, 0, 0, 1) 100%
+        );
+        height: 2000px;
+        width: 2000px;
+      }
+    }
+    .tabGroupContainer {
+      border: 1px solid red;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .tabList {
+        border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
+        display: flex;
+        gap: $goa-space-xl;
+
+        [role='tab'] {
+          padding: $goa-space-s $goa-space-m;
+
+          background: none;
+          overflow: hidden;
+          white-space: nowrap;
+          cursor: pointer;
+          border: none;
+          font: $goa-typography-body-m;
+          color: $goa-color-text-default;
+          letter-spacing: 0.03125rem;
+          border-bottom: 4px solid transparent;
+          &:hover:not([aria-selected='true']) {
+            border-bottom: 4px solid $goa-color-greyscale-200;
+          }
+          &[aria-selected='true'] {
+            border-bottom: 4px solid $goa-color-interactive-default;
+            font: $goa-typography-heading-s;
+          }
+        }
+      }
+      .tabContainer {
+        overflow: auto;
+        div {
+          background: linear-gradient(
+            45deg,
+            rgba(2, 0, 36, 1) 0%,
+            //   rgba(162, 9, 121, 1) 35%,
+            rgba(255, 0, 0, 1) 100%
+          );
+          height: 2000px;
+          width: 2000px;
+        }
+      }
     }
   }
 }
