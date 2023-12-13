@@ -132,7 +132,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                 <td>{x.data.fund}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
-                    <GoAButton size='compact' type='secondary'>
+                    <GoAButton size='compact' type='secondary' disabled={true}>
                       Remove
                     </GoAButton>
                   </div>
