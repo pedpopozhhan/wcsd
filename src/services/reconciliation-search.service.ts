@@ -19,7 +19,7 @@ class ReconciliationService {
   private baseUrl: string;
   private functionsKey: string;
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_BASE_URL;
+    this.baseUrl = import.meta.env.VITE_AVIATION_API_BASE_URL;
     this.functionsKey = import.meta.env.VITE_API_KEY_CODE;
   }
 
