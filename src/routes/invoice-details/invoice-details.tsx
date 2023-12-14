@@ -38,6 +38,10 @@ export default function InvoiceDetails() {
     };
   }, [invoiceId]);
 
+  function onAddRemove(newTotal: number) {
+    //update the totalizer
+    console.log(newTotal);
+  }
   return (
     <div className={container}>
       <div className={content}>
@@ -67,7 +71,9 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <DetailsTable data={allData} />}
+              {tabIndex === 1 && (
+                <DetailsTable data={allData} onAddRemove={onAddRemove} />
+              )}
               {tabIndex === 2 && <div>Coming Soon</div>}
             </div>
           </div>
