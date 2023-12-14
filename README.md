@@ -8,8 +8,9 @@ See package.json for the scripts.
 Vite is used for bundling, buidling etc.
 
 .env.local is for local dev, do not check in. (it is excluded in the .gitignore)
-VITE_API_BASE_URL=<url to aviation api>
-VITE_API_KEY_CODE=<aviation token>
+VITE_API_BASE_URL=<url to wcds-web-functions api>
+VITE_AVIATION_API_BASE_URL=<url to aviation api>
+VITE_AVIATION_API_KEY_CODE=<aviation token>
 
 [Visit Design System](https://ui-components.alberta.ca)
 
