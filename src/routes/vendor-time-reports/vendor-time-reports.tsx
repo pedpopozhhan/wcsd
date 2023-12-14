@@ -1,23 +1,7 @@
 import {
-  GoAAppHeader,
-  GoABlock,
   GoAButton,
-  GoAContainer,
-  GoADropdown,
-  GoADropdownItem,
-  GoAFormItem,
-  GoAGrid,
-  GoAIcon,
-  GoAInput,
-  GoAInputSearch,
-  GoAInputText,
-  GoASpacer,
   GoATab,
-  GoATable,
   GoATabs,
-  GoATextArea,
-  GoAThreeColumnLayout,
-  GoATwoColumnLayout,
 } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -70,14 +54,14 @@ const VendorTimeReports = () => {
   return (
     <div className={vendorTimeReportRoot}>
       <div className={vendorTimeReportMain}>
-        <GoAButton
-          {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+      <GoAButton
+          {...{ style: '"padding: 0 10px 0 10px;height: 60px;"' }}
           size='compact'
           type='tertiary'
+          leadingIcon='chevron-back'
           onClick={() => BackToContractReconciliationClick()}
         >
-          {' '}
-          {`< Back`}
+          {`Back`}
         </GoAButton>
         <h2>{header}</h2>
         <GoATabs initialTab={2}>
