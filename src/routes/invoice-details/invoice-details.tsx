@@ -6,6 +6,7 @@ import DetailsTable from './details-table';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
+import { GoAButton } from '@abgov/react-components';
 
 let {
   container,
@@ -42,6 +43,9 @@ export default function InvoiceDetails() {
     //update the totalizer
     setReconciledAmount(newTotal);
   }
+
+  function cancel() {}
+
   return (
     <div className={container}>
       <div className={content}>
@@ -83,7 +87,11 @@ export default function InvoiceDetails() {
           </div>
         </div>
       </div>
-      <div className={footer}>footer</div>
+      <div className={footer}>
+        <GoAButton type='secondary' onClick={cancel}>
+          Cancel
+        </GoAButton>
+      </div>
     </div>
   );
 }
