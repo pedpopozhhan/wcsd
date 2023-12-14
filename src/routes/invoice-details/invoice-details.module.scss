@@ -28,6 +28,8 @@
   .main {
     overflow-y: auto;
     overflow: hidden;
+
+    // this is all to make the tabs have a hidden scroll. the goa component wont work that way
     .tabGroupContainer {
       height: 100%;
       overflow: hidden;

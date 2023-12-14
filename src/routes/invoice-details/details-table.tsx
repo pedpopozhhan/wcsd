@@ -28,6 +28,7 @@ class Row {
 }
 interface IDetailsTableProps {
   data: IDetailsTableRowData[];
+  onAddRemove: (newTotal: number) => any;
 }
 const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
@@ -44,6 +45,16 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     );
   }, [props.data]);
 
+  // This reacts to the rowData changing
+  useEffect(() => {
+    const total = rowData
+      .filter((x) => x.isAdd)
+      .reduce((acc, cur) => {
+        return acc + cur.data.cost;
+      }, 0);
+    props.onAddRemove(total);
+  }, [rowData]);
+
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
     console.log(sortDir);
@@ -58,7 +69,19 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     });
     setRowData(data);
   }
+  function addRemoveClicked(row: Row) {
+    const isAdd = !row.isAdd;
 
+    setRowData(
+      rowData.map((r) => {
+        if (r.index === row.index) {
+          return { ...r, isAdd: isAdd };
+        } else {
+          return r;
+        }
+      })
+    );
+  }
   return (
     <div className={container}>
       <div className={tableContainer}>
@@ -112,7 +135,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                     <GoACheckbox
                       name={`cb${index}`}
                       checked={false}
-                      disabled={true}
+                      disabled={x.isAdd ? true : false}
                     ></GoACheckbox>
                   </div>
                 </td>
@@ -133,8 +156,12 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                 <td>{x.data.fund}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
-                    <GoAButton size='compact' type='secondary' disabled={true}>
-                      Remove
+                    <GoAButton
+                      size='compact'
+                      type='secondary'
+                      onClick={() => addRemoveClicked(x)}
+                    >
+                      {x.isAdd ? 'Remove' : 'Add'}
                     </GoAButton>
                   </div>
                 </td>
