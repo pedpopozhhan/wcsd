@@ -9,7 +9,6 @@ import { yearMonthDay } from '@/common/dates';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import { useImmer } from 'use-immer';
 
 let {
   container,
@@ -82,18 +81,6 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
         }
       })
     );
-    // let total = 0;
-    // setRowData((draft) => {
-    //   const r = draft.find((x) => x.index === row.index);
-    //   if (r) {
-    //     r.isAdd = isAdd;
-    //   }
-    //   total = draft
-    //     .filter((x) => x.isAdd)
-    //     .reduce((acc, cur) => {
-    //       return acc + cur.data.cost;
-    //     }, 0);
-    // });
   }
   return (
     <div className={container}>
