@@ -14,8 +14,6 @@ let {
   main,
   footer,
   header,
-  tabs,
-  testdiv,
   tabGroupContainer,
   tabList,
   tabContainer,
@@ -23,9 +21,11 @@ let {
 
 export default function InvoiceDetails() {
   const { invoiceId } = useParams();
-  const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
+
+  let invoiceAmount = 27000;
+  const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
@@ -40,14 +40,18 @@ export default function InvoiceDetails() {
 
   function onAddRemove(newTotal: number) {
     //update the totalizer
-    console.log(newTotal);
+    setReconciledAmount(newTotal);
   }
   return (
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
           <div className={header}>Invoice</div>
-          <Totalizer />
+          <Totalizer
+            invoiceAmount={invoiceAmount}
+            reconciledAmount={reconciledAmount}
+            remainingAmount={invoiceAmount - reconciledAmount}
+          />
           <Summary />
         </div>
         <div className={main}>
