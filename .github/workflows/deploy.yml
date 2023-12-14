@@ -3,7 +3,7 @@ name: 'Web Build/Deloy'
 on:
   push:
     branches:
-      - dev
+    - dev
 
 #Special permissions required for OIDC authentication
 permissions:
@@ -12,15 +12,14 @@ permissions:
   pull-requests: write
 
 jobs:
-  # Builds the application for production.
-  # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
+ # Builds the application for production. 
+ # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
   build:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      VITE_API_BASE_URL: '${{ vars.VITE_API_BASE_URL }}'
-      VITE_AVIATION_API_BASE_URL: '${{ vars.VITE_AVIATION_API_BASE_URL }}'
-      VITE_AVIATION_API_KEY_CODE: '${{ secrets.VITE_AVIATION_API_KEY_CODE }}'
+      VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
+      VITE_API_KEY_CODE: "${{ secrets.VITE_API_KEY_CODE }}"
 
     steps:
       - uses: actions/checkout@v3
@@ -35,25 +34,25 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-        # Other scripts if configured should be added here, such as linting, formating
+         # Other scripts if configured should be added here, such as linting, formating
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
           path: dist # This should be your distribution path, not the root path
-
-  # Deploy the application to Azure
+ 
+ # Deploy the application to Azure
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment: dev
     env:
-      ARM_CLIENT_ID: '${{ secrets.ARM_CLIENT_ID }}'
-      ARM_SUBSCRIPTION_ID: '${{ secrets.ARM_SUBSCRIPTION_ID }}'
-      ARM_TENANT_ID: '${{ secrets.ARM_TENANT_ID }}'
-      ARM_CLIENT_SECRET: '${{ secrets.ARM_CLIENT_SECRET }}'
-
+      ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+      ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+ 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
@@ -67,31 +66,31 @@ jobs:
             -u "${{ secrets.ARM_CLIENT_ID }}" \
             -p "${{ secrets.ARM_CLIENT_SECRET }}" \
             --tenant "${{ secrets.ARM_TENANT_ID }}"
-
+  
       - name: Purge blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az storage blob delete-batch --account-name wcdsstoragewebdev --auth-mode key -s '$web'
-
+            
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name wcdsstoragewebdev --auth-mode key -d '$web' -s .
-
+              az storage blob upload-batch --account-name wcdsstoragewebdev --auth-mode key -d '$web' -s .
+      
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --subscription "a9b1d048-a7f6-4d5c-ba63-a917e07892b7" \
-            --content-paths  "/*" \
-            --profile-name "wcds-web-profile-dev" \
-            --name "wcds-web-dev" \
-            --resource-group "wcds-web-dev"
+              az cdn endpoint purge --subscription "a9b1d048-a7f6-4d5c-ba63-a917e07892b7" \
+              --content-paths  "/*" \
+              --profile-name "wcds-web-profile-dev" \
+              --name "wcds-web-dev" \
+              --resource-group "wcds-web-dev"
 
-      # Azure logout
+  # Azure logout
       - name: logout
         run: |
-          az logout
+              az logout
         if: always()
