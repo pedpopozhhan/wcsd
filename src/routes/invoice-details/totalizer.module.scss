@@ -1,5 +1,24 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
-
+@property --recWhole {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+@property --recFraction {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+@property --remWhole {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+@property --remFraction {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
 .container {
   display: flex;
   padding: $goa-space-xl $goa-space-xl $goa-space-2xl $goa-space-xl;
@@ -36,6 +55,26 @@
       align-self: stretch;
       font: $goa-typography-body-m;
       line-height: $goa-line-height-3;
+    }
+
+    // props to https://css-tricks.com/animating-number-counters/
+    $duration: 0.25s;
+    .reconciledAmount {
+      transition: --recWhole $duration, --recFraction $duration;
+      counter-reset: recWhole var(--recWhole) recFraction var(--recFraction);
+    }
+    .reconciledAmount::before {
+      content: '$' counter(recWhole) '.'
+        counter(recFraction, decimal-leading-zero);
+    }
+
+    .remainingAmount {
+      transition: --remWhole $duration, --remFraction $duration;
+      counter-reset: remWhole var(--remWhole) recFraction var(--remFraction);
+    }
+    .remainingAmount::before {
+      content: '$' counter(remWhole) '.'
+        counter(remFraction, decimal-leading-zero);
     }
   }
 }
