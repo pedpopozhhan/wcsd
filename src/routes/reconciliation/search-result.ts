@@ -10,7 +10,7 @@ export class SearchResult {
 
 const searchResultColumns: { value: string; label: string }[] = [
   { value: 'vendor', label: 'Vendor' },
-  { value: 'businessId', label: 'Business ID' },
+  { value: 'businessId', label: 'Business No.' },
   { value: 'contractNumber', label: 'Contract No.' },
   { value: 'contractType', label: 'Type' },
   { value: 'numTimeReports', label: 'Time Reports' },
