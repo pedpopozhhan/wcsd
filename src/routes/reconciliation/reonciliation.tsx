@@ -88,7 +88,10 @@ export default function Reconciliation() {
   function handleOnChange(newValue: string | SearchOption) {
     setSearchTerm(newValue);
     if (!newValue) {
-      setSearchResults(allData);
+      const filtered = allData.filter(
+        (x) => contractType === 'all' || x.contractType === contractType
+      );
+      setSearchResults(filtered);
     }
   }
 
