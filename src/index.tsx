@@ -2,7 +2,6 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import { Home } from './routes/home';
 import Reconciliation from './routes/reconciliation/reonciliation';
 
 import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports';
