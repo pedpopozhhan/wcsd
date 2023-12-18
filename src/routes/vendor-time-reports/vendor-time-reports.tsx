@@ -1,8 +1,4 @@
-import {
-  GoAButton,
-  GoATab,
-  GoATabs,
-} from '@abgov/react-components';
+import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -54,7 +50,7 @@ const VendorTimeReports = () => {
   return (
     <div className={vendorTimeReportRoot}>
       <div className={vendorTimeReportMain}>
-      <GoAButton
+        <GoAButton
           {...{ style: '"padding: 0 10px 0 10px;height: 60px;"' }}
           size='compact'
           type='tertiary'
@@ -69,7 +65,9 @@ const VendorTimeReports = () => {
             <SignedOffTabDetails contractNumber={contractNumber} />
           </GoATab>
           <GoATab heading='Approved'>
-            <ApprovedTabDetails contractNumber={contractNumber}></ApprovedTabDetails>
+            <ApprovedTabDetails
+              contractNumber={contractNumber}
+            ></ApprovedTabDetails>
           </GoATab>
           <GoATab heading='Invoiced'></GoATab>
           <GoATab heading='Processed'></GoATab>
