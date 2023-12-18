@@ -1,33 +1,18 @@
 import styles from './summary.module.scss';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
+import { yearMonthDay } from '@/common/dates';
 let { container } = styles;
 
+interface ISummary {
+  InvoiceID: string,
+  DateOnInvoie: Date,
+  InvoiceAmount: number,
+  PeriodEnding: Date,
+  InvoiceReceived: Date,
+  ContractNumber: string
+}
 
-
-export default function Summary() {
-
-  const [invoiceId, setInvoiceId] = useState("");
-  const [dateOfInvoice, setDateOfInvoice] = useState(new Date(Date()));
-  const [invoiceAmount, setInvoiceAmount] = useState(0);
-  const [periodEndingDate, setPeriodEndingDate] = useState(new Date(Date()));
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(new Date(Date()));
-  const [contractNumber, setContractNumber] = useState("");
-
-
-  useEffect(() => {
-    if (sessionStorage.getItem('invoiceData') !== null) {
-      let invoiceData = JSON.parse(sessionStorage.getItem('invoiceData') || '{}');
-      setInvoiceId(invoiceData.InvoiceID);
-      setInvoiceAmount(invoiceData.InvoiceAmount);
-      setDateOfInvoice(invoiceData.DateOnInvoie);
-      setInvoiceReceivedDate(invoiceData.InvoiceReceived);
-      setPeriodEndingDate(invoiceData.PeriodEnding);
-      setContractNumber(invoiceData.ContractNumber);
-    }
-
-  });
-
+const Summary: React.FC<ISummary> = (props) => {
   return (
     <div className={container}>
       <div>
@@ -40,7 +25,7 @@ export default function Summary() {
       </div>
       <div>
         <div>Contract no.</div>
-        <div>{contractNumber}</div>
+        <div>{props.ContractNumber}</div>
       </div>
       <div>
         <div>Type</div>
@@ -48,20 +33,22 @@ export default function Summary() {
       </div>
       <div>
         <div>Invoice no.</div>
-        <div>{invoiceId}</div>
+        <div>{props.InvoiceID}</div>
       </div>
       <div>
         <div>Invoice date</div>
-        <div>{moment(dateOfInvoice).format("yyyy-MM-DD")}</div>
+        <div>{yearMonthDay(props.DateOnInvoie)}</div>
       </div>
       <div>
         <div>Invoice received</div>
-        <div>{moment(invoiceReceivedDate).format("yyyy-MM-DD")}</div>
+        <div>{yearMonthDay(props.InvoiceReceived)}</div>
       </div>
       <div>
         <div>Period ending</div>
-        <div>{moment(periodEndingDate).format("yyyy-MM-DD")}</div>
+        <div>{yearMonthDay(props.PeriodEnding)}</div>
       </div>
     </div>
   );
-}
+};
+
+export default Summary;

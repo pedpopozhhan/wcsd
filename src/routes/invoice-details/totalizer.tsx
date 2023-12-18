@@ -1,33 +1,20 @@
 import { GoAContainer, GoATable } from '@abgov/react-components';
 import styles from './totalizer.module.scss';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
+import { convertToCurrency } from '@/common/currency';
+
 
 let { totalizerAmount, totalizerAmountLabel } = styles;
+interface ITotalizer {
+  InvoiceAmount: number
+}
 
-export default function Totalizer() {
-
-  const [invoiceAmount, setInvoiceAmount] = useState(0);
-
-  const formatter = new Intl.NumberFormat('default', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  let val = formatter.format(invoiceAmount);
-
-  useEffect(() => {
-    if (sessionStorage.getItem('invoiceData') !== null) {
-      let invoiceData = JSON.parse(sessionStorage.getItem('invoiceData') || '{}');
-      setInvoiceAmount(invoiceData.InvoiceAmount);
-    }
-  });
-
+const Totalizer: React.FC<ITotalizer> = (props) => {
   return (
     <GoAContainer>
       <div className={totalizerAmountLabel}>Invoice Amount</div>
       <div>
-        <label className={totalizerAmount}>{val}</label>
+        <label className={totalizerAmount}>{convertToCurrency(props.InvoiceAmount)}</label>
       </div>
       <br />
       <div className={totalizerAmountLabel}>Reconciled Amount</div>
@@ -43,4 +30,6 @@ export default function Totalizer() {
       </div>
     </GoAContainer>
   );
-}
+};
+
+export default Totalizer;

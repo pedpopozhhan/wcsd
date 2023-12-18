@@ -146,6 +146,7 @@ const InvoiceModalDialog = (props: any) => {
             // update object in session
 
             sessionStorage.setItem('invoiceData', JSON.stringify(invoiceForSession));
+            props.stateChanged();
             props.showInvoiceDialog(false);
         }
     }

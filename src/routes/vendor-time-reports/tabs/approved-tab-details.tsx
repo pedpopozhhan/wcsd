@@ -22,7 +22,7 @@ import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
-import InvoiceModalDialog from '@/common/invoiceModalDialog';
+import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
