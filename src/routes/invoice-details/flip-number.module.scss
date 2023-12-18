@@ -1,6 +1,6 @@
 // props to https://css-tricks.com/animating-number-counters/
 // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
-y --fraction {
+@property --fraction {
   syntax: '<integer>';
   inherits: false;
   initial-value: 0;
