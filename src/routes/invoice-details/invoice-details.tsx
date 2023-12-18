@@ -6,6 +6,8 @@ import DetailsTable from './details-table';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
+import { GoAButton, GoATable } from '@abgov/react-components';
+import InvoiceModalDialog from '@/common/invoiceModalDialog';
 
 let {
   container,
@@ -19,6 +21,7 @@ let {
   tabGroupContainer,
   tabList,
   tabContainer,
+  tableInvoiceHeader,
 } = styles;
 
 export default function InvoiceDetails() {
@@ -26,6 +29,13 @@ export default function InvoiceDetails() {
   const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
+  
+  // Modal Dialog configuration
+  const [parentShowModal, setParentShowModal] = useState(false);
+  const editInvoice = () => {
+    setParentShowModal(true);
+  }
+
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
@@ -42,7 +52,15 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div className={header}>Invoice</div>
+          <div className={header}>
+            <table className={tableInvoiceHeader}>
+              <tr>
+                <td>Invoice</td>
+                <td></td>
+                <td><GoAButton type='tertiary' onClick={editInvoice}>Edit</GoAButton></td>
+              </tr>
+            </table>
+          </div>
           <Totalizer />
           <Summary />
         </div>
@@ -74,6 +92,7 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>footer</div>
+      <InvoiceModalDialog isAddition = 'false' visible = {parentShowModal} showInvoiceDialog ={setParentShowModal} />
     </div>
   );
 }
