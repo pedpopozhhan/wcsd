@@ -19,7 +19,8 @@ jobs:
     environment: dev
     env:
       VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
-      VITE_API_KEY_CODE: "${{ secrets.VITE_API_KEY_CODE }}"
+      VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
+      VITE_AVIATION_API_KEY_CODE: "${{ vars.VITE_AVIATION_API_KEY_CODE }}"
 
     steps:
       - uses: actions/checkout@v3
