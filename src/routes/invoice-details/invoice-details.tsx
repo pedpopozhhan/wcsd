@@ -19,7 +19,7 @@ let {
   tabGroupContainer,
   tabList,
   tabContainer,
-  tableInvoiceHeader,
+  summaryContainer,
 } = styles;
 
 export default function InvoiceDetails() {
@@ -31,19 +31,22 @@ export default function InvoiceDetails() {
   const [parentShowModal, setParentShowModal] = useState(false);
   const editInvoice = () => {
     setParentShowModal(true);
-  }
+  };
 
-  const [invoiceID, setInvoiceId] = useState("");
+  const [invoiceID, setInvoiceId] = useState('');
   const [dateOfInvoice, setDateOfInvoice] = useState(new Date(Date()));
   const [invoiceAmount, setInvoiceAmount] = useState(0);
   const [periodEndingDate, setPeriodEndingDate] = useState(new Date(Date()));
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(new Date(Date()));
-  const [contractNumber, setContractNumber] = useState("");
-
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(
+    new Date(Date())
+  );
+  const [contractNumber, setContractNumber] = useState('');
 
   const updateModalData = () => {
     if (sessionStorage.getItem('invoiceData') !== null) {
-      let invoiceData = JSON.parse(sessionStorage.getItem('invoiceData') || '{}');
+      let invoiceData = JSON.parse(
+        sessionStorage.getItem('invoiceData') || '{}'
+      );
       setInvoiceId(invoiceData.InvoiceID);
       setInvoiceAmount(invoiceData.InvoiceAmount);
       setDateOfInvoice(invoiceData.DateOnInvoie);
@@ -51,20 +54,20 @@ export default function InvoiceDetails() {
       setPeriodEndingDate(invoiceData.PeriodEnding);
       setContractNumber(invoiceData.ContractNumber);
     }
-  }
+  };
 
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
       updateModalData();
-      setAllData(data);  
+      setAllData(data);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [invoiceId, invoiceID, dateOfInvoice,invoiceAmount]);
+  }, [invoiceId, invoiceID, dateOfInvoice, invoiceAmount]);
 
   function onAddRemove(newTotal: number) {
     //update the totalizer
@@ -77,20 +80,27 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div className= {header}>
-          Invoice <GoAButton  type='tertiary' onClick={editInvoice}>Edit</GoAButton>
+          <div className={header}>
+            Invoice{' '}
+            <GoAButton type='tertiary' onClick={editInvoice}>
+              Edit
+            </GoAButton>
           </div>
-          <Totalizer invoiceAmount={invoiceAmount}
-           reconciledAmount={reconciledAmount}
-           remainingAmount={invoiceAmount - reconciledAmount}
+          <Totalizer
+            invoiceAmount={invoiceAmount}
+            reconciledAmount={reconciledAmount}
+            remainingAmount={invoiceAmount - reconciledAmount}
           />
-          <Summary InvoiceID={invoiceID}
-            DateOnInvoie={dateOfInvoice}
-            InvoiceAmount={invoiceAmount}
-            PeriodEnding={periodEndingDate}
-            InvoiceReceived={invoiceReceivedDate}
-            ContractNumber={contractNumber}
-          />
+          <div className={summaryContainer}>
+            <Summary
+              InvoiceID={invoiceID}
+              DateOnInvoie={dateOfInvoice}
+              InvoiceAmount={invoiceAmount}
+              PeriodEnding={periodEndingDate}
+              InvoiceReceived={invoiceReceivedDate}
+              ContractNumber={contractNumber}
+            />
+          </div>
         </div>
         <div className={main}>
           <div className={tabGroupContainer}>
@@ -126,7 +136,12 @@ export default function InvoiceDetails() {
           Cancel
         </GoAButton>
       </div>
-      <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} stateChanged={updateModalData}/>
+      <InvoiceModalDialog
+        isAddition='false'
+        visible={parentShowModal}
+        showInvoiceDialog={setParentShowModal}
+        stateChanged={updateModalData}
+      />
     </div>
   );
 }
