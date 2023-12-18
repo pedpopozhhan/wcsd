@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
@@ -23,6 +23,7 @@ let {
 } = styles;
 
 export default function InvoiceDetails() {
+  const navigate = useNavigate();
   const { invoiceId } = useParams();
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
@@ -74,7 +75,10 @@ export default function InvoiceDetails() {
     setReconciledAmount(newTotal);
   }
 
-  function cancel() {}
+  function cancel() {
+    // navigate to time reports page
+    navigate(`/VendorTimeReports/${contractNumber}`);
+  }
 
   return (
     <div className={container}>

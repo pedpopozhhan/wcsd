@@ -49,7 +49,6 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
 
     // commarize the whole part
     const commarized = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    console.dir(commarized.split(','));
     // split into tens, hundreds, thousands etc
     setCommaSplits(commarized.split(','));
 
