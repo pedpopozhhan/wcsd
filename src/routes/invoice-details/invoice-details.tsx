@@ -6,7 +6,7 @@ import DetailsTable from './details-table';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { GoAButton, GoATable } from '@abgov/react-components';
+import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 
 let {
@@ -16,8 +16,6 @@ let {
   main,
   footer,
   header,
-  tabs,
-  testdiv,
   tabGroupContainer,
   tabList,
   tabContainer,
@@ -26,7 +24,6 @@ let {
 
 export default function InvoiceDetails() {
   const { invoiceId } = useParams();
-  const initialTab = 1;
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
 
@@ -56,6 +53,7 @@ export default function InvoiceDetails() {
     }
   }
 
+  const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
@@ -68,6 +66,13 @@ export default function InvoiceDetails() {
     };
   }, [invoiceId, invoiceID, dateOfInvoice,invoiceAmount]);
 
+  function onAddRemove(newTotal: number) {
+    //update the totalizer
+    setReconciledAmount(newTotal);
+  }
+
+  function cancel() {}
+
   return (
     <div className={container}>
       <div className={content}>
@@ -75,7 +80,10 @@ export default function InvoiceDetails() {
           <div className= {header}>
           Invoice <GoAButton  type='tertiary' onClick={editInvoice}>Edit</GoAButton>
           </div>
-          <Totalizer InvoiceAmount={invoiceAmount}/>
+          <Totalizer invoiceAmount={invoiceAmount}
+           reconciledAmount={reconciledAmount}
+           remainingAmount={invoiceAmount - reconciledAmount}
+          />
           <Summary InvoiceID={invoiceID}
             DateOnInvoie={dateOfInvoice}
             InvoiceAmount={invoiceAmount}
@@ -105,13 +113,19 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <DetailsTable data={allData} />}
+              {tabIndex === 1 && (
+                <DetailsTable data={allData} onAddRemove={onAddRemove} />
+              )}
               {tabIndex === 2 && <div>Coming Soon</div>}
             </div>
           </div>
         </div>
       </div>
-      <div className={footer}>footer</div>
+      <div className={footer}>
+        <GoAButton type='secondary' onClick={cancel}>
+          Cancel
+        </GoAButton>
+      </div>
       <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} stateChanged={updateModalData}/>
     </div>
   );

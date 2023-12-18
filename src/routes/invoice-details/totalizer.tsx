@@ -1,35 +1,38 @@
 import { GoAContainer, GoATable } from '@abgov/react-components';
 import styles from './totalizer.module.scss';
-import { useEffect, useState } from 'react';
+import { FC } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
-
-let { totalizerAmount, totalizerAmountLabel } = styles;
-interface ITotalizer {
-  InvoiceAmount: number
+let { container, totalizerAmount, totalizerAmountLabel, section } = styles;
+interface ITotalizerProps {
+  invoiceAmount: number;
+  reconciledAmount: number;
+  remainingAmount: number;
 }
-
-const Totalizer: React.FC<ITotalizer> = (props) => {
+//   const DetailsTable: React.FC<IDetailsTableProps> = (props) =>
+const Totalizer: FC<ITotalizerProps> = (props) => {
   return (
-    <GoAContainer>
-      <div className={totalizerAmountLabel}>Invoice Amount</div>
-      <div>
-        <label className={totalizerAmount}>{convertToCurrency(props.InvoiceAmount)}</label>
+    <div className={container}>
+      <div className={section}>
+        <div className={totalizerAmountLabel}>Invoice Amount</div>
+
+        <div className={totalizerAmount}>
+          {convertToCurrency(props.invoiceAmount)}
+        </div>
       </div>
-      <br />
-      <div className={totalizerAmountLabel}>Reconciled Amount</div>
-      <div>
-        {' '}
-        <label className={totalizerAmount}>$0.00</label>
+      <div className={section}>
+        <div className={totalizerAmountLabel}>Reconciled Amount</div>
+        <div className={totalizerAmount}>
+          {convertToCurrency(props.reconciledAmount)}
+        </div>{' '}
       </div>
-      <br />
-      <div className={totalizerAmountLabel}>Remaining Amount</div>
-      <div>
-        {' '}
-        <label className={totalizerAmount}>$27,000.00</label>
+      <div className={section}>
+        <div className={totalizerAmountLabel}>Remaining Amount</div>
+        <div className={totalizerAmount}>
+          {convertToCurrency(props.remainingAmount)}
+        </div>{' '}
       </div>
-    </GoAContainer>
+    </div>
   );
 };
-
 export default Totalizer;

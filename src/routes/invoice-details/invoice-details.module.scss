@@ -28,6 +28,8 @@
   .main {
     overflow-y: auto;
     overflow: hidden;
+
+    // this is all to make the tabs have a hidden scroll. the goa component wont work that way
     .tabGroupContainer {
       height: 100%;
       overflow: hidden;
@@ -66,8 +68,12 @@
   }
 }
 .footer {
-  flex-shrink: 0;
-  height: 80px;
+  display: flex;
+  padding: calc($goa-space-m + $goa-space-3xs)
+    calc($goa-space-l - $goa-space-3xs);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc($goa-space-xs + $goa-space-3xs);
 }
 
 
