@@ -1,7 +1,18 @@
 import styles from './summary.module.scss';
-
+import { useEffect, useState } from 'react';
+import { yearMonthDay } from '@/common/dates';
 let { container } = styles;
-export default function Summary() {
+
+interface ISummary {
+  InvoiceID: string,
+  DateOnInvoie: Date,
+  InvoiceAmount: number,
+  PeriodEnding: Date,
+  InvoiceReceived: Date,
+  ContractNumber: string
+}
+
+const Summary: React.FC<ISummary> = (props) => {
   return (
     <div className={container}>
       <div>
@@ -14,7 +25,7 @@ export default function Summary() {
       </div>
       <div>
         <div>Contract no.</div>
-        <div>23AFD203</div>
+        <div>{props.ContractNumber}</div>
       </div>
       <div>
         <div>Type</div>
@@ -22,20 +33,22 @@ export default function Summary() {
       </div>
       <div>
         <div>Invoice no.</div>
-        <div>23-0452</div>
+        <div>{props.InvoiceID}</div>
       </div>
       <div>
         <div>Invoice date</div>
-        <div>2023-08-09</div>
+        <div>{yearMonthDay(props.DateOnInvoie)}</div>
       </div>
       <div>
         <div>Invoice received</div>
-        <div>2023-09-08</div>
+        <div>{yearMonthDay(props.InvoiceReceived)}</div>
       </div>
       <div>
         <div>Period ending</div>
-        <div>2023-07-31</div>
+        <div>{yearMonthDay(props.PeriodEnding)}</div>
       </div>
     </div>
   );
-}
+};
+
+export default Summary;
