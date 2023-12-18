@@ -27,7 +27,7 @@ export class SampleData {
         numberOfUnits: i,
         rateUnit: `${i}`,
         ratePerUnit: i, //with $0.00
-        cost: i * 1000, //with $0.00
+        cost: i * 1000.25, //with $0.00
         glAccountNumber: i,
         profitCentre: `${i}`,
         costCentre: `${i}`,

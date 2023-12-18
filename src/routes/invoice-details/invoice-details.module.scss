@@ -1,5 +1,6 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 @import '@mixins/scrollbar.mixin.scss';
+
 .container {
   display: flex;
   flex-direction: column;
@@ -23,6 +24,9 @@
       font: $goa-typography-heading-l;
       line-height: $goa-line-height-6;
       margin-bottom: $goa-space-l;
+    }
+    .summaryContainer {
+      margin-top: $goa-space-l;
     }
   }
   .main {
@@ -76,20 +80,19 @@
   gap: calc($goa-space-xs + $goa-space-3xs);
 }
 
-
 .tableInvoiceHeader {
   overflow-x: auto;
   max-width: 100%;
   tr td {
-    padding:0;  
+    padding: 0;
   }
   tr td:nth-child(1) {
-    width:30%;
+    width: 30%;
   }
   tr td:nth-child(2) {
-    width:65%;
+    width: 65%;
   }
   tr td:nth-child(3) {
-    width:5%;
+    width: 5%;
   }
 }

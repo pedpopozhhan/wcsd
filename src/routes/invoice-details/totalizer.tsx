@@ -1,7 +1,7 @@
-import { GoAContainer, GoATable } from '@abgov/react-components';
 import styles from './totalizer.module.scss';
 import { FC } from 'react';
 import { convertToCurrency } from '@/common/currency';
+import FlipNumber from './flip-number';
 
 let { container, totalizerAmount, totalizerAmountLabel, section } = styles;
 interface ITotalizerProps {
@@ -9,7 +9,7 @@ interface ITotalizerProps {
   reconciledAmount: number;
   remainingAmount: number;
 }
-//   const DetailsTable: React.FC<IDetailsTableProps> = (props) =>
+
 const Totalizer: FC<ITotalizerProps> = (props) => {
   return (
     <div className={container}>
@@ -22,15 +22,16 @@ const Totalizer: FC<ITotalizerProps> = (props) => {
       </div>
       <div className={section}>
         <div className={totalizerAmountLabel}>Reconciled Amount</div>
+
         <div className={totalizerAmount}>
-          {convertToCurrency(props.reconciledAmount)}
-        </div>{' '}
+          <FlipNumber value={props.reconciledAmount}></FlipNumber>
+        </div>
       </div>
       <div className={section}>
         <div className={totalizerAmountLabel}>Remaining Amount</div>
         <div className={totalizerAmount}>
-          {convertToCurrency(props.remainingAmount)}
-        </div>{' '}
+          <FlipNumber value={props.remainingAmount}></FlipNumber>
+        </div>
       </div>
     </div>
   );

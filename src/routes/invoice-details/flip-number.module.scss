@@ -1,0 +1,174 @@
+// props to https://css-tricks.com/animating-number-counters/
+// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+@property --fraction {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tens {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --hundreds {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --thousands {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --millions {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --billions {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+@property --trillions {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.container {
+  $duration: 0.25s;
+  .fraction {
+    transition: --fraction $duration;
+    counter-reset: fraction var(--fraction);
+    &::before {
+      content: '.' counter(fraction, decimal-leading-zero);
+    }
+  }
+
+  .hundreds {
+    transition: --hundreds $duration;
+    counter-reset: hundreds var(--hundreds);
+
+    &.oneDigit {
+      &::before {
+        content: '00' counter(hundreds, decimal);
+      }
+    }
+    &.twoDigits {
+      &::before {
+        content: '0' counter(hundreds, decimal);
+      }
+    }
+    &.threeDigits {
+      &::before {
+        content: counter(hundreds, decimal);
+      }
+    }
+    &.noDigits {
+      &::before {
+        content: '00' counter(hundreds, decimal);
+      }
+    }
+  }
+
+  .thousands {
+    transition: --thousands $duration;
+    counter-reset: thousands var(--thousands);
+    &.oneDigit {
+      &::before {
+        content: '00' counter(thousands, decimal);
+      }
+    }
+    &.twoDigits {
+      &::before {
+        content: '0' counter(thousands, decimal);
+      }
+    }
+    &.threeDigits {
+      &::before {
+        content: counter(thousands, decimal);
+      }
+    }
+    &.noDigits {
+      &::before {
+        content: '00' counter(thousands, decimal);
+      }
+    }
+  }
+
+  .millions {
+    transition: --millions $duration;
+    counter-reset: millions var(--millions);
+    &.oneDigit {
+      &::before {
+        content: '00' counter(millions, decimal);
+      }
+    }
+    &.twoDigits {
+      &::before {
+        content: '0' counter(millions, decimal);
+      }
+    }
+    &.threeDigits {
+      &::before {
+        content: counter(millions, decimal);
+      }
+    }
+    &.noDigits {
+      &::before {
+        content: '00' counter(millions, decimal);
+      }
+    }
+  }
+
+  .billions {
+    transition: --billions $duration;
+    counter-reset: billions var(--billions);
+
+    &.oneDigit {
+      &::before {
+        content: '00' counter(billions, decimal);
+      }
+    }
+    &.twoDigits {
+      &::before {
+        content: '0' counter(billions, decimal);
+      }
+    }
+    &.threeDigits {
+      &::before {
+        content: counter(billions, decimal);
+      }
+    }
+    &.noDigits {
+      &::before {
+        content: '00' counter(billions, decimal);
+      }
+    }
+  }
+
+  .trillions {
+    transition: --trillions $duration;
+    counter-reset: trillions var(--trillions);
+    &.oneDigit {
+      &::before {
+        content: '00' counter(trillions, decimal);
+      }
+    }
+    &.twoDigits {
+      &::before {
+        content: '0' counter(trillions, decimal);
+      }
+    }
+    &.threeDigits {
+      &::before {
+        content: counter(trillions, decimal);
+      }
+    }
+    &.noDigits {
+      &::before {
+        content: '00' counter(trillions, decimal);
+      }
+    }
+  }
+}
