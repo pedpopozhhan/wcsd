@@ -1,22 +1,14 @@
 import {
-    GoATable,
     GoAInput,
     GoAButton,
-    GoATableSortHeader,
-    GoAIconButton,
     GoAFormItem,
-    GoAGrid,
     GoAInputDate,
-    GoAInputText,
-    GoARadioGroup,
-    GoARadioItem,
-    GoATextArea,
     GoAModal,
     GoAButtonGroup,
 
 } from '@abgov/react-components';
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const InvoiceModalDialog = (props: any) => {
     const [invoiceId, setInvoiceId] = useState("");
@@ -28,10 +20,17 @@ const InvoiceModalDialog = (props: any) => {
     const [invoiceAmount, setInvoiceAmount] = useState(0);
     const [invoiceAmountError, setInvoiceAmountError] = useState(false);
     const [periodEndingDate, setPeriodEndingDate] = useState(new Date(Date()));
+    const [periodEndingDateError, setPeriodEndingDateError] = useState(false);
     const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(new Date(Date()));
+    const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState(false);
     const [maxDate, setMaxDate] = useState(getDateWithMonthOffset(1));
     const [contractNumber, setContractNumber] = useState(props.contract);
     const [timeReports, setTimeReports] = useState(props.timeReports);
+    const [pageHasError, setPageHasError] = useState(false);
+    const [minDate, setMinDate] = useState(new Date(1950, 1, 1));
+    const [dialogTitle, setDialogTitle] = useState("");
+
+
 
 
     const invoiceForSession = {
@@ -51,8 +50,10 @@ const InvoiceModalDialog = (props: any) => {
         return d;
     }
 
+
     useEffect(() => {
         if (props.isAddition === "false") {
+            setDialogTitle("Update invoice");
             setIsInvoiceAddition(false);
             setlabelforInvoiceOperation("Update");
 
@@ -65,7 +66,8 @@ const InvoiceModalDialog = (props: any) => {
                 setPeriodEndingDate(invoiceData.PeriodEnding);
                 setContractNumber(invoiceData.ContractNumber);
             }
-        }
+        } else
+            setDialogTitle("Create Invoice");
     }, [isInvoiceAddition,]);
 
     const clearDialgoControls = () => {
@@ -76,39 +78,21 @@ const InvoiceModalDialog = (props: any) => {
         setDateOfInvoice(new Date(Date()));
         setDateOfInvoiceError(false);
         setPeriodEndingDate(new Date(Date()));
+        setPeriodEndingDateError(false);
         setInvoiceReceivedDate(new Date(Date()));
+        setInvoiceReceivedDateError(false);
     }
 
     const hideModalDialog = () => {
-        if (props.isAddition === "true"){
+        if (props.isAddition === 'true')
             clearDialgoControls();
-        }
+
         props.showInvoiceDialog(false);
-    }
-
-    const validateInvoiceID = () => {
-        if (invoiceId.length <= 0) {
-            setInvoiceIdError(true);
-        } else {
-            setInvoiceIdError(false);
-        }
-    }
-
-    const validateInvoiceAmount = () => {
-        if (invoiceAmount <= 0) {
-            setInvoiceAmountError(true);
-        } else {
-            setInvoiceAmountError(false);
-        }
-    }
-
-    const validateDateOnInvoice = () => {
-
     }
 
     const setInvoice = () => {
         // Validate them and show errors
-        if (invoiceId.length <= 0) {
+        if (invoiceId.trim().length <= 0) {
             setInvoiceIdError(true);
             return;
         } else {
@@ -121,6 +105,9 @@ const InvoiceModalDialog = (props: any) => {
         } else {
             setInvoiceAmountError(false);
         }
+
+        if (pageHasError)
+            return;
 
         // put them in the session object
         if (isInvoiceAddition) {
@@ -136,7 +123,7 @@ const InvoiceModalDialog = (props: any) => {
             sessionStorage.setItem('invoiceData', JSON.stringify(invoiceForSession));
             sessionStorage.setItem('timeReportsToReconcile', JSON.stringify(props.timeReports));
 
-             // Clear the modal contrls
+            // Clear the modal contrls
             clearDialgoControls();
 
             // Navigate to invoice detail page
@@ -155,7 +142,7 @@ const InvoiceModalDialog = (props: any) => {
     return (
         <>
             <GoAModal
-                heading="Create invoice"
+                heading={dialogTitle}
                 open={props.visible}
                 actions={
                     <GoAButtonGroup alignment="end">
@@ -172,15 +159,16 @@ const InvoiceModalDialog = (props: any) => {
                             <td>
                                 <GoAFormItem label="Invoice">
                                     <GoAInput
-                                        name="invoiceId"
+                                        name='invoiceId'
                                         width='300px'
+                                        maxLength={20}
                                         value={invoiceId}
                                         error={invoiceIdError}
-                                        onBlur={(key, value) => {                                            
+                                        onBlur={(key, value) => {
                                         }}
-                                        onChange={(key, value) => { 
-                                            setInvoiceId(value)
-                                            if (value.length <= 0) {
+                                        onChange={(key, value) => {
+                                            setInvoiceId(value.trim())
+                                            if (value.trim().length <= 0) {
                                                 setInvoiceIdError(true);
                                             } else {
                                                 setInvoiceIdError(false);
@@ -197,14 +185,21 @@ const InvoiceModalDialog = (props: any) => {
                                         name="dateOnInvoice"
                                         placeholder="YYYY-MM-DD"
                                         value={dateOfInvoice}
-                                        min={new Date(1950, 1, 1)}
-                                        max={new Date()}
+                                        min={minDate}
+                                        max={maxDate}
                                         width="200px"
                                         onChange={(name, value) => {
                                             const propertyValue: Date = new Date(value);
                                             setDateOfInvoice(propertyValue);
-                                            validateDateOnInvoice();
+                                            if (propertyValue < minDate) {
+                                                setDateOfInvoiceError(true);
+                                                setPageHasError(true);
+
+                                            }
+                                            else
+                                                setDateOfInvoice(propertyValue);
                                         }}
+
                                     />
                                 </GoAFormItem>
                             </td>
@@ -213,22 +208,35 @@ const InvoiceModalDialog = (props: any) => {
                             <td>
                                 <GoAFormItem label="Invoice amount">
                                     <GoAInput
-                                        name="invoiceAmount"
+                                        name="ctrlInvoiceAmount"
                                         width='300px'
+                                        maxLength={10}
                                         error={invoiceAmountError}
                                         value={invoiceAmount.toString()}
                                         prefix='$'
                                         onBlur={(key, value) => {
-                                            
-                                        }}
-                                        onChange={(key, value) => {
-                                            if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)))
-                                            {
+                                            //alert("onBlur")
+                                            if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                                                 setInvoiceAmountError(true);
+                                                setPageHasError(true);
                                             }
-                                            else{
+                                            else {
                                                 setInvoiceAmount(Number(value));
                                                 setInvoiceAmountError(false);
+                                                setPageHasError(false);
+                                            }
+                                        }}
+                                        onChange={(key, value) => {
+                                            //alert("onChange");
+                                            if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
+                                                setInvoiceAmountError(true);
+                                                setPageHasError(true);
+                                                setInvoiceAmount(0);
+                                            }
+                                            else {
+                                                setInvoiceAmount(Number(value));
+                                                setInvoiceAmountError(false);
+                                                setPageHasError(false);
                                             }
                                         }}
                                     />
@@ -242,12 +250,17 @@ const InvoiceModalDialog = (props: any) => {
                                         name="periodEndingDate"
                                         placeholder="yyyy-MM-DD"
                                         value={periodEndingDate}
-                                        min={new Date(1950, 1, 1)}
-                                        max={new Date()}
+                                        error={periodEndingDateError}
+                                        min={minDate}
+                                        max={maxDate}
                                         width="200px"
                                         onChange={(name, value) => {
                                             const propertyValue: Date = new Date(value);
                                             setPeriodEndingDate(propertyValue);
+                                            if (propertyValue < minDate) {
+                                                setPeriodEndingDateError(true);
+                                                setPageHasError(true);
+                                            }
                                         }}
                                     />
                                 </GoAFormItem>
@@ -261,17 +274,20 @@ const InvoiceModalDialog = (props: any) => {
                                         name="invoiceReceivedDate"
                                         placeholder="YYYY-MM-DD"
                                         value={invoiceReceivedDate}
-                                        min={new Date(1950, 1, 1)}
-                                        max={new Date()}
+                                        min={minDate}
+                                        max={maxDate}
                                         width="200px"
                                         onChange={(name, value) => {
                                             const propertyValue: Date = new Date(value);
                                             setInvoiceReceivedDate(propertyValue);
+                                            if (propertyValue < minDate) {
+                                                setInvoiceReceivedDateError(true);
+                                                setPageHasError(true);
+                                            }
                                         }}
                                     />
                                 </GoAFormItem>
                             </td>
-                            <td></td>
                             <td></td>
                         </tr>
                     </tbody>
