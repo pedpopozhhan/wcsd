@@ -4,12 +4,12 @@ import { yearMonthDay } from '@/common/dates';
 let { container } = styles;
 
 interface ISummary {
-  InvoiceID: string,
-  DateOnInvoie: Date,
-  InvoiceAmount: number,
-  PeriodEnding: Date,
-  InvoiceReceived: Date,
-  ContractNumber: string
+  InvoiceID: string;
+  DateOnInvoice: Date;
+  InvoiceAmount: number;
+  PeriodEnding: Date;
+  InvoiceReceived: Date;
+  ContractNumber: string;
 }
 
 const Summary: React.FC<ISummary> = (props) => {
@@ -37,7 +37,7 @@ const Summary: React.FC<ISummary> = (props) => {
       </div>
       <div>
         <div>Invoice date</div>
-        <div>{yearMonthDay(props.DateOnInvoie)}</div>
+        <div>{yearMonthDay(props.DateOnInvoice)}</div>
       </div>
       <div>
         <div>Invoice received</div>

@@ -7,7 +7,10 @@ import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { GoAButton } from '@abgov/react-components';
-import InvoiceModalDialog from '@/common/invoice-modal-dialog';
+import { useSessionStorage } from 'usehooks-ts';
+import InvoiceModalDialog, {
+  IInvoiceData,
+} from '@/common/invoice-modal-dialog';
 
 let {
   container,
@@ -24,7 +27,10 @@ let {
 
 export default function InvoiceDetails() {
   const navigate = useNavigate();
-  const { invoiceId } = useParams();
+  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
+    'invoiceData',
+    null as any
+  );
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
 
@@ -33,42 +39,18 @@ export default function InvoiceDetails() {
   const editInvoice = () => {
     setParentShowModal(true);
   };
-
-  const [invoiceID, setInvoiceId] = useState('');
-  const [dateOfInvoice, setDateOfInvoice] = useState(new Date(Date()));
-  const [invoiceAmount, setInvoiceAmount] = useState(0);
-  const [periodEndingDate, setPeriodEndingDate] = useState(new Date(Date()));
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(
-    new Date(Date())
-  );
-  const [contractNumber, setContractNumber] = useState('');
-
-  const updateModalData = () => {
-    if (sessionStorage.getItem('invoiceData') !== null) {
-      let invoiceData = JSON.parse(
-        sessionStorage.getItem('invoiceData') || '{}'
-      );
-      setInvoiceId(invoiceData.InvoiceID);
-      setInvoiceAmount(invoiceData.InvoiceAmount);
-      setDateOfInvoice(invoiceData.DateOnInvoie);
-      setInvoiceReceivedDate(invoiceData.InvoiceReceived);
-      setPeriodEndingDate(invoiceData.PeriodEnding);
-      setContractNumber(invoiceData.ContractNumber);
-    }
-  };
-
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
+
   useEffect(() => {
     const subscription = invoiceDetailsService.getAll().subscribe((results) => {
       const data = results.slice();
-      updateModalData();
       setAllData(data);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [invoiceId, invoiceID, dateOfInvoice, invoiceAmount]);
+  }, [invoiceData]);
 
   function onAddRemove(newTotal: number) {
     //update the totalizer
@@ -77,7 +59,7 @@ export default function InvoiceDetails() {
 
   function cancel() {
     // navigate to time reports page
-    navigate(`/VendorTimeReports/${contractNumber}`);
+    navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
 
   return (
@@ -91,18 +73,18 @@ export default function InvoiceDetails() {
             </GoAButton>
           </div>
           <Totalizer
-            invoiceAmount={invoiceAmount}
+            invoiceAmount={invoiceData.InvoiceAmount}
             reconciledAmount={reconciledAmount}
-            remainingAmount={invoiceAmount - reconciledAmount}
+            remainingAmount={invoiceData.InvoiceAmount - reconciledAmount}
           />
           <div className={summaryContainer}>
             <Summary
-              InvoiceID={invoiceID}
-              DateOnInvoie={dateOfInvoice}
-              InvoiceAmount={invoiceAmount}
-              PeriodEnding={periodEndingDate}
-              InvoiceReceived={invoiceReceivedDate}
-              ContractNumber={contractNumber}
+              InvoiceID={invoiceData.InvoiceID}
+              DateOnInvoice={invoiceData.DateOnInvoice}
+              InvoiceAmount={invoiceData.InvoiceAmount}
+              PeriodEnding={invoiceData.PeriodEnding}
+              InvoiceReceived={invoiceData.InvoiceReceived}
+              ContractNumber={invoiceData.ContractNumber}
             />
           </div>
         </div>
@@ -144,7 +126,6 @@ export default function InvoiceDetails() {
         isAddition='false'
         visible={parentShowModal}
         showInvoiceDialog={setParentShowModal}
-        stateChanged={updateModalData}
       />
     </div>
   );
