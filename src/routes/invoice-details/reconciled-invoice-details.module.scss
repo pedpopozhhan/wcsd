@@ -1,0 +1,27 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+
+.headerButtonContainer {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    margin-top: 25px;
+    padding: 5px;
+    gap: 30px;
+}
+.reconciledDetailsDiv{
+    padding: 15px;
+    overflow-y: auto;
+    height: 200px;
+
+}
+.otherCostHeader{
+    font: $goa-typography-heading-s;
+    line-height: $goa-line-height-6;
+    margin-bottom: $goa-space-l;
+}
+.otherCostsDiv{
+    padding: 15px;
+    overflow-y: auto;
+    height: 300px;
+}
