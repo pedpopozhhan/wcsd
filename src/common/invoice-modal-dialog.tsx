@@ -18,6 +18,7 @@ export interface IInvoiceData {
   InvoiceReceived: Date;
   ContractNumber: string;
 }
+
 const InvoiceModalDialog = (props: any) => {
   const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
     'invoiceData',
@@ -25,6 +26,7 @@ const InvoiceModalDialog = (props: any) => {
   );
   const [timeReportsToReconcile, setTimeReportsToReconcile] =
     useSessionStorage<IInvoiceData>('timeReportsToReconcile', null as any);
+
   const [invoiceId, setInvoiceId] = useState('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] =
     useState('Continue');
@@ -79,7 +81,9 @@ const InvoiceModalDialog = (props: any) => {
         setPeriodEndingDate(invoiceData.PeriodEnding);
         setContractNumber(invoiceData.ContractNumber);
       }
-    } else setDialogTitle('Create Invoice');
+    } else {
+      setDialogTitle('Create invoice');
+    }
   }, [isInvoiceAddition]);
 
   const clearDialgoControls = () => {
@@ -127,6 +131,7 @@ const InvoiceModalDialog = (props: any) => {
     if (isInvoiceAddition) {
       setInvoiceData(invoiceForSession);
       setTimeReportsToReconcile(props.timeReports);
+
       // Clear the modal contrls
       clearDialgoControls();
 
@@ -134,8 +139,8 @@ const InvoiceModalDialog = (props: any) => {
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
       // update object in session
-
       setInvoiceData(invoiceForSession);
+      props.stateChanged();
       props.showInvoiceDialog(false);
     }
   };
@@ -174,6 +179,7 @@ const InvoiceModalDialog = (props: any) => {
                         setInvoiceIdError(true);
                       } else {
                         setInvoiceIdError(false);
+                        setPageHasError(false);
                       }
                     }}
                   />
@@ -186,17 +192,26 @@ const InvoiceModalDialog = (props: any) => {
                     // trailingIcon='calendar'
                     name='dateOnInvoice'
                     placeholder='YYYY-MM-DD'
+                    error={dateOfInvoiceError}
                     value={dateOfInvoice}
                     min={minDate}
                     max={maxDate}
                     width='200px'
                     onChange={(name, value) => {
-                      const propertyValue: Date = new Date(value);
-                      setDateOfInvoice(propertyValue);
-                      if (propertyValue < minDate) {
+                      if (value === '') {
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
-                      } else setDateOfInvoice(propertyValue);
+                      } else {
+                        const propertyValue: Date = new Date(value);
+                        setDateOfInvoice(propertyValue);
+                        if (propertyValue < minDate) {
+                          setDateOfInvoiceError(true);
+                          setPageHasError(true);
+                        } else {
+                          setDateOfInvoiceError(false);
+                          setPageHasError(false);
+                        }
+                      }
                     }}
                   />
                 </GoAFormItem>
@@ -207,13 +222,15 @@ const InvoiceModalDialog = (props: any) => {
                 <GoAFormItem label='Invoice amount'>
                   <GoAInput
                     name='ctrlInvoiceAmount'
+                    type='number'
                     width='300px'
                     maxLength={10}
                     error={invoiceAmountError}
                     value={invoiceAmount.toString()}
+                    max='99999999'
+                    min='0'
                     prefix='$'
                     onBlur={(key, value) => {
-                      //alert("onBlur")
                       if (
                         Number.isNaN(value) ||
                         Number.isNaN(Number.parseFloat(value))
@@ -227,7 +244,6 @@ const InvoiceModalDialog = (props: any) => {
                       }
                     }}
                     onChange={(key, value) => {
-                      //alert("onChange");
                       if (
                         Number.isNaN(value) ||
                         Number.isNaN(Number.parseFloat(value))
@@ -248,7 +264,6 @@ const InvoiceModalDialog = (props: any) => {
               <td>
                 <GoAFormItem label='Period ending'>
                   <GoAInputDate
-                    // trailingIcon='calendar'
                     name='periodEndingDate'
                     placeholder='yyyy-MM-DD'
                     value={periodEndingDate}
@@ -257,11 +272,19 @@ const InvoiceModalDialog = (props: any) => {
                     max={maxDate}
                     width='200px'
                     onChange={(name, value) => {
-                      const propertyValue: Date = new Date(value);
-                      setPeriodEndingDate(propertyValue);
-                      if (propertyValue < minDate) {
+                      if (value === '') {
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
+                      } else {
+                        const propertyValue: Date = new Date(value);
+                        setPeriodEndingDate(propertyValue);
+                        if (propertyValue < minDate) {
+                          setPeriodEndingDateError(true);
+                          setPageHasError(true);
+                        } else {
+                          setPeriodEndingDateError(false);
+                          setPageHasError(false);
+                        }
                       }
                     }}
                   />
@@ -272,19 +295,27 @@ const InvoiceModalDialog = (props: any) => {
               <td>
                 <GoAFormItem label='Invoice received'>
                   <GoAInputDate
-                    // trailingIcon='calendar'
                     name='invoiceReceivedDate'
                     placeholder='YYYY-MM-DD'
                     value={invoiceReceivedDate}
+                    error={invoiceReceivedDateError}
                     min={minDate}
                     max={maxDate}
                     width='200px'
                     onChange={(name, value) => {
-                      const propertyValue: Date = new Date(value);
-                      setInvoiceReceivedDate(propertyValue);
-                      if (propertyValue < minDate) {
+                      if (value === '') {
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
+                      } else {
+                        const propertyValue: Date = new Date(value);
+                        setInvoiceReceivedDate(propertyValue);
+                        if (propertyValue < minDate) {
+                          setInvoiceReceivedDateError(true);
+                          setPageHasError(true);
+                        } else {
+                          setInvoiceReceivedDateError(false);
+                          setPageHasError(false);
+                        }
                       }
                     }}
                   />
