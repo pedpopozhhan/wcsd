@@ -132,9 +132,7 @@ export default function InvoiceDetails() {
                 <DetailsTable data={allData} onAddRemove={onAddRemove} />
               )}
               {tabIndex === 2 && (
-                <div>
                   <ReconciledInvoiceDetails />
-                </div>
               )}
             </div>
           </div>
