@@ -1,11 +1,4 @@
-import {
-  GoAAppHeader,
-  GoAMicrositeHeader,
-  GoAAppFooter,
-  GoAPageBlock,
-  GoAAppFooterMetaSection,
-  GoAOneColumnLayout,
-} from '@abgov/react-components';
+import { GoAAppHeader } from '@abgov/react-components';
 import { Outlet } from 'react-router-dom';
 import styles from './App.module.scss';
 let { mainContainer, outletContainer } = styles;
