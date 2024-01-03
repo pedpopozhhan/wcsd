@@ -24,8 +24,9 @@ const InvoiceModalDialog = (props: any) => {
     'invoiceData',
     null as any
   );
-  const [timeReportsToReconcile, setTimeReportsToReconcile] =
-    useSessionStorage<IInvoiceData>('timeReportsToReconcile', null as any);
+  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
+    number[]
+  >('timeReportsToReconcile', []);
 
   const [invoiceId, setInvoiceId] = useState('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] =

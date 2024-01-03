@@ -1,15 +1,58 @@
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 
 import { Observable, map, of } from 'rxjs';
-
+import axios from 'axios-observable';
+interface IDetailsServiceGetBody {
+  timeReportIds: number[];
+}
 class InvoiceDetailsService {
   private baseUrl: string;
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
-
+  getInvoiceDetails(
+    timeReportIds: number[]
+  ): Observable<IDetailsTableRowData[]> {
+    const body: IDetailsServiceGetBody = {
+      timeReportIds: timeReportIds,
+    };
+    return axios
+      .request<IDetailsTableRowData[]>({
+        method: 'post',
+        url: this.baseUrl + '/GetInvoiceDetails',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        data: body,
+      })
+      .pipe(
+        map((x) => {
+          console.dir(x.data);
+          return x.data;
+        })
+      );
+  }
   getAll(): Observable<IDetailsTableRowData[]> {
-    return of(SampleData.GetSampleResults());
+    const body: IDetailsServiceGetBody = {
+      timeReportIds: [0],
+    };
+    return axios
+      .request<IDetailsTableRowData[]>({
+        method: 'post',
+        url: this.baseUrl + '/GetInvoiceDetails',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        data: body,
+      })
+      .pipe(
+        map((x) => {
+          console.dir(x.data);
+          return x.data;
+        })
+      );
   }
 }
 

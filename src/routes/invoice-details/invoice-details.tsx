@@ -32,6 +32,9 @@ export default function InvoiceDetails() {
     'invoiceData',
     null as any
   );
+  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
+    number[]
+  >('timeReportsToReconcile', []);
   const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
   const [tabIndex, setTabIndex] = useState<number>(1);
 
@@ -43,10 +46,12 @@ export default function InvoiceDetails() {
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
 
   useEffect(() => {
-    const subscription = invoiceDetailsService.getAll().subscribe((results) => {
-      const data = results.slice();
-      setAllData(data);
-    });
+    const subscription = invoiceDetailsService
+      .getInvoiceDetails(timeReportsToReconcile)
+      .subscribe((results) => {
+        const data = results.slice();
+        setAllData(data);
+      });
 
     return () => {
       subscription.unsubscribe();
