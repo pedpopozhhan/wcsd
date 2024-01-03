@@ -15,7 +15,7 @@ let {
 
 export default function ReconciledInvoiceDetails() { 
   
-  const [parentShowModal, setParentShowModal] = useState(false);
+  const [parentShowModal, setParentShowModal] = useState<boolean>(false);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);

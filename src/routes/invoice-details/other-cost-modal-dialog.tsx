@@ -15,23 +15,23 @@ import { useNavigate } from 'react-router-dom';
 
 const OtherCostModalDialog = (props: any) => {
 
-    const [pageHasError, setPageHasError] = useState(false);
-    const [minDate, setMinDate] = useState(new Date(1950, 1, 1));
-    const [dialogTitle, setDialogTitle] = useState("");
-    const [isOtherCostAddition, setIsOtherCostAddition] = useState(props.isAddition);
+    const [pageHasError, setPageHasError] = useState<boolean>(false);
+    const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
+    const [dialogTitle, setDialogTitle] = useState<string>("");
+    const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
-    const [rateType, setRateType] = useState("");
-    const [unit, setUnit] = useState("");
-    const [rate, setRate] = useState(0);
-    const [numberOfUnits, setNumberOfUnits] = useState(0);
-    const [unitCost, setUnitCost] = useState("");
+    const [rateType, setRateType] = useState<string>("");
+    const [unit, setUnit] = useState<string>("");
+    const [rate, setRate] = useState<number>(0);
+    const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
+    const [unitCost, setUnitCost] = useState<string>("");
 
-    const [glAccount, setGlAccount] = useState("");
-    const [profitCentre, setProfitCenter] = useState("");
-    const [costCenter, setCostCenter] = useState("");
-    const [internalOrder, setInternalOrder] = useState("");
-    const [fund, setFund] = useState("");
-    const [remarks, setRemarks] = useState("");
+    const [glAccount, setGlAccount] = useState<string>("");
+    const [profitCentre, setProfitCenter] = useState<string>("");
+    const [costCenter, setCostCenter] = useState<string>("");
+    const [internalOrder, setInternalOrder] = useState<string>("");
+    const [fund, setFund] = useState<string>("");
+    const [remarks, setRemarks] = useState<string>("");
 
     const otherCostForSession = {}
     const navigate = useNavigate();
