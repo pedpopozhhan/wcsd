@@ -7,8 +7,16 @@ interface IDetailsServiceGetBody {
 }
 class InvoiceDetailsService {
   private baseUrl: string;
+  private apiKeyCode: string;
+  private headers: { [key: string]: string };
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
+    this.apiKeyCode = import.meta.env.VITE_API_KEY_CODE;
+    this.headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'x-functions-key': this.apiKeyCode,
+    };
   }
   getInvoiceDetails(
     timeReportIds: number[]
@@ -20,15 +28,11 @@ class InvoiceDetailsService {
       .request<IDetailsTableRowData[]>({
         method: 'post',
         url: this.baseUrl + '/GetInvoiceDetails',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: this.headers,
         data: body,
       })
       .pipe(
         map((x) => {
-          console.dir(x.data);
           return x.data;
         })
       );
@@ -41,10 +45,7 @@ class InvoiceDetailsService {
       .request<IDetailsTableRowData[]>({
         method: 'post',
         url: this.baseUrl + '/GetInvoiceDetails',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: this.headers,
         data: body,
       })
       .pipe(
