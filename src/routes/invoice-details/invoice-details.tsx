@@ -3,6 +3,7 @@ import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
 import DetailsTable from './details-table';
+import ReconciledInvoiceDetails from './reconciled-invoice-details';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
@@ -117,7 +118,9 @@ export default function InvoiceDetails() {
               {tabIndex === 1 && (
                 <DetailsTable data={allData} onAddRemove={onAddRemove} />
               )}
-              {tabIndex === 2 && <div>Coming Soon</div>}
+              {tabIndex === 2 && (
+                  <ReconciledInvoiceDetails />
+              )}
             </div>
           </div>
         </div>
