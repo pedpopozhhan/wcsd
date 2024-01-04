@@ -75,13 +75,24 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     setRowData(
       rowData.map((r) => {
         if (r.index === row.index) {
-          return { ...r, isAdd: isAdd };
+          return { ...r, isAdd: isAdd, isSelected: isAdd };
         } else {
           return r;
         }
       })
     );
   }
+
+  function checkAll() {
+    // if any selected, uncheck them all
+    let anySelected = rowData.filter((x) => x.isAdd).some((x) => x.isSelected);
+    setRowData(
+      rowData.map((r) => {
+        return r.isAdd ? r : { ...r, isSelected: !anySelected };
+      })
+    );
+  }
+
   return (
     <div className={container}>
       <div className={tableContainer}>
@@ -92,8 +103,9 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                 <div className={checkboxWrapper}>
                   <GoACheckbox
                     name={''}
-                    checked={false}
-                    disabled={true}
+                    checked={rowData.some((x) => x.isSelected)}
+                    disabled={false}
+                    onChange={() => checkAll()}
                   ></GoACheckbox>
                 </div>
               </th>
@@ -134,7 +146,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                   <div className={checkboxWrapper}>
                     <GoACheckbox
                       name={`cb${index}`}
-                      checked={false}
+                      checked={x.isSelected}
                       disabled={x.isAdd ? true : false}
                     ></GoACheckbox>
                   </div>
