@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styles from './reconciled-invoice-details.module.scss';
+import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
