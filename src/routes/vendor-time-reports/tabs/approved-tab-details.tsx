@@ -23,6 +23,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
+import { useSessionStorage } from 'usehooks-ts';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -49,7 +50,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [loading, setIsLoading] = useState(true);
 
   //Pagination
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   // page number
   const [page, setPage] = useState(1);
@@ -62,21 +62,16 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [sortDir, setSortDir] = useState(-1);
   const [isSorting, setIsSorting] = useState(false);
 
-  //const filteredData = paginationResults?.data;
-
-  //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
-
   // Modal Dialog configuration
   const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID, setContractID] = useState(contractNumber);
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useState<any>([]);
+  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
+    number[]
+  >('timeReportsToReconcile', []);
 
   useEffect(() => {
-    //console.log("startDate", startDate)
-    //console.log("endDate", endDate)
     onRefreshFlightReport();
     setPageFlightReports(paginationResults?.data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function onRefreshFlightReport() {
@@ -215,7 +210,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
   const reconcileTimeReports = () => {
     let items = pageData?.filter((fr: any) => fr.isChecked === true);
-    const trItems: string[] = [];
+    const trItems: number[] = [];
     items?.map((record: any) => {
       trItems.push(record.flightReportId);
     });
@@ -399,7 +394,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
         visible={parentShowModal}
         showInvoiceDialog={setParentShowModal}
         contract={contractID}
-        timeReports={timeReportsToReconcile}
       />
     </>
   );
