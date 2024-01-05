@@ -1,0 +1,55 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+
+.container {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  overflow-x: auto;
+  display: flex;
+  @include thin-scrollbar;
+
+  .buttonWrapper {
+    // goa button is not legitimately customizable
+    width: 140px;
+    text-align: center;
+    gap: $goa-space-xs;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+  }
+
+  .tableContainer {
+    overflow-x: auto;
+    max-width: 100%;
+    @include thin-scrollbar;
+
+    th,
+    td {
+      white-space: nowrap;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+    }
+
+    .stickyColumn {
+      position: sticky;
+      background-color: $goa-color-greyscale-white;
+      z-index: 0;
+
+      &.start {
+        left: 0;
+      }
+
+      &.end {
+        right: 0;
+      }
+
+      &.onTop {
+        z-index: 3;
+      }
+    }
+  }
+}

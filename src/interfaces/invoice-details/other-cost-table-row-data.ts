@@ -3,9 +3,9 @@ export interface IOtherCostTableRowData {
     to: Date;
     rateType: string;
     unit: string;
-    rate: number;    
-    numberOfUnits: number;
     ratePerUnit: number; //with $0.00 //Unit Cost
+    numberOfUnits: number;
+    cost : number;
     glAccountNumber: number;
     profitCentre: string;
     costCentre: string;
