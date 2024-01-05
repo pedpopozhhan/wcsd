@@ -136,7 +136,6 @@ const InvoiceModalDialog = (props: any) => {
     } else {
       // update object in session
       setInvoiceData(invoiceForSession);
-      props.stateChanged();
       props.showInvoiceDialog(false);
     }
   };
