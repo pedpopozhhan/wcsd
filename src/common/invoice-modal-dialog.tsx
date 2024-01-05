@@ -24,10 +24,6 @@ const InvoiceModalDialog = (props: any) => {
     'invoiceData',
     null as any
   );
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
-    number[]
-  >('timeReportsToReconcile', []);
-
   const [invoiceId, setInvoiceId] = useState('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] =
     useState('Continue');
@@ -131,7 +127,6 @@ const InvoiceModalDialog = (props: any) => {
     // put them in the session object
     if (isInvoiceAddition) {
       setInvoiceData(invoiceForSession);
-      setTimeReportsToReconcile(props.timeReports);
 
       // Clear the modal contrls
       clearDialgoControls();
