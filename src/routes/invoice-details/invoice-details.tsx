@@ -2,8 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
-import DetailsTable from './details-table';
-import ReconciledInvoiceDetails from './reconciled-invoice-details';
+import DetailsTab from './details-tab';
+import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
@@ -116,11 +116,9 @@ export default function InvoiceDetails() {
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && (
-                <DetailsTable data={allData} onAddRemove={onAddRemove} />
+                <DetailsTab data={allData} onAddRemove={onAddRemove} />
               )}
-              {tabIndex === 2 && (
-                  <ReconciledInvoiceDetails />
-              )}
+              {tabIndex === 2 && <ReconciledTab />}
             </div>
           </div>
         </div>

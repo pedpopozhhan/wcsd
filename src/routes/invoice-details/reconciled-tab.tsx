@@ -13,28 +13,26 @@ let {
   otherCostHeader,
 } = styles;
 
-
-
-
-export default function ReconciledInvoiceDetails() { 
-  
+export default function ReconciledTab() {
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [allData, setAllData] = useState([] as IOtherCostTableRowData[]);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);
   };
-  
+
   useEffect(() => {
-    const subscription = InvoiceOtherCostService.getAll().subscribe((results) => {
-      const data = results.slice();
-      setAllData(data);
-    });
+    const subscription = InvoiceOtherCostService.getAll().subscribe(
+      (results) => {
+        const data = results.slice();
+        setAllData(data);
+      }
+    );
 
     return () => {
       subscription.unsubscribe();
     };
-  },);
+  });
 
   function onAddRemove(newTotal: number) {
     //update the totalizer
@@ -43,16 +41,21 @@ export default function ReconciledInvoiceDetails() {
   return (
     <div>
       <div className={headerButtonContainer}>
-        <GoAButton type='secondary' onClick={showOtherCostsModal}>Add other costs</GoAButton>
+        <GoAButton type='secondary' onClick={showOtherCostsModal}>
+          Add other costs
+        </GoAButton>
         <GoAButton type='tertiary'> Remove all</GoAButton>
       </div>
-      <div className={reconciledDetailsDiv}>
-      </div>
+      <div className={reconciledDetailsDiv}></div>
       <div className={otherCostHeader}>Other Costs</div>
-      <div className= {otherCostsDiv}>
-      <OtherCostDetailsTable data={allData} onAddRemove={onAddRemove} />
+      <div className={otherCostsDiv}>
+        <OtherCostDetailsTable data={allData} onAddRemove={onAddRemove} />
       </div>
-      <OtherCostModalDialog isAddition='true' visible={parentShowModal} showOtherCostDialog={setParentShowModal} />
+      <OtherCostModalDialog
+        isAddition='true'
+        visible={parentShowModal}
+        showOtherCostDialog={setParentShowModal}
+      />
     </div>
   );
 }

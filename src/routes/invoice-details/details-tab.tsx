@@ -4,7 +4,7 @@ import {
   GoATable,
   GoATableSortHeader,
 } from '@abgov/react-components';
-import styles from './details-table.module.scss';
+import styles from './details-tab.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useEffect, useState } from 'react';
@@ -23,14 +23,14 @@ let {
 class Row {
   index: number;
   data: IDetailsTableRowData;
-  isAdd: boolean = false;
+  isAdded: boolean = false;
   isSelected: boolean = false;
 }
-interface IDetailsTableProps {
+interface IDetailsTabProps {
   data: IDetailsTableRowData[];
   onAddRemove: (newTotal: number) => any;
 }
-const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
+const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
   useEffect(() => {
     setRowData(
@@ -38,7 +38,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
         return {
           index: i,
           data: x,
-          isAdd: false,
+          isAdded: false,
           isSelected: false,
         };
       })
@@ -48,7 +48,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
   // This reacts to the rowData changing
   useEffect(() => {
     const total = rowData
-      .filter((x) => x.isAdd)
+      .filter((x) => x.isAdded)
       .reduce((acc, cur) => {
         return acc + cur.data.cost;
       }, 0);
@@ -70,12 +70,25 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
     setRowData(data);
   }
   function addRemoveClicked(row: Row) {
-    const isAdd = !row.isAdd;
+    const isAdd = !row.isAdded;
 
     setRowData(
       rowData.map((r) => {
         if (r.index === row.index) {
-          return { ...r, isAdd: isAdd, isSelected: isAdd };
+          return { ...r, isAdded: isAdd };
+        } else {
+          return r;
+        }
+      })
+    );
+  }
+  function checkClicked(row: Row, checked: boolean) {
+    const isAdd = !row.isAdded;
+
+    setRowData(
+      rowData.map((r) => {
+        if (r.index === row.index) {
+          return { ...r, isSelected: isAdd };
         } else {
           return r;
         }
@@ -85,10 +98,12 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
 
   function checkAll() {
     // if any selected, uncheck them all
-    let anySelected = rowData.filter((x) => x.isAdd).some((x) => x.isSelected);
+    let anySelected = rowData
+      .filter((x) => !x.isAdded)
+      .some((x) => x.isSelected);
     setRowData(
       rowData.map((r) => {
-        return r.isAdd ? r : { ...r, isSelected: !anySelected };
+        return r.isAdded ? r : { ...r, isSelected: !anySelected };
       })
     );
   }
@@ -147,7 +162,10 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                     <GoACheckbox
                       name={`cb${index}`}
                       checked={x.isSelected}
-                      disabled={x.isAdd ? true : false}
+                      disabled={x.isAdded ? true : false}
+                      onChange={(name, checked, value) => {
+                        checkClicked(x, checked);
+                      }}
                     ></GoACheckbox>
                   </div>
                 </td>
@@ -173,7 +191,7 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
                       type='secondary'
                       onClick={() => addRemoveClicked(x)}
                     >
-                      {x.isAdd ? 'Remove' : 'Add'}
+                      {x.isAdded ? 'Remove' : 'Add'}
                     </GoAButton>
                   </div>
                 </td>
@@ -186,4 +204,29 @@ const DetailsTable: React.FC<IDetailsTableProps> = (props) => {
   );
 };
 
-export default DetailsTable;
+export default DetailsTab;
+/*
+
+ADD ITEM
+Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
+
+“Add” will add the “Cost” of details Data to Reconciled Amount and also populate the Reconciled Grouping in it’s respective Tab
+
+Adding a row will disable it for multiselection
+
+Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
+
+uses number transition per addition / removal for feedback
+
+REMOVE ITEM
+Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
+
+“Remove” will remove the “Cost” of details Data from Reconciled Amount and also from the Reconciled Grouping in it’s resp
+
+Remove a row selected will enable it for multiselection
+
+Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
+
+uses number transition per addition / removal for feedback
+
+*/
