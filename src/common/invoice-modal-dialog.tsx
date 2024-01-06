@@ -51,6 +51,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const navigate = useNavigate();
+  const defaultErrorDate = new Date(1950,0,1);
 
   function getDateWithMonthOffset(offset: number) {
     const d = new Date();
@@ -219,7 +220,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setDateOfInvoice(new Date(1950,0,1));
+                        setDateOfInvoice(defaultErrorDate);
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
                       } else {
@@ -294,7 +295,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setPeriodEndingDate(new Date(1950, 0, 1));
+                        setPeriodEndingDate(defaultErrorDate);
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
                       } else {
@@ -326,7 +327,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setInvoiceReceivedDate(new Date(1950, 0, 1));
+                        setInvoiceReceivedDate(defaultErrorDate);
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
                       } else {
