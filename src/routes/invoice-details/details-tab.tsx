@@ -6,9 +6,12 @@ import {
 } from '@abgov/react-components';
 import styles from './details-tab.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
+import {
+  IDetailsTableRow,
+  InvoiceDetailsContext,
+} from './invoice-details-context';
 
 let {
   container,
@@ -20,30 +23,12 @@ let {
   end,
   onTop,
 } = styles;
-class Row {
-  index: number;
-  data: IDetailsTableRowData;
-  isAdded: boolean = false;
-  isSelected: boolean = false;
-}
 interface IDetailsTabProps {
-  data: IDetailsTableRowData[];
   onAddRemove: (newTotal: number) => any;
 }
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
-  const [rowData, setRowData] = useState<Row[]>([]);
-  useEffect(() => {
-    setRowData(
-      props.data.slice().map((x, i) => {
-        return {
-          index: i,
-          data: x,
-          isAdded: false,
-          isSelected: false,
-        };
-      })
-    );
-  }, [props.data]);
+  const context = useContext(InvoiceDetailsContext);
+  const { rowData, setRowData } = context;
 
   // This reacts to the rowData changing
   useEffect(() => {
@@ -57,7 +42,6 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-    console.log(sortDir);
     data.sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];
@@ -69,7 +53,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
     });
     setRowData(data);
   }
-  function addRemoveClicked(row: Row) {
+  function addRemoveClicked(row: IDetailsTableRow) {
     const isAdd = !row.isAdded;
 
     setRowData(
@@ -82,7 +66,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
       })
     );
   }
-  function checkClicked(row: Row, checked: boolean) {
+  function checkClicked(row: IDetailsTableRow, checked: boolean) {
     const isAdd = !row.isAdded;
 
     setRowData(

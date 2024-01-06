@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
@@ -13,7 +13,8 @@ let {
   otherCostHeader,
 } = styles;
 
-export default function ReconciledTab() {
+interface IReconciledTabProps {}
+const ReconciledTab: FC<IReconciledTabProps> = (props) => {
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [allData, setAllData] = useState([] as IOtherCostTableRowData[]);
 
@@ -58,4 +59,5 @@ export default function ReconciledTab() {
       />
     </div>
   );
-}
+};
+export default ReconciledTab;
