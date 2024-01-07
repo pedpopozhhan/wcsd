@@ -66,10 +66,14 @@ export default function InvoiceDetails() {
     };
   }, [invoiceData]);
 
-  function onAddRemove(newTotal: number) {
-    //update the totalizer
-    setReconciledAmount(newTotal);
-  }
+  useEffect(() => {
+    const total = rowData
+      .filter((x) => x.isAdded)
+      .reduce((acc, cur) => {
+        return acc + cur.data.cost;
+      }, 0);
+    setReconciledAmount(total);
+  }, [rowData]);
 
   function cancel() {
     // navigate to time reports page
@@ -123,7 +127,8 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <DetailsTab onAddRemove={onAddRemove} />}
+              {/* {tabIndex === 1 && <DetailsTab onAddRemove={onAddRemove} />} */}
+              {tabIndex === 1 && <DetailsTab />}
               {tabIndex === 2 && <ReconciledTab />}
             </div>
           </div>

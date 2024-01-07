@@ -12,6 +12,7 @@ import {
   IDetailsTableRow,
   InvoiceDetailsContext,
 } from './invoice-details-context';
+import InvoiceDataTable from './invoice-data-table';
 
 let {
   container,
@@ -24,21 +25,11 @@ let {
   onTop,
 } = styles;
 interface IDetailsTabProps {
-  onAddRemove: (newTotal: number) => any;
+  //   onAddRemove: (newTotal: number) => any;
 }
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData } = context;
-
-  // This reacts to the rowData changing
-  useEffect(() => {
-    const total = rowData
-      .filter((x) => x.isAdded)
-      .reduce((acc, cur) => {
-        return acc + cur.data.cost;
-      }, 0);
-    props.onAddRemove(total);
-  }, [rowData]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -92,100 +83,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
     );
   }
 
-  return (
-    <div className={container}>
-      <div className={tableContainer}>
-        <GoATable onSort={sortData}>
-          <thead>
-            <tr>
-              <th className={`${stickyColumn} ${start} ${onTop}`}>
-                <div className={checkboxWrapper}>
-                  <GoACheckbox
-                    name={''}
-                    checked={rowData.some((x) => x.isSelected)}
-                    disabled={false}
-                    onChange={() => checkAll()}
-                  ></GoACheckbox>
-                </div>
-              </th>
-              <th>
-                <GoATableSortHeader name={'date'}>Date</GoATableSortHeader>
-              </th>
-              <th>Reg No.</th>
-              <th>Report No.</th>
-              <th>AO02 No.</th>
-              <th>Rate Type</th>
-              <th>
-                <GoATableSortHeader name={'numberOfUnits'}>
-                  No. of Units
-                </GoATableSortHeader>
-              </th>
-              <th>Rate Unit</th>
-              <th>
-                <GoATableSortHeader name={'ratePerUnit'}>
-                  Rate / unit
-                </GoATableSortHeader>
-              </th>
-              <th>
-                <GoATableSortHeader name={'cost'}>Cost</GoATableSortHeader>
-              </th>
-              <th>GL Account No.</th>
-              <th>Profit Centre</th>
-              <th>Cost Centre</th>
-              <th>Fire No.</th>
-              <th>Internal Order</th>
-              <th>Fund</th>
-              <th className={`${stickyColumn} ${end} ${onTop}`}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rowData.map((x, index) => (
-              <tr key={index}>
-                <td className={`${stickyColumn} ${start}`}>
-                  <div className={checkboxWrapper}>
-                    <GoACheckbox
-                      name={`cb${index}`}
-                      checked={x.isSelected}
-                      disabled={x.isAdded ? true : false}
-                      onChange={(name, checked, value) => {
-                        checkClicked(x, checked);
-                      }}
-                    ></GoACheckbox>
-                  </div>
-                </td>
-                <td>{yearMonthDay(x.data.date)}</td>
-                <td>{x.data.registrationNumber}</td>
-                <td>{x.data.reportNumber}</td>
-                <td>{x.data.aO02Number}</td>
-                <td>{x.data.rateType}</td>
-                <td>{x.data.numberOfUnits}</td>
-                <td>{x.data.rateUnit}</td>
-                <td>{convertToCurrency(x.data.ratePerUnit)}</td>
-                <td>{convertToCurrency(x.data.cost)}</td>
-                <td>{x.data.glAccountNumber}</td>
-                <td>{x.data.profitCentre}</td>
-                <td>{x.data.costCentre}</td>
-                <td>{x.data.fireNumber}</td>
-                <td>{x.data.internalOrder}</td>
-                <td>{x.data.fund}</td>
-                <td className={`${stickyColumn} ${end}`}>
-                  <div className={buttonWrapper}>
-                    <GoAButton
-                      size='compact'
-                      type='secondary'
-                      onClick={() => addRemoveClicked(x)}
-                    >
-                      {x.isAdded ? 'Remove' : 'Add'}
-                    </GoAButton>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </GoATable>
-      </div>
-    </div>
-  );
+  return <InvoiceDataTable />;
 };
 
 export default DetailsTab;
