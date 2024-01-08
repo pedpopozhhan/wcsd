@@ -25,6 +25,7 @@ let {
 } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
+  showCheckBoxes?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const context = useContext(InvoiceDetailsContext);
@@ -91,16 +92,18 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
         <GoATable onSort={sortData}>
           <thead>
             <tr>
-              <th className={`${stickyColumn} ${start} ${onTop}`}>
-                <div className={checkboxWrapper}>
-                  <GoACheckbox
-                    name={''}
-                    checked={rowData.some((x) => x.isSelected)}
-                    disabled={false}
-                    onChange={() => checkAll()}
-                  ></GoACheckbox>
-                </div>
-              </th>
+              {props.showCheckBoxes && (
+                <th className={`${stickyColumn} ${start} ${onTop}`}>
+                  <div className={checkboxWrapper}>
+                    <GoACheckbox
+                      name={''}
+                      checked={rowData.some((x) => x.isSelected)}
+                      disabled={false}
+                      onChange={() => checkAll()}
+                    ></GoACheckbox>
+                  </div>
+                </th>
+              )}
               <th>
                 <GoATableSortHeader name={'date'}>Date</GoATableSortHeader>
               </th>
@@ -134,18 +137,20 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
           <tbody>
             {rowData.filter(getFilter()).map((x, index) => (
               <tr key={index}>
-                <td className={`${stickyColumn} ${start}`}>
-                  <div className={checkboxWrapper}>
-                    <GoACheckbox
-                      name={`cb${index}`}
-                      checked={x.isSelected}
-                      disabled={x.isAdded ? true : false}
-                      onChange={(name, checked, value) => {
-                        checkClicked(x, checked);
-                      }}
-                    ></GoACheckbox>
-                  </div>
-                </td>
+                {props.showCheckBoxes && (
+                  <td className={`${stickyColumn} ${start}`}>
+                    <div className={checkboxWrapper}>
+                      <GoACheckbox
+                        name={`cb${index}`}
+                        checked={x.isSelected}
+                        disabled={x.isAdded ? true : false}
+                        onChange={(name, checked, value) => {
+                          checkClicked(x, checked);
+                        }}
+                      ></GoACheckbox>
+                    </div>
+                  </td>
+                )}
                 <td>{yearMonthDay(x.data.date)}</td>
                 <td>{x.data.registrationNumber}</td>
                 <td>{x.data.reportNumber}</td>
