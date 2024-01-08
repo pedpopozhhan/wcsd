@@ -2,8 +2,8 @@ export interface IOtherCostTableRowData {
   recordid: number;
   from: Date;
   to: Date;
-  rateType: string;
-  unit: string;
+  rateType: string | string[];
+  unit: string | string[];
   ratePerUnit: number; //with $0.00 //Unit Cost
   numberOfUnits: number;
   cost: number;
