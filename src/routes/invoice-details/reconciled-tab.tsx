@@ -33,7 +33,12 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostAdded(item: IOtherCostTableRowData) {
-    setOtherData([...otherData, item]);
+    setOtherData(
+      [...otherData, item].map((x, index) => {
+        x.recordid = index;
+        return x;
+      })
+    );
   }
 
   return (
