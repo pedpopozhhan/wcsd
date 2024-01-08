@@ -103,11 +103,11 @@ const OtherCostModalDialog = (props: any) => {
     }
 
     function onRateChange(name: string, value: string | string[]) {
-        setRateType(rateType);
+        setRateType(value[0]);
     }
 
     function onUnitChange(name: string, value: string | string[]) {
-        setUnit(unit);
+        setUnit(value[0]);
     }
 
     const validateOtherCost = () => {
@@ -126,7 +126,7 @@ const OtherCostModalDialog = (props: any) => {
             setToDateError(false);
         }
 
-        if (rateType === "") {
+        if (rateType === undefined || rateType === '') {
             setRateTypeError(true);
             setPageHasError(true);
         }
@@ -134,7 +134,7 @@ const OtherCostModalDialog = (props: any) => {
             setRateTypeError(false);
         }
 
-        if (unit === "") {
+        if (unit === undefined || unit === '') {
             setUnitError(true);
             setPageHasError(true);
         }
@@ -336,9 +336,31 @@ const OtherCostModalDialog = (props: any) => {
                         <td className={rowFormatter}>
                             <GoAFormItem label="Rate Type">
                                 <GoADropdown name="rateTypes" value={rateType} onChange={onRateChange} width={lg} error={rateTypeError}>
-                                    <GoADropdownItem value="TYPE1" label="TYPE1" />
-                                    <GoADropdownItem value="TYPE2" label="TYPE2" />
-                                    <GoADropdownItem value="TYPE3" label="TYPE3" />
+                                    <GoADropdownItem value="Dry" label="Dry" />
+                                    <GoADropdownItem value="Ferry" label="Ferry" />
+                                    <GoADropdownItem value="Flat" label="Flat" />
+                                    <GoADropdownItem value="Mars" label="Mars" />
+                                    <GoADropdownItem value="Primary" label="Primary" />
+                                    <GoADropdownItem value="Secondary" label="Secondary" />
+                                    <GoADropdownItem value="Wet" label="Wet" />
+                                    <GoADropdownItem value="Accommodation" label="Accommodation" />
+                                    <GoADropdownItem value="Airport Fee" label="Airport Fee" />
+                                    <GoADropdownItem value="Basing" label="Basing" />
+                                    <GoADropdownItem value="Basing Non-Core" label="Basing Non-Core" />
+                                    <GoADropdownItem value="Basing Penalty" label="Basing Penalty" />
+                                    <GoADropdownItem value="Charter Minimums" label="Charter Minimums" />
+                                    <GoADropdownItem value="Crew Exp - Breakfast" label="Crew Exp - Breakfast" />
+                                    <GoADropdownItem value="Crew Exp - Dinner" label="Crew Exp - Dinner" />
+                                    <GoADropdownItem value="Crew Exp - Lunch" label="Crew Exp - Lunch" />
+                                    <GoADropdownItem value="Crew Expenses" label="Crew Expenses" />
+                                    <GoADropdownItem value="Double Crew" label="Double Crew" />
+                                    <GoADropdownItem value="Landing Fee" label="Landing Fee" />
+                                    <GoADropdownItem value="Nav Canada" label="Nav Canada" />
+                                    <GoADropdownItem value="Passenger Fee" label="Passenger Fee" />
+                                    <GoADropdownItem value="Standby" label="Standby" />
+                                    <GoADropdownItem value="Vehicle Rental" label="Vehicle Rental" />
+                                    
+
                                 </GoADropdown>
                             </GoAFormItem>
                             <GoAFormItem label="Unit">
