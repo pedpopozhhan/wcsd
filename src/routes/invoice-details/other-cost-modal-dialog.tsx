@@ -211,16 +211,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const addOtherCost = () => {
     validateOtherCost();
     if (pageHasError) return;
-    props.onAdd(currentotherCost);
-    // let otherCosts = otherCostsData;
-    // let max = Math.max.apply(Math, otherCosts.map(function (a) { return a.recordid }));
-    //     if (max.toString() === '-Infinity')
-    //         currentOtherCost.recordid = 0;
-    //     else
-    //         currentOtherCost.recordid = max + 1;
-    // otherCosts.push(currentotherCost);
-    // setOtherCostsData(otherCosts);
-    // props.onAddUpdateOtherCost(Number(cost));
+    props.onAdd(currentOtherCost);
     clearDialgoControls();
     setIsOtherCostAddition(false);
     props.showOtherCostDialog(false);
@@ -229,16 +220,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const addAnohterOtherCost = () => {
     validateOtherCost();
     if (pageHasError) return;
-    props.onAdd(currentotherCost);
-    // let otherCosts = otherCostsData;
-    // let max = Math.max.apply(Math, otherCosts.map(function (a) { return a.recordid }));
-    //     if (max.toString() === '-Infinity')
-    //         currentOtherCost.recordid = 0;
-    //     else
-    //         currentOtherCost.recordid = max + 1;
-    // otherCosts.push(currentotherCost);
-    // setOtherCostsData(otherCosts);
-    // props.onAddUpdateOtherCost(Number(cost));
+    props.onAdd(currentOtherCost);
     clearDialgoControls();
     setIsOtherCostAddition(true);
   };
