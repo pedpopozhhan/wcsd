@@ -1,16 +1,14 @@
-import { useState, useEffect, FC, useContext } from 'react';
+import { useState, FC, useContext } from 'react';
 import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import InvoiceOtherCostService from '@/services/invoice-other-cost.service';
 import OtherCostDetailsTable from './other-cost-details-table';
 import {
   InvoiceDetailsContext,
   IDetailsTableRow,
 } from './invoice-details-context';
 import InvoiceDataTable from './invoice-data-table';
-import { useSessionStorage } from 'usehooks-ts';
 
 let {
   headerButtonContainer,
@@ -19,27 +17,23 @@ let {
   otherCostHeader,
 } = styles;
 
-interface IReconciledTabProps {
-  onAddUpdateRemoveOtherCost: (value: number) => any;
-}
-const ReconciledTab: FC<IReconciledTabProps> = (props) => {
+interface IReconciledTabProps {}
+const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
+  const context = useContext(InvoiceDetailsContext);
+  const { otherData, setOtherData } = context;
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
-  const [allData, setAllData] = useState([] as IOtherCostTableRowData[]);
-  const [otherCostsData, setOtherCostsData] = useSessionStorage<
-    IOtherCostTableRowData[]
-  >('invoiceOtherCostData', []);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);
   };
 
-  useEffect(() => {
-    setAllData(otherCostsData);
-  }, [otherCostsData]);
-
   function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
     //update the totalizer
-    props.onAddUpdateRemoveOtherCost(amountToAdjust);
+    console.log(amountToAdjust);
+  }
+
+  function onOtherCostAdded(item: IOtherCostTableRowData) {
+    setOtherData([...otherData, item]);
   }
 
   return (
@@ -56,15 +50,15 @@ const ReconciledTab: FC<IReconciledTabProps> = (props) => {
       <div className={otherCostHeader}>Other Costs</div>
       <div className={otherCostsDiv}>
         <OtherCostDetailsTable
-          data={allData}
+          data={otherData}
           onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost}
         />
       </div>
       <OtherCostModalDialog
-        isAddition='true'
+        isAddition={true}
         visible={parentShowModal}
+        onAdd={onOtherCostAdded}
         showOtherCostDialog={setParentShowModal}
-        onAddUpdateOtherCost={onAddUpdateRemoveOtherCost}
       />
     </div>
   );

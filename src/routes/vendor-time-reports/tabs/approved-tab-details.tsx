@@ -23,7 +23,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
-import { useSessionStorage } from 'usehooks-ts';
+import { useLocalStorage, useSessionStorage } from 'usehooks-ts';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -65,7 +65,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   // Modal Dialog configuration
   const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID, setContractID] = useState(contractNumber);
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
+  const [timeReportsToReconcile, setTimeReportsToReconcile] = useLocalStorage<
     number[]
   >('timeReportsToReconcile', []);
 

@@ -7,7 +7,7 @@ import ReconciledTab from './reconciled-tab';
 import { useContext, useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
-import { useSessionStorage } from 'usehooks-ts';
+import { useLocalStorage, useSessionStorage } from 'usehooks-ts';
 import InvoiceModalDialog, {
   IInvoiceData,
 } from '@/common/invoice-modal-dialog';
@@ -28,14 +28,14 @@ let {
 
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData } = context;
+  const { rowData, setRowData, otherData, setOtherData } = context;
   const [otherAmount, setOtherAmount] = useState<number>(0);
   const navigate = useNavigate();
   const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
     'invoiceData',
     null as any
   );
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
+  const [timeReportsToReconcile, setTimeReportsToReconcile] = useLocalStorage<
     number[]
   >('timeReportsToReconcile', []);
   const [tabIndex, setTabIndex] = useState<number>(1);
@@ -65,7 +65,7 @@ export default function InvoiceDetails() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [invoiceData]);
+  }, [timeReportsToReconcile]);
 
   useEffect(() => {
     const total = rowData
@@ -73,12 +73,12 @@ export default function InvoiceDetails() {
       .reduce((acc, cur) => {
         return acc + cur.data.cost;
       }, 0);
-    setReconciledAmount(total + otherAmount);
-  }, [rowData]);
 
-  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
-    setOtherAmount(amountToAdjust);
-  }
+    const otherTotal = otherData.reduce((acc, cur) => {
+      return acc + cur.cost;
+    }, 0);
+    setReconciledAmount(total + otherTotal);
+  }, [rowData, otherData]);
 
   function cancel() {
     // navigate to time reports page
@@ -133,11 +133,7 @@ export default function InvoiceDetails() {
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <DetailsTab />}
-              {tabIndex === 2 && (
-                <ReconciledTab
-                  onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost}
-                />
-              )}
+              {tabIndex === 2 && <ReconciledTab />}
             </div>
           </div>
         </div>
