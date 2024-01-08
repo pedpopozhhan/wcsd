@@ -29,6 +29,7 @@ let {
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData } = context;
+  const [otherAmount, setOtherAmount] = useState<number>(0);
   const navigate = useNavigate();
   const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
     'invoiceData',
@@ -72,8 +73,12 @@ export default function InvoiceDetails() {
       .reduce((acc, cur) => {
         return acc + cur.data.cost;
       }, 0);
-    setReconciledAmount(total);
+    setReconciledAmount(total + otherAmount);
   }, [rowData]);
+
+  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
+    setOtherAmount(amountToAdjust);
+  }
 
   function cancel() {
     // navigate to time reports page
@@ -127,9 +132,12 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {/* {tabIndex === 1 && <DetailsTab onAddRemove={onAddRemove} />} */}
               {tabIndex === 1 && <DetailsTab />}
-              {tabIndex === 2 && <ReconciledTab />}
+              {tabIndex === 2 && (
+                <ReconciledTab
+                  onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost}
+                />
+              )}
             </div>
           </div>
         </div>

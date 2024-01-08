@@ -8,10 +8,11 @@ class InvoiceOtherCostService {
         this.baseUrl = import.meta.env.VITE_API_BASE_URL;
     }
 
-    getAll(): Observable<IOtherCostTableRowData[]> {
+    getAll(): Observable<IOtherCostTableRowData[]> {        
         return of(SampleData.GetSampleResults());
     }
 }
+
 
 export class SampleData {
     static GetSampleResults(): IOtherCostTableRowData[] {
@@ -19,6 +20,7 @@ export class SampleData {
         const date = Date.now();
         for (let i = 1; i <= 5; i++) {
             results.push({
+                recordid: i,
                 from: new Date(date + 86400000 * i),
                 to: new Date(date + 86400000 * i),
                 rateType: `${i}`,
@@ -26,12 +28,12 @@ export class SampleData {
                 ratePerUnit: 1234.25,
                 numberOfUnits: i,
                 cost: i * 1234.25, //with $0.00
-                glAccountNumber: i,
+                glAccountNumber: `${i}`,
                 profitCentre: `${i}`,
                 costCentre: `${i}`,
                 remarks: `${i}`,
                 internalOrder: `${i}`,
-                fund: i,
+                fund: `${i}`,
                 invoiceId: `${i}`,
             });
         }

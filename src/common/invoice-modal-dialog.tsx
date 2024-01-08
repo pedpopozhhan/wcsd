@@ -9,6 +9,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from 'usehooks-ts';
+import { yearMonthDay } from '@/common/dates';
 
 export interface IInvoiceData {
   InvoiceID: string;
@@ -20,32 +21,25 @@ export interface IInvoiceData {
 }
 
 const InvoiceModalDialog = (props: any) => {
-  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
-    'invoiceData',
-    null as any
-  );
-  const [invoiceId, setInvoiceId] = useState('');
-  const [labelforInvoiceOperation, setlabelforInvoiceOperation] =
-    useState('Continue');
-  const [isInvoiceAddition, setIsInvoiceAddition] = useState(props.isAddition);
-  const [invoiceIdError, setInvoiceIdError] = useState(false);
-  const [dateOfInvoice, setDateOfInvoice] = useState(new Date(Date()));
-  const [dateOfInvoiceError, setDateOfInvoiceError] = useState(false);
-  const [invoiceAmount, setInvoiceAmount] = useState(0);
-  const [invoiceAmountError, setInvoiceAmountError] = useState(false);
-  const [periodEndingDate, setPeriodEndingDate] = useState(new Date(Date()));
-  const [periodEndingDateError, setPeriodEndingDateError] = useState(false);
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState(
-    new Date(Date())
-  );
-  const [invoiceReceivedDateError, setInvoiceReceivedDateError] =
-    useState(false);
-  const [maxDate, setMaxDate] = useState(getDateWithMonthOffset(1));
+  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>('invoiceData', null as any);
+  const [invoiceId, setInvoiceId] = useState<string>('');
+  const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
+  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
+  const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
+  const [dateOfInvoice, setDateOfInvoice] = useState<Date>(new Date(Date()));
+  const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
+  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
+  const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
+  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(new Date(Date()));
+  const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(new Date(Date()));
+  const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
+  const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [timeReports, setTimeReports] = useState(props.timeReports);
-  const [pageHasError, setPageHasError] = useState(false);
-  const [minDate, setMinDate] = useState(new Date(1950, 1, 1));
-  const [dialogTitle, setDialogTitle] = useState('');
+  const [pageHasError, setPageHasError] = useState<boolean>(false);
+  const [minDate, setMinDate] = useState<Date>(new Date(1950, 2, 1));
+  const [dialogTitle, setDialogTitle] = useState<string>('');
 
   const invoiceForSession = {
     InvoiceID: invoiceId,
@@ -57,6 +51,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const navigate = useNavigate();
+  const defaultErrorDate = new Date(1950,0,1);
 
   function getDateWithMonthOffset(offset: number) {
     const d = new Date();
@@ -71,34 +66,48 @@ const InvoiceModalDialog = (props: any) => {
       setlabelforInvoiceOperation('Update');
 
       if (invoiceData != null) {
-        setInvoiceId(invoiceData.InvoiceID);
-        setInvoiceAmount(invoiceData.InvoiceAmount);
-        setDateOfInvoice(invoiceData.DateOnInvoice);
-        setInvoiceReceivedDate(invoiceData.InvoiceReceived);
-        setPeriodEndingDate(invoiceData.PeriodEnding);
-        setContractNumber(invoiceData.ContractNumber);
+        setToSessionData();
       }
     } else {
       setDialogTitle('Create invoice');
     }
   }, [isInvoiceAddition]);
 
-  const clearDialgoControls = () => {
-    setInvoiceId('');
+
+  const setToSessionData = () => {
+    setInvoiceId(invoiceData.InvoiceID);
+    setInvoiceAmount(invoiceData.InvoiceAmount);
+    setDateOfInvoice(invoiceData.DateOnInvoice);
+    setInvoiceReceivedDate(invoiceData.InvoiceReceived);
+    setPeriodEndingDate(invoiceData.PeriodEnding);
+    setContractNumber(invoiceData.ContractNumber);
+  }
+
+  const clearErrors = () => {
     setInvoiceIdError(false);
-    setInvoiceAmount(0);
     setInvoiceAmountError(false);
-    setDateOfInvoice(new Date(Date()));
     setDateOfInvoiceError(false);
-    setPeriodEndingDate(new Date(Date()));
     setPeriodEndingDateError(false);
-    setInvoiceReceivedDate(new Date(Date()));
     setInvoiceReceivedDateError(false);
   };
 
-  const hideModalDialog = () => {
-    if (props.isAddition === 'true') clearDialgoControls();
+  const clearDataPoints = () => {
+    setInvoiceId('');
+    setInvoiceAmount(0);
+    setDateOfInvoice(new Date(Date()));
+    setPeriodEndingDate(new Date(Date()));
+    setInvoiceReceivedDate(new Date(Date()));
+  }
 
+
+  const hideModalDialog = () => {
+    if (props.isAddition === 'true') {
+      clearDataPoints();
+    }
+    else{
+      if (invoiceData != null) setToSessionData();
+    }
+    clearErrors();
     props.showInvoiceDialog(false);
   };
 
@@ -111,15 +120,33 @@ const InvoiceModalDialog = (props: any) => {
       setInvoiceIdError(false);
     }
 
-    if (
-      Number.isNaN(invoiceAmount) ||
-      invoiceAmount <= 0 ||
-      invoiceAmount === null
-    ) {
+    if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
       setInvoiceAmountError(true);
       return;
-    } else {
+    }
+    else {
       setInvoiceAmountError(false);
+    }
+
+    if (new Date(yearMonthDay(dateOfInvoice)) < minDate) {
+      setDateOfInvoiceError(true);
+      return;
+    } else {
+      setDateOfInvoiceError(false);
+    }
+
+    if (new Date(yearMonthDay(periodEndingDate)) < minDate) {
+      setPeriodEndingDateError(true);
+      return;
+    } else {
+      setPeriodEndingDateError(false);
+    }
+
+    if (new Date(yearMonthDay(invoiceReceivedDate)) < minDate) {
+      setInvoiceReceivedDateError(true);
+      return;
+    } else {
+      setInvoiceReceivedDateError(false);
     }
 
     if (pageHasError) return;
@@ -127,15 +154,15 @@ const InvoiceModalDialog = (props: any) => {
     // put them in the session object
     if (isInvoiceAddition) {
       setInvoiceData(invoiceForSession);
-
-      // Clear the modal contrls
-      clearDialgoControls();
+      clearDataPoints();
+      clearErrors();
 
       // Navigate to invoice detail page
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
       // update object in session
       setInvoiceData(invoiceForSession);
+      clearErrors();
       props.showInvoiceDialog(false);
     }
   };
@@ -167,7 +194,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => {}}
+                    onBlur={(key, value) => { }}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {
@@ -184,7 +211,6 @@ const InvoiceModalDialog = (props: any) => {
               <td>
                 <GoAFormItem label='Date on invoice'>
                   <GoAInputDate
-                    // trailingIcon='calendar'
                     name='dateOnInvoice'
                     placeholder='YYYY-MM-DD'
                     error={dateOfInvoiceError}
@@ -194,6 +220,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
+                        setDateOfInvoice(defaultErrorDate);
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
                       } else {
@@ -268,6 +295,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
+                        setPeriodEndingDate(defaultErrorDate);
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
                       } else {
@@ -299,6 +327,7 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
+                        setInvoiceReceivedDate(defaultErrorDate);
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
                       } else {
