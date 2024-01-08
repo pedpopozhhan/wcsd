@@ -5,6 +5,7 @@ import OtherCostModalDialog from './other-cost-modal-dialog';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import InvoiceOtherCostService from '@/services/invoice-other-cost.service';
 import OtherCostDetailsTable from './other-cost-details-table';
+import { useSessionStorage } from 'usehooks-ts';
 
 let {
   headerButtonContainer,
@@ -13,29 +14,27 @@ let {
   otherCostHeader,
 } = styles;
 
-export default function ReconciledTab() {
+
+interface IReconciledTabProps {
+  onAddUpdateRemoveOtherCost: (amountToAdjust: number) => any;
+}
+
+const ReconciledTab: React.FC<IReconciledTabProps> = (props) => {
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [allData, setAllData] = useState([] as IOtherCostTableRowData[]);
+  const [otherCostsData, setOtherCostsData] = useSessionStorage<IOtherCostTableRowData[]>('invoiceOtherCostData', []);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);
   };
 
   useEffect(() => {
-    const subscription = InvoiceOtherCostService.getAll().subscribe(
-      (results) => {
-        const data = results.slice();
-        setAllData(data);
-      }
-    );
+    setAllData(otherCostsData);    
+  }, [otherCostsData]);
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  });
-
-  function onAddRemove(newTotal: number) {
+  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
     //update the totalizer
+    props.onAddUpdateRemoveOtherCost(amountToAdjust);
   }
 
   return (
@@ -49,13 +48,15 @@ export default function ReconciledTab() {
       <div className={reconciledDetailsDiv}></div>
       <div className={otherCostHeader}>Other Costs</div>
       <div className={otherCostsDiv}>
-        <OtherCostDetailsTable data={allData} onAddRemove={onAddRemove} />
+        <OtherCostDetailsTable data={allData} onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost} />
       </div>
       <OtherCostModalDialog
         isAddition='true'
         visible={parentShowModal}
         showOtherCostDialog={setParentShowModal}
+        onAddUpdateOtherCost = {onAddUpdateRemoveOtherCost}
       />
     </div>
   );
-}
+};
+export default ReconciledTab;

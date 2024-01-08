@@ -10,47 +10,93 @@ import {
     GoATextArea,
 } from '@abgov/react-components';
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-
+import { json, useNavigate } from 'react-router-dom';
+import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { useSessionStorage } from 'usehooks-ts';
+import { yearMonthDay } from '@/common/dates';
+import { dateValidator } from '@/common/validation';
+import styles from './other-cost-modal-dialog.module.scss';
+let {
+    rowFormatter,
+} = styles;
 
 const OtherCostModalDialog = (props: any) => {
-
     const [pageHasError, setPageHasError] = useState<boolean>(false);
     const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
     const [dialogTitle, setDialogTitle] = useState<string>("");
     const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
-    const [rateType, setRateType] = useState<string>("");
-    const [unit, setUnit] = useState<string>("");
+    const [recordId, setRecordId] = useState<number>(0);
+    const [fromDate, setFromDate] = useState<Date>(new Date());
+    const [fromDateError, setFromDateError] = useState<boolean>(false);
+    const [toDate, setToDate] = useState<Date>(new Date());
+    const [toDateError, setToDateError] = useState<boolean>(false);
+    const [rateType, setRateType] = useState<string>('');
+    const [rateTypeError, setRateTypeError] = useState<boolean>(false);
+    const [unit, setUnit] = useState<string>('');
+    const [unitError, setUnitError] = useState<boolean>(false);
     const [rate, setRate] = useState<number>(0);
+    const [rateError, setRateError] = useState<boolean>(false);
     const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
-    const [unitCost, setUnitCost] = useState<string>("");
+    const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(false);
+    const [cost, setCost] = useState<string>('');
 
     const [glAccount, setGlAccount] = useState<string>("");
+    const [glAccountError, setGlAccountError] = useState<boolean>(false);
     const [profitCentre, setProfitCenter] = useState<string>("");
+    const [profitCentreError, setProfitCenterError] = useState<boolean>(false);
     const [costCenter, setCostCenter] = useState<string>("");
+    const [costCenterError, setCostCenterError] = useState<boolean>(false);
     const [internalOrder, setInternalOrder] = useState<string>("");
+    const [internalOrderError, setInternalOrderError] = useState<boolean>(false);
     const [fund, setFund] = useState<string>("");
+    const [fundError, setFundError] = useState<boolean>(false);
     const [remarks, setRemarks] = useState<string>("");
+    const [remarksError, setRemarksError] = useState<boolean>(false);
+    const [invoiceId, setInvoiceId] = useState<string>("testing");
 
-    const otherCostForSession = {}
+    const [otherCostsData, setOtherCostsData] = useSessionStorage<IOtherCostTableRowData[]>('invoiceOtherCostData', []);
+    const defaultErrorDate = new Date(1950, 0, 1);
+
+    const currentotherCost = {
+        recordid: recordId,
+        from: fromDate,
+        to: toDate,
+        rateType: rateType,
+        unit: unit,
+        ratePerUnit: rate,
+        numberOfUnits: numberOfUnits,
+        cost: Number(cost),
+        glAccountNumber: glAccount,
+        profitCentre: profitCentre,
+        costCentre: costCenter,
+        internalOrder: internalOrder,
+        fund: fund,
+        remarks: remarks,
+        invoiceId: invoiceId
+    };
+
     const navigate = useNavigate();
     const xl = "500px"
     const lg = "250px";
+    const xmd = "225px"
     const md = "150px";
     const sm = "125px";
     const xs = "120px";
 
     useEffect(() => {
-        if (props.isAddition === "false") {
-            setDialogTitle("Update other cost");
-        } else {
+        if (props.isAddition === "true") {
             setDialogTitle("Add other cost");
+            clearDialgoControls();            
+        } else {
+            setDialogTitle("Update other cost");
         }
-
     }, [isOtherCostAddition,]);
 
-    const clearDialgoControls = () => { }
+    const clearDialgoControls = () => {
+        clearDataPoints();
+        clearErrors();
+    }
 
     const hideModalDialog = () => {
         props.showOtherCostDialog(false);
@@ -64,6 +110,154 @@ const OtherCostModalDialog = (props: any) => {
         setUnit(unit);
     }
 
+    const validateOtherCost = () => {
+
+        if (new Date(yearMonthDay(fromDate)) < minDate) {
+            setFromDateError(true);
+            setPageHasError(true);
+        } else {
+            setFromDateError(false);
+        }
+
+        if (new Date(yearMonthDay(toDate)) < minDate) {
+            setToDateError(true);
+            setPageHasError(true);
+        } else {
+            setToDateError(false);
+        }
+
+        if (rateType === "") {
+            setRateTypeError(true);
+            setPageHasError(true);
+        }
+        else {
+            setRateTypeError(false);
+        }
+
+        if (unit === "") {
+            setUnitError(true);
+            setPageHasError(true);
+        }
+        else {
+            setUnitError(false);
+        }
+
+        if (Number.isNaN(rate) || rate <= 0 || rate === null || rate > 99999.99) {
+            setRateError(true);
+            setPageHasError(true);
+        }
+        else {
+            setRateError(false);
+        }
+
+        if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0 || numberOfUnits === null || numberOfUnits > 99999) {
+            setNumberOfUnitsError(true);
+            setPageHasError(true);
+        }
+        else {
+            setNumberOfUnitsError(false);
+        }
+
+        if (glAccount === "") {
+            setGlAccountError(true);
+            setPageHasError(true);
+        }
+        else
+            setGlAccountError(false);
+
+        if (profitCentre === "") {
+            setProfitCenterError(true);
+            setPageHasError(true);
+        }
+        else
+            setProfitCenterError(false);
+
+
+        if (costCenter === "") {
+            setCostCenterError(true);
+            setPageHasError(true);
+        }
+        else
+            setCostCenterError(false);
+
+        if (internalOrder === "") {
+            setInternalOrderError(true);
+            setPageHasError(true);
+        }
+        else
+            setInternalOrderError(false);
+
+        if (fund === "") {
+            setFundError(true);
+            setPageHasError(true);
+        }
+        else
+            setFundError(false);
+
+        if (remarks === "") {
+            setRemarksError(true);
+            setPageHasError(true);
+        }
+        else
+            setRemarksError(false);
+    }
+
+    const clearErrors = () => {
+        setFromDateError(false);
+        setToDateError(false);
+        setRateTypeError(false);
+        setNumberOfUnitsError(false);
+        setUnitError(false);
+        setRateError(false);
+        setGlAccountError(false);
+        setProfitCenterError(false);
+        setCostCenterError(false);
+        setInternalOrderError(false);
+        setFundError(false);
+        setRemarksError(false);
+    }
+
+    const clearDataPoints = () => {
+        setFromDate(new Date());
+        setToDate(new Date());
+        setRateType(' ');
+        setUnit(' ');
+        setRate(0);
+        setNumberOfUnits(0);
+        setCost('');
+        setGlAccount('');
+        setProfitCenter('');
+        setCostCenter('');
+        setInternalOrder('');
+        setFund('');
+        setRemarks('');
+    }
+
+    const addOtherCost = () => {
+        validateOtherCost();
+        if (pageHasError)
+            return;
+        let otherCosts = otherCostsData;
+        otherCosts.push(currentotherCost);
+        setOtherCostsData(otherCosts);
+        props.onAddUpdateOtherCost(Number(cost));
+        clearDialgoControls();
+        setIsOtherCostAddition(false);
+        props.showOtherCostDialog(false);
+    }
+
+    const addAnohterOtherCost = () => {
+        validateOtherCost();
+        if (pageHasError)
+            return;
+        let otherCosts = otherCostsData;
+        otherCosts.push(currentotherCost);
+        setOtherCostsData(otherCosts);
+        props.onAddUpdateOtherCost(Number(cost));
+        clearDialgoControls();
+        setIsOtherCostAddition(true);
+
+    }
 
     return (
         <GoAModal
@@ -72,177 +266,303 @@ const OtherCostModalDialog = (props: any) => {
             width='30vw'
             actions={
                 <GoAButtonGroup alignment="end">
-                    <GoAButton type='tertiary' onClick={() => hideModalDialog()}>Cancel</GoAButton>
-                    <GoAButton type='secondary'>Add</GoAButton>
-                    <GoAButton type='primary'>Add Another</GoAButton>
+                    <GoAButton type='tertiary' onClick={hideModalDialog}>Cancel</GoAButton>
+                    <GoAButton type='secondary' onClick={addOtherCost}>Add</GoAButton>
+                    <GoAButton type='primary' onClick={addAnohterOtherCost}>Add Another</GoAButton>
                 </GoAButtonGroup>
             }
         >
             <table>
                 <tbody>
-                    <tr >
-                        <td>
+                    <tr>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="From">
                                 <GoAInputDate
-                                    name="dateOnInvoice"
+                                    name="fromDate"
                                     placeholder="YYYY-MM-DD"
                                     value={new Date()}
+                                    error={fromDateError}
                                     min={minDate}
                                     width={lg}
-                                    onChange={(name, value) => { }}
-
+                                    onChange={(name, value) => {
+                                        if (value === '') {
+                                            setFromDate(defaultErrorDate);
+                                            setFromDateError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            const propertyValue: Date = new Date(value);
+                                            setFromDate(propertyValue);
+                                            if (propertyValue < minDate) {
+                                                setFromDateError(true);
+                                                setPageHasError(true);
+                                            } else {
+                                                setFromDateError(false);
+                                                setPageHasError(false);
+                                            }
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td colSpan={2}>
                             <GoAFormItem label="To">
                                 <GoAInputDate
                                     name="dateOnInvoice"
                                     placeholder="YYYY-MM-DD"
+                                    error={toDateError}
                                     value={new Date()}
                                     min={minDate}
                                     width={lg}
-                                    onChange={(name, value) => { }}
+                                    onChange={(name, value) => {
+                                        if (value === '') {
+                                            setToDate(defaultErrorDate);
+                                            setToDateError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            const propertyValue: Date = new Date(value);
+                                            setToDate(propertyValue);
+                                            if (propertyValue < minDate) {
+                                                setToDateError(true);
+                                                setPageHasError(true);
+                                            } else {
+                                                setToDateError(false);
+                                                setPageHasError(false);
+                                            }
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
                         </td>
-                        <td></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="Rate Type">
-                                <GoADropdown name="rateTypes" value={rateType} onChange={onRateChange} width={lg}>
+                                <GoADropdown name="rateTypes" value={rateType} onChange={onRateChange} width={lg} error={rateTypeError}>
                                     <GoADropdownItem value="TYPE1" label="TYPE1" />
                                     <GoADropdownItem value="TYPE2" label="TYPE2" />
                                     <GoADropdownItem value="TYPE3" label="TYPE3" />
                                 </GoADropdown>
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td colSpan={2}>
                             <GoAFormItem label="Unit">
-                                <GoADropdown name="units" value={unit} onChange={onRateChange} width={lg}>
+                                <GoADropdown name="units" value={unit} onChange={onUnitChange} width={lg} error={unitError}>
                                     <GoADropdownItem value="UNIT1" label="UNIT1" />
                                     <GoADropdownItem value="UNIT2" label="UNIT2" />
                                     <GoADropdownItem value="UNIT3" label="UNIT3" />
                                 </GoADropdown>
                             </GoAFormItem>
                         </td>
-                        <td></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="Rate">
                                 <GoAInput
                                     name="rate"
                                     type='number'
                                     width={lg}
+                                    error={rateError}
                                     value={rate.toString()}
+                                    max='99999.99'
+                                    min='0'
                                     prefix='$'
                                     suffix="Per&nbsp;Unit"
-                                    onBlur={(key, value) => { }}
-                                    onChange={(key, value) => { }}
+                                    onBlur={(key, value) => {
+                                        if (
+                                            Number.isNaN(value) ||
+                                            Number.isNaN(Number.parseFloat(value))
+                                        ) {
+                                            setRateError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            setRate(Number(value));
+                                            setCost((rate * numberOfUnits).toString())
+                                            setRateError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
+                                    onChange={(key, value) => {
+                                        if (
+                                            Number.isNaN(value) ||
+                                            Number.isNaN(Number.parseFloat(value))
+                                        ) {
+                                            setRateError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            setRate(Number(value));
+                                            setCost((rate * numberOfUnits).toString())
+                                            setRateError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td><GoAFormItem label="No. of Units">
-                            <GoAInput
-                                name="numberOfUnits"
-                                type='number'
-                                width={xs}
-                                value={numberOfUnits.toString()}
-                                onBlur={(key, value) => { }}
-                                onChange={(key, value) => { }}
-                            />
-                        </GoAFormItem></td>
-                        <td>
-                            <GoAFormItem label="Unit Cost">
+                            <GoAFormItem label="No. of Units">
                                 <GoAInput
-                                    name="unitCost"
+                                    name="numberOfUnits"
+                                    type='number'
+                                    width={xs}
+                                    value={numberOfUnits.toString()}
+                                    error={numberOfUnitsError}
+                                    max='99999'
+                                    min='0'
+                                    onBlur={(key, value) => {
+                                        if (
+                                            Number.isNaN(value) ||
+                                            Number.isNaN(Number.parseFloat(value))
+                                        ) {
+                                            setNumberOfUnitsError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            setNumberOfUnits(Number(value));
+                                            setCost((rate * numberOfUnits).toString())
+                                            setNumberOfUnitsError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
+                                    onChange={(key, value) => {
+                                        if (
+                                            Number.isNaN(value) ||
+                                            Number.isNaN(Number.parseFloat(value))
+                                        ) {
+                                            setNumberOfUnitsError(true);
+                                            setPageHasError(true);
+                                        } else {
+                                            setNumberOfUnits(Number(value));
+                                            setCost((rate * numberOfUnits).toString())
+                                            setNumberOfUnitsError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
+                                />
+                            </GoAFormItem>
+                            <GoAFormItem label="Cost">
+                                <GoAInput
+                                    name="cost"
                                     width={sm}
-                                    value={unitCost.toString()}
+                                    value={cost.toString()}
                                     prefix='$'
                                     disabled
-                                    onChange={() => { }}
+                                    onChange={(key, value) => {
+                                       setCost(value);
+                                    }}
                                 />
                             </GoAFormItem>
                         </td>
-                        <td></td>
                     </tr>
-                </tbody>
-            </table>
-            <table>
-                <tbody>
                     <tr>
-                        <td>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="GL Account">
                                 <GoAInput
                                     name="glAccount"
                                     width={md}
                                     value={glAccount}
-                                    onChange={() => { }}
+                                    error={glAccountError}
+                                    maxLength={12}
+                                    onChange={(key, value) => {
+                                        setGlAccount(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setGlAccountError(true);
+                                        } else {
+                                            setGlAccountError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td>
                             <GoAFormItem label="Profit Center">
                                 <GoAInput
                                     name="profitCenter"
                                     width={md}
                                     value={profitCentre}
-                                    onChange={() => { }}
+                                    error={profitCentreError}
+                                    maxLength={12}
+                                    onChange={(key, value) => {
+                                        setProfitCenter(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setProfitCenterError(true);
+                                        } else {
+                                            setProfitCenterError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td>
+
                             <GoAFormItem label="Cost Center">
                                 <GoAInput
                                     name="costCenter"
                                     width={md}
                                     value={costCenter}
-                                    onChange={() => { }}
+                                    error={costCenterError}
+                                    maxLength={12}
+                                    onChange={(key, value) => {
+                                        setCostCenter(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setCostCenterError(true);
+                                        } else {
+                                            setCostCenterError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="Internal Order">
                                 <GoAInput
                                     name="internalOrder"
                                     width={md}
                                     value={internalOrder}
-                                    onChange={() => { }}
+                                    error={internalOrderError}
+                                    maxLength={12}
+                                    onChange={(key, value) => {
+                                        setInternalOrder(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setInternalOrderError(true);
+                                        } else {
+                                            setInternalOrderError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
-                        </td>
-                        <td></td>
-                        <td>
                             <GoAFormItem label="Fund">
                                 <GoAInput
                                     name="fund"
                                     width={md}
                                     value={fund}
-                                    onChange={() => { }}
+                                    error={fundError}
+                                    maxLength={12}
+                                    onChange={(key, value) => {
+                                        setFund(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setFundError(true);
+                                        } else {
+                                            setFundError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
                         </td>
-                        <td></td>
-                        <td></td>
                     </tr>
                     <tr>
-                        <td colSpan={5}>
+                        <td className={rowFormatter}>
                             <GoAFormItem label="Remarks">
                                 <GoATextArea
                                     name="remkarks"
                                     width={xl}
-
+                                    maxCharCount={1000}
                                     value={remarks}
-                                    onChange={() => { }}
+                                    error={remarksError}
+                                    onChange={(key, value) => {
+                                        setRemarks(value.trim());
+                                        if (value.trim().length <= 0) {
+                                            setRemarksError(true);
+                                        } else {
+                                            setRemarksError(false);
+                                            setPageHasError(false);
+                                        }
+                                    }}
                                 />
                             </GoAFormItem>
                         </td>

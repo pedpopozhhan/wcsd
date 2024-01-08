@@ -63,6 +63,11 @@ export default function InvoiceDetails() {
     setReconciledAmount(newTotal);
   }
 
+  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
+    //update the totalizer
+    setReconciledAmount(reconciledAmount + amountToAdjust);
+  }
+
   function cancel() {
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
@@ -115,10 +120,8 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && (
-                <DetailsTab data={allData} onAddRemove={onAddRemove} />
-              )}
-              {tabIndex === 2 && <ReconciledTab />}
+              {tabIndex === 1 && (<DetailsTab data={allData} onAddRemove={onAddRemove} />)}
+              {tabIndex === 2 && (<ReconciledTab onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost} />)}
             </div>
           </div>
         </div>

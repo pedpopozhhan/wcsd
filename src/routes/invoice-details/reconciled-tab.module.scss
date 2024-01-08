@@ -17,11 +17,11 @@
 }
 .otherCostHeader{
     font: $goa-typography-heading-s;
-    line-height: $goa-line-height-6;
+    line-height: $goa-line-height-1;
     margin-bottom: $goa-space-l;
 }
 .otherCostsDiv{
-    padding: $goa-space-l;
+    padding: $goa-space-s;
     overflow-y: auto;
-    height: 300px;
+    height: 360px;
 }

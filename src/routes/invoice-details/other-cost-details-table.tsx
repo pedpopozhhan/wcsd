@@ -9,6 +9,7 @@ import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
+
 let {
     container,
     checkboxWrapper,
@@ -25,7 +26,7 @@ class Row {
 }
 interface IOtherCostTableProps {
     data: IOtherCostTableRowData[];
-    onAddRemove: (newTotal: number) => any;
+    onAddUpdateRemoveOtherCost: (amountToAdjust: number) => any;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     const [rowData, setRowData] = useState<Row[]>([]);
@@ -59,7 +60,13 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
         });
         setRowData(data);
     }
-    
+
+    function editSelectedOtherCost(row: Row) {
+    }
+
+    function removeSelectedOtherCost(row: Row) {
+      }
+
     return (
         <div className={container}>
             <div className={tableContainer}>
@@ -77,8 +84,8 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                             <th>Profit Centre</th>
                             <th>Cost Centre</th>
                             <th>Internal Order</th>
-                            <th>Fund</th>                            
-                            <th>Remarks</th>                            
+                            <th>Fund</th>
+                            <th>Remarks</th>
                             <th className={`${stickyColumn} ${end} ${onTop}`}></th>
                         </tr>
                     </thead>
@@ -89,7 +96,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                                 <td>{yearMonthDay(x.data.to)}</td>
                                 <td>{x.data.rateType}</td>
                                 <td>{x.data.unit}</td>
-                                <td>{convertToCurrency(x.data.ratePerUnit)}</td>                                
+                                <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                                 <td>{x.data.numberOfUnits}</td>
                                 <td>{convertToCurrency(x.data.cost)}</td>
                                 <td>{x.data.glAccountNumber}</td>
@@ -100,19 +107,14 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                                 <td>{x.data.remarks}</td>
                                 <td className={`${stickyColumn} ${end}`}>
                                     <div className={buttonWrapper}>
-                                        <GoAButton size='compact' type='secondary'
-                                        // onClick={() => addRemoveClicked(x)}
-                                        >
+                                        <GoAButton size='compact' type='secondary' onClick={() => editSelectedOtherCost(x)}>
                                             {'Edit'}
                                         </GoAButton>
-
-                                        <GoAButton size='compact' type='secondary'
-                                        // onClick={() => addRemoveClicked(x)}
-                                        >
+                                        <GoAButton size='compact' type='secondary'  onClick={() => removeSelectedOtherCost(x)}>
                                             {'Remove'}
                                         </GoAButton>
                                     </div>
-                                </td>                    
+                                </td>
                             </tr>
                         ))}
                     </tbody>

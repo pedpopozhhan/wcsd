@@ -1,0 +1,9 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+
+.rowFormatter {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: $goa-space-s;
+}
