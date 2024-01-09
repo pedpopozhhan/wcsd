@@ -207,7 +207,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
       <div>
         <div className='divTable'>
-          <GoATable onSort={sortData}>
+          <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
                 <th style={{ maxWidth: '40%' }}>

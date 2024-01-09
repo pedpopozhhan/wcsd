@@ -251,7 +251,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           Reconcile
         </GoAButton>
         <div className='divTable'>
-          <GoATable onSort={sortData}>
+          <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
                 <th style={{ maxWidth: '2%', padding: '12px 0 12px 32px' }}>
