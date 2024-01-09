@@ -6,13 +6,8 @@ import {
   GoAPagination,
   GoATableSortHeader,
   GoAIconButton,
-  GoAModal,
-  GoAButtonGroup,
-  GoAInput,
-  GoAInputDate,
-  GoAFormItem,
 } from '@abgov/react-components';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
 import { IPaginationResult } from '@/interfaces/pagination-result.interface';
@@ -23,7 +18,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
-import { useLocalStorage, useSessionStorage } from 'usehooks-ts';
+import { MainContext } from '@/common/main-context';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -65,9 +60,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   // Modal Dialog configuration
   const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID, setContractID] = useState(contractNumber);
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useLocalStorage<
-    number[]
-  >('timeReportsToReconcile', []);
+
+  const mainContext = useContext(MainContext);
+  const { setTimeReportsToReconcile } = mainContext;
 
   useEffect(() => {
     onRefreshFlightReport();

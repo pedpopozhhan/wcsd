@@ -1,6 +1,7 @@
 import { GoAAppHeader } from '@abgov/react-components';
 import { Outlet } from 'react-router-dom';
 import styles from './App.module.scss';
+import { MainContextProvider } from './common/main-context';
 let { mainContainer, outletContainer } = styles;
 
 export function App() {
@@ -23,7 +24,9 @@ export function App() {
       </GoAAppHeader>
 
       <div className={outletContainer}>
-        <Outlet />
+        <MainContextProvider>
+          <Outlet />
+        </MainContextProvider>
       </div>
     </div>
   );

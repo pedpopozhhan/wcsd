@@ -7,11 +7,11 @@ import ReconciledTab from './reconciled-tab';
 import { useContext, useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
-import { useLocalStorage, useSessionStorage } from 'usehooks-ts';
 import InvoiceModalDialog, {
   IInvoiceData,
 } from '@/common/invoice-modal-dialog';
 import { InvoiceDetailsContext } from './invoice-details-context';
+import { MainContext } from '@/common/main-context';
 
 let {
   container,
@@ -28,16 +28,11 @@ let {
 
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherData, setOtherData } = context;
-  const [otherAmount, setOtherAmount] = useState<number>(0);
+  const { rowData, setRowData, otherData } = context;
   const navigate = useNavigate();
-  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
-    'invoiceData',
-    null as any
-  );
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useLocalStorage<
-    number[]
-  >('timeReportsToReconcile', []);
+
+  const mainContext = useContext(MainContext);
+  const { timeReportsToReconcile, invoiceData } = mainContext;
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   // Modal Dialog configuration
