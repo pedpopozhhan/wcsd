@@ -1,114 +1,70 @@
 import {
   GoAButton,
-  GoACheckbox,
-  GoATable,
-  GoATableSortHeader,
+  GoADropdown,
+  GoADropdownItem,
 } from '@abgov/react-components';
 import styles from './details-tab.module.scss';
-import { yearMonthDay } from '@/common/dates';
 import { useContext, useEffect, useState } from 'react';
-import { convertToCurrency } from '@/common/currency';
-import {
-  IDetailsTableRow,
-  InvoiceDetailsContext,
-} from './invoice-details-context';
+import { InvoiceDetailsContext } from './invoice-details-context';
 import InvoiceDataTable from './invoice-data-table';
 
-let {
-  container,
-  checkboxWrapper,
-  buttonWrapper,
-  tableContainer,
-  stickyColumn,
-  start,
-  end,
-  onTop,
-} = styles;
-interface IDetailsTabProps {
-  //   onAddRemove: (newTotal: number) => any;
-}
+let { container, buttons } = styles;
+interface IDetailsTabProps {}
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData } = context;
+  const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
+  const [rateTypes, setRateTypes] = useState<string[]>([]);
+  const [selectedRateType, setSelectedRateType] = useState<string>('');
 
-  function sortData(sortBy: string, sortDir: number) {
-    const data = [...rowData];
-    data.sort((a: any, b: any) => {
-      const varA = a.data[sortBy];
-      const varB = b.data[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
-        const res = varB.localeCompare(varA);
-        return res * sortDir;
+  useEffect(() => {
+    setSelectAllEnabled(rowData.some((x) => x.isSelected));
+
+    const types: string[] = [];
+    rowData.forEach((row) => {
+      if (!types.includes(row.data.rateType)) {
+        types.push(row.data.rateType);
       }
-      return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(data);
-  }
-  function addRemoveClicked(row: IDetailsTableRow) {
-    const isAdd = !row.isAdded;
+    setRateTypes(types);
+  }, [rowData]);
 
+  function onAddSelected() {
     setRowData(
       rowData.map((r) => {
-        if (r.index === row.index) {
-          return { ...r, isAdded: isAdd };
-        } else {
-          return r;
-        }
-      })
-    );
-  }
-  function checkClicked(row: IDetailsTableRow, checked: boolean) {
-    const isAdd = !row.isAdded;
-
-    setRowData(
-      rowData.map((r) => {
-        if (r.index === row.index) {
-          return { ...r, isSelected: isAdd };
-        } else {
-          return r;
-        }
+        return !r.isSelected ? r : { ...r, isSelected: false, isAdded: true };
       })
     );
   }
 
-  function checkAll() {
-    // if any selected, uncheck them all
-    let anySelected = rowData
-      .filter((x) => !x.isAdded)
-      .some((x) => x.isSelected);
-    setRowData(
-      rowData.map((r) => {
-        return r.isAdded ? r : { ...r, isSelected: !anySelected };
-      })
-    );
+  function onChangeRateType(name: string, type: string | string[]) {
+    setSelectedRateType(type as string);
   }
 
-  return <InvoiceDataTable />;
+  return (
+    <div className={container}>
+      <div className={buttons}>
+        <GoAButton
+          type='secondary'
+          onClick={onAddSelected}
+          disabled={!selectAllEnabled}
+        >
+          Add Selected
+        </GoAButton>
+        <GoADropdown
+          filterable
+          placeholder='All rate types'
+          onChange={onChangeRateType}
+          value={selectedRateType}
+        >
+          {rateTypes.map((x, i) => {
+            return <GoADropdownItem key={i} value={x} label={x} />;
+          })}
+        </GoADropdown>
+      </div>
+      <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateType} />
+    </div>
+  );
 };
 
 export default DetailsTab;
-/*
-
-ADD ITEM
-Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
-
-“Add” will add the “Cost” of details Data to Reconciled Amount and also populate the Reconciled Grouping in it’s respective Tab
-
-Adding a row will disable it for multiselection
-
-Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
-
-uses number transition per addition / removal for feedback
-
-REMOVE ITEM
-Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
-
-“Remove” will remove the “Cost” of details Data from Reconciled Amount and also from the Reconciled Grouping in it’s resp
-
-Remove a row selected will enable it for multiselection
-
-Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
-
-uses number transition per addition / removal for feedback
-
-*/

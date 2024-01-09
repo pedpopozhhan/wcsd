@@ -4,9 +4,9 @@ import {
   GoATable,
   GoATableSortHeader,
 } from '@abgov/react-components';
-import styles from './details-tab.module.scss';
+import styles from './invoice-data-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { convertToCurrency } from '@/common/currency';
 import {
   IDetailsTableRow,
@@ -25,15 +25,20 @@ let {
 } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
+  rateTypeFilter?: string;
   showCheckBoxes?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData } = context;
 
+  const filterByRateType = (x: IDetailsTableRow) => {
+    return props.rateTypeFilter ? x.data.rateType === props.rateTypeFilter : x;
+  };
+
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-    data.sort((a: any, b: any) => {
+    data.filter(filterByRateType).sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];
       if (typeof varA === 'string' || typeof varB === 'string') {
@@ -58,12 +63,10 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
     );
   }
   function checkClicked(row: IDetailsTableRow, checked: boolean) {
-    const isAdd = !row.isAdded;
-
     setRowData(
       rowData.map((r) => {
         if (r.index === row.index) {
-          return { ...r, isSelected: isAdd };
+          return { ...r, isSelected: checked };
         } else {
           return r;
         }
@@ -135,50 +138,54 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {rowData.filter(getFilter()).map((x, index) => (
-              <tr key={index}>
-                {props.showCheckBoxes && (
-                  <td className={`${stickyColumn} ${start}`}>
-                    <div className={checkboxWrapper}>
-                      <GoACheckbox
-                        name={`cb${index}`}
-                        checked={x.isSelected}
-                        disabled={x.isAdded ? true : false}
-                        onChange={(name, checked, value) => {
-                          checkClicked(x, checked);
-                        }}
-                      ></GoACheckbox>
+            {rowData
+              .filter(filterByRateType)
+              .filter(getFilter())
+              .map((x, index) => (
+                <tr key={index}>
+                  {props.showCheckBoxes && (
+                    <td className={`${stickyColumn} ${start}`}>
+                      <div className={checkboxWrapper}>
+                        <GoACheckbox
+                          name={`cb${index}`}
+                          checked={x.isSelected}
+                          disabled={x.isAdded ? true : false}
+                          onChange={(name, checked, value) => {
+                            checkClicked(x, checked);
+                          }}
+                        ></GoACheckbox>
+                      </div>
+                    </td>
+                  )}
+                  <td>{yearMonthDay(x.data.date)}</td>
+                  <td>{x.data.registrationNumber}</td>
+                  <td>{x.data.reportNumber}</td>
+                  <td>{x.data.aO02Number}</td>
+                  <td>{x.data.rateType}</td>
+                  <td>{x.data.numberOfUnits}</td>
+                  <td>{x.data.rateUnit}</td>
+                  <td>{convertToCurrency(x.data.ratePerUnit)}</td>
+                  <td>{convertToCurrency(x.data.cost)}</td>
+                  <td>{x.data.glAccountNumber}</td>
+                  <td>{x.data.profitCentre}</td>
+                  <td>{x.data.costCentre}</td>
+                  <td>{x.data.fireNumber}</td>
+                  <td>{x.data.internalOrder}</td>
+                  <td>{x.data.fund}</td>
+                  <td className={`${stickyColumn} ${end}`}>
+                    <div className={buttonWrapper}>
+                      <GoAButton
+                        size='compact'
+                        type='secondary'
+                        disabled={rowData.some((x) => x.isSelected)}
+                        onClick={() => addRemoveClicked(x)}
+                      >
+                        {x.isAdded ? 'Remove' : 'Add'}
+                      </GoAButton>
                     </div>
                   </td>
-                )}
-                <td>{yearMonthDay(x.data.date)}</td>
-                <td>{x.data.registrationNumber}</td>
-                <td>{x.data.reportNumber}</td>
-                <td>{x.data.aO02Number}</td>
-                <td>{x.data.rateType}</td>
-                <td>{x.data.numberOfUnits}</td>
-                <td>{x.data.rateUnit}</td>
-                <td>{convertToCurrency(x.data.ratePerUnit)}</td>
-                <td>{convertToCurrency(x.data.cost)}</td>
-                <td>{x.data.glAccountNumber}</td>
-                <td>{x.data.profitCentre}</td>
-                <td>{x.data.costCentre}</td>
-                <td>{x.data.fireNumber}</td>
-                <td>{x.data.internalOrder}</td>
-                <td>{x.data.fund}</td>
-                <td className={`${stickyColumn} ${end}`}>
-                  <div className={buttonWrapper}>
-                    <GoAButton
-                      size='compact'
-                      type='secondary'
-                      onClick={() => addRemoveClicked(x)}
-                    >
-                      {x.isAdded ? 'Remove' : 'Add'}
-                    </GoAButton>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                </tr>
+              ))}
           </tbody>
         </GoATable>
       </div>
@@ -187,28 +194,3 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 };
 
 export default InvoiceDataTable;
-/*
-  
-  ADD ITEM
-  Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
-  
-  “Add” will add the “Cost” of details Data to Reconciled Amount and also populate the Reconciled Grouping in it’s respective Tab
-  
-  Adding a row will disable it for multiselection
-  
-  Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
-  
-  uses number transition per addition / removal for feedback
-  
-  REMOVE ITEM
-  Cost of the Row Added / Removed will be reflected in Reconciled and Remaining Amounts
-  
-  “Remove” will remove the “Cost” of details Data from Reconciled Amount and also from the Reconciled Grouping in it’s resp
-  
-  Remove a row selected will enable it for multiselection
-  
-  Reconciled Amount is the total cost of detail items added either singularly || multi-selection 
-  
-  uses number transition per addition / removal for feedback
-  
-  */
