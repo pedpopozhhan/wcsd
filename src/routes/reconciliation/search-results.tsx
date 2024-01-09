@@ -99,7 +99,7 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
   return (
     <>
       {/* <div className={table}> */}
-      <GoATable onSort={sortData} mb='xl'>
+      <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
             <th style={{ verticalAlign: 'middle' }}>

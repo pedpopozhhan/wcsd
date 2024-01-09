@@ -92,7 +92,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   return (
     <div className={container}>
       <div className={tableContainer}>
-        <GoATable onSort={sortData}>
+        <GoATable onSort={sortData} width='100%'>
           <thead>
             <tr>
               {props.showCheckBoxes && (
