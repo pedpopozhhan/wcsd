@@ -7,6 +7,7 @@ import Reconciliation from './routes/reconciliation/reonciliation';
 import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports';
 import App from './App';
 import InvoiceDetails from './routes/invoice-details/invoice-details';
+import { InvoiceDetailsProvider } from './routes/invoice-details/invoice-details-context';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -24,7 +25,11 @@ root.render(
           <Route
             key='4'
             path='invoice/:invoiceId'
-            element={<InvoiceDetails />}
+            element={
+              <InvoiceDetailsProvider>
+                <InvoiceDetails />
+              </InvoiceDetailsProvider>
+            }
           />
         </Route>
       </Routes>

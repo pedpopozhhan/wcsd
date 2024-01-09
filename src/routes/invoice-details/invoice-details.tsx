@@ -1,17 +1,17 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './invoice-details.module.scss';
 import Summary from './summary';
 import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
-import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { GoAButton } from '@abgov/react-components';
-import { useSessionStorage } from 'usehooks-ts';
 import InvoiceModalDialog, {
   IInvoiceData,
 } from '@/common/invoice-modal-dialog';
+import { InvoiceDetailsContext } from './invoice-details-context';
+import { MainContext } from '@/common/main-context';
 
 let {
   container,
@@ -27,15 +27,12 @@ let {
 } = styles;
 
 export default function InvoiceDetails() {
+  const context = useContext(InvoiceDetailsContext);
+  const { rowData, setRowData, otherData } = context;
   const navigate = useNavigate();
-  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>(
-    'invoiceData',
-    null as any
-  );
-  const [timeReportsToReconcile, setTimeReportsToReconcile] = useSessionStorage<
-    number[]
-  >('timeReportsToReconcile', []);
-  const [allData, setAllData] = useState([] as IDetailsTableRowData[]);
+
+  const mainContext = useContext(MainContext);
+  const { timeReportsToReconcile, invoiceData } = mainContext;
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   // Modal Dialog configuration
@@ -49,24 +46,34 @@ export default function InvoiceDetails() {
     const subscription = invoiceDetailsService
       .getInvoiceDetails(timeReportsToReconcile)
       .subscribe((results) => {
-        const data = results.slice();
-        setAllData(data);
+        const data = results.slice().map((x, i) => {
+          return {
+            index: i,
+            data: x,
+            isAdded: false,
+            isSelected: false,
+          };
+        });
+        setRowData(data);
       });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [invoiceData]);
+  }, [timeReportsToReconcile]);
 
-  function onAddRemove(newTotal: number) {
-    //update the totalizer
-    setReconciledAmount(newTotal);
-  }
+  useEffect(() => {
+    const total = rowData
+      .filter((x) => x.isAdded)
+      .reduce((acc, cur) => {
+        return acc + cur.data.cost;
+      }, 0);
 
-  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
-    //update the totalizer
-    setReconciledAmount(reconciledAmount + amountToAdjust);
-  }
+    const otherTotal = otherData.reduce((acc, cur) => {
+      return acc + cur.cost;
+    }, 0);
+    setReconciledAmount(total + otherTotal);
+  }, [rowData, otherData]);
 
   function cancel() {
     // navigate to time reports page
@@ -120,8 +127,8 @@ export default function InvoiceDetails() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && (<DetailsTab data={allData} onAddRemove={onAddRemove} />)}
-              {tabIndex === 2 && (<ReconciledTab onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost} />)}
+              {tabIndex === 1 && <DetailsTab />}
+              {tabIndex === 2 && <ReconciledTab />}
             </div>
           </div>
         </div>

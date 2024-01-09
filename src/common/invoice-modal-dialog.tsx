@@ -6,10 +6,10 @@ import {
   GoAModal,
   GoAButtonGroup,
 } from '@abgov/react-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSessionStorage } from 'usehooks-ts';
 import { yearMonthDay } from '@/common/dates';
+import { MainContext } from './main-context';
 
 export interface IInvoiceData {
   InvoiceID: string;
@@ -21,19 +21,29 @@ export interface IInvoiceData {
 }
 
 const InvoiceModalDialog = (props: any) => {
-  const [invoiceData, setInvoiceData] = useSessionStorage<IInvoiceData>('invoiceData', null as any);
+  const mainContext = useContext(MainContext);
+  const { invoiceData, setInvoiceData } = mainContext;
   const [invoiceId, setInvoiceId] = useState<string>('');
-  const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
-  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
+  const [labelforInvoiceOperation, setlabelforInvoiceOperation] =
+    useState<string>('Continue');
+  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(
+    props.isAddition
+  );
   const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
   const [dateOfInvoice, setDateOfInvoice] = useState<Date>(new Date(Date()));
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
-  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(new Date(Date()));
-  const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(new Date(Date()));
-  const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
+  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(
+    new Date(Date())
+  );
+  const [periodEndingDateError, setPeriodEndingDateError] =
+    useState<boolean>(false);
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(
+    new Date(Date())
+  );
+  const [invoiceReceivedDateError, setInvoiceReceivedDateError] =
+    useState<boolean>(false);
   const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [timeReports, setTimeReports] = useState(props.timeReports);
@@ -51,7 +61,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const navigate = useNavigate();
-  const defaultErrorDate = new Date(1950,0,1);
+  const defaultErrorDate = new Date(1950, 0, 1);
 
   function getDateWithMonthOffset(offset: number) {
     const d = new Date();
@@ -73,7 +83,6 @@ const InvoiceModalDialog = (props: any) => {
     }
   }, [isInvoiceAddition]);
 
-
   const setToSessionData = () => {
     setInvoiceId(invoiceData.InvoiceID);
     setInvoiceAmount(invoiceData.InvoiceAmount);
@@ -81,7 +90,7 @@ const InvoiceModalDialog = (props: any) => {
     setInvoiceReceivedDate(invoiceData.InvoiceReceived);
     setPeriodEndingDate(invoiceData.PeriodEnding);
     setContractNumber(invoiceData.ContractNumber);
-  }
+  };
 
   const clearErrors = () => {
     setInvoiceIdError(false);
@@ -97,14 +106,12 @@ const InvoiceModalDialog = (props: any) => {
     setDateOfInvoice(new Date(Date()));
     setPeriodEndingDate(new Date(Date()));
     setInvoiceReceivedDate(new Date(Date()));
-  }
-
+  };
 
   const hideModalDialog = () => {
     if (props.isAddition === 'true') {
       clearDataPoints();
-    }
-    else{
+    } else {
       if (invoiceData != null) setToSessionData();
     }
     clearErrors();
@@ -120,11 +127,15 @@ const InvoiceModalDialog = (props: any) => {
       setInvoiceIdError(false);
     }
 
-    if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
+    if (
+      Number.isNaN(invoiceAmount) ||
+      invoiceAmount <= 0 ||
+      invoiceAmount === null ||
+      invoiceAmount > 999999999.99
+    ) {
       setInvoiceAmountError(true);
       return;
-    }
-    else {
+    } else {
       setInvoiceAmountError(false);
     }
 
@@ -194,7 +205,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => { }}
+                    onBlur={(key, value) => {}}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {

@@ -45,10 +45,7 @@ export default function Reconciliation() {
     const results = allData.filter((x) =>
       filtered.some((y) => y.value === x.index)
     );
-    console.log(JSON.stringify(results));
-    console.log(
-      JSON.stringify(allData.filter((x) => x.vendorName.includes('MUSTANG')))
-    );
+
     setSearchResults(
       results.filter(
         (x) => contractType === 'all' || x.contractType === contractType
