@@ -58,7 +58,6 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
           Add other costs
         </GoAButton>
         <GoAButton type='tertiary' onClick={removeAll}>
-          {' '}
           Remove all
         </GoAButton>
       </div>
