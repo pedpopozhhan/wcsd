@@ -22,7 +22,7 @@ let {
 interface IReconciledTabProps {}
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const context = useContext(InvoiceDetailsContext);
-  const { otherData, setOtherData } = context;
+  const { rowData, setRowData, otherData, setOtherData } = context;
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
 
   const showOtherCostsModal = () => {
@@ -43,13 +43,24 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
     );
   }
 
+  function removeAll() {
+    setRowData(
+      rowData.map((x) => {
+        return { ...x, isAdded: false };
+      })
+    );
+  }
+
   return (
     <div className={container}>
       <div className={headerButtonContainer}>
         <GoAButton type='secondary' onClick={showOtherCostsModal}>
           Add other costs
         </GoAButton>
-        <GoAButton type='tertiary'> Remove all</GoAButton>
+        <GoAButton type='tertiary' onClick={removeAll}>
+          {' '}
+          Remove all
+        </GoAButton>
       </div>
       <div className={tabContainer}>
         <div className={reconciledDetailsDiv}>
