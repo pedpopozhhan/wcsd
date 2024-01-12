@@ -12,7 +12,6 @@ import {
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { yearMonthDay } from '@/common/dates';
-import { bool } from 'prop-types';
 
 interface IOtherCostModalDialog {
     onAdd: (item: IOtherCostTableRowData) => any;
@@ -366,19 +365,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         min='0'
                                         prefix='$'
                                         suffix='Per&nbsp;Unit'
-                                        onBlur={(key, value) => {
-                                            if (
-                                                Number.isNaN(value) ||
-                                                Number.isNaN(Number.parseFloat(value)
-                                                    || Number(value) <= 0)
-                                            ) {
-                                                setRateError(true);
-                                            } else {
-                                                setRate(Number(value));
-                                                setCost((rate * numberOfUnits).toFixed(2).toString());
-                                                setRateError(false);
-                                            }
-                                        }}
                                         onChange={(key, value) => {
                                             if (
                                                 Number.isNaN(value) ||
@@ -406,19 +392,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         error={numberOfUnitsError}
                                         max='99999'
                                         min='0'
-                                        onBlur={(key, value) => {
-                                            if (
-                                                Number.isNaN(value) ||
-                                                Number.isNaN(Number.parseFloat(value)
-                                                    || Number(value) <= 0)
-                                            ) {
-                                                setNumberOfUnitsError(true);
-                                            } else {
-                                                setNumberOfUnits(Number(value));
-                                                setCost((rate * numberOfUnits).toFixed(2).toString());
-                                                setNumberOfUnitsError(false);
-                                            }
-                                        }}
                                         onChange={(key, value) => {
                                             if (
                                                 Number.isNaN(value) ||
