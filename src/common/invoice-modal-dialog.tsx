@@ -61,7 +61,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const navigate = useNavigate();
-  const defaultErrorDate = new Date(1950, 0, 1);
+  const defaultErrorDate = new Date(Date());
 
   function getDateWithMonthOffset(offset: number) {
     const d = new Date();
@@ -205,7 +205,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => {}}
+                    onBlur={(key, value) => { }}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {

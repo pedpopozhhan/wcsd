@@ -7,12 +7,14 @@
   height: 100%;
   width: 100%;
 }
+
 .content {
   flex-grow: 1;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   gap: $goa-space-xs;
+
   .sideBar {
     @include thin-scrollbar;
     overflow-y: auto;
@@ -20,15 +22,18 @@
     flex-shrink: 0;
     width: 394px; // from figma
     padding: $goa-space-xl $goa-space-l;
+
     .header {
       font: $goa-typography-heading-l;
       line-height: $goa-line-height-6;
       margin-bottom: $goa-space-l;
     }
+
     .summaryContainer {
       margin-top: $goa-space-l;
     }
   }
+
   .main {
     overflow-y: auto;
     overflow: hidden;
@@ -39,9 +44,11 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+
       .tabList {
         border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
         display: flex;
+        width: fit-content;
         gap: $goa-space-xl;
 
         [role='tab'] {
@@ -56,25 +63,28 @@
           color: $goa-color-text-default;
           letter-spacing: 0.03125rem;
           border-bottom: 4px solid transparent;
+
           &:hover:not([aria-selected='true']) {
             border-bottom: 4px solid $goa-color-greyscale-200;
           }
+
           &[aria-selected='true'] {
             border-bottom: 4px solid $goa-color-interactive-default;
             font: $goa-typography-heading-s;
           }
         }
       }
+
       .tabContainer {
         overflow: hidden;
       }
     }
   }
 }
+
 .footer {
   display: flex;
-  padding: calc($goa-space-m + $goa-space-3xs)
-    calc($goa-space-l - $goa-space-3xs);
+  padding: calc($goa-space-m + $goa-space-3xs) calc($goa-space-l - $goa-space-3xs);
   flex-direction: column;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
@@ -83,15 +93,19 @@
 .tableInvoiceHeader {
   overflow-x: auto;
   max-width: 100%;
+
   tr td {
     padding: 0;
   }
+
   tr td:nth-child(1) {
     width: 30%;
   }
+
   tr td:nth-child(2) {
     width: 65%;
   }
+
   tr td:nth-child(3) {
     width: 5%;
   }

@@ -123,7 +123,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     _flightReports.sort((a, b) => {
       return (
         (a[sortCol as keyof typeof paginationResults] >
-        b[sortCol as keyof typeof paginationResults]
+          b[sortCol as keyof typeof paginationResults]
           ? -1
           : 1) * sortDir
       );
@@ -242,10 +242,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
         <GoAButton
           size='compact'
           type='primary'
-          disabled={
-            pageData?.filter((item: any) => item?.isChecked === true).length <
-              1 || pageData === undefined
-          }
+          // disabled={
+          //   pageData?.filter((item: any) => item?.isChecked === true).length <
+          //     1 || pageData === undefined
+          // }
           onClick={reconcileTimeReports}
         >
           Reconcile
