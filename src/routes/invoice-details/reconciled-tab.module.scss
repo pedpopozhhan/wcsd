@@ -5,6 +5,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: auto;
   .headerButtonContainer {
     display: flex;
     align-items: flex-start;
