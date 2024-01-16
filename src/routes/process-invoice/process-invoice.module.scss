@@ -2,16 +2,29 @@
 @import '@mixins/scrollbar.mixin.scss';
 
 .serviceSheetTabContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: 50px;
-   td:first-child{
-    width: 300px;
+  line-height: 50px;
+  margin-left: 18px;
+  :nth-child(even) {
+    padding-left: 10px;
   }
+
+
+  div{
+    border-bottom: 1px solid lightgray;
+  }
+ 
 }
 .serviceSheetTabAltValues{
   background: #F8F8F8;
 }
 .serviceSheetNameDesc{
   font-size: small;
+  border: none !important;
+  margin-top: -10px;
+  margin-left: -10px;
 }
 
 .container {
