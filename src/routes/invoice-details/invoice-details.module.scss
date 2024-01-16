@@ -84,8 +84,9 @@
 
 .footer {
   display: flex;
-  padding: calc($goa-space-m + $goa-space-3xs) calc($goa-space-l - $goa-space-3xs);
-  flex-direction: column;
+  padding: calc($goa-space-m + $goa-space-3xs)
+    calc($goa-space-l - $goa-space-3xs);
+  flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
 }
