@@ -80,7 +80,6 @@ export default function InvoiceDetails() {
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
-    // navigate to time reports page
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`);
   }
 
