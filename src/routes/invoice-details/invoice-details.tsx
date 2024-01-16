@@ -79,6 +79,10 @@ export default function InvoiceDetails() {
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
+  function processInvoice() {
+    // navigate to time reports page
+    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`);
+  }
 
   return (
     <div className={container}>
@@ -134,6 +138,9 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
+      <GoAButton type='primary' onClick={processInvoice}>
+          Process
+        </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
           Cancel
         </GoAButton>
