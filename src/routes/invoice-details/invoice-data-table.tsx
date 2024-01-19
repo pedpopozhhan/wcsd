@@ -167,8 +167,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                   <td>{convertToCurrency(x.data.cost)}</td>
                   <td>{x.data.glAccountNumber}</td>
-                  <td>{x.data.profitCentre}</td>
-                  <td>{x.data.costCentre}</td>
+                  <td>{x.data.profitCenter}</td>
+                  <td>{x.data.costCenter}</td>
                   <td>{x.data.fireNumber}</td>
                   <td>{x.data.internalOrder}</td>
                   <td>{x.data.fund}</td>

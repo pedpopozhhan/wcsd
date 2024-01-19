@@ -2,6 +2,7 @@ import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table
 
 import { Observable, map, of } from 'rxjs';
 import axios from 'axios-observable';
+import IInvoiceDetails from '@/interfaces/invoice-details/invoice-details';
 interface IDetailsServiceGetBody {
   timeReportIds: number[];
 }
@@ -18,14 +19,12 @@ class InvoiceDetailsService {
       'x-functions-key': this.apiKeyCode,
     };
   }
-  getInvoiceDetails(
-    timeReportIds: number[]
-  ): Observable<IDetailsTableRowData[]> {
+  getInvoiceDetails(timeReportIds: number[]): Observable<IInvoiceDetails> {
     const body: IDetailsServiceGetBody = {
       timeReportIds: timeReportIds,
     };
     return axios
-      .request<IDetailsTableRowData[]>({
+      .request<IInvoiceDetails>({
         method: 'post',
         url: this.baseUrl + '/GetInvoiceDetails',
         headers: this.headers,
@@ -73,8 +72,8 @@ export class SampleData {
         ratePerUnit: i, //with $0.00
         cost: i * 1000.25, //with $0.00
         glAccountNumber: i,
-        profitCentre: `${i}`,
-        costCentre: `${i}`,
+        profitCenter: `${i}`,
+        costCenter: `${i}`,
         fireNumber: `${i}`,
         internalOrder: `${i}`,
         fund: i,
