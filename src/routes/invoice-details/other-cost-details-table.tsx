@@ -25,7 +25,8 @@ class Row {
 }
 interface IOtherCostTableProps {
   data: IOtherCostTableRowData[];
-  onAddUpdateRemoveOtherCost: (amountToAdjust: number) => any;
+  onRemoveOtherCost: (item: IOtherCostTableRowData) => any;
+  onUpdateOtherCost: (item: IOtherCostTableRowData) => any;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
@@ -41,7 +42,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   }, [props.data]);
 
   // This reacts to the rowData changing
-  useEffect(() => {}, [rowData]);
+  useEffect(() => { }, [rowData]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -58,9 +59,13 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     setRowData(data);
   }
 
-  function editSelectedOtherCost(row: Row) {}
+  function editSelectedOtherCost(row: Row) {
+    props.onUpdateOtherCost(row.data);
+  }
 
-  function removeSelectedOtherCost(row: Row) {}
+  function removeSelectedOtherCost(row: Row) {
+    props.onRemoveOtherCost(row.data);
+  }
 
   return (
     <div className={container}>
