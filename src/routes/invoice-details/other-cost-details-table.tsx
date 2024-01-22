@@ -45,8 +45,6 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     );
   }, [props.data]);
 
-  // This reacts to the rowData changing
-  useEffect(() => { }, [rowData, rowToUpdate]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -65,8 +63,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
 
   function editSelectedOtherCost(row: Row) {
     setRowToUpdate(row.data);
-    setParentShowModal(true);
-    //props.onUpdateOtherCost(row.data);
+    setParentShowModal(true);    
   }
 
   function removeSelectedOtherCost(row: Row) {
