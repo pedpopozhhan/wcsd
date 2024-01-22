@@ -9,8 +9,8 @@ export interface IDetailsTableRowData {
   ratePerUnit: number; //with $0.00
   cost: number; //with $0.00
   glAccountNumber: number;
-  profitCentre: string;
-  costCentre: string;
+  profitCenter: string;
+  costCenter: string;
   fireNumber: string;
   internalOrder: string;
   fund: number;

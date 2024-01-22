@@ -12,21 +12,12 @@ let { container, buttons } = styles;
 interface IDetailsTabProps {}
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData } = context;
+  const { rowData, setRowData, rateTypes } = context;
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
-  const [rateTypes, setRateTypes] = useState<string[]>([]);
   const [selectedRateType, setSelectedRateType] = useState<string>('');
 
   useEffect(() => {
     setSelectAllEnabled(rowData.some((x) => x.isSelected));
-
-    const types: string[] = [];
-    rowData.forEach((row) => {
-      if (!types.includes(row.data.rateType)) {
-        types.push(row.data.rateType);
-      }
-    });
-    setRateTypes(types);
   }, [rowData]);
 
   function onAddSelected() {

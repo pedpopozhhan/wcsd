@@ -1,5 +1,3 @@
-import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { FC, ReactNode, createContext, useState } from 'react';
 import { IInvoiceData } from './invoice-modal-dialog';
 
@@ -27,7 +25,7 @@ export const MainContextProvider: FC<IMainContextProviderProps> = ({
     number[]
   >([]);
 
-  const [invoiceData, _setInvoiceData] = useState<IInvoiceData>(null as any);
+  const [invoiceData, _setInvoiceData] = useState<IInvoiceData>({} as any);
 
   // Function to update context value
   const setTimeReportsToReconcile = (newValue: number[]) => {
@@ -37,6 +35,7 @@ export const MainContextProvider: FC<IMainContextProviderProps> = ({
   const setInvoiceData = (newValue: IInvoiceData) => {
     _setInvoiceData(newValue);
   };
+
   return (
     <MainContext.Provider
       value={{
