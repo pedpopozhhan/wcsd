@@ -62,16 +62,16 @@ export class SampleData {
     const date = Date.now();
     for (let i = 1; i <= 50; i++) {
       results.push({
-        date: new Date(date + 86400000 * i),
-        registrationNumber: `${i}`,
-        reportNumber: i,
+        flightReportDate: new Date(date + 86400000 * i),
+        contractRegistrationName: `${i}`,
+        flightReportId: i,
         aO02Number: `${i}`,
         rateType: `${i}`,
         numberOfUnits: i,
         rateUnit: `${i}`,
         ratePerUnit: i, //with $0.00
         cost: i * 1000.25, //with $0.00
-        glAccountNumber: i,
+        account: i,
         profitCenter: `${i}`,
         costCenter: `${i}`,
         fireNumber: `${i}`,
