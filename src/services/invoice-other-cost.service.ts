@@ -8,7 +8,7 @@ class InvoiceOtherCostService {
         this.baseUrl = import.meta.env.VITE_API_BASE_URL;
     }
 
-    getAll(): Observable<IOtherCostTableRowData[]> {        
+    getAll(): Observable<IOtherCostTableRowData[]> {
         return of(SampleData.GetSampleResults());
     }
 }
@@ -20,7 +20,8 @@ export class SampleData {
         const date = Date.now();
         for (let i = 1; i <= 5; i++) {
             results.push({
-                recordid: i,
+                index: i,
+                id: i,
                 from: new Date(date + 86400000 * i),
                 to: new Date(date + 86400000 * i),
                 rateType: `${i}`,

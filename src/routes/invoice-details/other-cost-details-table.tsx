@@ -6,6 +6,7 @@ import {
 import styles from './other-cost-details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
@@ -30,6 +31,9 @@ interface IOtherCostTableProps {
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
+  const [parentShowModal, setParentShowModal] = useState<boolean>(false);
+  const [rowToUpdate, setRowToUpdate] = useState<IOtherCostTableRowData>();
+
   useEffect(() => {
     setRowData(
       props.data.slice().map((x, i) => {
@@ -42,7 +46,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   }, [props.data]);
 
   // This reacts to the rowData changing
-  useEffect(() => { }, [rowData]);
+  useEffect(() => { }, [rowData, rowToUpdate]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -60,11 +64,16 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   }
 
   function editSelectedOtherCost(row: Row) {
-    props.onUpdateOtherCost(row.data);
+    setRowToUpdate(row.data);
+    setParentShowModal(true);
+    //props.onUpdateOtherCost(row.data);
   }
 
   function removeSelectedOtherCost(row: Row) {
     props.onRemoveOtherCost(row.data);
+  }
+
+  function onOtherCostUpdated(item: IOtherCostTableRowData) {
   }
 
   return (
@@ -134,7 +143,15 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
           </tbody>
         </GoATable>
       </div>
+      <OtherCostModalDialog
+        isAddition={false}
+        visible={parentShowModal}
+        onAddUpdate={onOtherCostUpdated}
+        showOtherCostDialog={setParentShowModal}
+        data={rowToUpdate}
+      />
     </div>
+
   );
 };
 

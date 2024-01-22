@@ -24,6 +24,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData, otherCostData, setOtherCostData } = context;
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
+  const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRowData>();
 
   useEffect(() => {
 
@@ -95,8 +96,9 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
       <OtherCostModalDialog
         isAddition={true}
         visible={parentShowModal}
-        onAdd={onOtherCostAdded}
+        onAddUpdate={onOtherCostAdded}
         showOtherCostDialog={setParentShowModal}
+        data={otherCostDataToUpdate}
       />
     </div>
   );
