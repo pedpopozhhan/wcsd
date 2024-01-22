@@ -8,27 +8,38 @@ import {
     GoADropdown,
     GoADropdownItem,
     GoATextArea,
+    GoAButtonType,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { yearMonthDay } from '@/common/dates';
 
 interface IOtherCostModalDialog {
-    onAdd: (item: IOtherCostTableRowData) => any;
+    onAddUpdate: (item: IOtherCostTableRowData) => any;
     showOtherCostDialog: (value: boolean) => any;
     isAddition: boolean;
     visible: boolean;
+    data: IOtherCostTableRowData | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
+    const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.data);
+    const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
+    const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
+    const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
+    const [addButtonType, setAddButtonType] = useState<GoAButtonType>('primary');
+    const [addAnotherButtonlabel, setAddAnotherButtonLabel] = useState<string>('');
+    const [addAnotherButtonType, setAddAnotherButtonType] = useState<GoAButtonType>('tertiary');
+
     const [addAnother, setAddAnother] = useState(false);
     const [iscancelled, setIsCancelled] = useState<boolean>(false);
-    const [pageHasError, setPageHasError] = useState<boolean>(false);
+    const [saveData, setSaveData] = useState<boolean>(false);
     const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
     const [dialogTitle, setDialogTitle] = useState<string>('');
     const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
-    const [recordId, setRecordId] = useState<number>(0);
+    const [index, setIndex] = useState<number>(0);
+    const [id, setId] = useState<number>(0);
     const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
     const [fromDateError, setFromDateError] = useState<boolean>(false);
     const [toDate, setToDate] = useState<Date>(new Date(Date()));
@@ -52,7 +63,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const defaultErrorDate = new Date(Date());
 
     const currentOtherCost = {
-        recordid: recordId,
+        index: index,
+        id: id,
         from: fromDate,
         to: toDate,
         rateType: rateType,
@@ -73,37 +85,74 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const lg = '225px';
     const md = '150px';
     const sm = '125px';
-    const xs = '120px';
 
     useEffect(() => {
         if (props.isAddition) {
-            setDialogTitle('Add other cost');
+            setControlsForAddition();
             clearDialgoControls();
         } else {
-            setDialogTitle('Update other cost');
+            setControlsForUpdate();
+            if (props.data?.from !== undefined)
+                setFromDate(props.data?.from);
+            if (props.data?.to !== undefined)
+                setToDate(props.data?.to);
+
+            setRate(Number(props.data?.ratePerUnit));
+            setNumberOfUnits(Number(props.data?.numberOfUnits));
+            setCost(Number(props.data?.cost).toString());
+            setRateType(String(props.data?.rateType));
+            setUnit(String(props.data?.unit));
         }
-    }, [isOtherCostAddition,]);
+    }, [isOtherCostAddition, props.data]);
+
+    function setControlsForAddition() {
+        setDialogTitle('Add other cost');
+        setCancelButtonLabel('Cancel');
+        setCancelButtonType('tertiary');
+        setAddButtonLabel('Add');
+        setAddButtonType('secondary');
+        setAddAnotherButtonLabel('Add Another');
+        setAddAnotherButtonType('primary');
+    }
+
+    function setControlsForUpdate() {
+        setDialogTitle('Update other cost');
+        setCancelButtonLabel('Cancel');
+        setCancelButtonType('secondary');
+        setAddButtonLabel('Update');
+        setAddButtonType('primary');
+        setAddAnotherButtonLabel('');
+        setAddAnotherButtonType('tertiary');
+        setRateError(false);
+        setNumberOfUnitsError(false);
+    }
 
     useEffect(() => {
-        if (pageHasError) {
-            setPageHasError(false);
+        if (saveData) {
+            setSaveData(false);
             if (fromDateError || toDateError || rateError || numberOfUnitsError)
                 return;
             else {
-                props.onAdd(currentOtherCost);
-                clearDialgoControls();
-                if (!addAnother) {
+                if (props.isAddition) {
+                    props.onAddUpdate(currentOtherCost);
+                    clearDialgoControls();
+                    if (!addAnother) {
+                        props.showOtherCostDialog(false);
+                    }
+                    else
+                        setIsOtherCostAddition(true);
+                }
+                else {
+                    setIsCancelled(true);
                     props.showOtherCostDialog(false);
                 }
-                else
-                    setIsOtherCostAddition(true);
             }
         }
         else {
             setRate(Number(rate));
             setCost((rate * numberOfUnits).toFixed(2).toString());
         }
-    }, [pageHasError, rate, numberOfUnits,]);
+    }, [saveData, rate, numberOfUnits,]);
 
     useEffect(() => {
         if (iscancelled) {
@@ -182,13 +231,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     };
 
     const addOtherCost = () => {
-        setPageHasError(true);
+        setSaveData(true);
         setAddAnother(false);
         validateOtherCost();
     };
 
     const addAnohterOtherCost = () => {
-        setPageHasError(true);
+        setSaveData(true);
         setAddAnother(true);
         validateOtherCost();
     };
@@ -200,14 +249,14 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 open={props.visible}
                 actions={
                     <GoAButtonGroup alignment='end'>
-                        <GoAButton type='tertiary' onClick={hideModalDialog}>
-                            Cancel
+                        <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
+                            {cancelButtonlabel}
                         </GoAButton>
-                        <GoAButton type='secondary' onClick={addOtherCost}>
-                            Add
+                        <GoAButton type={addButtonType} onClick={addOtherCost}>
+                            {addButtonlabel}
                         </GoAButton>
-                        <GoAButton type='primary' onClick={addAnohterOtherCost}>
-                            Add Another
+                        <GoAButton type={addAnotherButtonType} onClick={addAnohterOtherCost} >
+                            {addAnotherButtonlabel}
                         </GoAButton>
                     </GoAButtonGroup>
                 }

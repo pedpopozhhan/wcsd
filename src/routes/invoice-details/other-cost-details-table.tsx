@@ -6,6 +6,7 @@ import {
 import styles from './other-cost-details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
@@ -25,10 +26,14 @@ class Row {
 }
 interface IOtherCostTableProps {
   data: IOtherCostTableRowData[];
-  onAddUpdateRemoveOtherCost: (amountToAdjust: number) => any;
+  onRemoveOtherCost: (item: IOtherCostTableRowData) => any;
+  onUpdateOtherCost: (item: IOtherCostTableRowData) => any;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
+  const [parentShowModal, setParentShowModal] = useState<boolean>(false);
+  const [rowToUpdate, setRowToUpdate] = useState<IOtherCostTableRowData>();
+
   useEffect(() => {
     setRowData(
       props.data.slice().map((x, i) => {
@@ -40,8 +45,6 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     );
   }, [props.data]);
 
-  // This reacts to the rowData changing
-  useEffect(() => {}, [rowData]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -58,9 +61,17 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     setRowData(data);
   }
 
-  function editSelectedOtherCost(row: Row) {}
+  function editSelectedOtherCost(row: Row) {
+    setRowToUpdate(row.data);
+    setParentShowModal(true);    
+  }
 
-  function removeSelectedOtherCost(row: Row) {}
+  function removeSelectedOtherCost(row: Row) {
+    props.onRemoveOtherCost(row.data);
+  }
+
+  function onOtherCostUpdated(item: IOtherCostTableRowData) {
+  }
 
   return (
     <div className={container}>
@@ -129,7 +140,15 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
           </tbody>
         </GoATable>
       </div>
+      <OtherCostModalDialog
+        isAddition={false}
+        visible={parentShowModal}
+        onAddUpdate={onOtherCostUpdated}
+        showOtherCostDialog={setParentShowModal}
+        data={rowToUpdate}
+      />
     </div>
+
   );
 };
 

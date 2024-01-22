@@ -8,6 +8,7 @@ import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports'
 import App from './App';
 import InvoiceDetails from './routes/invoice-details/invoice-details';
 import { InvoiceDetailsProvider } from './routes/invoice-details/invoice-details-context';
+import ProcessInvoice from './routes/process-invoice/process-invoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -31,6 +32,7 @@ root.render(
               </InvoiceDetailsProvider>
             }
           />
+          <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>}/>
         </Route>
       </Routes>
     </Router>

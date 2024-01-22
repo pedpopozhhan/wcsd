@@ -28,7 +28,7 @@ let {
 
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherData, setRateTypes } = context;
+  const { rowData, setRowData, otherCostData, setRateTypes } = context;
   const navigate = useNavigate();
 
   const mainContext = useContext(MainContext);
@@ -70,15 +70,18 @@ export default function InvoiceDetails() {
         return acc + cur.data.cost;
       }, 0);
 
-    const otherTotal = otherData.reduce((acc, cur) => {
+    const otherTotal = otherCostData.reduce((acc, cur) => {
       return acc + cur.cost;
     }, 0);
     setReconciledAmount(total + otherTotal);
-  }, [rowData, otherData]);
+  }, [rowData, otherCostData]);
 
   function cancel() {
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
+  }
+  function processInvoice() {
+    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`);
   }
 
   return (
@@ -135,6 +138,9 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
+        <GoAButton type='primary' onClick={processInvoice}>
+          Process
+        </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
           Cancel
         </GoAButton>

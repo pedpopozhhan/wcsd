@@ -1,5 +1,6 @@
 export interface IOtherCostTableRowData {
-  recordid: number;
+  index: number;
+  id: number;
   from: Date;
   to: Date;
   rateType: string | string[];
