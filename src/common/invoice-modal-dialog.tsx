@@ -51,7 +51,7 @@ const InvoiceModalDialog = (props: any) => {
   const [minDate, setMinDate] = useState<Date>(new Date(1950, 2, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
 
-  const invoiceForSession = {
+  const invoiceForContext = {
     InvoiceID: invoiceId,
     DateOnInvoice: dateOfInvoice,
     InvoiceAmount: invoiceAmount,
@@ -164,7 +164,7 @@ const InvoiceModalDialog = (props: any) => {
 
     // put them in the session object
     if (isInvoiceAddition) {
-      setInvoiceData(invoiceForSession);
+      setInvoiceData(invoiceForContext);
       clearDataPoints();
       clearErrors();
 
@@ -172,7 +172,7 @@ const InvoiceModalDialog = (props: any) => {
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
       // update object in session
-      setInvoiceData(invoiceForSession);
+      setInvoiceData(invoiceForContext);
       clearErrors();
       props.showInvoiceDialog(false);
     }

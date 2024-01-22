@@ -1,4 +1,4 @@
-import { useState, FC, useContext } from 'react';
+import { useState, useEffect, FC, useContext } from 'react';
 import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
@@ -19,11 +19,16 @@ let {
   otherCostHeader,
 } = styles;
 
-interface IReconciledTabProps {}
+interface IReconciledTabProps { }
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherData, setOtherData } = context;
+  const { rowData, setRowData, otherCostData, setOtherCostData } = context;
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
+  const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRowData>();
+
+  useEffect(() => {
+
+  }, [otherCostData]);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);
@@ -35,12 +40,25 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostAdded(item: IOtherCostTableRowData) {
-    setOtherData(
-      [...otherData, item].map((x, index) => {
-        x.recordid = index;
+    setOtherCostData(
+      [...otherCostData, item].map((x, index) => {
+        x.index = index;
         return x;
       })
     );
+  }
+
+  function onOtherCostRemoved(item: IOtherCostTableRowData) {
+    let items = [...otherCostData].filter(p => p.index != item.index);
+    items.map((x, i) => {
+      x.index = i;
+      return x;
+    });
+    setOtherCostData(items);
+  }
+
+  function onOtherCostUpdated(item: IOtherCostTableRowData) {
+    setOtherCostData(otherCostData);
   }
 
   function removeAll() {
@@ -68,8 +86,9 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
         <div className={otherCostHeader}>Other Costs</div>
         <div className={otherCostsDiv}>
           <OtherCostDetailsTable
-            data={otherData}
-            onAddUpdateRemoveOtherCost={onAddUpdateRemoveOtherCost}
+            data={otherCostData}
+            onRemoveOtherCost={onOtherCostRemoved}
+            onUpdateOtherCost={onOtherCostUpdated}
           />
         </div>{' '}
       </div>
@@ -77,8 +96,9 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
       <OtherCostModalDialog
         isAddition={true}
         visible={parentShowModal}
-        onAdd={onOtherCostAdded}
+        onAddUpdate={onOtherCostAdded}
         showOtherCostDialog={setParentShowModal}
+        data={otherCostDataToUpdate}
       />
     </div>
   );

@@ -12,15 +12,15 @@ export interface IDetailsTableRow {
 interface IInvoiceDetailsContext {
   rowData: IDetailsTableRow[];
   setRowData: (newValue: IDetailsTableRow[]) => void;
-  otherData: IOtherCostTableRowData[];
-  setOtherData: (newValue: IOtherCostTableRowData[]) => void;
+  otherCostData: IOtherCostTableRowData[];
+  setOtherCostData: (newValue: IOtherCostTableRowData[]) => void;
 }
 
 export const InvoiceDetailsContext = createContext<IInvoiceDetailsContext>({
   rowData: [],
-  setRowData: () => {},
-  otherData: [],
-  setOtherData: () => {},
+  setRowData: () => { },
+  otherCostData: [],
+  setOtherCostData: () => { },
 });
 
 interface IInvoiceDetailsProviderProps {
@@ -30,20 +30,20 @@ export const InvoiceDetailsProvider: FC<IInvoiceDetailsProviderProps> = ({
   children,
 }) => {
   const [rowData, _setRowData] = useState<IDetailsTableRow[]>([]);
-  const [otherData, _setOtherData] = useState<IOtherCostTableRowData[]>([]);
+  const [otherCostData, _setOtherCostData] = useState<IOtherCostTableRowData[]>([]);
 
   // Function to update context value
   const setRowData = (newValue: IDetailsTableRow[]) => {
     _setRowData(newValue);
   };
 
-  const setOtherData = (newValue: IOtherCostTableRowData[]) => {
-    _setOtherData(newValue);
+  const setOtherCostData = (newValue: IOtherCostTableRowData[]) => {
+    _setOtherCostData(newValue);
   };
 
   return (
     <InvoiceDetailsContext.Provider
-      value={{ rowData, setRowData, otherData, setOtherData }}
+      value={{ rowData, setRowData, otherCostData, setOtherCostData }}
     >
       {children}
     </InvoiceDetailsContext.Provider>
