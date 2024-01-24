@@ -231,10 +231,14 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setDateOfInvoice(defaultErrorDate);
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
-                      } else {
+                      }
+                      else if (isNaN(Date.parse(value.toString()))) {
+                        setDateOfInvoiceError(true);
+                        setPageHasError(true);
+                      }
+                      else {
                         const propertyValue: Date = new Date(value);
                         setDateOfInvoice(propertyValue);
                         if (propertyValue < minDate) {
@@ -306,10 +310,14 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setPeriodEndingDate(defaultErrorDate);
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
-                      } else {
+                      }
+                      else if (isNaN(Date.parse(value.toString()))) {
+                        setPeriodEndingDateError(true);
+                        setPageHasError(true);
+                      }
+                      else {
                         const propertyValue: Date = new Date(value);
                         setPeriodEndingDate(propertyValue);
                         if (propertyValue < minDate) {
@@ -338,10 +346,14 @@ const InvoiceModalDialog = (props: any) => {
                     width='200px'
                     onChange={(name, value) => {
                       if (value === '') {
-                        setInvoiceReceivedDate(defaultErrorDate);
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
-                      } else {
+                      }
+                      else if (isNaN(Date.parse(value.toString()))) {
+                        setInvoiceReceivedDateError(true);
+                        setPageHasError(true);
+                      }
+                      else {
                         const propertyValue: Date = new Date(value);
                         setInvoiceReceivedDate(propertyValue);
                         if (propertyValue < minDate) {

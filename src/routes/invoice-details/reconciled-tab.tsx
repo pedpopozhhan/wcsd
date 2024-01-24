@@ -58,7 +58,13 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRowData) {
-    setOtherCostData(otherCostData);
+    let items = [...otherCostData].filter(p => p.index != item.index);
+    setOtherCostData(
+      [...items, item].map((x, index) => {
+        x.index = index;
+        return x;
+      })
+    );
   }
 
   function removeAll() {
