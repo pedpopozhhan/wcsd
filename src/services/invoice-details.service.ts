@@ -1,6 +1,6 @@
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import IInvoiceDetails from '@/interfaces/invoice-details/invoice-details';
 interface IDetailsServiceGetBody {
