@@ -88,7 +88,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       .getSearch(objISearch)
       .subscribe((response) => {
         if (response.errorMessage) {
-          // TODO: display an error message
+          // TODO: display an error message the right way
+          console.error(response.errorMessage);
         } else {
           setData(response.data);
           // sort by what default

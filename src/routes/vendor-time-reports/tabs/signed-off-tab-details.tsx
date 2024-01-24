@@ -38,7 +38,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
@@ -51,10 +50,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [sortCol, setSortCol] = React.useState('flightReportDate');
   const [sortDir, setSortDir] = React.useState(-1);
   const [isSorting, setIsSorting] = React.useState(false);
-
-  //const filteredData = paginationResults?.data;
-
-  //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
 
   useEffect(() => {
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
@@ -82,7 +77,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       .getSearch(objISearch)
       .subscribe((response) => {
         if (response.errorMessage) {
-          // TODO: display an error message
+          // TODO: display an error message the right way
+          console.error(response.errorMessage);
         } else {
           setData(response.data);
           // sort by what default
