@@ -34,13 +34,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   ...props
 }) => {
   //Object for the page data
-  const [pageData, setPageFlightReports] = useState<any>([]);
+  const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
   //Navigation
   const navigate = useNavigate();
   //Data set
-  const [paginationResults, setPaginationResult] =
-    useState<IPaginationResult<IFlightReportDashboard>>();
+  const [data, setData] = useState<IFlightReportDashboard[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
@@ -86,13 +85,17 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       filterBy: objIFilter,
       pagination: objIPagination,
     };
+    setIsLoading(true);
     const subscription = flightReportDashboardService
       .getSearch(objISearch)
       .subscribe((response) => {
-        setPaginationResult((p) => {
-          return sortingData(response);
-        });
-        setPageFlightReports(paginationResults?.data.slice(0, perPage));
+        if (response.errorMessage) {
+          // TODO: display an error message
+        } else {
+          setData(response.data);
+          // sort by what default
+          setPageData(response.data.slice(0, perPage));
+        }
         setIsLoading(false);
       });
 
@@ -103,158 +106,72 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     // setPageFlightReports(paginationResults?.data);
   }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
-  //   function onRefreshFlightReport() {
-  //     getFlightReports();
-  //     setPageFlightReports(paginationResults?.data.slice(0, perPage));
+  function sortData(sortBy: string, sortDir: number) {
+    data.sort((a: any, b: any) => {
+      const varA = a[sortBy];
+      const varB = b[sortBy];
+      if (typeof varA === 'string' || typeof varB === 'string') {
+        const res = varB.localeCompare(varA);
+        return res * sortDir;
+      }
+      return (varA > varB ? 1 : -1) * sortDir;
+    });
+    setData(data.slice());
+    setPageData(data.slice(0, perPage));
+    setPage(1);
+  }
+  function getTotalPages() {
+    let num = data ? Math.ceil(data.length / perPage) : 0;
+
+    return num;
+  }
+  //   function sortingData(
+  //     paginationResult: IPaginationResult<IFlightReportDashboard>
+  //   ) {
+  //     const _flightReports = [...(paginationResult.data || [])];
+  //     _flightReports.sort((a, b) => {
+  //       return (
+  //         (a[sortCol as keyof typeof data] >
+  //         b[sortCol as keyof typeof data]
+  //           ? -1
+  //           : 1) * sortDir
+  //       );
+  //     });
+
+  //     paginationResult.data = _flightReports;
+  //     //Only for sorting applied reset pagination
+  //     if (isSorting) {
+  //       setPerPage(previousSelectedPerPage | 10);
+  //       setPage(1);
+
+  //       //Reset value
+  //       setIsSorting(false);
+  //       setPreviousSelectedPerPage(perPage);
+  //     }
+  //     setPageData(paginationResult?.data.slice(0, perPage));
+  //     return paginationResult;
   //   }
 
-  //   useEffect(() => {
-  //     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-  //     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-
-  //     let objIPagination: IPagination = {
-  //       perPage: perPage,
-  //       page: page,
-  //     };
-
-  //     let objIFilter: IFilter = {
-  //       contractNumber: contractNumber,
-  //       status: 'approved',
-  //     };
-
-  //     let objISearch: ISearch = {
-  //       search: strSearchValue,
-  //       sortBy: sortCol,
-  //       sortOrder: sortOrder,
-  //       filterBy: objIFilter,
-  //       pagination: objIPagination,
-  //     };
-
-  //     const subscription = flightReportDashboardService
-  //       .getSearch(objISearch)
-  //       .subscribe((response) => {
-  //         setPaginationResult((p) => {
-  //           return sortingData(response.data);
-  //         });
-
-  //         setIsLoading(false);
-  //       });
-
-  //     return () => {
-  //       subscription.unsubscribe();
-  //     };
-  //   }, [timeReportsToReconcile]);
-  //Get flight reports data
-  //   const getFlightReports = async () => {
-  //     setIsLoading(true);
-
-  //     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-  //     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-
-  //     let objIPagination: IPagination = {
-  //       perPage: perPage,
-  //       page: page,
-  //     };
-
-  //     let objIFilter: IFilter = {
-  //       contractNumber: contractNumber,
-  //       status: 'approved',
-  //     };
-
-  //     let objISearch: ISearch = {
-  //       search: strSearchValue,
-  //       sortBy: sortCol,
-  //       sortOrder: sortOrder,
-  //       filterBy: objIFilter,
-  //       pagination: objIPagination,
-  //     };
-
-  //     setTimeout(() => {
-  //       FlightReportDashboardService.getSearch(objISearch)
-  //         .then((response: any) => {
-  //           setPaginationResult((p) => {
-  //             return sortingData(response.data);
-  //           });
-
-  //           setIsLoading(false);
-  //         })
-  //         .catch((e: Error) => {
-  //           setIsLoading(false);
-  //           sessionStorage.setItem('api_token', '');
-  //           navigate('/');
-  //         });
-  //     }, 200);
-  //   };
-
-  function sortingData(
-    paginationResult: IPaginationResult<IFlightReportDashboard>
-  ) {
-    const _flightReports = [...(paginationResult.data || [])];
-    _flightReports.sort((a, b) => {
-      return (
-        (a[sortCol as keyof typeof paginationResults] >
-        b[sortCol as keyof typeof paginationResults]
-          ? -1
-          : 1) * sortDir
-      );
-    });
-
-    paginationResult.data = _flightReports;
-    //Only for sorting applied reset pagination
-    if (isSorting) {
-      setPerPage(previousSelectedPerPage | 10);
-      setPage(1);
-
-      //Reset value
-      setIsSorting(false);
-      setPreviousSelectedPerPage(perPage);
-    }
-    setPageFlightReports(paginationResult?.data.slice(0, perPage));
-    return paginationResult;
-  }
-
-  function sortData(sortBy: string, sortDir: number) {
-    setSortCol(sortBy);
-    setSortDir(sortDir);
-    setPreviousSelectedPerPage(perPage);
-    setPerPage(paginationResults?.paginationInfo.total || 30);
-    setPage(1);
-    setIsSorting(true);
-  }
+  //   function sortData(sortBy: string, sortDir: number) {
+  //     setSortCol(sortBy);
+  //     setSortDir(sortDir);
+  //     setPreviousSelectedPerPage(perPage);
+  //     setPerPage(paginationResults?.paginationInfo.total || 30);
+  //     setPage(1);
+  //     setIsSorting(true);
+  //   }
 
   //Pagination change page
   function changePage(newPage: any) {
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
-      const _flightReports = paginationResults?.data.slice(
-        offset,
-        offset + perPage
-      );
+      const _flightReports = data.slice(offset, offset + perPage);
       setPerPage(perPage);
       setPage(newPage);
-      setPageFlightReports(_flightReports);
+      setPageData(_flightReports);
     }
   }
-
-  //   function changePerPage(name: any, value: any) {
-  //     if (value) {
-  //       setIsLoading(true);
-  //       const newPerPage = parseInt(value, 10);
-  //       const offset = (page - 1) * newPerPage;
-
-  //       const _flightReports = paginationResults?.data.slice(
-  //         offset,
-  //         offset + newPerPage
-  //       );
-  //       setPageFlightReports(_flightReports);
-  //       //setSearchValue("");
-  //       setPerPage((p) => {
-  //         return newPerPage;
-  //       });
-  //       setPage(page);
-  //     }
-  //   }
 
   //#endregion
 
@@ -289,14 +206,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       let allTimeReports = pageData?.map((record: any) => {
         return { ...record, isChecked: checked };
       });
-      setPageFlightReports(allTimeReports);
+      setPageData(allTimeReports);
     } else {
       let selectedTimeReports = pageData?.map((record: any) =>
         record.flightReportId?.toString() === name
           ? { ...record, isChecked: checked }
           : record
       );
-      setPageFlightReports(selectedTimeReports);
+      setPageData(selectedTimeReports);
     }
   };
 
@@ -430,7 +347,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
         <div
           className={
-            paginationResults?.data && paginationResults?.data.length > 0
+            data && data.length > 0
               ? 'visible pagination'
               : 'not-visible pagination'
           }
@@ -438,14 +355,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
-                Page {page} of {paginationResults?.paginationInfo.totalPages}
+                Page {page} of {getTotalPages()}
               </span>
             </div>
             <GoASpacer hSpacing='fill' />
 
             <GoAPagination
               variant='links-only'
-              itemCount={paginationResults?.paginationInfo.total || 10}
+              itemCount={data.length}
               // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
               pageNumber={page}
