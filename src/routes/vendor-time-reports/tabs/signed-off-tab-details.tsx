@@ -10,14 +10,13 @@ import {
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
-import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
-import { IForestArea } from '@/interfaces/flight-report-dashboard/corporate-region.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
-import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
+import flightReportDashboardService from '@/services/flight-report-dashboard.service';
+import { useEffect } from 'react';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -34,14 +33,12 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   //Navigation
   const navigate = useNavigate();
   //Data set
-  const [paginationResults, setPaginationResult] =
-    React.useState<IPaginationResult<IFlightReportDashboard>>();
+  const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageUsers, setPageFlightReports] = React.useState<any>([]);
+  const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
   //count per page
@@ -54,25 +51,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [sortDir, setSortDir] = React.useState(-1);
   const [isSorting, setIsSorting] = React.useState(false);
 
-  //const filteredData = paginationResults?.data;
-
-  //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
-
-  React.useEffect(() => {
-    //console.log("startDate", startDate)
-    //console.log("endDate", endDate)
-    onRefreshFlightReport();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
-
-  function onRefreshFlightReport() {
-    getFlightReports();
-    setPageFlightReports(paginationResults?.data.slice(0, perPage));
-  }
-
-  //Get flight reports data
-  const getFlightReports = async () => {
-    setIsLoading(true);
+  useEffect(() => {
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
@@ -81,7 +60,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       page: page,
     };
 
-    //const testContractid = 81804
     let objIFilter: IFilter = {
       contractNumber: contractNumber,
       status: 'signed off',
@@ -94,59 +72,47 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       filterBy: objIFilter,
       pagination: objIPagination,
     };
+    setIsLoading(true);
+    const subscription = flightReportDashboardService
+      .getSearch(objISearch)
+      .subscribe((response) => {
+        if (response.errorMessage) {
+          // TODO: display an error message the right way
+          console.error(response.errorMessage);
+        } else {
+          setData(response.data);
+          // sort by what default
+          setPageData(response.data.slice(0, perPage));
+        }
+        setIsLoading(false);
+      });
 
-    setTimeout(() => {
-      FlightReportDashboardService.getSearch(objISearch)
-        .then((response: any) => {
-          setPaginationResult((p) => {
-            return sortingData(response.data);
-          });
-
-          setIsLoading(false);
-        })
-        .catch((e: Error) => {
-          setIsLoading(false);
-          sessionStorage.setItem('api_token', '');
-          navigate('/');
-        });
-    }, 200);
-  };
-
-  function sortingData(
-    paginationResult: IPaginationResult<IFlightReportDashboard>
-  ) {
-    const _flightReports = [...(paginationResult.data || [])];
-    _flightReports.sort((a, b) => {
-      return (
-        (a[sortCol as keyof typeof paginationResults] >
-        b[sortCol as keyof typeof paginationResults]
-          ? -1
-          : 1) * sortDir
-      );
-    });
-
-    paginationResult.data = _flightReports;
-    //Only for sorting applied reset pagination
-    if (isSorting) {
-      setPerPage(previousSelectedPerPage | 10);
-      setPage(1);
-      setPageFlightReports(paginationResults?.data.slice(0, perPage));
-
-      //Reset value
-      setIsSorting(false);
-      setPreviousSelectedPerPage(perPage);
-    }
-    return paginationResult;
-  }
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function sortData(sortBy: string, sortDir: number) {
+    data.sort((a: any, b: any) => {
+      const varA = a[sortBy];
+      const varB = b[sortBy];
+      if (typeof varA === 'string' || typeof varB === 'string') {
+        const res = varB.localeCompare(varA);
+        return res * sortDir;
+      }
+      return (varA > varB ? 1 : -1) * sortDir;
+    });
+    setData(data.slice());
+    setPageData(data.slice(0, perPage));
+    setPage(1);
     setSortCol(sortBy);
     setSortDir(sortDir);
-
     setPreviousSelectedPerPage(perPage);
-    setPerPage(paginationResults?.paginationInfo.total || 30);
-    setPage(1);
-    setIsSorting(true);
+  }
+  function getTotalPages() {
+    let num = data ? Math.ceil(data.length / perPage) : 0;
+
+    return num;
   }
 
   //Pagination change page
@@ -154,14 +120,11 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
-      const _flightReports = paginationResults?.data.slice(
-        offset,
-        offset + perPage
-      );
+      const _flightReports = data.slice(offset, offset + perPage);
 
       setPerPage(perPage);
       setPage(newPage);
-      setPageFlightReports(_flightReports);
+      setPageData(_flightReports);
     }
   }
 
@@ -171,12 +134,9 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       const newPerPage = parseInt(value, 10);
       const offset = (page - 1) * newPerPage;
 
-      const _flightReports = paginationResults?.data.slice(
-        offset,
-        offset + newPerPage
-      );
+      const _flightReports = data.slice(offset, offset + newPerPage);
 
-      setPageFlightReports(_flightReports);
+      setPageData(_flightReports);
       //setSearchValue("");
       setPerPage((p) => {
         return newPerPage;
@@ -238,8 +198,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
               style={{ position: 'sticky', top: 0 }}
               className='table-body'
             >
-              {paginationResults?.data && paginationResults.data.length > 0 ? (
-                paginationResults.data.map((record: any, index: any) => (
+              {data && data.length > 0 ? (
+                data.map((record: any, index: any) => (
                   // {filteredData && filteredData.length > 0 ? (
                   // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
@@ -281,40 +241,22 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
         <div
           className={
-            paginationResults?.data && paginationResults?.data.length > 0
+            data && data.length > 0
               ? 'visible pagination'
               : 'not-visible pagination'
           }
         >
           <GoABlock alignment='center'>
-            {/* <GoABlock mb='m' alignment='center' gap='m'>
-              <span style={{ whiteSpace: 'nowrap' }}>Show</span>
-              <div className='dropdown-list'>
-                <GoADropdown
-                  name='selPerPage'
-                  onChange={changePerPage}
-                  value='10'
-                  width='8ch'
-                >
-                  <GoADropdownItem value='10'></GoADropdownItem>
-                  <GoADropdownItem value='20'></GoADropdownItem>
-                  <GoADropdownItem value='30'></GoADropdownItem>
-                </GoADropdown>
-              </div>
-              <span style={{ whiteSpace: 'nowrap' }}>
-                of {paginationResults?.paginationInfo.total} items
-              </span>
-            </GoABlock> */}
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
-                Page {page} of {paginationResults?.paginationInfo.totalPages}
+                Page {page} of {getTotalPages()}
               </span>
             </div>
             <GoASpacer hSpacing='fill' />
 
             <GoAPagination
               variant='links-only'
-              itemCount={paginationResults?.paginationInfo.total || 10}
+              itemCount={data.length || 10}
               // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
               pageNumber={page}
