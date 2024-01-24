@@ -9,24 +9,24 @@ import styles from './vendor-time-reports.module.scss';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
-import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
+// import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
-  (async () => {
-    await aviationReportingAuthenticate();
-    //  await domainServiceAuthenticate();
-  })();
+  //   (async () => {
+  //     await aviationReportingAuthenticate();
+  //     //  await domainServiceAuthenticate();
+  //   })();
 
-  async function aviationReportingAuthenticate() {
-    await FlightReportDashboardService.getAuthenticate()
-      .then((res) => {
-        sessionStorage.setItem('api_token', res.data);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-  }
+  //   async function aviationReportingAuthenticate() {
+  //     await FlightReportDashboardService.getAuthenticate()
+  //       .then((res) => {
+  //         sessionStorage.setItem('api_token', res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log('error', err);
+  //       });
+  //   }
 
   // async function domainServiceAuthenticate() {
   //   await DomainService.getAuthenticate()

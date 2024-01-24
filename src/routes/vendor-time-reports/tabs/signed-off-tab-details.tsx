@@ -16,8 +16,9 @@ import { IForestArea } from '@/interfaces/flight-report-dashboard/corporate-regi
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
-import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
+// import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
+import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -59,20 +60,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   //const sortPaginationResults = React.useMemo(() => sortedPaginationResults(), [sortedPaginationResults]);
 
   React.useEffect(() => {
-    //console.log("startDate", startDate)
-    //console.log("endDate", endDate)
-    onRefreshFlightReport();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
-
-  function onRefreshFlightReport() {
-    getFlightReports();
-    setPageFlightReports(paginationResults?.data.slice(0, perPage));
-  }
-
-  //Get flight reports data
-  const getFlightReports = async () => {
-    setIsLoading(true);
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
@@ -81,7 +68,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       page: page,
     };
 
-    //const testContractid = 81804
     let objIFilter: IFilter = {
       contractNumber: contractNumber,
       status: 'signed off',
@@ -94,23 +80,71 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       filterBy: objIFilter,
       pagination: objIPagination,
     };
-
-    setTimeout(() => {
-      FlightReportDashboardService.getSearch(objISearch)
-        .then((response: any) => {
-          setPaginationResult((p) => {
-            return sortingData(response.data);
-          });
-
-          setIsLoading(false);
-        })
-        .catch((e: Error) => {
-          setIsLoading(false);
-          sessionStorage.setItem('api_token', '');
-          navigate('/');
+    const subscription = flightReportDashboardService
+      .getSearch(objISearch)
+      .subscribe((response) => {
+        setPaginationResult((p) => {
+          return sortingData(response);
         });
-    }, 200);
-  };
+        setPageFlightReports(paginationResults?.data.slice(0, perPage));
+        setIsLoading(false);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+    //console.log("startDate", startDate)
+    //console.log("endDate", endDate)
+    // onRefreshFlightReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
+
+  //   function onRefreshFlightReport() {
+  //     getFlightReports();
+  //     setPageFlightReports(paginationResults?.data.slice(0, perPage));
+  //   }
+
+  //Get flight reports data
+  //   const getFlightReports = async () => {
+  //     setIsLoading(true);
+  //     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
+  //     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
+
+  //     let objIPagination: IPagination = {
+  //       perPage: perPage,
+  //       page: page,
+  //     };
+
+  //     //const testContractid = 81804
+  //     let objIFilter: IFilter = {
+  //       contractNumber: contractNumber,
+  //       status: 'signed off',
+  //     };
+
+  //     let objISearch: ISearch = {
+  //       search: strSearchValue,
+  //       sortBy: sortCol,
+  //       sortOrder: sortOrder,
+  //       filterBy: objIFilter,
+  //       pagination: objIPagination,
+  //     };
+
+  //     setTimeout(() => {
+  //       FlightReportDashboardService.getSearch(objISearch)
+  //         .then((response: any) => {
+  //           setPaginationResult((p) => {
+  //             return sortingData(response.data);
+  //           });
+
+  //           setIsLoading(false);
+  //         })
+  //         .catch((e: Error) => {
+  //           setIsLoading(false);
+  //           sessionStorage.setItem('api_token', '');
+  //           navigate('/');
+  //         });
+  //     }, 200);
+  //   };
 
   function sortingData(
     paginationResult: IPaginationResult<IFlightReportDashboard>
