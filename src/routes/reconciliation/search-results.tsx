@@ -13,10 +13,10 @@ import { ContractType, convertContractType } from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
-interface IContractSearchResultsProps {
+interface IVendorSearchResultsProps {
   searchResults: IVendorSearchResult[];
 }
-const VendorSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
+const VendorSearchResults: React.FC<IVendorSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
   const [pageResults, setPageResults] = useState<IVendorSearchResult[]>([]);
 
