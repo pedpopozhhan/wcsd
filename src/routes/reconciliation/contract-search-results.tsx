@@ -1,4 +1,4 @@
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result'
 import {
   GoABlock,
   GoAButton,

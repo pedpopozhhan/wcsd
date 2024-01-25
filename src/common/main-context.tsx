@@ -1,6 +1,6 @@
 import { FC, ReactNode, createContext, useState } from 'react';
 import { IInvoiceData } from './invoice-modal-dialog';
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 
 interface IMainContext {
   timeReportsToReconcile: number[];

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/reconciliation/contract-search-results';
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
