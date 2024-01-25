@@ -9,6 +9,8 @@ import {
     GoADropdownItem,
     GoATextArea,
     GoAButtonType,
+    GoABadge,
+    GoABadgeType,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
@@ -30,11 +32,15 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const [addButtonType, setAddButtonType] = useState<GoAButtonType>('primary');
     const [addAnotherButtonlabel, setAddAnotherButtonLabel] = useState<string>('');
     const [addAnotherButtonType, setAddAnotherButtonType] = useState<GoAButtonType>('tertiary');
+    const [respMessageType, setRespMessageType] = useState<GoABadgeType>('light');
+    const [respMessageContent, setRespMessageContent] = useState('');
+    const [respMessageIcon, setRespMessageIcon] = useState<boolean>(false)
 
     const [addAnother, setAddAnother] = useState(false);
     const [iscancelled, setIsCancelled] = useState<boolean>(false);
     const [saveData, setSaveData] = useState<boolean>(false);
     const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
+    const [maxDate, setMaxDate] = useState(new Date());
     const [dialogTitle, setDialogTitle] = useState<string>('');
     const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
@@ -102,6 +108,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             setCost(Number(props.data?.cost).toString());
             setRateType(String(props.data?.rateType));
             setUnit(String(props.data?.unit));
+            setGlAccount(String(props.data?.glAccountNumber));
+            setProfitCenter(String(props.data?.profitCentre));
+            setCostCenter(String(props.data?.costCentre));
+            setInternalOrder(String(props.data?.internalOrder));
+            setFund(String(props.data?.fund));
+            setRemarks(String(props.data?.remarks));
         }
     }, [isOtherCostAddition, props.data]);
 
@@ -143,6 +155,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setIsOtherCostAddition(true);
                 }
                 else {
+                    props.onAddUpdate(currentOtherCost);
                     setIsCancelled(true);
                     props.showOtherCostDialog(false);
                 }
@@ -249,6 +262,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 open={props.visible}
                 actions={
                     <GoAButtonGroup alignment='end'>
+                        <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
                         <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
                             {cancelButtonlabel}
                         </GoAButton>
@@ -272,14 +286,17 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         value={fromDate}
                                         error={fromDateError}
                                         min={minDate}
+                                        max={maxDate}
                                         width={lg}
                                         onChange={(name, value) => {
                                             if (value === '') {
-                                                setFromDate(defaultErrorDate);
                                                 setFromDateError(true);
-                                            } else {
+                                            }
+                                            else if (isNaN(Date.parse(value.toString()))) {
+                                                setToDateError(true);
+                                            }
+                                            else {
                                                 const propertyValue: Date = new Date(value);
-                                                setFromDate(propertyValue);
                                                 if (propertyValue < minDate) {
                                                     setFromDateError(true);
                                                 } else {
@@ -299,12 +316,16 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         error={toDateError}
                                         value={toDate}
                                         min={minDate}
+                                        max={maxDate}
                                         width={lg}
                                         onChange={(name, value) => {
                                             if (value === '') {
-                                                setToDate(defaultErrorDate);
                                                 setToDateError(true);
-                                            } else {
+                                            }
+                                            else if (isNaN(Date.parse(value.toString()))) {
+                                                setToDateError(true);
+                                            }
+                                            else {
                                                 const propertyValue: Date = new Date(value);
                                                 setToDate(propertyValue);
                                                 if (propertyValue < minDate) {

@@ -157,18 +157,18 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                       </div>
                     </td>
                   )}
-                  <td>{yearMonthDay(x.data.date)}</td>
-                  <td>{x.data.registrationNumber}</td>
-                  <td>{x.data.reportNumber}</td>
+                  <td>{yearMonthDay(x.data.flightReportDate)}</td>
+                  <td>{x.data.contractRegistrationName}</td>
+                  <td>{x.data.flightReportId}</td>
                   <td>{x.data.aO02Number}</td>
                   <td>{x.data.rateType}</td>
                   <td>{x.data.numberOfUnits}</td>
                   <td>{x.data.rateUnit}</td>
                   <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                   <td>{convertToCurrency(x.data.cost)}</td>
-                  <td>{x.data.glAccountNumber}</td>
-                  <td>{x.data.profitCentre}</td>
-                  <td>{x.data.costCentre}</td>
+                  <td>{x.data.account}</td>
+                  <td>{x.data.profitCenter}</td>
+                  <td>{x.data.costCenter}</td>
                   <td>{x.data.fireNumber}</td>
                   <td>{x.data.internalOrder}</td>
                   <td>{x.data.fund}</td>

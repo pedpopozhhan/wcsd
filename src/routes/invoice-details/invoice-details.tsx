@@ -28,7 +28,7 @@ let {
 
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherCostData } = context;
+  const { rowData, setRowData, otherCostData, setRateTypes } = context;
   const navigate = useNavigate();
 
   const mainContext = useContext(MainContext);
@@ -45,16 +45,23 @@ export default function InvoiceDetails() {
   useEffect(() => {
     const subscription = invoiceDetailsService
       .getInvoiceDetails(timeReportsToReconcile)
-      .subscribe((results) => {
-        const data = results.slice().map((x, i) => {
-          return {
-            index: i,
-            data: x,
-            isAdded: false,
-            isSelected: false,
-          };
-        });
-        setRowData(data);
+      .subscribe({
+        next: (results) => {
+          const data = results.rows.slice().map((x, i) => {
+            return {
+              index: i,
+              data: x,
+              isAdded: false,
+              isSelected: false,
+            };
+          });
+          setRowData(data);
+          setRateTypes(results.rateTypes);
+        },
+        error: (error) => {
+          // TODO: display an error message the right way
+          console.error(error);
+        },
       });
 
     return () => {

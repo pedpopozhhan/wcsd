@@ -1,7 +1,8 @@
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
+import IInvoiceDetails from '@/interfaces/invoice-details/invoice-details';
 interface IDetailsServiceGetBody {
   timeReportIds: number[];
 }
@@ -18,14 +19,12 @@ class InvoiceDetailsService {
       'x-functions-key': this.apiKeyCode,
     };
   }
-  getInvoiceDetails(
-    timeReportIds: number[]
-  ): Observable<IDetailsTableRowData[]> {
+  getInvoiceDetails(timeReportIds: number[]): Observable<IInvoiceDetails> {
     const body: IDetailsServiceGetBody = {
       timeReportIds: timeReportIds,
     };
     return axios
-      .request<IDetailsTableRowData[]>({
+      .request<IInvoiceDetails>({
         method: 'post',
         url: this.baseUrl + '/GetInvoiceDetails',
         headers: this.headers,
@@ -63,18 +62,18 @@ export class SampleData {
     const date = Date.now();
     for (let i = 1; i <= 50; i++) {
       results.push({
-        date: new Date(date + 86400000 * i),
-        registrationNumber: `${i}`,
-        reportNumber: i,
+        flightReportDate: new Date(date + 86400000 * i),
+        contractRegistrationName: `${i}`,
+        flightReportId: i,
         aO02Number: `${i}`,
         rateType: `${i}`,
         numberOfUnits: i,
         rateUnit: `${i}`,
         ratePerUnit: i, //with $0.00
         cost: i * 1000.25, //with $0.00
-        glAccountNumber: i,
-        profitCentre: `${i}`,
-        costCentre: `${i}`,
+        account: i,
+        profitCenter: `${i}`,
+        costCenter: `${i}`,
         fireNumber: `${i}`,
         internalOrder: `${i}`,
         fund: i,

@@ -10,15 +10,14 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
-import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
-import { FlightReportDashboardService } from '@/services/flight-report-dashboard.service';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { MainContext } from '@/common/main-context';
+import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -33,13 +32,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   ...props
 }) => {
   //Object for the page data
-  const [pageData, setPageFlightReports] = useState<any>([]);
+  const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
   //Navigation
   const navigate = useNavigate();
   //Data set
-  const [paginationResults, setPaginationResult] =
-    useState<IPaginationResult<IFlightReportDashboard>>();
+  const [data, setData] = useState<IFlightReportDashboard[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
@@ -65,19 +63,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const { setTimeReportsToReconcile } = mainContext;
 
   useEffect(() => {
-    onRefreshFlightReport();
-    setPageFlightReports(paginationResults?.data);
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
-
-  function onRefreshFlightReport() {
-    getFlightReports();
-    setPageFlightReports(paginationResults?.data.slice(0, perPage));
-  }
-
-  //Get flight reports data
-  const getFlightReports = async () => {
-    setIsLoading(true);
-
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
     let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
@@ -98,58 +83,47 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       filterBy: objIFilter,
       pagination: objIPagination,
     };
+    setIsLoading(true);
+    const subscription = flightReportDashboardService
+      .getSearch(objISearch)
+      .subscribe((response) => {
+        if (response.errorMessage) {
+          // TODO: display an error message the right way
+          console.error(response.errorMessage);
+        } else {
+          setData(response.data);
+          // sort by what default
+          setPageData(response.data.slice(0, perPage));
+        }
+        setIsLoading(false);
+      });
 
-    setTimeout(() => {
-      FlightReportDashboardService.getSearch(objISearch)
-        .then((response: any) => {
-          setPaginationResult((p) => {
-            return sortingData(response.data);
-          });
-
-          setIsLoading(false);
-        })
-        .catch((e: Error) => {
-          setIsLoading(false);
-          sessionStorage.setItem('api_token', '');
-          navigate('/');
-        });
-    }, 200);
-  };
-
-  function sortingData(
-    paginationResult: IPaginationResult<IFlightReportDashboard>
-  ) {
-    const _flightReports = [...(paginationResult.data || [])];
-    _flightReports.sort((a, b) => {
-      return (
-        (a[sortCol as keyof typeof paginationResults] >
-          b[sortCol as keyof typeof paginationResults]
-          ? -1
-          : 1) * sortDir
-      );
-    });
-
-    paginationResult.data = _flightReports;
-    //Only for sorting applied reset pagination
-    if (isSorting) {
-      setPerPage(previousSelectedPerPage | 10);
-      setPage(1);
-
-      //Reset value
-      setIsSorting(false);
-      setPreviousSelectedPerPage(perPage);
-    }
-    setPageFlightReports(paginationResult?.data.slice(0, perPage));
-    return paginationResult;
-  }
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function sortData(sortBy: string, sortDir: number) {
+    data.sort((a: any, b: any) => {
+      const varA = a[sortBy];
+      const varB = b[sortBy];
+      if (typeof varA === 'string' || typeof varB === 'string') {
+        const res = varB.localeCompare(varA);
+        return res * sortDir;
+      }
+      return (varA > varB ? 1 : -1) * sortDir;
+    });
+    setData(data.slice());
+    setPageData(data.slice(0, perPage));
+    setPage(1);
     setSortCol(sortBy);
     setSortDir(sortDir);
     setPreviousSelectedPerPage(perPage);
-    setPerPage(paginationResults?.paginationInfo.total || 30);
-    setPage(1);
-    setIsSorting(true);
+  }
+  function getTotalPages() {
+    let num = data ? Math.ceil(data.length / perPage) : 0;
+
+    return num;
   }
 
   //Pagination change page
@@ -157,32 +131,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
-      const _flightReports = paginationResults?.data.slice(
-        offset,
-        offset + perPage
-      );
+      const _flightReports = data.slice(offset, offset + perPage);
       setPerPage(perPage);
       setPage(newPage);
-      setPageFlightReports(_flightReports);
-    }
-  }
-
-  function changePerPage(name: any, value: any) {
-    if (value) {
-      setIsLoading(true);
-      const newPerPage = parseInt(value, 10);
-      const offset = (page - 1) * newPerPage;
-
-      const _flightReports = paginationResults?.data.slice(
-        offset,
-        offset + newPerPage
-      );
-      setPageFlightReports(_flightReports);
-      //setSearchValue("");
-      setPerPage((p) => {
-        return newPerPage;
-      });
-      setPage(page);
+      setPageData(_flightReports);
     }
   }
 
@@ -191,17 +143,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   function flightReportClick(flightReportId?: number) {
     if (flightReportId) {
       alert('Fligh Report ID:' + flightReportId);
-      // navigate(`/flightReportDetail/${flightReportId}`, {
-      //   state: corporateRegionPaginationResult,
-      // });
-    } else {
-      // navigate(`/flightReportDetail/new`, {
-      //   state: corporateRegionPaginationResult,
-      // });
     }
   }
-
-  //const [openModal, setOpenModal] = useState(false);
 
   const reconcileTimeReports = () => {
     let items = pageData?.filter((fr: any) => fr.isChecked === true);
@@ -219,14 +162,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       let allTimeReports = pageData?.map((record: any) => {
         return { ...record, isChecked: checked };
       });
-      setPageFlightReports(allTimeReports);
+      setPageData(allTimeReports);
     } else {
       let selectedTimeReports = pageData?.map((record: any) =>
         record.flightReportId?.toString() === name
           ? { ...record, isChecked: checked }
           : record
       );
-      setPageFlightReports(selectedTimeReports);
+      setPageData(selectedTimeReports);
     }
   };
 
@@ -239,15 +182,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     <>
       <PageLoader visible={loading} />
       <div>
-        <GoAButton
-          size='compact'
-          type='primary'
-          // disabled={
-          //   pageData?.filter((item: any) => item?.isChecked === true).length <
-          //     1 || pageData === undefined
-          // }
-          onClick={reconcileTimeReports}
-        >
+        <GoAButton size='compact' type='primary' onClick={reconcileTimeReports}>
           Reconcile
         </GoAButton>
         <div className='divTable'>
@@ -360,7 +295,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
 
         <div
           className={
-            paginationResults?.data && paginationResults?.data.length > 0
+            data && data.length > 0
               ? 'visible pagination'
               : 'not-visible pagination'
           }
@@ -368,14 +303,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
-                Page {page} of {paginationResults?.paginationInfo.totalPages}
+                Page {page} of {getTotalPages()}
               </span>
             </div>
             <GoASpacer hSpacing='fill' />
 
             <GoAPagination
               variant='links-only'
-              itemCount={paginationResults?.paginationInfo.total || 10}
+              itemCount={data.length}
               // itemCount={filteredData?.length || 10}
               perPageCount={perPage}
               pageNumber={page}
