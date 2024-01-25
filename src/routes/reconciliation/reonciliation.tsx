@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/reconciliation/search-results';
-import { SearchResult } from '@/routes/reconciliation/search-result';
+import { ContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
@@ -13,8 +13,8 @@ let { top, search } = styles;
 export default function Reconciliation() {
   const header = 'Invoice Reconciliation';
 
-  const [searchResults, setSearchResults] = useState([] as SearchResult[]);
-  const [allData, setAllData] = useState([] as SearchResult[]);
+  const [searchResults, setSearchResults] = useState([] as ContractSearchResult[]);
+  const [allData, setAllData] = useState([] as ContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
 
@@ -28,8 +28,8 @@ export default function Reconciliation() {
         return b.vendorName > a.vendorName
           ? -1
           : b.vendorName < a.vendorName
-          ? 1
-          : 0;
+            ? 1
+            : 0;
       });
 
       setAllData(data);

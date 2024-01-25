@@ -1,7 +1,9 @@
-import {
-  SearchResult,
-  searchResultColumns,
-} from '@/routes/reconciliation/search-result';
+// import {
+//   //SearchResult,
+//   contractSearchResultColumns,
+// } from '@/routes/reconciliation/search-result';
+
+import { ContractSearchResult, contractSearchResultColumns } from '@/interfaces/reconciliation/contract-SearchResult'
 import {
   GoABlock,
   GoAButton,
@@ -15,12 +17,13 @@ import { ContractType, convertContractType } from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
-interface ISearchResultsProps {
-  searchResults: SearchResult[];
+interface IContractSearchResultsProps {
+  searchResults: ContractSearchResult[];
 }
-const SearchResults: React.FC<ISearchResultsProps> = (props) => {
+const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
-  const [pageResults, setPageResults] = useState<SearchResult[]>([]);
+  const [pageResults, setPageResults] = useState<ContractSearchResult[]>([]);
+
   let totalPages = 0;
   useEffect(() => {
     setResults(props.searchResults);
@@ -104,22 +107,22 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
           <tr>
             <th style={{ verticalAlign: 'middle' }}>
               {/* <GoATableSortHeader name={searchResultColumns[0].value}> */}
-              {searchResultColumns[0].label}
+              {contractSearchResultColumns[0].label}
               {/* </GoATableSortHeader> */}
             </th>
             <th style={{ verticalAlign: 'middle' }}>
               {/* <GoATableSortHeader name={searchResultColumns[1].value}> */}
-              {searchResultColumns[1].label}
+              {contractSearchResultColumns[1].label}
               {/* </GoATableSortHeader> */}
             </th>
             <th style={{ verticalAlign: 'middle' }}>
               {/* <GoATableSortHeader name={searchResultColumns[2].value}> */}
-              {searchResultColumns[2].label}
+              {contractSearchResultColumns[2].label}
               {/* </GoATableSortHeader> */}
             </th>
             <th style={{ verticalAlign: 'middle' }}>
               {/* <GoATableSortHeader name={searchResultColumns[3].value}> */}
-              {searchResultColumns[3].label}
+              {contractSearchResultColumns[3].label}
               {/* </GoATableSortHeader> */}
             </th>
             {/* Hide this for now
@@ -193,4 +196,4 @@ const SearchResults: React.FC<ISearchResultsProps> = (props) => {
     </>
   );
 };
-export default SearchResults;
+export default ContractSearchResults;
