@@ -51,7 +51,7 @@ const VendorTimeReports = () => {
           <GoATab heading='Processed'></GoATab>
         </GoATabs>
       </div>
-      <VendorTimeReportsSidePanel vendorDetails={vendorForReconciliation} />
+      <VendorTimeReportsSidePanel contractDetails={vendorForReconciliation} />
     </div>
   );
 };

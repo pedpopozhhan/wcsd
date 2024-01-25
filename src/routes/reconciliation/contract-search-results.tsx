@@ -1,4 +1,4 @@
-import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
 import {
   GoABlock,
   GoAButton,
@@ -14,11 +14,11 @@ let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
 interface IContractSearchResultsProps {
-  searchResults: IVendorSearchResult[];
+  searchResults: IContractSearchResult[];
 }
 const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
-  const [pageResults, setPageResults] = useState<IVendorSearchResult[]>([]);
+  const [pageResults, setPageResults] = useState<IContractSearchResult[]>([]);
 
   const mainContext = useContext(MainContext);
   const { setVendorForReconciliation } = mainContext;
@@ -85,7 +85,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     return !num || page === num;
   }
 
-  function timeReportsClick(selectedVendor: IVendorSearchResult) {
+  function timeReportsClick(selectedVendor: IContractSearchResult) {
     setVendorForReconciliation(selectedVendor);
     if (selectedVendor.contractNumber) {
       navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {

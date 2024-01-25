@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
 import SearchResults from '@/routes/reconciliation/contract-search-results';
-import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
@@ -13,8 +13,8 @@ let { top, search } = styles;
 export default function Reconciliation() {
   const header = 'Invoice Reconciliation';
 
-  const [searchResults, setSearchResults] = useState([] as IVendorSearchResult[]);
-  const [allData, setAllData] = useState([] as IVendorSearchResult[]);
+  const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
+  const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
 

@@ -8,14 +8,14 @@ import {
   GoATwoColumnLayout,
 } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
-import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 import { ContractType, convertContractType } from '@/types/contract-type';
 
-interface IVendorTimeReportsSidePanelProps {
-  vendorDetails: IVendorSearchResult;
+interface IContractTimeReportsSidePanelProps {
+  contractDetails: IContractSearchResult;
 }
 
-const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (props) => {
+const VendorTimeReportsSidePanel: React.FC<IContractTimeReportsSidePanelProps> = (props) => {
   const {
     vendorTimeReportSidePanel,
     vendorTimeReportSidePanelSection,
@@ -34,19 +34,19 @@ const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='business'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.vendorName}</td>
+                <td style={{ borderBottom: 'none' }}>{props.contractDetails.vendorName}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='document-text'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.contractNumber}</td>
+                <td style={{ borderBottom: 'none' }}>{props.contractDetails.contractNumber}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='pricetag'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>{convertContractType(props.vendorDetails.contractType as ContractType)}</td>
+                <td style={{ borderBottom: 'none' }}>{convertContractType(props.contractDetails.contractType as ContractType)}</td>
               </tr>
             </tbody>
           </GoATable>
@@ -56,7 +56,7 @@ const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (
       <GoABlock gap='l'>
         <div></div>
         <div className={vendorTimeReportSidePanelContactInfo}>
-          <GoAFormItem label='Contact Info' />
+          {/* <GoAFormItem label='Contact Info' />
           <GoATable width='100%'>
             <tbody>
               <tr>
@@ -84,7 +84,7 @@ const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (
                 <td style={{ borderBottom: 'none' }}>abc@xyz.com</td>
               </tr>
             </tbody>
-          </GoATable>
+          </GoATable> */}
         </div>
       </GoABlock>
     </div>
