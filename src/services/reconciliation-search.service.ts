@@ -2,7 +2,7 @@ import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { SearchRequest } from '@/routes/reconciliation/search-request';
 import { SearchResponse } from '@/routes/reconciliation/search-response';
-import { SearchResult } from '@/routes/reconciliation/search-result';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import axios from 'axios-observable';
 import { Observable, concatMap, map, of } from 'rxjs';
 
@@ -23,7 +23,7 @@ class ReconciliationService {
     this.functionsKey = import.meta.env.VITE_API_KEY_CODE;
   }
 
-  getAll(): Observable<SearchResult[]> {
+  getAll(): Observable<IContractSearchResult[]> {
     // return of(SampleData.GetSampleResults());
 
     // The following is for when the aviation api is ready without authentication
@@ -39,7 +39,7 @@ class ReconciliationService {
       },
     };
     return axios
-      .request<IPaginationResult<SearchResult>>({
+      .request<IPaginationResult<IContractSearchResult>>({
         method: 'post',
         url: this.baseUrl + '/flight-report-dashboard/vendors/get',
         headers: {
@@ -57,7 +57,7 @@ class ReconciliationService {
         })
       );
     // return axios
-    //   .post<IPaginationResult<SearchResult>>(
+    //   .post<IPaginationResult<ContractSearchResult>>(
     //     this.baseUrl + '/flight-report-dashboard/vendors/get',
     //     JSON.stringify(body)
     //   )
@@ -70,8 +70,8 @@ class ReconciliationService {
 }
 
 // export class SampleData {
-//   static GetSampleResults(): SearchResult[] {
-//     const results: SearchResult[] = [];
+//   static GetSampleResults(): ContractSearchResult[] {
+//     const results: ContractSearchResult[] = [];
 
 //     for (let i = 1; i <= 50; i++) {
 //       results.push({

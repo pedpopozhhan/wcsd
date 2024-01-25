@@ -8,8 +8,14 @@ import {
   GoATwoColumnLayout,
 } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
+import { ContractType, convertContractType } from '@/types/contract-type';
 
-const VendorTimeReportsSidePanel = () => {
+interface IContractTimeReportsSidePanelProps {
+  contractDetails: IContractSearchResult;
+}
+
+const VendorTimeReportsSidePanel: React.FC<IContractTimeReportsSidePanelProps> = (props) => {
   const {
     vendorTimeReportSidePanel,
     vendorTimeReportSidePanelSection,
@@ -28,19 +34,19 @@ const VendorTimeReportsSidePanel = () => {
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='business'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Test Vendor</td>
+                <td style={{ borderBottom: 'none' }}>{props.contractDetails.vendorName}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='document-text'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>12345680</td>
+                <td style={{ borderBottom: 'none' }}>{props.contractDetails.contractNumber}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='pricetag'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Casual</td>
+                <td style={{ borderBottom: 'none' }}>{convertContractType(props.contractDetails.contractType as ContractType)}</td>
               </tr>
             </tbody>
           </GoATable>
@@ -50,14 +56,14 @@ const VendorTimeReportsSidePanel = () => {
       <GoABlock gap='l'>
         <div></div>
         <div className={vendorTimeReportSidePanelContactInfo}>
-          <GoAFormItem label='Contact Info' />
+          {/* <GoAFormItem label='Contact Info' />
           <GoATable width='100%'>
             <tbody>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='person'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Viral Patel</td>
+                <td style={{ borderBottom: 'none' }}>Test Data</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
@@ -78,7 +84,7 @@ const VendorTimeReportsSidePanel = () => {
                 <td style={{ borderBottom: 'none' }}>abc@xyz.com</td>
               </tr>
             </tbody>
-          </GoATable>
+          </GoATable> */}
         </div>
       </GoABlock>
     </div>
