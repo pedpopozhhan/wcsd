@@ -2,7 +2,7 @@ import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
-import SearchResults from '@/routes/reconciliation/search-results';
+import SearchResults from '@/routes/reconciliation/contract-search-results';
 import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
