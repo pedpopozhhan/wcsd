@@ -9,6 +9,7 @@ import {
 } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
 import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { ContractType, convertContractType } from '@/types/contract-type';
 
 interface IVendorTimeReportsSidePanelProps {
   vendorDetails: IVendorSearchResult;
@@ -33,19 +34,19 @@ const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='business'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Test Vendor</td>
+                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.vendorName}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='document-text'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>12345680</td>
+                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.contractNumber}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='pricetag'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Casual</td>
+                <td style={{ borderBottom: 'none' }}>{convertContractType(props.vendorDetails.contractType as ContractType)}</td>
               </tr>
             </tbody>
           </GoATable>
@@ -62,7 +63,7 @@ const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='person'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.vendorName}</td>
+                <td style={{ borderBottom: 'none' }}>Test Data</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>
