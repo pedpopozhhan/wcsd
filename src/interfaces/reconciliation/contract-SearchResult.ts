@@ -1,4 +1,4 @@
-export class ContractSearchResult {
+export interface IContractSearchResult {
     index: number;
     vendorName: string;
     businessId: number;
@@ -7,13 +7,3 @@ export class ContractSearchResult {
     contractType: string;
     numTimeReports: number;
 }
-
-const contractSearchResultColumns: { value: string; label: string }[] = [
-    { value: 'vendor', label: 'Vendor' },
-    { value: 'businessId', label: 'Business No.' },
-    { value: 'contractNumber', label: 'Contract No.' },
-    { value: 'contractType', label: 'Type' },
-    { value: 'numTimeReports', label: 'Time Reports' },
-];
-
-export { contractSearchResultColumns };

@@ -3,7 +3,7 @@
 //   contractSearchResultColumns,
 // } from '@/routes/reconciliation/search-result';
 
-import { ContractSearchResult, contractSearchResultColumns } from '@/interfaces/reconciliation/contract-SearchResult'
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
 import {
   GoABlock,
   GoAButton,
@@ -18,11 +18,19 @@ let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
 interface IContractSearchResultsProps {
-  searchResults: ContractSearchResult[];
+  searchResults: IContractSearchResult[];
 }
 const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
-  const [pageResults, setPageResults] = useState<ContractSearchResult[]>([]);
+  const [pageResults, setPageResults] = useState<IContractSearchResult[]>([]);
+
+  const contractSearchResultColumns: { value: string; label: string }[] = [
+    { value: 'vendor', label: 'Vendor' },
+    { value: 'businessId', label: 'Business No.' },
+    { value: 'contractNumber', label: 'Contract No.' },
+    { value: 'contractType', label: 'Type' },
+    { value: 'numTimeReports', label: 'Time Reports' },
+  ];
 
   let totalPages = 0;
   useEffect(() => {
