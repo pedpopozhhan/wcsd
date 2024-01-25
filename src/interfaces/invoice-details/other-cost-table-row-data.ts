@@ -14,5 +14,5 @@ export interface IOtherCostTableRowData {
   internalOrder: string;
   fund: string;
   remarks: string;
-  invoiceId: string;
+  invoiceId: number;
 }

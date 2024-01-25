@@ -2,13 +2,22 @@ import { useContext, useState } from 'react';
 import Summary from '../invoice-details/summary';
 import styles from './process-invoice.module.scss';
 import { MainContext } from '@/common/main-context';
-import { GoAButton } from '@abgov/react-components';
+import { GoAButton, GoAButtonGroup, GoAModal } from '@abgov/react-components';
 import Totalizer from './invoice-amount-totalizer';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ServiceSheetTab from './tabs/service-sheet-tab';
 import DetailsTab from './tabs/details-tab';
+import ProcessInvoiceModal from './process-invoice-modal-dialog';
+import { IDetailsTableRow, InvoiceDetailsContext } from '../invoice-details/invoice-details-context';
+import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+
 
 const ProcessInvoice = () => {
+  const reconciledData = useLocation();
+  const timeReportData : IDetailsTableRow[] = reconciledData.state.timeReportData;
+  const invoiceTimeReportData = timeReportData.map(i => i.data);
+  const otherCostData : IOtherCostTableRowData[] = reconciledData.state.otherCostData;
+
   let {
     container,
     content,
@@ -26,11 +35,16 @@ const ProcessInvoice = () => {
   const mainContext = useContext(MainContext);
   const navigate = useNavigate();
   const { invoiceData } = mainContext;
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   function navigateToReconcile() {
     navigate(`/invoice/${invoiceData.InvoiceID}`, {
       state: invoiceData.InvoiceID,
     });
+  }
+
+  function finishProcessingInvoice(){
+    setShowDialog(true);
   }
 
   return (
@@ -78,11 +92,12 @@ const ProcessInvoice = () => {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary'>Finish</GoAButton>
+        <GoAButton type='primary' onClick={finishProcessingInvoice}>Finish</GoAButton>
         <GoAButton type='secondary' onClick={navigateToReconcile}>
           Back to Reconcile
         </GoAButton>
       </div>
+      <ProcessInvoiceModal open={showDialog} close={setShowDialog}  data={{timeReportData: invoiceTimeReportData, otherCostData: otherCostData}}></ProcessInvoiceModal>
     </div>
   );
 };

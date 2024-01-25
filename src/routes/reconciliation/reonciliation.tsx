@@ -1,4 +1,4 @@
-import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
+import { GoADropdown, GoADropdownItem, GoAIcon } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
@@ -7,8 +7,9 @@ import { SearchResult } from '@/routes/reconciliation/search-result';
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
+import { useLocation } from 'react-router-dom';
 
-let { top, search } = styles;
+let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
 
 export default function Reconciliation() {
   const header = 'Invoice Reconciliation';
@@ -17,6 +18,8 @@ export default function Reconciliation() {
   const [allData, setAllData] = useState([] as SearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
+  const location = useLocation();
+  const [savedInvoiceNumber, setSavedInvoiceNumber] = useState(location.state ? location.state.invoiceNumber : '');
 
   useEffect(() => {
     const subscription = searchService.getAll().subscribe((searchResults) => {
@@ -34,12 +37,20 @@ export default function Reconciliation() {
 
       setAllData(data);
       setSearchResults(data);
+
+      setTimeout(() => {
+          if(savedInvoiceNumber){
+            setSavedInvoiceNumber('');
+          }
+        }, 5000);
     });
 
     return () => {
       subscription.unsubscribe();
     };
   }, [JSON.stringify(allData)]);
+
+
 
   function handleOnEnter(filtered: SearchOption[]) {
     const results = allData.filter((x) =>
@@ -132,6 +143,12 @@ export default function Reconciliation() {
       </div>
 
       <SearchResults searchResults={searchResults}></SearchResults>
+      {savedInvoiceNumber && <div className={invoiceProcessedNotificationContainer}>
+        <div>
+        <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
+        <label className={invoiceProcessedNotificationLabel}>Invoice #{savedInvoiceNumber} processed.</label>
+        </div>
+      </div>}
     </main>
   );
 }
