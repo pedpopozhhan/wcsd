@@ -92,7 +92,7 @@ const ProcessInvoice = () => {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={finishProcessingInvoice}>Finish</GoAButton>
+        <GoAButton type='primary' onClick={finishProcessingInvoice}><ion-icon name="archive-outline"></ion-icon><label>Finish</label></GoAButton>
         <GoAButton type='secondary' onClick={navigateToReconcile}>
           Back to Reconcile
         </GoAButton>

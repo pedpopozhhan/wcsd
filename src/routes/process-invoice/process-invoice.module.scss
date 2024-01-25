@@ -122,6 +122,11 @@
   flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
+
+  [name='archive-outline']{
+    vertical-align: top;
+    margin-right: 7px;
+  }
 }
 
 .tableInvoiceHeader {
