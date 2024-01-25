@@ -1,9 +1,4 @@
-// import {
-//   //SearchResult,
-//   contractSearchResultColumns,
-// } from '@/routes/reconciliation/search-result';
-
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
+import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult'
 import {
   GoABlock,
   GoAButton,
@@ -11,18 +6,22 @@ import {
   GoASpacer,
   GoATable,
 } from '@abgov/react-components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { MainContext } from '@/common/main-context';
 import styles from './search-results.module.scss';
 import { ContractType, convertContractType } from '@/types/contract-type';
 let { link, table, chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 
 interface IContractSearchResultsProps {
-  searchResults: IContractSearchResult[];
+  searchResults: IVendorSearchResult[];
 }
-const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
+const VendorSearchResults: React.FC<IContractSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
-  const [pageResults, setPageResults] = useState<IContractSearchResult[]>([]);
+  const [pageResults, setPageResults] = useState<IVendorSearchResult[]>([]);
+
+  const mainContext = useContext(MainContext);
+  const { setVendorForReconciliation } = mainContext;
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
@@ -86,10 +85,11 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     return !num || page === num;
   }
 
-  function timeReportsClick(contractNumber?: string) {
-    if (contractNumber) {
-      navigate(`/VendorTimeReports/${contractNumber}`, {
-        state: contractNumber,
+  function timeReportsClick(selectedVendor: IVendorSearchResult) {
+    setVendorForReconciliation(selectedVendor);
+    if (selectedVendor.contractNumber) {
+      navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {
+        state: selectedVendor.contractNumber,
       });
     }
   }
@@ -149,7 +149,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>
-                <a onClick={() => timeReportsClick(result.contractNumber)}>
+                <a onClick={() => timeReportsClick(result)}>
                   {result.contractNumber}
                 </a>
               </td>
@@ -164,7 +164,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
                 <div className={chevron}>
                   <GoAIconButton
                     icon='chevron-forward'
-                    onClick={() => timeReportsClick(result.contractNumber)}
+                    onClick={() => timeReportsClick(result)}
                   />
                 </div>
               </td>
@@ -204,4 +204,4 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     </>
   );
 };
-export default ContractSearchResults;
+export default VendorSearchResults;

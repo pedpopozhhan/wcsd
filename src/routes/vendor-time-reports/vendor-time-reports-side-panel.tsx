@@ -8,8 +8,13 @@ import {
   GoATwoColumnLayout,
 } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
+import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 
-const VendorTimeReportsSidePanel = () => {
+interface IVendorTimeReportsSidePanelProps {
+  vendorDetails: IVendorSearchResult;
+}
+
+const VendorTimeReportsSidePanel: React.FC<IVendorTimeReportsSidePanelProps> = (props) => {
   const {
     vendorTimeReportSidePanel,
     vendorTimeReportSidePanelSection,
@@ -57,7 +62,7 @@ const VendorTimeReportsSidePanel = () => {
                 <td style={{ borderBottom: 'none' }}>
                   <GoAIcon type='person'></GoAIcon>
                 </td>
-                <td style={{ borderBottom: 'none' }}>Viral Patel</td>
+                <td style={{ borderBottom: 'none' }}>{props.vendorDetails.vendorName}</td>
               </tr>
               <tr>
                 <td style={{ borderBottom: 'none' }}>

@@ -2,7 +2,7 @@ import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
 import { SearchRequest } from '@/routes/reconciliation/search-request';
 import { SearchResponse } from '@/routes/reconciliation/search-response';
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
+import { IVendorSearchResult } from '@/interfaces/reconciliation/contract-SearchResult';
 import axios from 'axios-observable';
 import { Observable, concatMap, map, of } from 'rxjs';
 
@@ -23,7 +23,7 @@ class ReconciliationService {
     this.functionsKey = import.meta.env.VITE_API_KEY_CODE;
   }
 
-  getAll(): Observable<IContractSearchResult[]> {
+  getAll(): Observable<IVendorSearchResult[]> {
     // return of(SampleData.GetSampleResults());
 
     // The following is for when the aviation api is ready without authentication
@@ -39,7 +39,7 @@ class ReconciliationService {
       },
     };
     return axios
-      .request<IPaginationResult<IContractSearchResult>>({
+      .request<IPaginationResult<IVendorSearchResult>>({
         method: 'post',
         url: this.baseUrl + '/flight-report-dashboard/vendors/get',
         headers: {

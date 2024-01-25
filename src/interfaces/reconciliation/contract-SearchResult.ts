@@ -1,4 +1,4 @@
-export interface IContractSearchResult {
+export interface IVendorSearchResult {
     index: number;
     vendorName: string;
     businessId: number;
