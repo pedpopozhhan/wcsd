@@ -63,7 +63,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
 
   function editSelectedOtherCost(row: Row) {
     setRowToUpdate(row.data);
-    setParentShowModal(true);    
+    setParentShowModal(true);
   }
 
   function removeSelectedOtherCost(row: Row) {
@@ -71,6 +71,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRowData) {
+    props.onUpdateOtherCost(item);
   }
 
   return (
