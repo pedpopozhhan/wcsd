@@ -43,7 +43,7 @@ const ProcessInvoiceModal : React.FC<IProcessInvoiceModalData> = (props) => {
         invoiceOtherCostDetails: props.data.otherCostData,
         invoiceServiceSheet:{
           uniqueServiceSheetName: "SS-A101",
-          purchaseGroup: "W01(FP_W01)",
+          purchaseGroup: "W01 (FP_W01)",
           serviceDescription: "Processional Services",
           communityCode: "TestCommunity",
           materialGroup: "TestMG",

@@ -27,6 +27,14 @@
   margin-left: -10px;
 }
 
+.invoiceAmountLabel {
+  font-family: "Roboto Mono";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
 .processInvoiceModalDialogContainer{
   ul.li {
     display: list-item;
@@ -75,6 +83,7 @@
       display: flex;
       flex-direction: column;
       .tabList {
+        width: 250px;
         border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
         display: flex;
         gap: $goa-space-xl;
