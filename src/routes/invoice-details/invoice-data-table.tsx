@@ -162,7 +162,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.flightReportId}</td>
                   <td>{x.data.aO02Number}</td>
                   <td>{x.data.rateType}</td>
-                  <td>{x.data.numberOfUnits}</td>
+                  <td>{x.data.noOfUnits}</td>
                   <td>{x.data.rateUnit}</td>
                   <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                   <td>{convertToCurrency(x.data.cost)}</td>
