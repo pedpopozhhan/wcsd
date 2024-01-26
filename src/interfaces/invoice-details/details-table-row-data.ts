@@ -13,5 +13,5 @@ export interface IDetailsTableRowData {
   costCenter: string;
   fireNumber: string;
   internalOrder: string;
-  fund: number;
+  fund: string;
 }
