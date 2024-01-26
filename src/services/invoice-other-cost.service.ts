@@ -21,7 +21,6 @@ export class SampleData {
         for (let i = 1; i <= 5; i++) {
             results.push({
                 index: i,
-                id: i,
                 from: new Date(date + 86400000 * i),
                 to: new Date(date + 86400000 * i),
                 rateType: `${i}`,
