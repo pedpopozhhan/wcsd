@@ -65,12 +65,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const [internalOrder, setInternalOrder] = useState<string>('');
     const [fund, setFund] = useState<string>('');
     const [remarks, setRemarks] = useState<string>('');
-    const [invoiceId, setInvoiceId] = useState<number>(0);
+    const [invoiceId, setInvoiceId] = useState<string>('');
     const defaultErrorDate = new Date(Date());
 
     const currentOtherCost = {
         index: index,
-        id: id,
         from: fromDate,
         to: toDate,
         rateType: rateType,
