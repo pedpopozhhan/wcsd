@@ -9,10 +9,10 @@ import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
 import { useLocation } from 'react-router-dom';
 
-let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
+let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel, searchResultsContainer } = styles;
 
 export default function Reconciliation() {
-  const header = 'Invoice Reconciliation';
+  const header = 'Contracts';
 
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
@@ -140,15 +140,14 @@ export default function Reconciliation() {
             <GoADropdownItem key={idx} value={type.value} label={type.label} />
           ))}
         </GoADropdown>
-      </div>
-
-      <SearchResults searchResults={searchResults}></SearchResults>
+      </div>      
+      <div className={searchResultsContainer}><SearchResults searchResults={searchResults}></SearchResults></div>
       {savedInvoiceNumber && <div className={invoiceProcessedNotificationContainer}>
-        <div>
-        <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
-        <label className={invoiceProcessedNotificationLabel}>Invoice #{savedInvoiceNumber} processed.</label>
-        </div>
-      </div>}
+          <div>
+          <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
+          <label className={invoiceProcessedNotificationLabel}>Invoice #{savedInvoiceNumber} processed.</label>
+          </div>
+        </div>}
     </main>
   );
 }

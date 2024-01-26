@@ -11,7 +11,14 @@ main {
   display: flex;
   flex-direction: column;
 }
+.top{
+  margin-left: 155px;
+}
+.searchResultsContainer{
+  margin-left: 155px;
+}
 .invoiceProcessedNotificationContainer {
+  margin-left: 25px;
   display: flex;
   height: 64px;
   width: 422px;
