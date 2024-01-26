@@ -4,7 +4,7 @@ export interface IDetailsTableRowData {
   flightReportId: number;
   aO02Number: string;
   rateType: string;
-  numberOfUnits: number;
+  noOfUnits: number;
   rateUnit: string;
   ratePerUnit: number; //with $0.00
   cost: number; //with $0.00

@@ -67,7 +67,7 @@ export class SampleData {
         flightReportId: i,
         aO02Number: `${i}`,
         rateType: `${i}`,
-        numberOfUnits: i,
+        noOfUnits: i,
         rateUnit: `${i}`,
         ratePerUnit: i, //with $0.00
         cost: i * 1000.25, //with $0.00
