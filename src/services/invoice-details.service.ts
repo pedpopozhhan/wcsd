@@ -55,32 +55,4 @@ class InvoiceDetailsService {
       );
   }
 }
-
-export class SampleData {
-  static GetSampleResults(): IDetailsTableRowData[] {
-    const results: IDetailsTableRowData[] = [];
-    const date = Date.now();
-    for (let i = 1; i <= 50; i++) {
-      results.push({
-        flightReportDate: new Date(date + 86400000 * i),
-        contractRegistrationName: `${i}`,
-        flightReportId: i,
-        aO02Number: `${i}`,
-        rateType: `${i}`,
-        noOfUnits: i,
-        rateUnit: `${i}`,
-        ratePerUnit: i, //with $0.00
-        cost: i * 1000.25, //with $0.00
-        account: i,
-        profitCenter: `${i}`,
-        costCenter: `${i}`,
-        fireNumber: `${i}`,
-        internalOrder: `${i}`,
-        fund: i,
-      });
-    }
-
-    return results;
-  }
-}
 export default new InvoiceDetailsService();
