@@ -12,6 +12,7 @@ import InvoiceModalDialog, {
 } from '@/common/invoice-modal-dialog';
 import { InvoiceDetailsContext } from './invoice-details-context';
 import { MainContext } from '@/common/main-context';
+import { useAppSelector } from '@/hooks';
 
 let {
   container,
@@ -32,6 +33,10 @@ export default function InvoiceDetails() {
   const navigate = useNavigate();
 
   const mainContext = useContext(MainContext);
+  const timeReportsToReconcile = useAppSelector(
+    (state) => state.app.timeReportsToReconcile
+  );
+
   const { timeReportsToReconcile, invoiceData } = mainContext;
   const [tabIndex, setTabIndex] = useState<number>(1);
 

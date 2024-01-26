@@ -20,7 +20,8 @@ export const appSlice = createSlice({
     },
   },
 });
-
+export const timeReportsToReconcile = (state: IAppSliceState) =>
+  state.timeReportsToReconcile;
 export const { setTimeReportsToReconcile } = appSlice.actions;
 
 const appReducer = appSlice.reducer;
