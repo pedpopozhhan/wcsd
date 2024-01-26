@@ -1,4 +1,4 @@
-import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
+import { GoADropdown, GoADropdownItem, GoAIcon } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
@@ -7,16 +7,29 @@ import { IContractSearchResult } from '@/interfaces/reconciliation/contract-sear
 import SearchSuggestion from '@/routes/reconciliation/search-suggestion';
 import { SearchOption } from '@/routes/reconciliation/search-option';
 import searchService from '@/services/reconciliation-search.service';
+import { useLocation } from 'react-router-dom';
 
-let { top, search } = styles;
+let {
+  top,
+  search,
+  invoiceProcessedNotificationContainer,
+  invoiceProcessedNotificationLabel,
+  searchResultsContainer,
+} = styles;
 
 export default function Reconciliation() {
-  const header = 'Invoice Reconciliation';
+  const header = 'Contracts';
 
-  const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
+  const [searchResults, setSearchResults] = useState(
+    [] as IContractSearchResult[]
+  );
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
+  const location = useLocation();
+  const [savedInvoiceNumber, setSavedInvoiceNumber] = useState(
+    location.state ? location.state.invoiceNumber : ''
+  );
 
   useEffect(() => {
     const subscription = searchService.getAll().subscribe((searchResults) => {
@@ -28,12 +41,18 @@ export default function Reconciliation() {
         return b.vendorName > a.vendorName
           ? -1
           : b.vendorName < a.vendorName
-            ? 1
-            : 0;
+          ? 1
+          : 0;
       });
 
       setAllData(data);
       setSearchResults(data);
+
+      setTimeout(() => {
+        if (savedInvoiceNumber) {
+          setSavedInvoiceNumber('');
+        }
+      }, 5000);
     });
 
     return () => {
@@ -130,8 +149,23 @@ export default function Reconciliation() {
           ))}
         </GoADropdown>
       </div>
-
-      <SearchResults searchResults={searchResults}></SearchResults>
+      <div className={searchResultsContainer}>
+        <SearchResults searchResults={searchResults}></SearchResults>
+      </div>
+      {savedInvoiceNumber && (
+        <div className={invoiceProcessedNotificationContainer}>
+          <div>
+            <GoAIcon
+              type='checkmark-circle'
+              theme='outline'
+              size='large'
+            ></GoAIcon>
+            <label className={invoiceProcessedNotificationLabel}>
+              Invoice #{savedInvoiceNumber} processed.
+            </label>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

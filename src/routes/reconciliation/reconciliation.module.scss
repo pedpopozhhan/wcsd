@@ -11,3 +11,38 @@ main {
   display: flex;
   flex-direction: column;
 }
+.top{
+  margin-left: 155px;
+}
+.searchResultsContainer{
+  margin-left: 155px;
+}
+.invoiceProcessedNotificationContainer {
+  margin-left: 25px;
+  display: flex;
+  height: 64px;
+  width: 422px;
+  min-width: 360px;
+  max-width: 640px;
+  padding: 10px 30px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 5px;
+  border: 1px solid #666666;
+  background: #006F4C;
+
+  [type='checkmark-circle']{
+    color: #FFFFFF !important;
+  }
+}
+
+.invoiceProcessedNotificationLabel {
+  color: #FFFFFF;
+  font-family: "arial";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  vertical-align: super;
+  margin-left: 10px;
+}

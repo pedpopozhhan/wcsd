@@ -1,6 +1,5 @@
 export interface IOtherCostTableRowData {
   index: number;
-  id: number;
   from: Date;
   to: Date;
   rateType: string | string[];
@@ -14,5 +13,5 @@ export interface IOtherCostTableRowData {
   internalOrder: string;
   fund: string;
   remarks: string;
-  invoiceId: string;
+  invoiceId: number;
 }
