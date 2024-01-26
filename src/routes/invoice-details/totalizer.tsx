@@ -14,7 +14,7 @@ const Totalizer: FC<ITotalizerProps> = (props) => {
   return (
     <div className={container}>
       <div className={section}>
-        <div className={totalizerAmountLabel}>Invoice Amount</div>
+        <div className={totalizerAmountLabel}>Invoice amount</div>
 
         <div className={totalizerAmount}>
           {convertToCurrency(props.invoiceAmount)}
