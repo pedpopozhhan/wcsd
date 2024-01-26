@@ -38,16 +38,19 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-    data.filter(filterByRateType).sort((a: any, b: any) => {
+    const sorted = data.filter(filterByRateType).sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];
       if (typeof varA === 'string' || typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
+      if (varA === varB) {
+        return 0;
+      }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(data);
+    setRowData(sorted);
   }
   function addRemoveClicked(row: IDetailsTableRow) {
     const isAdd = !row.isAdded;
@@ -101,21 +104,23 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                     <GoACheckbox
                       name={''}
                       checked={rowData.some((x) => x.isSelected)}
-                      disabled={false}
+                      disabled={!rowData.some((x) => !x.isAdded)}
                       onChange={() => checkAll()}
                     ></GoACheckbox>
                   </div>
                 </th>
               )}
               <th>
-                <GoATableSortHeader name={'date'}>Date</GoATableSortHeader>
+                <GoATableSortHeader name={'flightReportDate'}>
+                  Date
+                </GoATableSortHeader>
               </th>
               <th>Reg No.</th>
               <th>Report No.</th>
               <th>AO02 No.</th>
               <th>Rate Type</th>
               <th>
-                <GoATableSortHeader name={'numberOfUnits'}>
+                <GoATableSortHeader name={'noOfUnits'}>
                   No. of Units
                 </GoATableSortHeader>
               </th>

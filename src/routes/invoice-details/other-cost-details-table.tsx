@@ -45,10 +45,9 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     );
   }, [props.data]);
 
-
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-    console.log(sortDir);
+
     data.sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];
@@ -149,7 +148,6 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
         data={rowToUpdate}
       />
     </div>
-
   );
 };
 
