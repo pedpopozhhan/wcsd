@@ -96,7 +96,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     };
 
     const xl = '500px';
-    const lg = '250px';
+    const lg = '230px';
     const md = '175px';
 
     useEffect(() => {
@@ -573,7 +573,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                     <GoATextArea
                                         name='remkarks'
                                         width={xl}
-                                        maxCount={1000}
+                                        maxCount={70}
                                         value={remarks}
                                         onChange={(key, value) => {
                                             setRemarks(value.trim());
