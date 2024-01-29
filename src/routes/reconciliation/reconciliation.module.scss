@@ -18,7 +18,6 @@ main {
   margin-left: 155px;
 }
 .invoiceProcessedNotificationContainer {
-  margin-left: 25px;
   display: flex;
   height: 64px;
   width: 422px;
@@ -28,11 +27,14 @@ main {
   align-items: flex-start;
   gap: 10px;
   border-radius: 5px;
-  border: 1px solid #666666;
-  background: #006F4C;
+  border: 1px solid $goa-color-greyscale-700;
+  background: $goa-color-success-default;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
 
   [type='checkmark-circle']{
-    color: #FFFFFF !important;
+    color: $goa-color-greyscale-white;
   }
 }
 
