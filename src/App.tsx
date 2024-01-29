@@ -2,6 +2,8 @@ import { GoAAppHeader } from '@abgov/react-components';
 import { Outlet } from 'react-router-dom';
 import styles from './App.module.scss';
 import { MainContextProvider } from './common/main-context';
+import { Provider } from 'react-redux';
+import { store } from './store';
 let { mainContainer, outletContainer } = styles;
 
 export function App() {
@@ -18,17 +20,19 @@ export function App() {
   //   ));
 
   return (
-    <div className={mainContainer}>
-      <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
-        {menuItems}
-      </GoAAppHeader>
+    <Provider store={store}>
+      <div className={mainContainer}>
+        <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
+          {menuItems}
+        </GoAAppHeader>
 
-      <div className={outletContainer}>
-        <MainContextProvider>
-          <Outlet />
-        </MainContextProvider>
+        <div className={outletContainer}>
+          <MainContextProvider>
+            <Outlet />
+          </MainContextProvider>
+        </div>
       </div>
-    </div>
+    </Provider>
   );
 }
 

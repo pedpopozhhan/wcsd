@@ -1,12 +1,4 @@
-import {
-  GoATable,
-  GoAButton,
-  GoABlock,
-  GoASpacer,
-  GoAPagination,
-  GoATableSortHeader,
-  GoAIconButton,
-} from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
@@ -18,6 +10,8 @@ import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { MainContext } from '@/common/main-context';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
+import { useAppDispatch } from '@/hooks';
+import { setTimeReportsToReconcile } from '@/app-slice';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -25,12 +19,7 @@ interface IFlightReportAllProps {
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
-  contractNumber,
-  searchValue,
-  onClickFlightReport,
-  ...props
-}) => {
+const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
@@ -59,8 +48,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID, setContractID] = useState(contractNumber);
 
-  const mainContext = useContext(MainContext);
-  const { setTimeReportsToReconcile } = mainContext;
+  //   const mainContext = useContext(MainContext);
+  //   const { setTimeReportsToReconcile } = mainContext;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
@@ -84,19 +74,17 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       pagination: objIPagination,
     };
     setIsLoading(true);
-    const subscription = flightReportDashboardService
-      .getSearch(objISearch)
-      .subscribe((response) => {
-        if (response.errorMessage) {
-          // TODO: display an error message the right way
-          console.error(response.errorMessage);
-        } else {
-          setData(response.data);
-          // sort by what default
-          setPageData(response.data.slice(0, perPage));
-        }
-        setIsLoading(false);
-      });
+    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe((response) => {
+      if (response.errorMessage) {
+        // TODO: display an error message the right way
+        console.error(response.errorMessage);
+      } else {
+        setData(response.data);
+        // sort by what default
+        setPageData(response.data.slice(0, perPage));
+      }
+      setIsLoading(false);
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -152,7 +140,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
     items?.map((record: any) => {
       trItems.push(record.flightReportId);
     });
-    setTimeReportsToReconcile(trItems);
+    dispatch(setTimeReportsToReconcile(trItems));
+    // setTimeReportsToReconcile(trItems);
     setParentShowModal(true);
   };
 
@@ -165,9 +154,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       setPageData(allTimeReports);
     } else {
       let selectedTimeReports = pageData?.map((record: any) =>
-        record.flightReportId?.toString() === name
-          ? { ...record, isChecked: checked }
-          : record
+        record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record
       );
       setPageData(selectedTimeReports);
     }
@@ -193,10 +180,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                   <input
                     type='checkbox'
                     name='selectAll'
-                    checked={
-                      pageData?.filter((item: any) => item?.isChecked !== true)
-                        .length < 1
-                    }
+                    checked={pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
                     onChange={handleCheckBoxChange}
                     style={{
                       width: '20px',
@@ -206,9 +190,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                   ></input>
                 </th>
                 <th style={{ maxWidth: '38%' }}>
-                  <GoATableSortHeader name='flightReportDate'>
-                    Report Date
-                  </GoATableSortHeader>
+                  <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
                 <th style={{ maxWidth: '12%' }}>
                   {/* <GoATableSortHeader name="flightReportId"> */}
@@ -234,10 +216,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
               </tr>
             </thead>
 
-            <tbody
-              style={{ position: 'sticky', top: 0 }}
-              className='table-body'
-            >
+            <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
                 pageData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
@@ -261,9 +240,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                         size='compact'
                         type='tertiary'
-                        onClick={() =>
-                          flightReportClick(record?.flightReportId)
-                        }
+                        onClick={() => flightReportClick(record?.flightReportId)}
                       >
                         {record.flightReportId}
                       </GoAButton>
@@ -273,12 +250,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                     {/* <td>{record?.totalCost}</td> */}
                     <td>{formatter.format(record?.totalCost)}</td>
                     <td>
-                      <GoAIconButton
-                        icon='chevron-forward'
-                        onClick={() =>
-                          flightReportClick(record?.flightReportId)
-                        }
-                      />
+                      <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
                     </td>
                   </tr>
                 ))
@@ -293,13 +265,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           </GoATable>
         </div>
 
-        <div
-          className={
-            data && data.length > 0
-              ? 'visible pagination'
-              : 'not-visible pagination'
-          }
-        >
+        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'}>
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
@@ -319,12 +285,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           </GoABlock>
         </div>
       </div>
-      <InvoiceModalDialog
-        isAddition='true'
-        visible={parentShowModal}
-        showInvoiceDialog={setParentShowModal}
-        contract={contractID}
-      />
+      <InvoiceModalDialog isAddition='true' visible={parentShowModal} showInvoiceDialog={setParentShowModal} contract={contractID} />
     </>
   );
 };

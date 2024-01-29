@@ -1,15 +1,10 @@
-import {
-  GoAInput,
-  GoAButton,
-  GoAFormItem,
-  GoAInputDate,
-  GoAModal,
-  GoAButtonGroup,
-} from '@abgov/react-components';
+import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGroup } from '@abgov/react-components';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { yearMonthDay } from '@/common/dates';
 import { MainContext } from './main-context';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { setInvoiceData } from '@/app-slice';
 
 export interface IInvoiceData {
   InvoiceID: string;
@@ -21,29 +16,23 @@ export interface IInvoiceData {
 }
 
 const InvoiceModalDialog = (props: any) => {
-  const mainContext = useContext(MainContext);
-  const { invoiceData, setInvoiceData } = mainContext;
+  //   const mainContext = useContext(MainContext);
+  //   const { invoiceData, setInvoiceData } = mainContext;
+  const dispatch = useAppDispatch();
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+
   const [invoiceId, setInvoiceId] = useState<string>('');
-  const [labelforInvoiceOperation, setlabelforInvoiceOperation] =
-    useState<string>('Continue');
-  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(
-    props.isAddition
-  );
+  const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
+  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
   const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
   const [dateOfInvoice, setDateOfInvoice] = useState<Date>(new Date(Date()));
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
-  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(
-    new Date(Date())
-  );
-  const [periodEndingDateError, setPeriodEndingDateError] =
-    useState<boolean>(false);
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(
-    new Date(Date())
-  );
-  const [invoiceReceivedDateError, setInvoiceReceivedDateError] =
-    useState<boolean>(false);
+  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(new Date(Date()));
+  const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(new Date(Date()));
+  const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [timeReports, setTimeReports] = useState(props.timeReports);
@@ -127,12 +116,7 @@ const InvoiceModalDialog = (props: any) => {
       setInvoiceIdError(false);
     }
 
-    if (
-      Number.isNaN(invoiceAmount) ||
-      invoiceAmount <= 0 ||
-      invoiceAmount === null ||
-      invoiceAmount > 999999999.99
-    ) {
+    if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
       setInvoiceAmountError(true);
       return;
     } else {
@@ -164,7 +148,8 @@ const InvoiceModalDialog = (props: any) => {
 
     // put them in the session object
     if (isInvoiceAddition) {
-      setInvoiceData(invoiceForContext);
+      //   setInvoiceData(invoiceForContext);
+      dispatch(setInvoiceData(invoiceForContext));
       clearDataPoints();
       clearErrors();
 
@@ -172,7 +157,8 @@ const InvoiceModalDialog = (props: any) => {
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
       // update object in session
-      setInvoiceData(invoiceForContext);
+      //   setInvoiceData(invoiceForContext);
+      dispatch(setInvoiceData(invoiceForContext));
       clearErrors();
       props.showInvoiceDialog(false);
     }
@@ -205,7 +191,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => { }}
+                    onBlur={(key, value) => {}}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {
@@ -233,12 +219,10 @@ const InvoiceModalDialog = (props: any) => {
                       if (value === '') {
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
-                      }
-                      else if (isNaN(Date.parse(value.toString()))) {
+                      } else if (isNaN(Date.parse(value.toString()))) {
                         setDateOfInvoiceError(true);
                         setPageHasError(true);
-                      }
-                      else {
+                      } else {
                         const propertyValue: Date = new Date(value);
                         setDateOfInvoice(propertyValue);
                         if (propertyValue < minDate) {
@@ -268,10 +252,7 @@ const InvoiceModalDialog = (props: any) => {
                     min='0'
                     prefix='$'
                     onBlur={(key, value) => {
-                      if (
-                        Number.isNaN(value) ||
-                        Number.isNaN(Number.parseFloat(value))
-                      ) {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                         setInvoiceAmountError(true);
                         setPageHasError(true);
                       } else {
@@ -281,10 +262,7 @@ const InvoiceModalDialog = (props: any) => {
                       }
                     }}
                     onChange={(key, value) => {
-                      if (
-                        Number.isNaN(value) ||
-                        Number.isNaN(Number.parseFloat(value))
-                      ) {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                         setInvoiceAmountError(true);
                         setPageHasError(true);
                         setInvoiceAmount(0);
@@ -312,12 +290,10 @@ const InvoiceModalDialog = (props: any) => {
                       if (value === '') {
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
-                      }
-                      else if (isNaN(Date.parse(value.toString()))) {
+                      } else if (isNaN(Date.parse(value.toString()))) {
                         setPeriodEndingDateError(true);
                         setPageHasError(true);
-                      }
-                      else {
+                      } else {
                         const propertyValue: Date = new Date(value);
                         setPeriodEndingDate(propertyValue);
                         if (propertyValue < minDate) {
@@ -348,12 +324,10 @@ const InvoiceModalDialog = (props: any) => {
                       if (value === '') {
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
-                      }
-                      else if (isNaN(Date.parse(value.toString()))) {
+                      } else if (isNaN(Date.parse(value.toString()))) {
                         setInvoiceReceivedDateError(true);
                         setPageHasError(true);
-                      }
-                      else {
+                      } else {
                         const propertyValue: Date = new Date(value);
                         setInvoiceReceivedDate(propertyValue);
                         if (propertyValue < minDate) {

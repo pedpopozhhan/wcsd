@@ -2,7 +2,7 @@ import styles from './summary.module.scss';
 import { useEffect, useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { GoAIconButton } from '@abgov/react-components';
-let { container , assignedToLabel, assignedToIcon, assignedToHeader} = styles;
+let { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
 
 interface ISummary {
   InvoiceID: string;
@@ -21,7 +21,12 @@ const Summary: React.FC<ISummary> = (props) => {
         <div>Air Spray Ltd.</div>
       </div>
       <div>
-        <div className={assignedToHeader}><label>Assigned to</label><div className={assignedToIcon}><GoAIconButton icon='information-circle'/></div></div>
+        <div className={assignedToHeader}>
+          <label>Assigned to</label>
+          <div className={assignedToIcon}>
+            <GoAIconButton icon='information-circle' />
+          </div>
+        </div>
         <div className={assignedToLabel}>Sarah Tale</div>
       </div>
       <div>
