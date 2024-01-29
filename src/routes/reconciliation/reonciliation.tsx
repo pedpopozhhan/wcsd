@@ -51,6 +51,7 @@ export default function Reconciliation() {
       setTimeout(() => {
         if (savedInvoiceNumber) {
           setSavedInvoiceNumber('');
+          window.history.replaceState({}, document.title);
         }
       }, 5000);
     });
