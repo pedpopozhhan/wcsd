@@ -41,6 +41,7 @@ export default function InvoiceDetails() {
     setParentShowModal(true);
   };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
+  const enableProcess = (invoiceData.InvoiceAmount - reconciledAmount) == 0 ? true : false;
 
   useEffect(() => {
     const subscription = invoiceDetailsService
@@ -145,7 +146,7 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={processInvoice}>
+        <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : {disabled : true})}>
           Process
         </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
