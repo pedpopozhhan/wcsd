@@ -6,10 +6,10 @@ let { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
 
 interface ISummary {
   InvoiceID: string;
-  DateOnInvoice: Date;
+  DateOnInvoice: string;
   InvoiceAmount: number;
-  PeriodEnding: Date;
-  InvoiceReceived: Date;
+  PeriodEnding: string;
+  InvoiceReceived: string;
   ContractNumber: string;
 }
 

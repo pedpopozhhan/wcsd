@@ -8,10 +8,10 @@ import { setInvoiceData } from '@/app-slice';
 
 export interface IInvoiceData {
   InvoiceID: string;
-  DateOnInvoice: Date;
+  DateOnInvoice: string;
   InvoiceAmount: number;
-  PeriodEnding: Date;
-  InvoiceReceived: Date;
+  PeriodEnding: string;
+  InvoiceReceived: string;
   ContractNumber: string;
 }
 
@@ -25,13 +25,13 @@ const InvoiceModalDialog = (props: any) => {
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
   const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
-  const [dateOfInvoice, setDateOfInvoice] = useState<Date>(new Date(Date()));
+  const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
-  const [periodEndingDate, setPeriodEndingDate] = useState<Date>(new Date(Date()));
+  const [periodEndingDate, setPeriodEndingDate] = useState<string>(new Date().toISOString());
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<Date>(new Date(Date()));
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(new Date().toISOString());
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
@@ -92,9 +92,9 @@ const InvoiceModalDialog = (props: any) => {
   const clearDataPoints = () => {
     setInvoiceId('');
     setInvoiceAmount(0);
-    setDateOfInvoice(new Date(Date()));
-    setPeriodEndingDate(new Date(Date()));
-    setInvoiceReceivedDate(new Date(Date()));
+    setDateOfInvoice(new Date().toISOString());
+    setPeriodEndingDate(new Date().toISOString());
+    setInvoiceReceivedDate(new Date().toISOString());
   };
 
   const hideModalDialog = () => {
@@ -224,7 +224,7 @@ const InvoiceModalDialog = (props: any) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setDateOfInvoice(propertyValue);
+                        setDateOfInvoice(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setDateOfInvoiceError(true);
                           setPageHasError(true);
@@ -295,7 +295,7 @@ const InvoiceModalDialog = (props: any) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setPeriodEndingDate(propertyValue);
+                        setPeriodEndingDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setPeriodEndingDateError(true);
                           setPageHasError(true);
@@ -329,7 +329,7 @@ const InvoiceModalDialog = (props: any) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setInvoiceReceivedDate(propertyValue);
+                        setInvoiceReceivedDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setInvoiceReceivedDateError(true);
                           setPageHasError(true);
