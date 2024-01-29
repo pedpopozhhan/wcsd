@@ -92,7 +92,8 @@ export default function InvoiceDetails() {
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
-    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`);
+    const timeReportData = rowData.filter(i => i.isAdded);
+    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, {state: {timeReportData, otherCostData}});
   }
 
   return (

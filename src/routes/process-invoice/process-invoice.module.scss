@@ -27,6 +27,23 @@
   margin-left: -10px;
 }
 
+.invoiceAmountLabel {
+  font-family: "Roboto Mono";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.processInvoiceModalDialogContainer{
+  ul.li {
+    display: list-item;
+  }
+  div:nth-child(2){
+    margin-left: 20px;
+  }
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -66,6 +83,7 @@
       display: flex;
       flex-direction: column;
       .tabList {
+        width: 250px;
         border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
         display: flex;
         gap: $goa-space-xl;
@@ -104,6 +122,11 @@
   flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
+
+  [name='archive-outline']{
+    vertical-align: top;
+    margin-right: 7px;
+  }
 }
 
 .tableInvoiceHeader {

@@ -1,4 +1,5 @@
 import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
+import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './vendor-time-reports.module.scss';
@@ -6,13 +7,17 @@ import styles from './vendor-time-reports.module.scss';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
+import { MainContext } from '@/common/main-context';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
 
+  const mainContext = useContext(MainContext);
+  const { vendorForReconciliation } = mainContext;
+
   const navigate = useNavigate();
 
-  const header = "[Vendor's] Time Reports";
+  const header = vendorForReconciliation.vendorName;
 
   const { vendorTimeReportRoot, vendorTimeReportMain } = styles;
 
@@ -46,7 +51,7 @@ const VendorTimeReports = () => {
           <GoATab heading='Processed'></GoATab>
         </GoATabs>
       </div>
-      <VendorTimeReportsSidePanel />
+      <VendorTimeReportsSidePanel contractDetails={vendorForReconciliation} />
     </div>
   );
 };

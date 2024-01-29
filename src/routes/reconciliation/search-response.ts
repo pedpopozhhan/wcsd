@@ -1,5 +1,5 @@
-import { SearchResult } from './search-result';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 
 export class SearchResponse {
-  searchResults: SearchResult[];
+  searchResults: IContractSearchResult[];
 }

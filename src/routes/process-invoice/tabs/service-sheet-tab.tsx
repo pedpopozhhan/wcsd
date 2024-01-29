@@ -16,6 +16,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
     serviceSheetTabAltValues,
     gridContainer,
     serviceSheetNameDesc,
+    invoiceAmountLabel
   } = styles;
 
   const [serviceSheetName, setServiceSheetName] = useState<string>('');
@@ -36,7 +37,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
       </div>
 
       <div>Purchase group</div>
-      <div className={serviceSheetTabAltValues}>W01(FP_W01)</div>
+      <div className={serviceSheetTabAltValues}>W01 (FP_W01)</div>
 
       <div>Service description</div>
       <div>Professional Services</div>
@@ -57,7 +58,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
       <div className={serviceSheetTabAltValues}>Hour</div>
 
       <div>Price</div>
-      <div>{convertToCurrency(props.InvoiceAmount)}</div>
+      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace("$", '')}</div>
     </div>
   );
 };

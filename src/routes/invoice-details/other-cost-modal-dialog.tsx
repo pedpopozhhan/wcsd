@@ -70,7 +70,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
     const currentOtherCost = {
         index: index,
-        id: id,
         from: fromDate,
         to: toDate,
         rateType: rateType,
