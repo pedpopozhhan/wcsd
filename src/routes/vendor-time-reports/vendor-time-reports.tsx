@@ -7,13 +7,11 @@ import styles from './vendor-time-reports.module.scss';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
-import { MainContext } from '@/common/main-context';
+import { useAppSelector } from '@/hooks';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
-
-  const mainContext = useContext(MainContext);
-  const { vendorForReconciliation } = mainContext;
+  const vendorForReconciliation = useAppSelector((state) => state.vendorForReconciliation);
 
   const navigate = useNavigate();
 
@@ -43,9 +41,7 @@ const VendorTimeReports = () => {
             <SignedOffTabDetails contractNumber={contractNumber} />
           </GoATab>
           <GoATab heading='Approved'>
-            <ApprovedTabDetails
-              contractNumber={contractNumber}
-            ></ApprovedTabDetails>
+            <ApprovedTabDetails contractNumber={contractNumber}></ApprovedTabDetails>
           </GoATab>
           <GoATab heading='Invoiced'></GoATab>
           <GoATab heading='Processed'></GoATab>

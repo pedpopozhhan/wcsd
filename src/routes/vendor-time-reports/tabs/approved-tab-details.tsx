@@ -1,5 +1,5 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -8,7 +8,6 @@ import { IPagination } from '@/interfaces/pagination.interface';
 import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
-import { MainContext } from '@/common/main-context';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch } from '@/hooks';
 import { setTimeReportsToReconcile } from '@/app-slice';
@@ -48,8 +47,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID, setContractID] = useState(contractNumber);
 
-  //   const mainContext = useContext(MainContext);
-  //   const { setTimeReportsToReconcile } = mainContext;
   const dispatch = useAppDispatch();
 
   useEffect(() => {

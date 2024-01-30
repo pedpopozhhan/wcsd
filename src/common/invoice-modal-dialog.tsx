@@ -1,8 +1,7 @@
 import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGroup } from '@abgov/react-components';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { yearMonthDay } from '@/common/dates';
-import { MainContext } from './main-context';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { setInvoiceData } from '@/app-slice';
 
@@ -16,10 +15,8 @@ export interface IInvoiceData {
 }
 
 const InvoiceModalDialog = (props: any) => {
-  //   const mainContext = useContext(MainContext);
-  //   const { invoiceData, setInvoiceData } = mainContext;
   const dispatch = useAppDispatch();
-  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
 
   const [invoiceId, setInvoiceId] = useState<string>('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
@@ -35,7 +32,6 @@ const InvoiceModalDialog = (props: any) => {
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
-  const [timeReports, setTimeReports] = useState(props.timeReports);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate, setMinDate] = useState<Date>(new Date(1950, 2, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
@@ -148,7 +144,6 @@ const InvoiceModalDialog = (props: any) => {
 
     // put them in the session object
     if (isInvoiceAddition) {
-      //   setInvoiceData(invoiceForContext);
       dispatch(setInvoiceData(invoiceForContext));
       clearDataPoints();
       clearErrors();
@@ -156,8 +151,6 @@ const InvoiceModalDialog = (props: any) => {
       // Navigate to invoice detail page
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
-      // update object in session
-      //   setInvoiceData(invoiceForContext);
       dispatch(setInvoiceData(invoiceForContext));
       clearErrors();
       props.showInvoiceDialog(false);

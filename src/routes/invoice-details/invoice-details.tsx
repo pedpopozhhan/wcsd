@@ -7,9 +7,8 @@ import ReconciledTab from './reconciled-tab';
 import { useContext, useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
-import InvoiceModalDialog, { IInvoiceData } from '@/common/invoice-modal-dialog';
+import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { InvoiceDetailsContext } from './invoice-details-context';
-import { MainContext } from '@/common/main-context';
 import { useAppSelector } from '@/hooks';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
@@ -19,11 +18,9 @@ export default function InvoiceDetails() {
   const { rowData, setRowData, otherCostData, setRateTypes } = context;
   const navigate = useNavigate();
 
-  //   const mainContext = useContext(MainContext);
-  const timeReportsToReconcile = useAppSelector((state) => state.app.timeReportsToReconcile);
-  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const timeReportsToReconcile = useAppSelector((state) => state.timeReportsToReconcile);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
 
-  //   const { timeReportsToReconcile, invoiceData } = mainContext;
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   // Modal Dialog configuration

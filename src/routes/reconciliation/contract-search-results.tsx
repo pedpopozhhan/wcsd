@@ -1,17 +1,12 @@
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result'
-import {
-  GoABlock,
-  GoAButton,
-  GoAIconButton,
-  GoASpacer,
-  GoATable,
-} from '@abgov/react-components';
-import React, { useEffect, useState, useContext } from 'react';
-import { MainContext } from '@/common/main-context';
+import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
+import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
+import React, { useEffect, useState } from 'react';
 import styles from './search-results.module.scss';
 import { ContractType, convertContractType } from '@/types/contract-type';
-let { link, table, chevron, number } = styles;
+let { chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/hooks';
+import { setVendorForReconciliation } from '@/app-slice';
 
 interface IContractSearchResultsProps {
   searchResults: IContractSearchResult[];
@@ -20,8 +15,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   const [results, setResults] = useState(props.searchResults);
   const [pageResults, setPageResults] = useState<IContractSearchResult[]>([]);
 
-  const mainContext = useContext(MainContext);
-  const { setVendorForReconciliation } = mainContext;
+  const dispatch = useAppDispatch();
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
@@ -86,7 +80,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }
 
   function timeReportsClick(selectedVendor: IContractSearchResult) {
-    setVendorForReconciliation(selectedVendor);
+    dispatch(setVendorForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
       navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,
@@ -149,23 +143,16 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>
-                <a onClick={() => timeReportsClick(result)}>
-                  {result.contractNumber}
-                </a>
+                <a onClick={() => timeReportsClick(result)}>{result.contractNumber}</a>
               </td>
-              <td>
-                {convertContractType(result.contractType as ContractType)}
-              </td>
+              <td>{convertContractType(result.contractType as ContractType)}</td>
               {/* Hide this for now
               <td className={link}>
                 <a>{result.numTimeReports}</a>
               </td> */}
               <td>
                 <div className={chevron}>
-                  <GoAIconButton
-                    icon='chevron-forward'
-                    onClick={() => timeReportsClick(result)}
-                  />
+                  <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result)} />
                 </div>
               </td>
             </tr>
@@ -182,20 +169,10 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
         <GoASpacer hSpacing='fill' />
         <GoABlock mb='m' alignment='center' gap='m'>
           <GoABlock>
-            <GoAButton
-              type='tertiary'
-              leadingIcon='arrow-back'
-              onClick={previous}
-              disabled={page === 1}
-            >
+            <GoAButton type='tertiary' leadingIcon='arrow-back' onClick={previous} disabled={page === 1}>
               Previous
             </GoAButton>
-            <GoAButton
-              type='tertiary'
-              trailingIcon='arrow-forward'
-              onClick={next}
-              disabled={isNextDisabled()}
-            >
+            <GoAButton type='tertiary' trailingIcon='arrow-forward' onClick={next} disabled={isNextDisabled()}>
               Next
             </GoAButton>
           </GoABlock>

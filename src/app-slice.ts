@@ -21,25 +21,9 @@ export const appSlice = createSlice({
     setTimeReportsToReconcile: (state, action: PayloadAction<number[]>) => {
       state.timeReportsToReconcile = action.payload;
     },
-    setInvoiceData: {
-      reducer(state, action: PayloadAction<IInvoiceData>) {
-        state.invoiceData = action.payload;
-      },
-      prepare(value: IInvoiceData) {
-        return {
-          payload: {
-            ...value,
-            // DateOnInvoice: value.DateOnInvoice.toISOString(),
-            // PeriodEnding: value.PeriodEnding.toISOString(),
-            // InvoiceReceived: value.InvoiceReceived.toISOString()
-          },
-        };
-      },
+    setInvoiceData: (state, action: PayloadAction<IInvoiceData>) => {
+      state.invoiceData = action.payload;
     },
-
-    // (state, action: PayloadAction<IInvoiceData>) => {
-    //   state.invoiceData = action.payload;
-    // },
     setVendorForReconciliation: (state, action: PayloadAction<IContractSearchResult>) => {
       state.vendorForReconciliation = action.payload;
     },

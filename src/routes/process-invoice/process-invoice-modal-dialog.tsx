@@ -1,14 +1,12 @@
 import { GoAButton, GoAButtonGroup, GoAModal } from '@abgov/react-components';
-import { SetStateAction, useContext, useState } from 'react';
+import { useState } from 'react';
 import styles from './process-invoice.module.scss';
 import processInvoiceService from '@/services/process-invoice.service';
-import { MainContext } from '@/common/main-context';
-import { IDetailsTableRow, InvoiceDetailsContext } from '../invoice-details/invoice-details-context';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
-import { Navigate, useNavigate, useNavigation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/hooks';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -19,9 +17,8 @@ export interface IProcessInvoiceModalData {
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   let { processInvoiceModalDialogContainer } = styles;
   const navigate = useNavigate();
-  //   const mainContext = useContext(MainContext);
 
-  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
   const {} = props.data.timeReportData;
   function hideModalDialog() {
