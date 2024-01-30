@@ -61,11 +61,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
     const [cost, setCost] = useState<string>('');
 
-    const [glAccount, setGlAccount] = useState<string>('');
+    const [glAccount, setGlAccount] = useState<string | string[]>('');
     const [profitCentre, setProfitCenter] = useState<string>('100063');
     const [costCenter, setCostCenter] = useState<string | string[]>('');
-    const [internalOrder, setInternalOrder] = useState<string>('');
-    const [fund, setFund] = useState<string>('');
+    const [internalOrder, setInternalOrder] = useState<string | string[]>('');
+    const [fund, setFund] = useState<string | string[]>('');
     const [remarks, setRemarks] = useState<string>('');
     const [invoiceId, setInvoiceId] = useState<string>('');
 
@@ -225,6 +225,19 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     function onCostCenterChange(name: string, value: string | string[]) {
         setCostCenter(value);
     }
+
+    function onGLAccountChange(name: string, value: string | string[]) {
+        setGlAccount(value);
+    }
+
+    function onInternalOrderChange(name: string, value: string | string[]) {
+        setInternalOrder(value);
+    }
+
+    function onFundChange(name: string, value: string | string[]) {
+        setFund(value);
+    }
+
 
     const validateOtherCost = () => {
         if (new Date(yearMonthDay(fromDate)) < minDate) {
@@ -489,8 +502,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                     <GoADropdown
                                         placeholder='Select GL account'
                                         name='glAccount'
-                                        value={costCenter}
-                                        onChange={onCostCenterChange}
+                                        value={glAccount}
+                                        onChange={onGLAccountChange}
                                         width={lg}
                                     >
                                         {glAccounts.map((x, i) => {
@@ -524,7 +537,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         placeholder='Select fund'
                                         name='fund'
                                         value={fund}
-                                        onChange={onCostCenterChange}
+                                        onChange={onFundChange}
                                         width={lg}
                                     >
                                         {funds.map((x, i) => {
@@ -542,7 +555,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         placeholder='Select internal order'
                                         name='internalOrder'
                                         value={internalOrder}
-                                        onChange={onCostCenterChange}
+                                        onChange={onInternalOrderChange}
                                         width={lg}
                                     >
                                         {internalOrders.map((x, i) => {
