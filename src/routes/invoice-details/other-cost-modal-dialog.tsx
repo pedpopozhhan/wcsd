@@ -573,7 +573,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                     <GoATextArea
                                         name='remkarks'
                                         width={xl}
-                                        maxCount={70}
+                                        countBy="character"
+                                        maxCount={300}
                                         value={remarks}
                                         onChange={(key, value) => {
                                             setRemarks(value.trim());
