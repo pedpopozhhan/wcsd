@@ -177,7 +177,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                   <input
                     type='checkbox'
                     name='selectAll'
-                    checked={pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
+                    checked={pageData.length > 0 && pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
+                    disabled={pageData.length === 0}
                     onChange={handleCheckBoxChange}
                     style={{
                       width: '20px',

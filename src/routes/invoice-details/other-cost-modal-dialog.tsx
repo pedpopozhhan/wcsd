@@ -15,6 +15,8 @@ import {
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { yearMonthDay } from '@/common/dates';
+import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
+import { IDropDownList } from '@/interfaces/drop-down-list.interface';
 
 interface IOtherCostModalDialog {
     onAddUpdate: (item: IOtherCostTableRowData) => any;
@@ -60,13 +62,20 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     const [cost, setCost] = useState<string>('');
 
     const [glAccount, setGlAccount] = useState<string>('');
-    const [profitCentre, setProfitCenter] = useState<string>('');
-    const [costCenter, setCostCenter] = useState<string>('');
+    const [profitCentre, setProfitCenter] = useState<string>('100063');
+    const [costCenter, setCostCenter] = useState<string | string[]>('');
     const [internalOrder, setInternalOrder] = useState<string>('');
     const [fund, setFund] = useState<string>('');
     const [remarks, setRemarks] = useState<string>('');
     const [invoiceId, setInvoiceId] = useState<string>('');
-    const defaultErrorDate = new Date(Date());
+
+    const [rateTypes, setRateTypes] = useState<string[]>([]);
+    const [rateUnits, setRateUnits] = useState<string[]>([]);
+    const [glAccounts, setGLAccounts] = useState<string[]>([]);
+    const [costCenters, setCostCenters] = useState<string[]>([]);
+    const [internalOrders, setInternalOrders] = useState<string[]>([]);
+    const [funds, setFunds] = useState<string[]>([]);
+
 
     const currentOtherCost = {
         index: index,
@@ -87,9 +96,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     };
 
     const xl = '500px';
-    const lg = '225px';
-    const md = '150px';
-    const sm = '125px';
+    const lg = '230px';
+    const md = '175px';
 
     useEffect(() => {
         if (props.isAddition) {
@@ -115,6 +123,29 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             setRemarks(String(props.data?.remarks));
         }
     }, [isOtherCostAddition, props.data]);
+
+    useEffect(() => {
+        const subscription = invoiceOtherCostDDLService
+            .getOtherCostDropDownLists()
+            .subscribe({
+                next: (results) => {
+                    setRateTypes(results.rateTypes);
+                    setRateUnits(results.rateUnits);
+                    setCostCenters(results.costCenterList);
+                    setGLAccounts(results.glAccountList);
+                    setInternalOrders(results.internalOrderList);
+                    setFunds(results.fundList);
+                },
+                error: (error) => {
+                    // TODO: display an error message the right way
+                    console.error(error);
+                },
+            });
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
 
     function setControlsForAddition() {
         setDialogTitle('Add other cost');
@@ -191,6 +222,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
         setUnit(value);
     }
 
+    function onCostCenterChange(name: string, value: string | string[]) {
+        setCostCenter(value);
+    }
+
     const validateOtherCost = () => {
         if (new Date(yearMonthDay(fromDate)) < minDate) {
             setFromDateError(true);
@@ -235,7 +270,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
         setNumberOfUnits(0);
         setCost('');
         setGlAccount('');
-        setProfitCenter('');
+        setProfitCenter('100063');
         setCostCenter('');
         setInternalOrder('');
         setFund('');
@@ -277,7 +312,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <table>
                     <tbody>
                         <tr>
-                            <td colSpan={5}>
+                            <td >
                                 <GoAFormItem label='From'>
                                     <GoAInputDate
                                         name='fromDate'
@@ -307,7 +342,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                 </GoAFormItem>
                             </td>
                             <td></td>
-                            <td colSpan={4}>
+                            <td colSpan={3}>
                                 <GoAFormItem label='To'>
                                     <GoAInputDate
                                         name='dateOnInvoice'
@@ -340,89 +375,41 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                             <td></td>
                         </tr>
                         <tr>
-                            <td colSpan={5}>
+                            <td >
                                 <GoAFormItem label='Rate Type'>
                                     <GoADropdown
+                                        placeholder='Select rate Type'
                                         name='rateTypes'
                                         value={rateType}
                                         onChange={onRateChange}
                                         width={lg}
                                     >
-                                        <GoADropdownItem value='Dry' label='Dry' />
-                                        <GoADropdownItem value='Ferry' label='Ferry' />
-                                        <GoADropdownItem value='Flat' label='Flat' />
-                                        <GoADropdownItem value='Mars' label='Mars' />
-                                        <GoADropdownItem value='Primary' label='Primary' />
-                                        <GoADropdownItem value='Secondary' label='Secondary' />
-                                        <GoADropdownItem value='Wet' label='Wet' />
-                                        <GoADropdownItem
-                                            value='Accommodation'
-                                            label='Accommodation'
-                                        />
-                                        <GoADropdownItem value='Airport Fee' label='Airport Fee' />
-                                        <GoADropdownItem value='Basing' label='Basing' />
-                                        <GoADropdownItem
-                                            value='Basing Non-Core'
-                                            label='Basing Non-Core'
-                                        />
-                                        <GoADropdownItem
-                                            value='Basing Penalty'
-                                            label='Basing Penalty'
-                                        />
-                                        <GoADropdownItem
-                                            value='Charter Minimums'
-                                            label='Charter Minimums'
-                                        />
-                                        <GoADropdownItem
-                                            value='Crew Exp - Breakfast'
-                                            label='Crew Exp - Breakfast'
-                                        />
-                                        <GoADropdownItem
-                                            value='Crew Exp - Dinner'
-                                            label='Crew Exp - Dinner'
-                                        />
-                                        <GoADropdownItem
-                                            value='Crew Exp - Lunch'
-                                            label='Crew Exp - Lunch'
-                                        />
-                                        <GoADropdownItem
-                                            value='Crew Expenses'
-                                            label='Crew Expenses'
-                                        />
-                                        <GoADropdownItem value='Double Crew' label='Double Crew' />
-                                        <GoADropdownItem value='Landing Fee' label='Landing Fee' />
-                                        <GoADropdownItem value='Nav Canada' label='Nav Canada' />
-                                        <GoADropdownItem
-                                            value='Passenger Fee'
-                                            label='Passenger Fee'
-                                        />
-                                        <GoADropdownItem value='Standby' label='Standby' />
-                                        <GoADropdownItem
-                                            value='Vehicle Rental'
-                                            label='Vehicle Rental'
-                                        />
+                                        {rateTypes.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
                                     </GoADropdown>
                                 </GoAFormItem>
                             </td>
                             <td></td>
-                            <td colSpan={4}>
+                            <td colSpan={3}>
                                 <GoAFormItem label='Unit'>
                                     <GoADropdown
+                                        placeholder='Select rate unit'
                                         name='units'
                                         value={unit}
                                         onChange={onUnitChange}
                                         width={lg}
                                     >
-                                        <GoADropdownItem value='UNIT1' label='UNIT1' />
-                                        <GoADropdownItem value='UNIT2' label='UNIT2' />
-                                        <GoADropdownItem value='UNIT3' label='UNIT3' />
+                                        {rateUnits.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
                                     </GoADropdown>
                                 </GoAFormItem>
                             </td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td colSpan={5}>
+                            <td >
                                 <GoAFormItem label='Rate'>
                                     <GoAInput
                                         name='rate'
@@ -451,12 +438,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                 </GoAFormItem>
                             </td>
                             <td></td>
-                            <td colSpan={1}>
+                            <td >
                                 <GoAFormItem label='No. of Units'>
                                     <GoAInput
                                         name='numberOfUnits'
                                         type='number'
-                                        width={sm}
+                                        width={md}
                                         value={numberOfUnits.toString()}
                                         error={numberOfUnitsError}
                                         max='99999'
@@ -477,11 +464,16 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                     />
                                 </GoAFormItem>
                             </td>
-                            <td colSpan={3}>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
                                 <GoAFormItem label='Cost'>
                                     <GoAInput
                                         name='cost'
-                                        width={md}
+                                        width={lg}
                                         value={cost.toString()}
                                         prefix='$'
                                         disabled
@@ -491,84 +483,98 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                     />
                                 </GoAFormItem>
                             </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={4}>
+                            <td></td>
+                            <td colSpan={3}>
                                 <GoAFormItem label='GL Account'>
-                                    <GoAInput
+                                    <GoADropdown
+                                        placeholder='Select GL account'
                                         name='glAccount'
-                                        width={md}
-                                        value={glAccount}
-                                        maxLength={12}
-                                        onChange={(key, value) => {
-                                            setGlAccount(value.trim());
-                                        }}
-                                    />
+                                        value={costCenter}
+                                        onChange={onCostCenterChange}
+                                        width={lg}
+                                    >
+                                        {glAccounts.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
+                                    </GoADropdown>
                                 </GoAFormItem>
                             </td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <GoAFormItem label='Cost Center'>
+                                    <GoADropdown
+                                        placeholder='Select cost center'
+                                        name='costCenter'
+                                        value={costCenter}
+                                        onChange={onCostCenterChange}
+                                        width={lg}
+                                    >
+                                        {costCenters.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
+                                    </GoADropdown>
+                                </GoAFormItem>
+                            </td>
+                            <td></td>
                             <td colSpan={3}>
+                                <GoAFormItem label='Fund'>
+                                    <GoADropdown
+                                        placeholder='Select fund'
+                                        name='fund'
+                                        value={fund}
+                                        onChange={onCostCenterChange}
+                                        width={lg}
+                                    >
+                                        {funds.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
+                                    </GoADropdown>
+                                </GoAFormItem>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <GoAFormItem label='Internal Order'>
+                                    <GoADropdown
+                                        placeholder='Select internal order'
+                                        name='internalOrder'
+                                        value={internalOrder}
+                                        onChange={onCostCenterChange}
+                                        width={lg}
+                                    >
+                                        {internalOrders.map((x, i) => {
+                                            return <GoADropdownItem key={i} value={x} label={x} />;
+                                        })}
+                                    </GoADropdown>
+                                </GoAFormItem>
+                            </td>
+                            <td></td>
+                            <td>
                                 <GoAFormItem label='Profit Center'>
                                     <GoAInput
                                         name='profitCenter'
-                                        width={sm}
+                                        width={lg}
                                         value={profitCentre}
-                                        maxLength={12}
+                                        disabled
                                         onChange={(key, value) => {
                                             setProfitCenter(value.trim());
                                         }}
                                     />
                                 </GoAFormItem>
                             </td>
-                            <td colSpan={5}>
-                                <GoAFormItem label='Cost Center'>
-                                    <GoAInput
-                                        name='costCenter'
-                                        width={sm}
-                                        value={costCenter}
-                                        maxLength={12}
-                                        onChange={(key, value) => {
-                                            setCostCenter(value.trim());
-                                        }}
-                                    />
-                                </GoAFormItem>
-                            </td>
+                            <td></td>
                         </tr>
                         <tr>
-                            <td colSpan={4}>
-                                <GoAFormItem label='Internal Order'>
-                                    <GoAInput
-                                        name='internalOrder'
-                                        width={md}
-                                        value={internalOrder}
-                                        maxLength={12}
-                                        onChange={(key, value) => {
-                                            setInternalOrder(value.trim());
-                                        }}
-                                    />
-                                </GoAFormItem>
-                            </td>
-                            <td colSpan={3}>
-                                <GoAFormItem label='Fund'>
-                                    <GoAInput
-                                        name='fund'
-                                        width={sm}
-                                        value={fund}
-                                        maxLength={12}
-                                        onChange={(key, value) => {
-                                            setFund(value.trim());
-                                        }}
-                                    />
-                                </GoAFormItem>
-                            </td>
-                            <td colSpan={5}></td>
-                        </tr>
-                        <tr>
-                            <td colSpan={12}>
+                            <td colSpan={10}>
                                 <GoAFormItem label='Remarks'>
                                     <GoATextArea
                                         name='remkarks'
                                         width={xl}
-                                        maxCount={1000}
+                                        countBy="character"
+                                        maxCount={300}
                                         value={remarks}
                                         onChange={(key, value) => {
                                             setRemarks(value.trim());
