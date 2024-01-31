@@ -1,18 +1,17 @@
-import {
-  GoAButton,
-  GoADropdown,
-  GoADropdownItem,
-} from '@abgov/react-components';
+import { GoAButton, GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import styles from './details-tab.module.scss';
-import { useContext, useEffect, useState } from 'react';
-import { InvoiceDetailsContext } from './invoice-details-context';
+import { useEffect, useState } from 'react';
 import InvoiceDataTable from './invoice-data-table';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setRowData } from './invoice-details-slice';
 
 let { container, buttons } = styles;
 interface IDetailsTabProps {}
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
-  const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, rateTypes } = context;
+  const dispatch = useAppDispatch();
+  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
+  const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
+
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
   const [selectedRateType, setSelectedRateType] = useState<string>('');
 
@@ -21,10 +20,12 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   }, [rowData]);
 
   function onAddSelected() {
-    setRowData(
-      rowData.map((r) => {
-        return !r.isSelected ? r : { ...r, isSelected: false, isAdded: true };
-      })
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          return !r.isSelected ? r : { ...r, isSelected: false, isAdded: true };
+        })
+      )
     );
   }
 
@@ -35,19 +36,10 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   return (
     <div className={container}>
       <div className={buttons}>
-        <GoAButton
-          type='secondary'
-          onClick={onAddSelected}
-          disabled={!selectAllEnabled}
-        >
+        <GoAButton type='secondary' onClick={onAddSelected} disabled={!selectAllEnabled}>
           Add Selected
         </GoAButton>
-        <GoADropdown
-          filterable
-          placeholder='All rate types'
-          onChange={onChangeRateType}
-          value={selectedRateType}
-        >
+        <GoADropdown filterable placeholder='All rate types' onChange={onChangeRateType} value={selectedRateType}>
           {rateTypes.map((x, i) => {
             return <GoADropdownItem key={i} value={x} label={x} />;
           })}

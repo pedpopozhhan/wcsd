@@ -18,7 +18,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   let { processInvoiceModalDialogContainer } = styles;
   const navigate = useNavigate();
 
-  const invoiceData = useAppSelector((state) => state.invoiceData);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
   const {} = props.data.timeReportData;
   function hideModalDialog() {

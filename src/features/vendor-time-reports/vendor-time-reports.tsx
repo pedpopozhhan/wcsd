@@ -1,5 +1,4 @@
 import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
-import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './vendor-time-reports.module.scss';
@@ -11,7 +10,7 @@ import { useAppSelector } from '@/app/hooks';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
-  const vendorForReconciliation = useAppSelector((state) => state.vendorForReconciliation);
+  const vendorForReconciliation = useAppSelector((state) => state.app.vendorForReconciliation);
 
   const navigate = useNavigate();
 

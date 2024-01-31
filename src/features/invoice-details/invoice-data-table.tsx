@@ -1,36 +1,20 @@
-import {
-  GoAButton,
-  GoACheckbox,
-  GoATable,
-  GoATableSortHeader,
-} from '@abgov/react-components';
+import { GoAButton, GoACheckbox, GoATable, GoATableSortHeader } from '@abgov/react-components';
 import styles from './invoice-data-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { useContext } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import {
-  IDetailsTableRow,
-  InvoiceDetailsContext,
-} from './invoice-details-context';
+import { IDetailsTableRow } from './details-table-row.interface';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setRowData } from './invoice-details-slice';
 
-let {
-  container,
-  checkboxWrapper,
-  buttonWrapper,
-  tableContainer,
-  stickyColumn,
-  start,
-  end,
-  onTop,
-} = styles;
+let { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
   rateTypeFilter?: string;
   showCheckBoxes?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
-  const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData } = context;
+  const dispatch = useAppDispatch();
+  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
 
   const filterByRateType = (x: IDetailsTableRow) => {
     return props.rateTypeFilter ? x.data.rateType === props.rateTypeFilter : x;
@@ -50,42 +34,46 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(sorted);
+    dispatch(setRowData(sorted));
   }
   function addRemoveClicked(row: IDetailsTableRow) {
     const isAdd = !row.isAdded;
 
-    setRowData(
-      rowData.map((r) => {
-        if (r.index === row.index) {
-          return { ...r, isAdded: isAdd };
-        } else {
-          return r;
-        }
-      })
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          if (r.index === row.index) {
+            return { ...r, isAdded: isAdd };
+          } else {
+            return r;
+          }
+        })
+      )
     );
   }
   function checkClicked(row: IDetailsTableRow, checked: boolean) {
-    setRowData(
-      rowData.map((r) => {
-        if (r.index === row.index) {
-          return { ...r, isSelected: checked };
-        } else {
-          return r;
-        }
-      })
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          if (r.index === row.index) {
+            return { ...r, isSelected: checked };
+          } else {
+            return r;
+          }
+        })
+      )
     );
   }
 
   function checkAll() {
     // if any selected, uncheck them all
-    let anySelected = rowData
-      .filter((x) => !x.isAdded)
-      .some((x) => x.isSelected);
-    setRowData(
-      rowData.map((r) => {
-        return r.isAdded ? r : { ...r, isSelected: !anySelected };
-      })
+    let anySelected = rowData.filter((x) => !x.isAdded).some((x) => x.isSelected);
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          return r.isAdded ? r : { ...r, isSelected: !anySelected };
+        })
+      )
     );
   }
 
@@ -111,24 +99,18 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                 </th>
               )}
               <th>
-                <GoATableSortHeader name={'flightReportDate'}>
-                  Date
-                </GoATableSortHeader>
+                <GoATableSortHeader name={'flightReportDate'}>Date</GoATableSortHeader>
               </th>
               <th>Reg No.</th>
               <th>Report No.</th>
               <th>AO02 No.</th>
               <th>Rate Type</th>
               <th>
-                <GoATableSortHeader name={'noOfUnits'}>
-                  No. of Units
-                </GoATableSortHeader>
+                <GoATableSortHeader name={'noOfUnits'}>No. of Units</GoATableSortHeader>
               </th>
               <th>Rate Unit</th>
               <th>
-                <GoATableSortHeader name={'ratePerUnit'}>
-                  Rate / unit
-                </GoATableSortHeader>
+                <GoATableSortHeader name={'ratePerUnit'}>Rate / unit</GoATableSortHeader>
               </th>
               <th>
                 <GoATableSortHeader name={'cost'}>Cost</GoATableSortHeader>
@@ -179,12 +161,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.fund}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>
-                      <GoAButton
-                        size='compact'
-                        type='secondary'
-                        disabled={rowData.some((x) => x.isSelected)}
-                        onClick={() => addRemoveClicked(x)}
-                      >
+                      <GoAButton size='compact' type='secondary' disabled={rowData.some((x) => x.isSelected)} onClick={() => addRemoveClicked(x)}>
                         {x.isAdded ? 'Remove' : 'Add'}
                       </GoAButton>
                     </div>

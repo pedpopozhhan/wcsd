@@ -1,8 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import appReducer from './app-slice';
+
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import logger from 'redux-logger';
+import invoiceDetailsReducer from '@/features/invoice-details/invoice-details-slice';
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
 
 const persistConfig = {
@@ -10,11 +12,14 @@ const persistConfig = {
   version: 1,
   storage,
 };
+const reducers = combineReducers({ app: appReducer, invoiceDetails: invoiceDetailsReducer });
+const persistedReducer = persistReducer(persistConfig, reducers);
+// const reducers = combineReducers({ app: persistedReducer, invoiceDetails: invoiceDetailsReducer });
 
-const persistedReducer = persistReducer(persistConfig, appReducer);
 const environment = import.meta.env.VITE_ENV;
 const store = configureStore({
   // Can create a root reducer separately and pass that in
+
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => {
     const middleware = getDefaultMiddleware({
