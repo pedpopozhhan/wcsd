@@ -14,8 +14,6 @@ const persistConfig = {
 };
 const reducers = combineReducers({ app: appReducer, invoiceDetails: invoiceDetailsReducer });
 const persistedReducer = persistReducer(persistConfig, reducers);
-// const reducers = combineReducers({ app: persistedReducer, invoiceDetails: invoiceDetailsReducer });
-
 const environment = import.meta.env.VITE_ENV;
 const store = configureStore({
   // Can create a root reducer separately and pass that in
