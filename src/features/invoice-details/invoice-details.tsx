@@ -7,32 +7,20 @@ import ReconciledTab from './reconciled-tab';
 import { useContext, useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
-import InvoiceModalDialog, {
-  IInvoiceData,
-} from '@/common/invoice-modal-dialog';
+import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { InvoiceDetailsContext } from './invoice-details-context';
-import { MainContext } from '@/common/main-context';
+import { useAppSelector } from '@/app/hooks';
 
-let {
-  container,
-  content,
-  sideBar,
-  main,
-  footer,
-  header,
-  tabGroupContainer,
-  tabList,
-  tabContainer,
-  summaryContainer,
-} = styles;
+let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData, otherCostData, setRateTypes } = context;
   const navigate = useNavigate();
 
-  const mainContext = useContext(MainContext);
-  const { timeReportsToReconcile, invoiceData } = mainContext;
+  const timeReportsToReconcile = useAppSelector((state) => state.timeReportsToReconcile);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
+
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   // Modal Dialog configuration
@@ -41,29 +29,27 @@ export default function InvoiceDetails() {
     setParentShowModal(true);
   };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
-  const enableProcess = (invoiceData.InvoiceAmount - reconciledAmount) == 0 ? true : false;
+  const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    const subscription = invoiceDetailsService
-      .getInvoiceDetails(timeReportsToReconcile)
-      .subscribe({
-        next: (results) => {
-          const data = results.rows.slice().map((x, i) => {
-            return {
-              index: i,
-              data: x,
-              isAdded: false,
-              isSelected: false,
-            };
-          });
-          setRowData(data);
-          setRateTypes(results.rateTypes);
-        },
-        error: (error) => {
-          // TODO: display an error message the right way
-          console.error(error);
-        },
-      });
+    const subscription = invoiceDetailsService.getInvoiceDetails(timeReportsToReconcile).subscribe({
+      next: (results) => {
+        const data = results.rows.slice().map((x, i) => {
+          return {
+            index: i,
+            data: x,
+            isAdded: false,
+            isSelected: false,
+          };
+        });
+        setRowData(data);
+        setRateTypes(results.rateTypes);
+      },
+      error: (error) => {
+        // TODO: display an error message the right way
+        console.error(error);
+      },
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -88,8 +74,8 @@ export default function InvoiceDetails() {
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
-    const timeReportData = rowData.filter(i => i.isAdded);
-    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, {state: {timeReportData, otherCostData}});
+    const timeReportData = rowData.filter((i) => i.isAdded);
+    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
 
   return (
@@ -121,20 +107,10 @@ export default function InvoiceDetails() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button
-                id='Details'
-                role='tab'
-                aria-selected={tabIndex === 1}
-                onClick={(e) => setTabIndex(1)}
-              >
+              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={(e) => setTabIndex(1)}>
                 <span>Details</span>
               </button>
-              <button
-                id='Reconciled'
-                role='tab'
-                aria-selected={tabIndex === 2}
-                onClick={(e) => setTabIndex(2)}
-              >
+              <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={(e) => setTabIndex(2)}>
                 <span>Reconciled</span>
               </button>
             </div>
@@ -146,18 +122,14 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : {disabled : true})}>
+        <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}>
           Process
         </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
           Cancel
         </GoAButton>
       </div>
-      <InvoiceModalDialog
-        isAddition='false'
-        visible={parentShowModal}
-        showInvoiceDialog={setParentShowModal}
-      />
+      <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} />
     </div>
   );
 }

@@ -4,31 +4,19 @@ import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import OtherCostDetailsTable from './other-cost-details-table';
-import {
-  InvoiceDetailsContext,
-  IDetailsTableRow,
-} from './invoice-details-context';
+import { InvoiceDetailsContext, IDetailsTableRow } from './invoice-details-context';
 import InvoiceDataTable from './invoice-data-table';
 
-let {
-  container,
-  headerButtonContainer,
-  tabContainer,
-  reconciledDetailsDiv,
-  otherCostsDiv,
-  otherCostHeader,
-} = styles;
+let { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps { }
+interface IReconciledTabProps {}
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const context = useContext(InvoiceDetailsContext);
   const { rowData, setRowData, otherCostData, setOtherCostData } = context;
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRowData>();
 
-  useEffect(() => {
-
-  }, [otherCostData]);
+  useEffect(() => {}, [otherCostData]);
 
   const showOtherCostsModal = () => {
     setParentShowModal(true);
@@ -49,7 +37,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostRemoved(item: IOtherCostTableRowData) {
-    let items = [...otherCostData].filter(p => p.index != item.index);
+    let items = [...otherCostData].filter((p) => p.index != item.index);
     items.map((x, i) => {
       x.index = i;
       return x;
@@ -58,7 +46,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRowData) {
-    let items = [...otherCostData].filter(p => p.index != item.index);
+    let items = [...otherCostData].filter((p) => p.index != item.index);
     setOtherCostData(
       [...items, item].map((x, index) => {
         x.index = index;
@@ -73,6 +61,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
         return { ...x, isAdded: false };
       })
     );
+    setOtherCostData([]);
   }
 
   return (
@@ -91,11 +80,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
         </div>
         <div className={otherCostHeader}>Other Costs</div>
         <div className={otherCostsDiv}>
-          <OtherCostDetailsTable
-            data={otherCostData}
-            onRemoveOtherCost={onOtherCostRemoved}
-            onUpdateOtherCost={onOtherCostUpdated}
-          />
+          <OtherCostDetailsTable data={otherCostData} onRemoveOtherCost={onOtherCostRemoved} onUpdateOtherCost={onOtherCostUpdated} />
         </div>{' '}
       </div>
 
