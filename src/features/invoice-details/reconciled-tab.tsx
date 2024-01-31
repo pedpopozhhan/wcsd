@@ -1,18 +1,21 @@
-import { useState, useEffect, FC, useContext } from 'react';
+import { useState, useEffect, FC } from 'react';
 import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import OtherCostDetailsTable from './other-cost-details-table';
-import { InvoiceDetailsContext, IDetailsTableRow } from './invoice-details-context';
+import { IDetailsTableRow } from './details-table-row.interface';
 import InvoiceDataTable from './invoice-data-table';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setOtherCostData, setRowData } from './invoice-details-slice';
 
 let { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
 interface IReconciledTabProps {}
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
-  const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherCostData, setOtherCostData } = context;
+  const dispatch = useAppDispatch();
+  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
+  const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRowData>();
 
@@ -28,11 +31,13 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostAdded(item: IOtherCostTableRowData) {
-    setOtherCostData(
-      [...otherCostData, item].map((x, index) => {
-        x.index = index;
-        return x;
-      })
+    dispatch(
+      setOtherCostData(
+        [...otherCostData, item].map((x, index) => {
+          x.index = index;
+          return x;
+        })
+      )
     );
   }
 
@@ -42,26 +47,30 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
       x.index = i;
       return x;
     });
-    setOtherCostData(items);
+    dispatch(setOtherCostData(items));
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRowData) {
     let items = [...otherCostData].filter((p) => p.index != item.index);
-    setOtherCostData(
-      [...items, item].map((x, index) => {
-        x.index = index;
-        return x;
-      })
+    dispatch(
+      setOtherCostData(
+        [...items, item].map((x, index) => {
+          x.index = index;
+          return x;
+        })
+      )
     );
   }
 
   function removeAll() {
-    setRowData(
-      rowData.map((x) => {
-        return { ...x, isAdded: false };
-      })
+    dispatch(
+      setRowData(
+        rowData.map((x) => {
+          return { ...x, isAdded: false };
+        })
+      )
     );
-    setOtherCostData([]);
+    dispatch(setOtherCostData([]));
   }
 
   return (

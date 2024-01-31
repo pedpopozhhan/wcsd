@@ -16,7 +16,7 @@ export interface IInvoiceData {
 
 const InvoiceModalDialog = (props: any) => {
   const dispatch = useAppDispatch();
-  const invoiceData = useAppSelector((state) => state.invoiceData);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [invoiceId, setInvoiceId] = useState<string>('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');

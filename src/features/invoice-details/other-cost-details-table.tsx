@@ -1,8 +1,4 @@
-import {
-  GoAButton,
-  GoATable,
-  GoATableSortHeader,
-} from '@abgov/react-components';
+import { GoAButton, GoATable, GoATableSortHeader } from '@abgov/react-components';
 import styles from './other-cost-details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
@@ -10,16 +6,7 @@ import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
-let {
-  container,
-  checkboxWrapper,
-  buttonWrapper,
-  tableContainer,
-  stickyColumn,
-  start,
-  end,
-  onTop,
-} = styles;
+let { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
 class Row {
   index: number;
   data: IOtherCostTableRowData;
@@ -119,18 +106,10 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{x.data.remarks}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
-                    <GoAButton
-                      size='compact'
-                      type='secondary'
-                      onClick={() => editSelectedOtherCost(x)}
-                    >
+                    <GoAButton size='compact' type='secondary' onClick={() => editSelectedOtherCost(x)}>
                       {'Edit'}
                     </GoAButton>
-                    <GoAButton
-                      size='compact'
-                      type='secondary'
-                      onClick={() => removeSelectedOtherCost(x)}
-                    >
+                    <GoAButton size='compact' type='secondary' onClick={() => removeSelectedOtherCost(x)}>
                       {'Remove'}
                     </GoAButton>
                   </div>

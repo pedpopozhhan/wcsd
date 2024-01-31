@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ServiceSheetTab from './tabs/service-sheet-tab';
 import DetailsTab from './tabs/details-tab';
 import ProcessInvoiceModal from './process-invoice-modal-dialog';
-import { IDetailsTableRow } from '../invoice-details/invoice-details-context';
+import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { useAppSelector } from '@/app/hooks';
 
@@ -21,7 +21,7 @@ const ProcessInvoice = () => {
 
   const [tabIndex, setTabIndex] = useState<number>(1);
   const navigate = useNavigate();
-  const invoiceData = useAppSelector((state) => state.invoiceData);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
   function navigateToReconcile() {

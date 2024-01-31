@@ -4,22 +4,24 @@ import Summary from './summary';
 import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
-import { InvoiceDetailsContext } from './invoice-details-context';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setRateTypes, setRowData } from './invoice-details-slice';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
-  const context = useContext(InvoiceDetailsContext);
-  const { rowData, setRowData, otherCostData, setRateTypes } = context;
+  const dispatch = useAppDispatch();
+  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
+  const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
+
   const navigate = useNavigate();
 
-  const timeReportsToReconcile = useAppSelector((state) => state.timeReportsToReconcile);
-  const invoiceData = useAppSelector((state) => state.invoiceData);
+  const timeReportsToReconcile = useAppSelector((state) => state.app.timeReportsToReconcile);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [tabIndex, setTabIndex] = useState<number>(1);
 
@@ -42,8 +44,8 @@ export default function InvoiceDetails() {
             isSelected: false,
           };
         });
-        setRowData(data);
-        setRateTypes(results.rateTypes);
+        dispatch(setRowData(data));
+        dispatch(setRateTypes(results.rateTypes));
       },
       error: (error) => {
         // TODO: display an error message the right way
