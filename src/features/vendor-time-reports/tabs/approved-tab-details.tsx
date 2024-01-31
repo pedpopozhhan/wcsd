@@ -9,8 +9,8 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
-import { useAppDispatch } from '@/hooks';
-import { setTimeReportsToReconcile } from '@/app-slice';
+import { useAppDispatch } from '@/app/hooks';
+import { setTimeReportsToReconcile } from '@/app/app-slice';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;

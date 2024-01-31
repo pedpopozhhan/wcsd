@@ -7,7 +7,7 @@ import styles from './vendor-time-reports.module.scss';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@/app/hooks';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();

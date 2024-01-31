@@ -1,12 +1,12 @@
 import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
-import styles from './search-results.module.scss';
+import styles from './contract-search-results.module.scss';
 import { ContractType, convertContractType } from '@/types/contract-type';
 let { chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/hooks';
-import { setVendorForReconciliation } from '@/app-slice';
+import { useAppDispatch } from '@/app/hooks';
+import { setVendorForReconciliation } from '@/app/app-slice';
 
 interface IContractSearchResultsProps {
   searchResults: IContractSearchResult[];

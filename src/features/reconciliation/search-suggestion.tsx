@@ -2,22 +2,10 @@ import { GoAIcon } from '@abgov/react-components';
 import { useState, useRef, useEffect } from 'react';
 
 import styles from './search-suggestion.module.scss';
-import { SearchOption } from '@/routes/reconciliation/search-option';
+import { SearchOption } from '@/features/reconciliation/search-option';
 
-let {
-  search,
-  searchInput,
-  searchInputWrapper,
-  highlight,
-  closeButton,
-  closeButtonActive,
-  container,
-  item,
-  active,
-  hover,
-  showMenu,
-  hideMenu,
-} = styles;
+let { search, searchInput, searchInputWrapper, highlight, closeButton, closeButtonActive, container, item, active, hover, showMenu, hideMenu } =
+  styles;
 
 interface ISearchResultsProps {
   options: SearchOption[];
@@ -80,9 +68,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
         {parts.map((part, index) => (
           <span key={index}>
             {part}
-            {index < matches.length && (
-              <span className={highlight}>{matches[index]}</span>
-            )}
+            {index < matches.length && <span className={highlight}>{matches[index]}</span>}
           </span>
         ))}
       </>
@@ -97,9 +83,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     filteredSuggestions = filtered.slice();
     return filtered.map((data, index) => (
       <div
-        className={`${item} ${currentIndex === index ? hover : ''} ${
-          selectedIndex === index ? active : ''
-        }`}
+        className={`${item} ${currentIndex === index ? hover : ''} ${selectedIndex === index ? active : ''}`}
         onClick={(e) => setSelection(index)}
         key={index}
       >
@@ -135,11 +119,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
       // focus the menu items
       // scroll through the items and highlight it
       let newIndex = currentIndex;
-      if (
-        e.key === 'ArrowDown' &&
-        containerRef.current &&
-        currentIndex < containerRef.current.children.length - 1
-      ) {
+      if (e.key === 'ArrowDown' && containerRef.current && currentIndex < containerRef.current.children.length - 1) {
         newIndex++;
       } else if (e.key === 'ArrowUp' && currentIndex > 0) {
         newIndex--;
@@ -183,19 +163,12 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
             onKeyDown={handleInputKeyDown}
             placeholder='Search by Vendor or Business No.'
           ></input>
-          <div
-            data-cy='searchCancel'
-            className={`${closeButton} ${inputValue ? closeButtonActive : ''}`}
-            onClick={(e) => resetInput()}
-          >
+          <div data-cy='searchCancel' className={`${closeButton} ${inputValue ? closeButtonActive : ''}`} onClick={(e) => resetInput()}>
             <GoAIcon type='close' />
           </div>
         </div>
 
-        <div
-          className={`${container} ${menuIsOpen ? showMenu : hideMenu}`}
-          ref={containerRef}
-        >
+        <div className={`${container} ${menuIsOpen ? showMenu : hideMenu}`} ref={containerRef}>
           {filterSuggestions()}
         </div>
       </div>

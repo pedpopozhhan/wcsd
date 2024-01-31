@@ -2,13 +2,12 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Reconciliation from './routes/reconciliation/reonciliation';
-
-import VendorTimeReports from './routes/vendor-time-reports/vendor-time-reports';
-import App from './App';
-import InvoiceDetails from './routes/invoice-details/invoice-details';
-import { InvoiceDetailsProvider } from './routes/invoice-details/invoice-details-context';
-import ProcessInvoice from './routes/process-invoice/process-invoice';
+import App from './app/App';
+import InvoiceDetails from './features/invoice-details/invoice-details';
+import { InvoiceDetailsProvider } from './features/invoice-details/invoice-details-context';
+import Reconciliation from './features/reconciliation/reonciliation';
+import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
+import ProcessInvoice from './features/process-invoice/process-invoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -18,11 +17,7 @@ root.render(
         <Route path='/' element={<App />}>
           <Route key='1' path='/' element={<Reconciliation />} />
           <Route key='2' path='reconciliation' element={<Reconciliation />} />
-          <Route
-            key='3'
-            path='VendorTimeReports/:contractNumber'
-            element={<VendorTimeReports />}
-          />
+          <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
           <Route
             key='4'
             path='invoice/:invoiceId'
@@ -32,7 +27,7 @@ root.render(
               </InvoiceDetailsProvider>
             }
           />
-          <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>}/>
+          <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
         </Route>
       </Routes>
     </Router>

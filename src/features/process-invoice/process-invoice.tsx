@@ -9,7 +9,7 @@ import DetailsTab from './tabs/details-tab';
 import ProcessInvoiceModal from './process-invoice-modal-dialog';
 import { IDetailsTableRow } from '../invoice-details/invoice-details-context';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@/app/hooks';
 
 const ProcessInvoice = () => {
   const reconciledData = useLocation();

@@ -2,8 +2,8 @@ import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGrou
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { yearMonthDay } from '@/common/dates';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { setInvoiceData } from '@/app-slice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setInvoiceData } from '@/app/app-slice';
 
 export interface IInvoiceData {
   InvoiceID: string;

@@ -6,7 +6,7 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@/app/hooks';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
