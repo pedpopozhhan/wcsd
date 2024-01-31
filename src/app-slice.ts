@@ -13,7 +13,7 @@ const initialState: IAppSliceState = {
   invoiceData: null as any,
   vendorForReconciliation: null as any,
 };
-
+// TODO: I am sure there are patterns to organize reducers and slices, so let's keep that in mind as this grows.
 export const appSlice = createSlice({
   name: 'counter',
   initialState,
