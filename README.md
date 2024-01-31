@@ -11,7 +11,7 @@ Vite is used for bundling, buidling etc.
 VITE_API_BASE_URL=<url to wcds-web-functions api>
 VITE_AVIATION_API_BASE_URL=<url to aviation api>
 VITE_AVIATION_API_KEY_CODE=<aviation token>
-
+VITE_ENV=<dev or test or uat or prod>
 [Visit Design System](https://ui-components.alberta.ca)
 
 Should be read to go by just running the debugger in visual studio code.

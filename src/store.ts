@@ -12,7 +12,7 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
-
+const environment = import.meta.env.VITE_ENV;
 const store = configureStore({
   // Can create a root reducer separately and pass that in
   reducer: persistedReducer,
@@ -25,14 +25,14 @@ const store = configureStore({
     });
 
     // Conditionally add another middleware in dev
-    if (process.env.NODE_ENV !== 'production') {
+    if (environment !== 'prod') {
       middleware.push(logger);
     }
 
     return middleware;
   },
   // Turn off devtools in prod, or pass options in dev
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: environment !== 'prod',
 });
 
 export const persistor = persistStore(store);
