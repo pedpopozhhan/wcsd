@@ -96,14 +96,7 @@ export default function InvoiceDetails() {
             remainingAmount={invoiceData.InvoiceAmount - reconciledAmount}
           />
           <div className={summaryContainer}>
-            <Summary
-              InvoiceID={invoiceData.InvoiceID}
-              DateOnInvoice={invoiceData.DateOnInvoice}
-              InvoiceAmount={invoiceData.InvoiceAmount}
-              PeriodEnding={invoiceData.PeriodEnding}
-              InvoiceReceived={invoiceData.InvoiceReceived}
-              ContractNumber={invoiceData.ContractNumber}
-            />
+            <Summary />
           </div>
         </div>
         <div className={main}>

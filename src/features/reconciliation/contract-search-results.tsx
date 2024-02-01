@@ -6,7 +6,7 @@ import { ContractType, convertContractType } from '@/types/contract-type';
 let { chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
-import { setVendorForReconciliation } from '@/app/app-slice';
+import { setContractForReconciliation } from '@/app/app-slice';
 
 interface IContractSearchResultsProps {
   searchResults: IContractSearchResult[];
@@ -80,7 +80,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }
 
   function timeReportsClick(selectedVendor: IContractSearchResult) {
-    dispatch(setVendorForReconciliation(selectedVendor));
+    dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
       navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,

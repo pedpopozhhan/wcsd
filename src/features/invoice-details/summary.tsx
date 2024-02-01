@@ -2,23 +2,21 @@ import styles from './summary.module.scss';
 import { useEffect, useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { GoAIconButton } from '@abgov/react-components';
+import { useAppSelector } from '@/app/hooks';
 let { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
 
 interface ISummary {
-  InvoiceID: string;
-  DateOnInvoice: string;
-  InvoiceAmount: number;
-  PeriodEnding: string;
-  InvoiceReceived: string;
-  ContractNumber: string;
+  //
 }
 
-const Summary: React.FC<ISummary> = (props) => {
+const Summary: React.FC = () => {
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const contract = useAppSelector((state) => state.app.contractForReconciliation);
   return (
     <div className={container}>
       <div>
         <div>Vendor</div>
-        <div>Air Spray Ltd.</div>
+        <div>{contract.vendorName}</div>
       </div>
       <div>
         <div className={assignedToHeader}>
@@ -31,27 +29,27 @@ const Summary: React.FC<ISummary> = (props) => {
       </div>
       <div>
         <div>Contract no.</div>
-        <div>{props.ContractNumber}</div>
+        <div>{invoiceData.ContractNumber}</div>
       </div>
       <div>
         <div>Type</div>
-        <div>Casual</div>
+        <div>{contract.contractType}</div>
       </div>
       <div>
         <div>Invoice no.</div>
-        <div>{props.InvoiceID}</div>
+        <div>{invoiceData.InvoiceID}</div>
       </div>
       <div>
         <div>Invoice date</div>
-        <div>{yearMonthDay(props.DateOnInvoice)}</div>
+        <div>{yearMonthDay(invoiceData.DateOnInvoice)}</div>
       </div>
       <div>
         <div>Invoice received</div>
-        <div>{yearMonthDay(props.InvoiceReceived)}</div>
+        <div>{yearMonthDay(invoiceData.InvoiceReceived)}</div>
       </div>
       <div>
         <div>Period ending</div>
-        <div>{yearMonthDay(props.PeriodEnding)}</div>
+        <div>{yearMonthDay(invoiceData.PeriodEnding)}</div>
       </div>
     </div>
   );
