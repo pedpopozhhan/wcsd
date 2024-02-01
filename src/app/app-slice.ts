@@ -5,13 +5,13 @@ import { IContractSearchResult } from '../interfaces/reconciliation/contract-sea
 export interface IAppSliceState {
   timeReportsToReconcile: number[];
   invoiceData: IInvoiceData;
-  vendorForReconciliation: IContractSearchResult;
+  contractForReconciliation: IContractSearchResult;
 }
 
 const initialState: IAppSliceState = {
   timeReportsToReconcile: [],
   invoiceData: null as any,
-  vendorForReconciliation: null as any,
+  contractForReconciliation: null as any,
 };
 // TODO: I am sure there are patterns to organize reducers and slices, so let's keep that in mind as this grows.
 export const appSlice = createSlice({
@@ -24,14 +24,14 @@ export const appSlice = createSlice({
     setInvoiceData: (state, action: PayloadAction<IInvoiceData>) => {
       state.invoiceData = action.payload;
     },
-    setVendorForReconciliation: (state, action: PayloadAction<IContractSearchResult>) => {
-      state.vendorForReconciliation = action.payload;
+    setContractForReconciliation: (state, action: PayloadAction<IContractSearchResult>) => {
+      state.contractForReconciliation = action.payload;
     },
   },
 });
 
 // exports
 export const timeReportsToReconcile = (state: IAppSliceState) => state.timeReportsToReconcile;
-export const { setTimeReportsToReconcile, setInvoiceData, setVendorForReconciliation } = appSlice.actions;
+export const { setTimeReportsToReconcile, setInvoiceData, setContractForReconciliation } = appSlice.actions;
 
 export default appSlice.reducer;

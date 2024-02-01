@@ -10,7 +10,7 @@ import { useAppSelector } from '@/app/hooks';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
-  const vendorForReconciliation = useAppSelector((state) => state.app.vendorForReconciliation);
+  const vendorForReconciliation = useAppSelector((state) => state.app.contractForReconciliation);
 
   const navigate = useNavigate();
 
