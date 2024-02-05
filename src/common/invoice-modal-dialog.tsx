@@ -119,21 +119,21 @@ const InvoiceModalDialog = (props: any) => {
       setInvoiceAmountError(false);
     }
 
-    if (new Date(yearMonthDay(dateOfInvoice)) < minDate) {
+    if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
       setDateOfInvoiceError(true);
       return;
     } else {
       setDateOfInvoiceError(false);
     }
 
-    if (new Date(yearMonthDay(periodEndingDate)) < minDate) {
+    if (new Date(yearMonthDay(periodEndingDate)) < minDate || periodEndingDateError) {
       setPeriodEndingDateError(true);
       return;
     } else {
       setPeriodEndingDateError(false);
     }
 
-    if (new Date(yearMonthDay(invoiceReceivedDate)) < minDate) {
+    if (new Date(yearMonthDay(invoiceReceivedDate)) < minDate || invoiceReceivedDateError) {
       setInvoiceReceivedDateError(true);
       return;
     } else {
@@ -184,7 +184,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => {}}
+                    onBlur={(key, value) => { }}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {
