@@ -1,4 +1,5 @@
 import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './vendor-time-reports.module.scss';
@@ -15,8 +16,8 @@ const VendorTimeReports = () => {
   const navigate = useNavigate();
 
   const header = vendorForReconciliation.vendorName;
-
-  const { vendorTimeReportRoot, vendorTimeReportMain } = styles;
+  const [tabIndex, setTabIndex] = useState<number>(2);
+  const { vendorTimeReportRoot, vendorTimeReportMain, main, tabGroupContainer, tabList, tabContainer } = styles;
 
   function BackToContractReconciliationClick() {
     navigate('/reconciliation');
@@ -35,16 +36,23 @@ const VendorTimeReports = () => {
           {`Back`}
         </GoAButton>
         <h2>{header}</h2>
-        <GoATabs initialTab={2}>
-          <GoATab heading='Signed-off'>
-            <SignedOffTabDetails contractNumber={contractNumber} />
-          </GoATab>
-          <GoATab heading='Approved'>
-            <ApprovedTabDetails contractNumber={contractNumber}></ApprovedTabDetails>
-          </GoATab>
-          <GoATab heading='Invoiced'></GoATab>
-          <GoATab heading='Processed'></GoATab>
-        </GoATabs>
+        <div className={main}>
+          <div className={tabGroupContainer}>
+            <div className={tabList}>
+              <button id='Signed-off' role='tab' aria-selected={tabIndex === 1} onClick={(e) => setTabIndex(1)}>
+                <span>Signed-off</span>
+              </button>
+              <button id='Approved' role='tab' aria-selected={tabIndex === 2} onClick={(e) => setTabIndex(2)}>
+                <span>Approved</span>
+              </button>
+            </div>
+            <div className={tabContainer}>
+              {tabIndex === 1 && <SignedOffTabDetails contractNumber={contractNumber} />}
+              {tabIndex === 2 && <ApprovedTabDetails contractNumber={contractNumber} />}
+
+            </div>
+          </div>
+        </div>
       </div>
       <VendorTimeReportsSidePanel contractDetails={vendorForReconciliation} />
     </div>
