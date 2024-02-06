@@ -5,11 +5,10 @@ import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
-import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setRateTypes, setRowData } from './invoice-details-slice';
+import { getInvoiceDetails } from './invoice-details-epic';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -33,29 +32,11 @@ export default function InvoiceDetails() {
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
+  //    https://redux.js.org/tutorials/essentials/part-5-async-logic
+  //    https://redux-observable.js.org/docs/basics/Epics.html
+  //   https://stackoverflow.com/questions/64320308/react-observable-epic-with-redux-toolkit-and-typescript
   useEffect(() => {
-    const subscription = invoiceDetailsService.getInvoiceDetails(timeReportsToReconcile).subscribe({
-      next: (results) => {
-        const data = results.rows.slice().map((x, i) => {
-          return {
-            index: i,
-            data: x,
-            isAdded: false,
-            isSelected: false,
-          };
-        });
-        dispatch(setRowData(data));
-        dispatch(setRateTypes(results.rateTypes));
-      },
-      error: (error) => {
-        // TODO: display an error message the right way
-        console.error(error);
-      },
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    dispatch(getInvoiceDetails(timeReportsToReconcile));
   }, [timeReportsToReconcile]);
 
   useEffect(() => {
