@@ -17,13 +17,16 @@ const Toast: React.FC<IProps> = (props) => {
   const dispatch = useAppDispatch();
   const [toast, setToast] = useState<IToast>({} as any);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-
+  let timeout: NodeJS.Timeout;
   const processToastEvent = (event: CustomEvent) => {
     const _toast = event.detail as IToast;
     if (_toast) {
       setToast(_toast);
       setIsVisible(true);
-      setTimeout(() => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
         setIsVisible(false);
       }, 5000);
     }
@@ -42,6 +45,9 @@ const Toast: React.FC<IProps> = (props) => {
   }
 
   function retry() {
+    clearTimeout(timeout);
+    setIsVisible(false);
+
     if (toast.callback) {
       toast.callback();
     }
