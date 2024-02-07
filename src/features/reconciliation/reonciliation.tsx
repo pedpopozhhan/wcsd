@@ -118,14 +118,6 @@ export default function Reconciliation() {
       <div className={searchResultsContainer}>
         <ContractSearchResults searchResults={searchResults}></ContractSearchResults>
       </div>
-      {/* {savedInvoiceNumber && (
-        <div className={invoiceProcessedNotificationContainer}>
-          <div>
-            <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
-            <label className={invoiceProcessedNotificationLabel}>Invoice #{savedInvoiceNumber} processed.</label>
-          </div>
-        </div>
-      )} */}
     </main>
   );
 }
