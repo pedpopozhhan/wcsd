@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
+import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -50,6 +51,8 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         if (data > 0) {
           setSaveInvoiceStatus(true);
           dispatch(setInvoiceData({...invoiceData, InvoiceKey: data}));
+          dispatch(setRowData([]));
+          dispatch(setOtherCostData([]));
           dispatch(setServiceSheetNameChange(false));
           dispatch(setNotificationStatus(true));
         }
