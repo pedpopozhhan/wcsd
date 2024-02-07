@@ -1,7 +1,10 @@
 import { GoAInput, GoATable, GoATextArea } from '@abgov/react-components';
 import styles from '../process-invoice.module.scss';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
+import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setServiceSheetData, setServiceSheetNameChange } from './service-sheet-slice';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
@@ -18,8 +21,32 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
     serviceSheetNameDesc,
     invoiceAmountLabel
   } = styles;
+ 
+ const dispatch = useAppDispatch();
+  const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
+  function updateServiceSheetName(val: string){
+        if(serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val){
+          dispatch(setServiceSheetData({...serviceSheetData,  uniqueServiceSheetName: val}));
+          dispatch(setServiceSheetNameChange(true));
+        }
+   }
 
-  const [serviceSheetName, setServiceSheetName] = useState<string>('');
+  useEffect(() => {
+   if(!serviceSheetData){
+      const subscription = invoiceServiceSheetDataService.getAll().subscribe({
+        next: (result) => {
+          dispatch(setServiceSheetData(result));
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+  
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  });
 
   return (
     <div className={serviceSheetTabContainer}>
@@ -28,8 +55,9 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
         <GoAInput
           name='service-sheet-name'
           type='text'
-          onChange={(key, value) => setServiceSheetName(value)}
-          value={serviceSheetName}
+          maxLength={10}
+          onChange={(key,value) => updateServiceSheetName(value)}
+          value={serviceSheetData ? serviceSheetData.uniqueServiceSheetName : ''}
         />
         <div className={serviceSheetNameDesc}>
           required from Arriba to finish
@@ -40,7 +68,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
       <div className={serviceSheetTabAltValues}>W01 (FP_W01)</div>
 
       <div>Service description</div>
-      <div>Professional Services</div>
+      <div>{serviceSheetData?.serviceDescription}</div>
 
       <div>Commodity code</div>
       <div className={serviceSheetTabAltValues}>[Determined from Contract]</div>

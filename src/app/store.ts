@@ -9,6 +9,8 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { Observable, catchError } from 'rxjs';
 import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-epic';
 const environment = import.meta.env.VITE_ENV;
+import serviceSheetDataReducer from '@/features/process-invoice/tabs/service-sheet-slice';
+import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
 
 const persistConfig = {
@@ -16,7 +18,12 @@ const persistConfig = {
   version: 1,
   storage,
 };
-const reducers = combineReducers({ app: appReducer, invoiceDetails: invoiceDetailsReducer });
+const reducers = combineReducers({
+  app: appReducer,
+  invoiceDetails: invoiceDetailsReducer,
+  serviceSheetData: serviceSheetDataReducer,
+  processInvoiceNotification: processInvoiceReducer,
+});
 const persistedReducer = persistReducer(persistConfig, reducers);
 export const epics: any = [
   invoiceDetailsEpic,

@@ -214,7 +214,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
         props.showOtherCostDialog(false);
     };
 
-    function onRateChange(name: string, value: string | string[]) {
+    function onRateTypeChange(name: string, value: string | string[]) {
         setRateType(value);
     }
 
@@ -344,6 +344,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                             }
                                             else {
                                                 const propertyValue: Date = new Date(value);
+                                                setFromDate(propertyValue);
                                                 if (propertyValue < minDate) {
                                                     setFromDateError(true);
                                                 } else {
@@ -394,7 +395,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                                         placeholder='Select rate Type'
                                         name='rateTypes'
                                         value={rateType}
-                                        onChange={onRateChange}
+                                        onChange={onRateTypeChange}
                                         width={lg}
                                     >
                                         {rateTypes.map((x, i) => {

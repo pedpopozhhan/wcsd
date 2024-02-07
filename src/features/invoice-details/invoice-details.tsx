@@ -9,6 +9,7 @@ import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { action2, getInvoiceDetails } from './invoice-details-epic';
+import { setServiceSheetData } from '../process-invoice/tabs/service-sheet-slice';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -16,6 +17,7 @@ export default function InvoiceDetails() {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
+  const serviceSheetData = useAppSelector((state) => state.serviceSheetData);
 
   const navigate = useNavigate();
 
@@ -31,7 +33,6 @@ export default function InvoiceDetails() {
   };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
-
   //    https://redux.js.org/tutorials/essentials/part-5-async-logic
   //    https://redux-observable.js.org/docs/basics/Epics.html
   //   https://stackoverflow.com/questions/64320308/react-observable-epic-with-redux-toolkit-and-typescript
@@ -58,6 +59,9 @@ export default function InvoiceDetails() {
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
+    if (invoiceData.InvoiceKey == 0 && serviceSheetData.value) {
+      dispatch(setServiceSheetData({ ...serviceSheetData.value, uniqueServiceSheetName: '' }));
+    }
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
 
