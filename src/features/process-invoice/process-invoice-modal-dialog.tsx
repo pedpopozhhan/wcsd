@@ -50,9 +50,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         if (data > 0) {
           setSaveInvoiceStatus(true);
           dispatch(setInvoiceData({...invoiceData, InvoiceKey: data}));
-          if(serviceSheetData){
-            dispatch(setServiceSheetNameChange(false));
-          }
+          dispatch(setServiceSheetNameChange(false));
           dispatch(setNotificationStatus(true));
         }
       },
