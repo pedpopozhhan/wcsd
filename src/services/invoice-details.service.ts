@@ -36,23 +36,5 @@ class InvoiceDetailsService {
         })
       );
   }
-  getAll(): Observable<IDetailsTableRowData[]> {
-    const body: IDetailsServiceGetBody = {
-      timeReportIds: [0],
-    };
-    return axios
-      .request<IDetailsTableRowData[]>({
-        method: 'post',
-        url: this.baseUrl + '/GetInvoiceDetails',
-        headers: this.headers,
-        data: body,
-      })
-      .pipe(
-        map((x) => {
-          console.dir(x.data);
-          return x.data;
-        })
-      );
-  }
 }
 export default new InvoiceDetailsService();

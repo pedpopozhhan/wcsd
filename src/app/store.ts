@@ -6,11 +6,13 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import logger from 'redux-logger';
 import invoiceDetailsReducer from '@/features/invoice-details/invoice-details-slice';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
-import { Observable, catchError } from 'rxjs';
+import { catchError } from 'rxjs';
 import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-epic';
-const environment = import.meta.env.VITE_ENV;
+
 import serviceSheetDataReducer from '@/features/process-invoice/tabs/service-sheet-slice';
 import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
+
+const environment = import.meta.env.VITE_ENV;
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
 
 const persistConfig = {

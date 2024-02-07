@@ -1,4 +1,4 @@
-import { Action, createAction } from '@reduxjs/toolkit';
+import { Action, PayloadAction, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import invoiceDetailsService from '@/services/invoice-details.service';
@@ -21,7 +21,8 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
             console.error(error);
             publishToast({
               type: 'error',
-              message: 'there is an error',
+              message: 'Server error',
+              action: action,
             });
             return EMPTY;
           })

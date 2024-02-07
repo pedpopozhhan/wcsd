@@ -2,6 +2,8 @@ import styles from './toast.module.scss';
 import { useEffect, useState } from 'react';
 import { GoAIcon } from '@abgov/react-components';
 import { IToast } from '@/interfaces/toast.interface';
+import { Action } from 'redux';
+import { useAppDispatch } from '@/app/hooks';
 
 let { container, label, spacer } = styles;
 export const TOAST_EVENT = 'toast';
@@ -12,6 +14,7 @@ export const publishToast = (toast: IToast) => {
 
 interface IProps {}
 const Toast: React.FC<IProps> = (props) => {
+  const dispatch = useAppDispatch();
   const [toast, setToast] = useState<IToast>({} as any);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -20,9 +23,9 @@ const Toast: React.FC<IProps> = (props) => {
     if (_toast) {
       setToast(_toast);
       setIsVisible(true);
-      //   setTimeout(() => {
-      //     setIsVisible(false);
-      //   }, 5000);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 5000);
     }
   };
 
@@ -34,6 +37,18 @@ const Toast: React.FC<IProps> = (props) => {
     };
   }, []);
 
+  function showRetry() {
+    return toast.callback || toast.action;
+  }
+
+  function retry() {
+    if (toast.callback) {
+      toast.callback();
+    }
+    if (toast.action) {
+      dispatch(toast.action);
+    }
+  }
   return !isVisible ? null : (
     <div className={`${container} ${styles[toast.type]}`}>
       {toast.type === 'success' && <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>}
@@ -41,8 +56,8 @@ const Toast: React.FC<IProps> = (props) => {
       {toast.type === 'info' && <GoAIcon type='information-circle' theme='outline' size='large'></GoAIcon>}
       {toast.type === 'warning' && <GoAIcon type='warning' theme='outline' size='large'></GoAIcon>}
       <div className={label}>{toast.message}</div>
-      {toast.callback && <div className={spacer}></div>}
-      {toast.callback && <a onClick={toast.callback}>Retry</a>}
+      {showRetry() && <div className={spacer}></div>}
+      {showRetry() && <a onClick={retry}>Retry</a>}
     </div>
   );
 };
