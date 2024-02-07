@@ -1,12 +1,8 @@
-import { Action, AnyAction, createAction } from '@reduxjs/toolkit';
-import { EMPTY, Observable, catchError, filter, map, mergeMap, of, switchMap } from 'rxjs';
-import invoiceDetailsSlice, { initializeRowData, setRateTypes, setRowData } from './invoice-details-slice';
-import invoiceDetailsReducer from './invoice-details-slice';
-import { Epic } from 'redux-observable';
-import { RootState } from '@/app/store';
+import { Action, createAction } from '@reduxjs/toolkit';
+import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
+import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import invoiceDetailsService from '@/services/invoice-details.service';
-import { useAppDispatch } from '@/app/hooks';
-import { setToast } from '@/app/app-slice';
+import { publishToast } from '@/common/toast';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const ACTION_2 = 'action2';
@@ -19,17 +15,15 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
     filter((action) => getInvoiceDetails.match(action) || action2.match(action)),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
-        // Handle FETCH_USER action
         return invoiceDetailsService.getInvoiceDetails(action.payload).pipe(
           mergeMap((results) => of(setRateTypes(results.rateTypes), initializeRowData(results.rows))),
           catchError((error) => {
             console.error(error);
-            return of(
-              setToast({
-                type: 'error',
-                message: JSON.stringify(error),
-              })
-            );
+            publishToast({
+              type: 'error',
+              message: 'there is an error',
+            });
+            return EMPTY;
           })
         );
       } else if (action2.match(action)) {

@@ -9,7 +9,7 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { useAppDispatch } from '@/app/hooks';
-import { setToast } from '@/app/app-slice';
+import { publishToast } from '@/common/toast';
 
 let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel, searchResultsContainer } = styles;
 
@@ -35,15 +35,7 @@ export default function Reconciliation() {
 
       setAllData(data);
       setSearchResults(data);
-
-      dispatch(setToast({ type: 'success', message: `Invoice #${savedInvoiceNumber} processed.` }));
-      // TODO: Toast
-      //   setTimeout(() => {
-      //     if (savedInvoiceNumber) {
-      //       setSavedInvoiceNumber('');
-      //       window.history.replaceState({}, document.title);
-      //     }
-      //   }, 5000);
+      publishToast({ type: 'success', message: `Invoice #${savedInvoiceNumber} processed.` });
     });
 
     return () => {

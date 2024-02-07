@@ -14,13 +14,17 @@
   bottom: $goa-space-l;
   left: $goa-space-l;
   z-index: 999999;
-  color: $goa-color-greyscale-white;
+  color: $goa-color-text-light;
+  .spacer {
+    flex: 1;
+  }
   .label {
-    color: $goa-color-greyscale-white;
-    font-family: 'arial';
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
+    color: $goa-color-text-light;
+    font: $goa-typography-body-m;
+    // font-family: 'arial';
+    // font-size: 18px;
+    // font-style: normal;
+    // font-weight: 400;
     line-height: 28px;
     vertical-align: super;
     margin-left: 10px;
@@ -40,19 +44,8 @@
   }
 
   a {
-    color: $goa-color-interactive-default;
-    margin-right: $goa-space-2xl;
+    color: $goa-color-text-light;
+    font: $goa-typography-body-m;
     text-decoration: underline;
   }
-}
-
-.invoiceProcessedNotificationLabel {
-  color: #ffffff;
-  font-family: 'arial';
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 28px;
-  vertical-align: super;
-  margin-left: 10px;
 }
