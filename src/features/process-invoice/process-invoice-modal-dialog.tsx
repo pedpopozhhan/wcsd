@@ -6,19 +6,24 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setInvoiceData } from '@/app/app-slice';
+import { setNotificationStatus } from './process-invoice-slice';
+import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
   close: any;
-  data: { timeReportData: IDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[] };
+  data: { timeReportData: IDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[]};
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   let { processInvoiceModalDialogContainer } = styles;
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
+  const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
   const {} = props.data.timeReportData;
   function hideModalDialog() {
@@ -31,31 +36,24 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       invoiceAmount: invoiceData.InvoiceAmount,
       periodEndDate: new Date(invoiceData.PeriodEnding),
       invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-      vendor: 'test',
-      assignedTo: 'vpatel',
-      contractNumber: 'abc123',
-      type: 'casual',
-      createdBy: 'vpatel',
+      vendor: contract.vendorName,
+      assignedTo: '',
+      contractNumber: invoiceData.ContractNumber,
+      type: contract.contractType,
+      createdBy: '',
       invoiceTimeReportCostDetails: props.data.timeReportData,
       invoiceOtherCostDetails: props.data.otherCostData,
-      invoiceServiceSheet: {
-        uniqueServiceSheetName: 'SS-A101',
-        purchaseGroup: 'W01 (FP_W01)',
-        serviceDescription: 'Processional Services',
-        communityCode: 'TestCommunity',
-        materialGroup: 'TestMG',
-        accountType: 'casual',
-        quantity: 1,
-        unitOfMeasure: 'Hour',
-        price: 100.5,
-      },
+      invoiceServiceSheet: serviceSheetData
     };
     const subscription = processInvoiceService.createInvoice(processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
-          console.log(data);
           setSaveInvoiceStatus(true);
-          navigate(`/reconciliation`, { state: { invoiceNumber: processInvoiceData.invoiceNumber } });
+          dispatch(setInvoiceData({...invoiceData, InvoiceKey: data}));
+          if(serviceSheetData){
+            dispatch(setServiceSheetNameChange(false));
+          }
+          dispatch(setNotificationStatus(true));
         }
       },
       error: (error) => {
@@ -84,9 +82,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       }
     >
       <div className={processInvoiceModalDialogContainer}>
-        <div>This is irreversible. The following will occur.</div>
+        <div>The following will occur.</div>
         <div>
           <ul>
+            <li>payment scheduling and status changes</li>
             <li>details will no longer be available for future edits or reconciliation</li>
           </ul>
         </div>

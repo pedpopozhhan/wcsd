@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 
 export interface IInvoiceData {
+  InvoiceKey: number,
   InvoiceID: string;
   DateOnInvoice: string;
   InvoiceAmount: number;
@@ -37,6 +38,7 @@ const InvoiceModalDialog = (props: any) => {
   const [dialogTitle, setDialogTitle] = useState<string>('');
 
   const invoiceForContext = {
+    InvoiceKey: 0,
     InvoiceID: invoiceId,
     DateOnInvoice: dateOfInvoice,
     InvoiceAmount: invoiceAmount,

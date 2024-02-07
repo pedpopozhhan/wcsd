@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Summary from '../invoice-details/summary';
 import styles from './process-invoice.module.scss';
-import { GoAButton } from '@abgov/react-components';
+import { GoAButton, GoAIcon } from '@abgov/react-components';
 import Totalizer from './invoice-amount-totalizer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ServiceSheetTab from './tabs/service-sheet-tab';
@@ -9,24 +9,41 @@ import DetailsTab from './tabs/details-tab';
 import ProcessInvoiceModal from './process-invoice-modal-dialog';
 import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setNotificationStatus } from './process-invoice-slice';
 
-const ProcessInvoice = () => {
+export default function ProcessInvoice ()  {
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  useEffect(() =>{
+    setTimeout(() => {
+      dispatch(setNotificationStatus(false));
+    }, 10000);
+  });
   const reconciledData = useLocation();
   const timeReportData: IDetailsTableRow[] = reconciledData.state.timeReportData;
   const invoiceTimeReportData = timeReportData.map((i) => i.data);
   const otherCostData: IOtherCostTableRowData[] = reconciledData.state.otherCostData;
+  const showSavedInvoiceNotification = useAppSelector((state) => state.processInvoiceNotification.showInvoiceSavedNotification);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const serviceSheet = useAppSelector((state) => state.serviceSheetData);
+  const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
 
-  let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+  let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
 
   const [tabIndex, setTabIndex] = useState<number>(1);
-  const navigate = useNavigate();
-  const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
   function navigateToReconcile() {
     navigate(`/invoice/${invoiceData.InvoiceID}`, {
       state: invoiceData.InvoiceID,
+    });
+  }
+
+  function navigateToTimeReports(){
+    navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
+      state: contractDetails.contractNumber,
     });
   }
 
@@ -62,21 +79,35 @@ const ProcessInvoice = () => {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={finishProcessingInvoice}>
+      {(invoiceData.InvoiceKey > 0 && showSavedInvoiceNotification) && (
+        <div className={invoiceProcessedNotificationContainer}>
+          <div>
+            <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
+            <label className={invoiceProcessedNotificationLabel}>Invoice #{invoiceData.InvoiceID} processed.</label>
+          </div>
+        </div>
+      )}
+      {(invoiceData.InvoiceKey == 0) && (<Fragment><GoAButton type='primary' onClick={finishProcessingInvoice}>
           <ion-icon name='archive-outline'></ion-icon>
           <label>Finish</label>
         </GoAButton>
         <GoAButton type='secondary' onClick={navigateToReconcile}>
           Back to Reconcile
+        </GoAButton></Fragment>)}
+        {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={finishProcessingInvoice}  {...(serviceSheet.nameChanged) ? {disabled:false} : {disabled:true}}>
+          <label>Update</label>
         </GoAButton>
+        <GoAButton type='secondary' onClick={navigateToTimeReports}>
+          Close
+        </GoAButton></Fragment>)}
+      
       </div>
       <ProcessInvoiceModal
         open={showDialog}
         close={setShowDialog}
-        data={{ timeReportData: invoiceTimeReportData, otherCostData: otherCostData }}
+        data={{ timeReportData: invoiceTimeReportData, otherCostData: otherCostData}}
       ></ProcessInvoiceModal>
     </div>
   );
 };
 
-export default ProcessInvoice;
