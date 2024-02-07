@@ -3,6 +3,7 @@ import { IOtherCostTableRowData } from '../invoice-details/other-cost-table-row-
 import { IServiceSheetData } from './service-sheet-data';
 
 export interface IProcessInvoiceData {
+  invoiceKey?: number;
   invoiceNumber: string;
   invoiceDate: Date;
   invoiceAmount: number;
@@ -15,5 +16,5 @@ export interface IProcessInvoiceData {
   createdBy: string;
   invoiceTimeReportCostDetails : IDetailsTableRowData[];
   invoiceOtherCostDetails: IOtherCostTableRowData[];
-  invoiceServiceSheet: IServiceSheetData;
+  invoiceServiceSheet?: IServiceSheetData;
 }
