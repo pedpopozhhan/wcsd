@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { getInvoiceDetails } from './invoice-details-epic';
+import { action2, getInvoiceDetails } from './invoice-details-epic';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 

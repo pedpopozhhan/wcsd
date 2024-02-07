@@ -18,15 +18,16 @@ const persistConfig = {
 };
 const reducers = combineReducers({ app: appReducer, invoiceDetails: invoiceDetailsReducer });
 const persistedReducer = persistReducer(persistConfig, reducers);
-export const epics = [
-  invoiceDetailsEpic, // placeholder
-  // pingEpic,
-  // fetchUserEpic
+export const epics: any = [
+  invoiceDetailsEpic,
+  // epic 2,
+  // epic 3
 ];
 // root epic with global error handling
 const rootEpic = (action$: any, store$: any, dependencies: any) =>
   combineEpics(...epics)(action$, store$, dependencies).pipe(
     catchError((error, source) => {
+      console.error('Error at rootEpic');
       console.error(error);
       return source;
     })

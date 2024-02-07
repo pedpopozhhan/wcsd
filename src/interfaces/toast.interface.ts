@@ -1,6 +1,7 @@
 export interface IToast {
-  type: 'error' | 'warning';
+  type: 'success' | 'error' | 'warning' | 'info';
   message: string;
+  callback?: () => any;
 }
 
 // TODO: Toast
