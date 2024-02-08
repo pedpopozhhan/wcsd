@@ -46,6 +46,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       invoiceOtherCostDetails: props.data.otherCostData,
       invoiceServiceSheet: serviceSheetData,
     };
+    // TODO: move to epic
     const subscription = processInvoiceService.createInvoice(processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
@@ -53,6 +54,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
+
           dispatch(setServiceSheetNameChange(false));
           dispatch(setNotificationStatus(true));
         }

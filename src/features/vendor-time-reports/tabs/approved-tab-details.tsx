@@ -11,6 +11,7 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
+import { publishToast } from '@/common/toast';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -71,16 +72,22 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       pagination: objIPagination,
     };
     setIsLoading(true);
-    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe((response) => {
-      if (response.errorMessage) {
-        // TODO: display an error message the right way
-        console.error(response.errorMessage);
-      } else {
-        setData(response.data);
-        // sort by what default
-        setPageData(response.data.slice(0, perPage));
-      }
-      setIsLoading(false);
+    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe({
+      next: (response) => {
+        if (response.errorMessage) {
+          console.error(response.errorMessage);
+          publishToast({ type: 'error', message: response.errorMessage });
+        } else {
+          setData(response.data);
+          // sort by what default
+          setPageData(response.data.slice(0, perPage));
+        }
+        setIsLoading(false);
+      },
+      error: (error) => {
+        console.error(error);
+        publishToast({ type: 'error', message: `Server error` });
+      },
     });
 
     return () => {
