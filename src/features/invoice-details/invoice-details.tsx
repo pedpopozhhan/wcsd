@@ -5,12 +5,12 @@ import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
-import invoiceDetailsService from '@/services/invoice-details.service';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setRateTypes, setRowData } from './invoice-details-slice';
+import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData } from '../process-invoice/tabs/service-sheet-slice';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -34,29 +34,9 @@ export default function InvoiceDetails() {
   };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
-  useEffect(() => {
-    const subscription = invoiceDetailsService.getInvoiceDetails(timeReportsToReconcile).subscribe({
-      next: (results) => {
-        const data = results.rows.slice().map((x, i) => {
-          return {
-            index: i,
-            data: x,
-            isAdded: false,
-            isSelected: false,
-          };
-        });
-        dispatch(setRowData(data));
-        dispatch(setRateTypes(results.rateTypes));
-      },
-      error: (error) => {
-        // TODO: display an error message the right way
-        console.error(error);
-      },
-    });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+  useEffect(() => {
+    dispatch(getInvoiceDetails(timeReportsToReconcile));
   }, [timeReportsToReconcile]);
 
   useEffect(() => {
@@ -78,9 +58,9 @@ export default function InvoiceDetails() {
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
-    if(invoiceData.InvoiceKey == 0 && serviceSheetData.value){
-        dispatch(setServiceSheetData({...serviceSheetData.value,  uniqueServiceSheetName: ''}));
-      }
+    if (invoiceData.InvoiceKey == 0 && serviceSheetData.value) {
+      dispatch(setServiceSheetData({ ...serviceSheetData.value, uniqueServiceSheetName: '' }));
+    }
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
 

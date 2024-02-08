@@ -8,12 +8,14 @@ import { useLocation } from 'react-router-dom';
 import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
+import { useAppDispatch } from '@/app/hooks';
+import { publishToast } from '@/common/toast';
 
 let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel, searchResultsContainer } = styles;
 
 export default function Reconciliation() {
   const header = 'Contracts';
-
+  const dispatch = useAppDispatch();
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
@@ -33,13 +35,7 @@ export default function Reconciliation() {
 
       setAllData(data);
       setSearchResults(data);
-
-      setTimeout(() => {
-        if (savedInvoiceNumber) {
-          setSavedInvoiceNumber('');
-          window.history.replaceState({}, document.title);
-        }
-      }, 5000);
+      publishToast({ type: 'success', message: `Invoice #${savedInvoiceNumber} processed.` });
     });
 
     return () => {
@@ -122,14 +118,6 @@ export default function Reconciliation() {
       <div className={searchResultsContainer}>
         <ContractSearchResults searchResults={searchResults}></ContractSearchResults>
       </div>
-      {savedInvoiceNumber && (
-        <div className={invoiceProcessedNotificationContainer}>
-          <div>
-            <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
-            <label className={invoiceProcessedNotificationLabel}>Invoice #{savedInvoiceNumber} processed.</label>
-          </div>
-        </div>
-      )}
     </main>
   );
 }

@@ -4,6 +4,7 @@ import styles from './App.module.scss';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './store';
+import Toast from '@/common/toast';
 
 let { mainContainer, outletContainer } = styles;
 
@@ -22,6 +23,7 @@ export function App() {
           <div className={outletContainer}>
             <Outlet />
           </div>
+          <Toast></Toast>
         </div>
       </PersistGate>
     </Provider>
