@@ -118,19 +118,19 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                     <GoATable onSort={sortData} width='100%'>
                         <thead>
                             <tr>
-                                <th style={{ maxWidth: '20%' }}>
+                                <th style={{ maxWidth: '15%' }}>
                                     <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
                                 </th>
-                                <th style={{ maxWidth: '20%' }}>
+                                <th style={{ maxWidth: '15%' }}>
                                     Invoice No.
                                 </th>
-                                <th style={{ maxWidth: '20%' }}>
+                                <th style={{ maxWidth: '25%' }}>
                                     Invoice Amount
                                 </th>
-                                <th style={{ maxWidth: '20%' }}>
+                                <th style={{ maxWidth: '35%' }}>
                                     Payment
                                 </th>
-                                <th style={{ maxWidth: '20%', textAlign: 'right' }}></th>
+                                <th style={{ maxWidth: '10%', textAlign: 'right' }}></th>
                             </tr>
                         </thead>
 
@@ -150,7 +150,7 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                                             </GoAButton>
                                         </td>
                                         <td>{convertToCurrency(record?.invoiceAmount)}</td>
-                                        <td>{record?.type}</td>
+                                        <td>{record?.paymentStatus}</td>
                                         <td>
                                             <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceId)} />
                                         </td>

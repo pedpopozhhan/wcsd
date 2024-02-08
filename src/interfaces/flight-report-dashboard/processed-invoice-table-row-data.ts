@@ -10,4 +10,5 @@ export interface IProcessedInvoiceTableRowData {
     vontractNumber: string;
     type: string;
     createdBy: string;
+    paymentStatus: string;
 }
