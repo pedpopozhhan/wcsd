@@ -1,23 +1,19 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/flight-report-dashboard/processed-invoice-table-row-data';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
-import { useAppDispatch } from '@/app/hooks';
 
-interface IFlightReportAllProps {
+interface IProcessedTabDetailsAllProps {
     contractNumber: string | undefined;
 }
 
-const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, ...props }) => {
+const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber, ...props }) => {
     //Object for the page data
     const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
-    //Navigation
-    const navigate = useNavigate();
     //Data set
     const [data, setData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -25,7 +21,6 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     const [loading, setIsLoading] = useState(true);
 
     //Pagination
-
     // page number
     const [page, setPage] = useState(1);
     //count per page
@@ -104,11 +99,6 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
             alert('Invoice ID:' + invoiceId);
         }
     }
-
-    // const formatter = new Intl.NumberFormat('default', {
-    //     style: 'currency',
-    //     currency: 'USD',
-    // });
 
     return (
         <>
