@@ -8,6 +8,7 @@ import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-deta
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
 import { useAppSelector } from '@/app/hooks';
+import ProcessedTabDetails from './tabs/processed-tab-details';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
@@ -45,11 +46,14 @@ const VendorTimeReports = () => {
               <button id='Approved' role='tab' aria-selected={tabIndex === 2} onClick={(e) => setTabIndex(2)}>
                 <span>Approved</span>
               </button>
+              <button id='Processed' role='tab' aria-selected={tabIndex === 3} onClick={(e) => setTabIndex(3)}>
+                <span>Processed</span>
+              </button>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <SignedOffTabDetails contractNumber={contractNumber} />}
               {tabIndex === 2 && <ApprovedTabDetails contractNumber={contractNumber} />}
-
+              {tabIndex === 3 && <ProcessedTabDetails contractNumber={contractNumber} />}
             </div>
           </div>
         </div>
