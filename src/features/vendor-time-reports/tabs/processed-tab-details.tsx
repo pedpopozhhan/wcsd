@@ -4,17 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/flight-report-dashboard/processed-invoice-table-row-data';
 import { yearMonthDay } from '@/common/dates';
+import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
 import { useAppDispatch } from '@/app/hooks';
-import { setTimeReportsToReconcile } from '@/app/app-slice';
 
 interface IFlightReportAllProps {
     contractNumber: string | undefined;
-    searchValue?: string;
-    onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
+const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, ...props }) => {
     //Object for the page data
     const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -31,52 +29,14 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     // page number
     const [page, setPage] = useState(1);
     //count per page
-    const [perPage, setPerPage] = useState(10);
-    const [previousSelectedPerPage, setPreviousSelectedPerPage] = useState(10);
+    const [perPage, setPerPage] = useState(5);
+    const [previousSelectedPerPage, setPreviousSelectedPerPage] = useState(5);
 
     //Sorting
     const [sortCol, setSortCol] = useState('invoiceDate');
     const [sortDir, setSortDir] = useState(-1);
     const [isSorting, setIsSorting] = useState(false);
-
     const [contractID, setContractID] = useState<string | undefined>(contractNumber);
-
-    const dispatch = useAppDispatch();
-
-    // useEffect(() => {
-    //     // let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    //     // let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-
-    //     // let objIPagination: IPagination = {
-    //     //     perPage: perPage,
-    //     //     page: page,
-    //     // };
-
-    //     // let objIFilter: IFilter = {
-    //     //     contractNumber: contractNumber,
-    //     //     status: 'approved',
-    //     // };
-
-    //     // let objISearch: ISearch = {
-    //     //     search: strSearchValue,
-    //     //     sortBy: sortCol,
-    //     //     sortOrder: sortOrder,
-    //     //     filterBy: objIFilter,
-    //     //     pagination: objIPagination,
-    //     // };
-    //     // setIsLoading(true);
-    //     // const subscription = processedInvoicesService.getInvoices(String(contractID)).subscribe((response) => {
-
-    //     //     setData(response.invoices);
-    //     //     // sort by what default
-    //     //     setPageData(response.invoices.slice(0, perPage));
-    //     //     setIsLoading(false);
-    //     // });
-
-    //     // return () => {
-    //     //     subscription.unsubscribe();
-    //     // };
-    // }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
     useEffect(() => {
         const subscription = processedInvoicesService.getInvoices(String(contractID)).subscribe({
@@ -87,9 +47,7 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                         data: x,
                     };
                 });
-                //dispatch(setRowData(data));
                 setData(results.invoices);
-                // sort by what default
                 setPageData(results.invoices.slice(0, perPage));
                 setIsLoading(false);
             },
@@ -98,7 +56,6 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                 console.error(error);
             },
         });
-
         return () => {
             subscription.unsubscribe();
         };
@@ -148,10 +105,10 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
         }
     }
 
-    const formatter = new Intl.NumberFormat('default', {
-        style: 'currency',
-        currency: 'USD',
-    });
+    // const formatter = new Intl.NumberFormat('default', {
+    //     style: 'currency',
+    //     currency: 'USD',
+    // });
 
     return (
         <>
@@ -192,7 +149,7 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                                                 {record.invoiceNumber}
                                             </GoAButton>
                                         </td>
-                                        <td>{record.invoiceAmount}</td>
+                                        <td>{convertToCurrency(record?.invoiceAmount)}</td>
                                         <td>{record?.type}</td>
                                         <td>
                                             <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceId)} />
@@ -222,7 +179,6 @@ const ProcessedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                         <GoAPagination
                             variant='links-only'
                             itemCount={data.length}
-                            // itemCount={filteredData?.length || 10}
                             perPageCount={perPage}
                             pageNumber={page}
                             onChange={changePage}
