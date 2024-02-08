@@ -1,12 +1,4 @@
-import {
-  GoATable,
-  GoAButton,
-  GoABlock,
-  GoASpacer,
-  GoAPagination,
-  GoATableSortHeader,
-  GoAIconButton,
-} from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLoader from '../page-loader';
@@ -17,6 +9,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
+import { publishToast } from '@/common/toast';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -24,12 +17,7 @@ interface IFlightReportAllProps {
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
-  contractNumber,
-  searchValue,
-  onClickFlightReport,
-  ...props
-}) => {
+const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
   //Navigation
   const navigate = useNavigate();
   //Data set
@@ -43,8 +31,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
   const [page, setPage] = React.useState(1);
   //count per page
   const [perPage, setPerPage] = React.useState(10);
-  const [previousSelectedPerPage, setPreviousSelectedPerPage] =
-    React.useState(10);
+  const [previousSelectedPerPage, setPreviousSelectedPerPage] = React.useState(10);
 
   //Sorting
   const [sortCol, setSortCol] = React.useState('flightReportDate');
@@ -73,19 +60,23 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
       pagination: objIPagination,
     };
     setIsLoading(true);
-    const subscription = flightReportDashboardService
-      .getSearch(objISearch)
-      .subscribe((response) => {
+    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe({
+      next: (response) => {
         if (response.errorMessage) {
-          // TODO: display an error message the right way
           console.error(response.errorMessage);
+          publishToast({ type: 'error', message: response.errorMessage });
         } else {
           setData(response.data);
           // sort by what default
           setPageData(response.data.slice(0, perPage));
         }
         setIsLoading(false);
-      });
+      },
+      error: (error) => {
+        console.error(error);
+        publishToast({ type: 'error', message: `Server error` });
+      },
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -171,9 +162,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
             <thead>
               <tr>
                 <th style={{ maxWidth: '40%' }}>
-                  <GoATableSortHeader name='flightReportDate'>
-                    Report Date
-                  </GoATableSortHeader>
+                  <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
                 <th style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="flightReportId"> */}
@@ -194,10 +183,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
               </tr>
             </thead>
 
-            <tbody
-              style={{ position: 'sticky', top: 0 }}
-              className='table-body'
-            >
+            <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {data && data.length > 0 ? (
                 data.map((record: any, index: any) => (
                   // {filteredData && filteredData.length > 0 ? (
@@ -209,9 +195,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                         size='compact'
                         type='tertiary'
-                        onClick={() =>
-                          flightReportClick(record?.flightReportId)
-                        }
+                        onClick={() => flightReportClick(record?.flightReportId)}
                       >
                         {record.flightReportId}
                       </GoAButton>
@@ -219,12 +203,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
                     <td style={{ textAlign: 'right' }}>
-                      <GoAIconButton
-                        icon='chevron-forward'
-                        onClick={() =>
-                          flightReportClick(record?.flightReportId)
-                        }
-                      />
+                      <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
                     </td>
                   </tr>
                 ))
@@ -239,13 +218,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({
           </GoATable>
         </div>
 
-        <div
-          className={
-            data && data.length > 0
-              ? 'visible pagination'
-              : 'not-visible pagination'
-          }
-        >
+        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'}>
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>

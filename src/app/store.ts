@@ -11,6 +11,7 @@ import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-e
 
 import serviceSheetDataReducer from '@/features/process-invoice/tabs/service-sheet-slice';
 import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
+import { processInvoiceEpic } from '@/features/process-invoice/process-invoice-epic';
 
 const environment = import.meta.env.VITE_ENV;
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
@@ -29,6 +30,7 @@ const reducers = combineReducers({
 const persistedReducer = persistReducer(persistConfig, reducers);
 export const epics: any = [
   invoiceDetailsEpic,
+  processInvoiceEpic,
   // epic 2,
   // epic 3
 ];
