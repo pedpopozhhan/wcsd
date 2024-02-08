@@ -26,19 +26,6 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
   useEffect(() => {
     if (!serviceSheetData) {
       dispatch(getServiceSheetData());
-      //   // TODO: move to epic
-      //   const subscription = invoiceServiceSheetDataService.getAll().subscribe({
-      //     next: (result) => {
-      //       dispatch(setServiceSheetData(result));
-      //     },
-      //     error: (error) => {
-      //       console.error(error);
-      //     },
-      //   });
-
-      //   return () => {
-      //     subscription.unsubscribe();
-      //   };
     }
   });
 
