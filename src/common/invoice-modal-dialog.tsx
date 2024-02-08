@@ -34,7 +34,7 @@ const InvoiceModalDialog = (props: any) => {
   const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
-  const [minDate, setMinDate] = useState<Date>(new Date(1950, 2, 1));
+  const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
 
   const invoiceForContext = {
@@ -121,21 +121,22 @@ const InvoiceModalDialog = (props: any) => {
       setInvoiceAmountError(false);
     }
 
-    if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
+    //if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
+    if (new Date(dateOfInvoice) < minDate || dateOfInvoiceError) {
       setDateOfInvoiceError(true);
       return;
     } else {
       setDateOfInvoiceError(false);
     }
 
-    if (new Date(yearMonthDay(periodEndingDate)) < minDate || periodEndingDateError) {
+    if (new Date(periodEndingDate) < minDate || periodEndingDateError) {
       setPeriodEndingDateError(true);
       return;
     } else {
       setPeriodEndingDateError(false);
     }
 
-    if (new Date(yearMonthDay(invoiceReceivedDate)) < minDate || invoiceReceivedDateError) {
+    if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
       setInvoiceReceivedDateError(true);
       return;
     } else {
