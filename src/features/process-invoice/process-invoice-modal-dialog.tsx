@@ -15,7 +15,7 @@ import { setOtherCostData, setRowData } from '../invoice-details/invoice-details
 export interface IProcessInvoiceModalData {
   open: boolean;
   close: any;
-  data: { timeReportData: IDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[]};
+  data: { timeReportData: IDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[] };
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
@@ -44,13 +44,13 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       createdBy: '',
       invoiceTimeReportCostDetails: props.data.timeReportData,
       invoiceOtherCostDetails: props.data.otherCostData,
-      invoiceServiceSheet: serviceSheetData
+      invoiceServiceSheet: serviceSheetData,
     };
     const subscription = processInvoiceService.createInvoice(processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
           setSaveInvoiceStatus(true);
-          dispatch(setInvoiceData({...invoiceData, InvoiceKey: data}));
+          dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
           dispatch(setServiceSheetNameChange(false));
