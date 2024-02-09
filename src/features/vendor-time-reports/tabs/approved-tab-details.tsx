@@ -134,7 +134,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
   function flightReportClick(flightReportId?: number) {
     if (flightReportId) {
-      window.open(import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + 'flightReportDetail/' + flightReportId, '_blank');
+      window.open(import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + flightReportId, '_blank');
     }
   }
 
