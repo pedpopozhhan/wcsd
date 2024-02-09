@@ -4,7 +4,7 @@ import { IServiceSheetData } from './service-sheet-data';
 
 export interface IProcessInvoiceData {
   invoiceKey?: number;
-  invoiceNumber: string;
+  invoiceId: string;
   invoiceDate: Date;
   invoiceAmount: number;
   periodEndDate: Date;

@@ -10,17 +10,11 @@ import ProcessInvoiceModal from './process-invoice-modal-dialog';
 import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setNotificationStatus } from './process-invoice-slice';
 
 export default function ProcessInvoice ()  {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  useEffect(() =>{
-    setTimeout(() => {
-      dispatch(setNotificationStatus(false));
-    }, 10000);
-  });
   const reconciledData = useLocation();
   const timeReportData: IDetailsTableRow[] = reconciledData.state.timeReportData;
   const invoiceTimeReportData = timeReportData.map((i) => i.data);
@@ -29,7 +23,10 @@ export default function ProcessInvoice ()  {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const serviceSheet = useAppSelector((state) => state.serviceSheetData);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
-
+  let dialogType = 'finish-invoice';
+  if(invoiceData.InvoiceKey > 0){
+    dialogType = 'update-service-sheet';
+  }
   let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
 
   const [tabIndex, setTabIndex] = useState<number>(1);
@@ -46,10 +43,7 @@ export default function ProcessInvoice ()  {
       state: contractDetails.contractNumber,
     });
   }
-
-  function finishProcessingInvoice() {
-    setShowDialog(true);
-  }
+  
 
   return (
     <div className={container}>
@@ -79,22 +73,14 @@ export default function ProcessInvoice ()  {
         </div>
       </div>
       <div className={footer}>
-      {(invoiceData.InvoiceKey > 0 && showSavedInvoiceNotification) && (
-        <div className={invoiceProcessedNotificationContainer}>
-          <div>
-            <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>
-            <label className={invoiceProcessedNotificationLabel}>Invoice #{invoiceData.InvoiceID} processed.</label>
-          </div>
-        </div>
-      )}
-      {(invoiceData.InvoiceKey == 0) && (<Fragment><GoAButton type='primary' onClick={finishProcessingInvoice}>
+      {(invoiceData.InvoiceKey == 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}>
           <ion-icon name='archive-outline'></ion-icon>
           <label>Finish</label>
         </GoAButton>
         <GoAButton type='secondary' onClick={navigateToReconcile}>
           Back to Reconcile
         </GoAButton></Fragment>)}
-        {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={finishProcessingInvoice}  {...(serviceSheet.nameChanged) ? {disabled:false} : {disabled:true}}>
+        {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}  {...(serviceSheet.nameChanged) ? {disabled:false} : {disabled:true}}>
           <label>Update</label>
         </GoAButton>
         <GoAButton type='secondary' onClick={navigateToTimeReports}>
@@ -102,11 +88,12 @@ export default function ProcessInvoice ()  {
         </GoAButton></Fragment>)}
       
       </div>
-      <ProcessInvoiceModal
+      {<ProcessInvoiceModal
         open={showDialog}
         close={setShowDialog}
         data={{ timeReportData: invoiceTimeReportData, otherCostData: otherCostData}}
-      ></ProcessInvoiceModal>
+        type={dialogType}
+      ></ProcessInvoiceModal>}
     </div>
   );
 };

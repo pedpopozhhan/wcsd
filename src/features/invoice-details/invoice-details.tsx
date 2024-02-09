@@ -10,7 +10,6 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData } from '../process-invoice/tabs/service-sheet-slice';
-import { PayloadAction } from '@reduxjs/toolkit';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -59,7 +58,7 @@ export default function InvoiceDetails() {
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
     if (invoiceData.InvoiceKey == 0 && serviceSheetData.value) {
-      dispatch(setServiceSheetData({ ...serviceSheetData.value, uniqueServiceSheetName: '' }));
+      dispatch(setServiceSheetData({ ...serviceSheetData.value, invoiceKey: 0, uniqueServiceSheetName: '' }));
     }
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
