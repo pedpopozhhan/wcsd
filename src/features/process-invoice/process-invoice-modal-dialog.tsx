@@ -11,7 +11,7 @@ import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
 import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -55,100 +55,99 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
-          if(serviceSheetData){
-            dispatch(setServiceSheetData({...serviceSheetData, invoiceKey: data}));
+          if (serviceSheetData) {
+            dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
           }
           dispatch(setServiceSheetNameChange(false));
           dispatch(setNotificationStatus(true));
-          publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.`});
+          publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
         }
       },
       error: (error) => {
         console.log(error);
-        publishToast({ type: 'error', message: `Error processing invoice ${invoiceData.InvoiceID}.`});
+        publishToast({ type: 'error', message: failedToPerform('create invoice', 'Server Error') });
       },
     });
     props.close();
   }
-  
-  function updateInvoiceServiceSheet(){
-    if(serviceSheetData){
-        processInvoiceService.updateInvoice(serviceSheetData).subscribe({
-          next: (data) => {
-            if (data) {
-              dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
-              dispatch(setServiceSheetNameChange(false));
-              dispatch(setNotificationStatus(true));
-              publishToast({ type: 'success', message: `Invoice updated successfully.`});
-            }
-          },
-          error: (error) => {
-            console.log(error);
-            publishToast({ type: 'error', message: `Error updating invoice.`});
-          },
-        });
-        props.close();
+
+  function updateInvoiceServiceSheet() {
+    if (serviceSheetData) {
+      processInvoiceService.updateInvoice(serviceSheetData).subscribe({
+        next: (data) => {
+          if (data) {
+            dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
+            dispatch(setServiceSheetNameChange(false));
+            dispatch(setNotificationStatus(true));
+            publishToast({ type: 'success', message: `Invoice updated successfully.` });
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          publishToast({ type: 'error', message: failedToPerform('update invoice', 'Server Error') });
+        },
+      });
+      props.close();
     }
   }
 
-
   return (
     <Fragment>
-     {props.type == 'finish-invoice' &&
-     <GoAModal
-      heading='Process Invoice'
-      open={props.open}
-      actions={
-        <GoAButtonGroup alignment='end'>
-          <GoAButton type='secondary' onClick={() => hideModalDialog()}>
-           Cancel
-          </GoAButton>
-          <GoAButton type='primary' onClick={() => createInvoice()}>
-           Yes, Process
-          </GoAButton>
-        </GoAButtonGroup>
-      }
-    >
-      <div className={processInvoiceModalDialogContainer}>
-        <div>The following will occur.</div>
-        <div>
-          <ul>
-            <li>payment scheduling and status changes</li>
-            <li>details will no longer be available for future edits or reconciliation</li>
-          </ul>
-        </div>
-        <div>Complete payment process in Ariba.</div>
-      </div>
-    </GoAModal>}
+      {props.type == 'finish-invoice' && (
+        <GoAModal
+          heading='Process Invoice'
+          open={props.open}
+          actions={
+            <GoAButtonGroup alignment='end'>
+              <GoAButton type='secondary' onClick={() => hideModalDialog()}>
+                Cancel
+              </GoAButton>
+              <GoAButton type='primary' onClick={() => createInvoice()}>
+                Yes, Process
+              </GoAButton>
+            </GoAButtonGroup>
+          }
+        >
+          <div className={processInvoiceModalDialogContainer}>
+            <div>The following will occur.</div>
+            <div>
+              <ul>
+                <li>payment scheduling and status changes</li>
+                <li>details will no longer be available for future edits or reconciliation</li>
+              </ul>
+            </div>
+            <div>Complete payment process in Ariba.</div>
+          </div>
+        </GoAModal>
+      )}
 
-    {props.type == 'update-service-sheet' &&
-     <GoAModal
-      heading='Updating Service Sheet Name'
-      open={props.open}
-      actions={
-        <GoAButtonGroup alignment='end'>
-          <GoAButton type='secondary' onClick={() => hideModalDialog()}>
-            Cancel
-          </GoAButton>
-          <GoAButton type='primary' onClick={() => updateInvoiceServiceSheet()}>
-           Update
-          </GoAButton>
-        </GoAButtonGroup>
-      }
-    >
-      <div className={processInvoiceModalDialogContainer}>
-        <div>The following will occur.</div>
-        <div>
-          <ul>
-            <li>payment scheduling and status changes to the details of invoice</li>
-          </ul>
-        </div>
-        <div>Invoice processing is now complete</div>
-      </div>
-    </GoAModal>}
-
+      {props.type == 'update-service-sheet' && (
+        <GoAModal
+          heading='Updating Service Sheet Name'
+          open={props.open}
+          actions={
+            <GoAButtonGroup alignment='end'>
+              <GoAButton type='secondary' onClick={() => hideModalDialog()}>
+                Cancel
+              </GoAButton>
+              <GoAButton type='primary' onClick={() => updateInvoiceServiceSheet()}>
+                Update
+              </GoAButton>
+            </GoAButtonGroup>
+          }
+        >
+          <div className={processInvoiceModalDialogContainer}>
+            <div>The following will occur.</div>
+            <div>
+              <ul>
+                <li>payment scheduling and status changes to the details of invoice</li>
+              </ul>
+            </div>
+            <div>Invoice processing is now complete</div>
+          </div>
+        </GoAModal>
+      )}
     </Fragment>
-
   );
 };
 
