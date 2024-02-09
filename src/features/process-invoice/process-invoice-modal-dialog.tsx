@@ -11,6 +11,7 @@ import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
 import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
+import { publishToast } from '@/common/toast';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -59,10 +60,12 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           }
           dispatch(setServiceSheetNameChange(false));
           dispatch(setNotificationStatus(true));
+          publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.`});
         }
       },
       error: (error) => {
         console.log(error);
+        publishToast({ type: 'error', message: `Error processing invoice ${invoiceData.InvoiceID}.`});
       },
     });
     props.close();
@@ -76,11 +79,13 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
               dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
               dispatch(setServiceSheetNameChange(false));
               dispatch(setNotificationStatus(true));
+              publishToast({ type: 'success', message: `Invoice updated successfully.`});
               props.close();
             }
           },
           error: (error) => {
             console.log(error);
+            publishToast({ type: 'error', message: `Error updating invoice.`});
           },
         });
     }

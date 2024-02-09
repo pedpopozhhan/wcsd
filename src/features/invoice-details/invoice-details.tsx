@@ -10,7 +10,6 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData } from '../process-invoice/tabs/service-sheet-slice';
-import { PayloadAction } from '@reduxjs/toolkit';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 

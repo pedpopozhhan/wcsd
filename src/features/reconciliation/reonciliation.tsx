@@ -21,7 +21,6 @@ export default function Reconciliation() {
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
   const location = useLocation();
-  const [savedInvoiceNumber, setSavedInvoiceNumber] = useState(location.state ? location.state.invoiceNumber : '');
 
   useEffect(() => {
     const subscription = searchService.getAll().subscribe({
@@ -33,7 +32,6 @@ export default function Reconciliation() {
 
         setAllData(data);
         setSearchResults(data);
-        publishToast({ type: 'success', message: `Invoice #${savedInvoiceNumber} processed.` });
       },
       error: (error) => {
         console.error(error);
