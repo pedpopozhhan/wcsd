@@ -131,7 +131,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         type='tertiary'
                         onClick={() => invoiceIdClick(record?.invoiceId)}
                       >
-                        {record.invoiceNumber}
+                        {record.invoiceId}
                       </GoAButton>
                     </td>
                     <td>{convertToCurrency(record?.invoiceAmount)}</td>
