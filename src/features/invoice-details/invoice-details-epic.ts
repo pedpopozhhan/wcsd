@@ -2,7 +2,7 @@ import { Action, PayloadAction, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import invoiceDetailsService from '@/services/invoice-details.service';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const ACTION_2 = 'action2';
@@ -21,7 +21,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
             console.error(error);
             publishToast({
               type: 'error',
-              message: 'Server error',
+              message: failedToPerform('get invoice details', 'Server error'),
               action: action,
             });
             return EMPTY;

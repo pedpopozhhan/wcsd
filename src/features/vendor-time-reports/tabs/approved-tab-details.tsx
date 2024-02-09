@@ -11,7 +11,7 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -76,7 +76,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       next: (response) => {
         if (response.errorMessage) {
           console.error(response.errorMessage);
-          publishToast({ type: 'error', message: response.errorMessage });
+          publishToast({ type: 'error', message: failedToPerform('search flight reports', response.errorMessage) });
         } else {
           setData(response.data);
           // sort by what default
@@ -86,7 +86,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: `Server error` });
+        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
 

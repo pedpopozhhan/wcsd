@@ -1,0 +1,34 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    // z-index: 1001;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1);
+    width: auto;
+    padding: $goa-space-xl;
+    .header {
+    }
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      @include thin-scrollbar;
+    }
+    .footer {
+      margin-top: $goa-space-l;
+    }
+  }
+}

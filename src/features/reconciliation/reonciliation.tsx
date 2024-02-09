@@ -9,7 +9,7 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { useAppDispatch } from '@/app/hooks';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 let { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel, searchResultsContainer } = styles;
 
@@ -37,7 +37,7 @@ export default function Reconciliation() {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: `Server error` });
+        publishToast({ type: 'error', message: failedToPerform('search contracts', 'Server error') });
       },
     });
 

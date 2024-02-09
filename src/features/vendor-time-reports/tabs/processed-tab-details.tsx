@@ -5,7 +5,7 @@ import { IProcessedInvoiceTableRowData } from '@/interfaces/flight-report-dashbo
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -49,7 +49,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: `Server error` });
+        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
     return () => {

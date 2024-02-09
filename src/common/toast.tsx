@@ -11,7 +11,9 @@ export const publishToast = (toast: IToast) => {
   const event = new CustomEvent(TOAST_EVENT, { detail: toast });
   document.dispatchEvent(event);
 };
-
+export const failedToPerform = (actionPerformed: string, reason: string) => {
+  return `Failed to ${actionPerformed}. ${reason}`;
+};
 interface IProps {}
 const Toast: React.FC<IProps> = (props) => {
   const dispatch = useAppDispatch();
