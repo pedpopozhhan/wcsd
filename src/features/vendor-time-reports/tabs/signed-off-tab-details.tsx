@@ -140,15 +140,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
 
   function flightReportClick(flightReportId?: number) {
     if (flightReportId) {
-      if (flightReportId) {
-        // navigate(`/flightReportDetail/${flightReportId}`, {
-        //   state: corporateRegionPaginationResult,
-        // });
-      } else {
-        // navigate(`/flightReportDetail/new`, {
-        //   state: corporateRegionPaginationResult,
-        // });
-      }
+      window.open(import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + 'flightReportDetail/' + flightReportId, '_blank');
     }
   }
 
