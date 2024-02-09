@@ -59,7 +59,7 @@ export default function InvoiceDetails() {
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
     if (invoiceData.InvoiceKey == 0 && serviceSheetData.value) {
-      dispatch(setServiceSheetData({ ...serviceSheetData.value, uniqueServiceSheetName: '' }));
+      dispatch(setServiceSheetData({ ...serviceSheetData.value, invoiceKey: 0, uniqueServiceSheetName: '' }));
     }
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
