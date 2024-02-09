@@ -21,21 +21,22 @@ export default function Reconciliation() {
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
   const location = useLocation();
-  const [savedInvoiceNumber, setSavedInvoiceNumber] = useState(location.state ? location.state.invoiceNumber : '');
 
   useEffect(() => {
-    const subscription = searchService.getAll().subscribe((searchResults) => {
-      const data = searchResults.slice();
+    const subscription = searchService.getAll().subscribe({
+      next: (searchResults) => {
+        const data = searchResults.slice();
+        data.sort((a, b) => {
+          return b.vendorName > a.vendorName ? -1 : b.vendorName < a.vendorName ? 1 : 0;
+        });
 
-      // sort ascending
-
-      data.sort((a, b) => {
-        return b.vendorName > a.vendorName ? -1 : b.vendorName < a.vendorName ? 1 : 0;
-      });
-
-      setAllData(data);
-      setSearchResults(data);
-      publishToast({ type: 'success', message: `Invoice #${savedInvoiceNumber} processed.` });
+        setAllData(data);
+        setSearchResults(data);
+      },
+      error: (error) => {
+        console.error(error);
+        publishToast({ type: 'error', message: `Server error` });
+      },
     });
 
     return () => {

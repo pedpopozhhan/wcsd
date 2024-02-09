@@ -7,5 +7,6 @@ export interface IServiceSheetData {
   accountType: string,
   quantity: number,
   unitOfMeasure: string,
-  price: number
+  price: number,
+  invoiceKey?: number
 }

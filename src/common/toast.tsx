@@ -59,7 +59,6 @@ const Toast: React.FC<IProps> = (props) => {
     <div className={`${container} ${styles[toast.type]}`}>
       {toast.type === 'success' && <GoAIcon type='checkmark-circle' theme='outline' size='large'></GoAIcon>}
       {toast.type === 'error' && <GoAIcon type='close-circle' theme='outline' size='large'></GoAIcon>}
-      {toast.type === 'info' && <GoAIcon type='information-circle' theme='outline' size='large'></GoAIcon>}
       {toast.type === 'warning' && <GoAIcon type='warning' theme='outline' size='large'></GoAIcon>}
       <div className={label}>{toast.message}</div>
       {showRetry() && <div className={spacer}></div>}
