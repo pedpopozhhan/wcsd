@@ -5,46 +5,27 @@ import { convertToCurrency } from '@/common/currency';
 import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setServiceSheetData, setServiceSheetNameChange } from './service-sheet-slice';
+import { getServiceSheetData } from '../process-invoice-epic';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
   InvoiceAmount: number;
 }
-const ServiceSheetTab: FC<IServiceSheetTabProps> = (
-  props: IServiceSheetTabProps
-) => {
-  let {
-    serviceSheetTabContainer,
-    serviceSheetTabLabels,
-    serviceSheetTabAltValues,
-    gridContainer,
-    serviceSheetNameDesc,
-    invoiceAmountLabel
-  } = styles;
- 
- const dispatch = useAppDispatch();
+const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
+  let { serviceSheetTabContainer, serviceSheetTabLabels, serviceSheetTabAltValues, gridContainer, serviceSheetNameDesc, invoiceAmountLabel } = styles;
+
+  const dispatch = useAppDispatch();
   const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
-  function updateServiceSheetName(val: string){
-        if(serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val){
-          dispatch(setServiceSheetData({...serviceSheetData,  uniqueServiceSheetName: val}));
-          dispatch(setServiceSheetNameChange(true));
-        }
-   }
+  function updateServiceSheetName(val: string) {
+    if (serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val) {
+      dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: val }));
+      dispatch(setServiceSheetNameChange(true));
+    }
+  }
 
   useEffect(() => {
-   if(!serviceSheetData){
-      const subscription = invoiceServiceSheetDataService.getAll().subscribe({
-        next: (result) => {
-          dispatch(setServiceSheetData(result));
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
-  
-      return () => {
-        subscription.unsubscribe();
-      };
+    if (!serviceSheetData) {
+      dispatch(getServiceSheetData());
     }
   });
 
@@ -56,12 +37,10 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
           name='service-sheet-name'
           type='text'
           maxLength={10}
-          onChange={(key,value) => updateServiceSheetName(value)}
+          onChange={(key, value) => updateServiceSheetName(value)}
           value={serviceSheetData ? serviceSheetData.uniqueServiceSheetName : ''}
         />
-        <div className={serviceSheetNameDesc}>
-          required from Arriba to finish
-        </div>
+        <div className={serviceSheetNameDesc}>required from Arriba to finish</div>
       </div>
 
       <div>Purchase group</div>
@@ -86,7 +65,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (
       <div className={serviceSheetTabAltValues}>Hour</div>
 
       <div>Price</div>
-      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace("$", '')}</div>
+      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace('$', '')}</div>
     </div>
   );
 };

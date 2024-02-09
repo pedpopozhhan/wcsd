@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { yearMonthDay } from '@/common/dates';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
+import { publishToast } from './toast';
 
 export interface IInvoiceData {
-  InvoiceKey: number,
+  InvoiceKey: number;
   InvoiceID: string;
   DateOnInvoice: string;
   InvoiceAmount: number;
@@ -155,6 +156,7 @@ const InvoiceModalDialog = (props: any) => {
       navigate(`/invoice/${invoiceId}`, { state: invoiceId });
     } else {
       dispatch(setInvoiceData(invoiceForContext));
+      publishToast({ type: 'info', message: `Invoice updated.` });
       clearErrors();
       props.showInvoiceDialog(false);
     }
@@ -187,7 +189,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => { }}
+                    onBlur={(key, value) => {}}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {
@@ -348,3 +350,6 @@ const InvoiceModalDialog = (props: any) => {
 };
 
 export default InvoiceModalDialog;
+function setToast(): any {
+  throw new Error('Function not implemented.');
+}
