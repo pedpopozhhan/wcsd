@@ -2,9 +2,7 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 
 import { Observable, map, of } from 'rxjs';
 import axios from 'axios-observable';
-interface IProcessInvoiceResult {
-  invoiceId : number;
-};
+import { IServiceSheetData } from '@/interfaces/process-invoice/service-sheet-data';
 class ProcessInvoiceService {
   private baseUrl: string;
   private apiKeyCode: string;
@@ -34,6 +32,22 @@ class ProcessInvoiceService {
     })
   );
   }
+
+  updateInvoice(serviceSheetData: IServiceSheetData) : Observable<string>{
+    return axios
+    .request<string>({
+      method: 'post',
+      url: this.baseUrl + '/UpdateProcessedInvoice',
+      headers: this.headers,
+      data: serviceSheetData,
+    })
+    .pipe(
+      map((x) => {
+        return x.data;
+      })
+    );
+    }
+    
 }
 
 

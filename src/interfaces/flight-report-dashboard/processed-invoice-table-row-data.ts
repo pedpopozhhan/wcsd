@@ -1,6 +1,6 @@
 export interface IProcessedInvoiceTableRowData {
-    invoiceId: number;
-    invoiceNumber: string;
+    invoiceKey: number;
+    invoiceId: string;
     invoiceAmount: number;
     invoiceDate: Date;
     periodEndDate: Date;
