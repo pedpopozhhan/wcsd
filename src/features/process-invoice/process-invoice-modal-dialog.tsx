@@ -80,7 +80,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
               dispatch(setServiceSheetNameChange(false));
               dispatch(setNotificationStatus(true));
               publishToast({ type: 'success', message: `Invoice updated successfully.`});
-              props.close();
             }
           },
           error: (error) => {
@@ -88,6 +87,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             publishToast({ type: 'error', message: `Error updating invoice.`});
           },
         });
+        props.close();
     }
   }
 
