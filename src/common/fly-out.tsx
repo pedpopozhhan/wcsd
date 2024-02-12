@@ -1,17 +1,17 @@
 import styles from './fly-out.module.scss';
 import { Fragment, PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-let { overlay, container, header, content, footer } = styles;
+let { container, overlay, pane, content, body, header, footer } = styles;
 interface IProps {
   heading: string;
   open: boolean;
   actions: any;
+  position?: 'left' | 'right';
   onClose?: () => any;
 }
 const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [containerWidth, setContainerWidth] = useState<string | number>(0);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+
   const contentRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     setIsVisible(props.open);
@@ -30,15 +30,20 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
     }
   }
 
+  function getPosition() {
+    return props.position ? (props.position === 'left' ? 'flex-start' : 'flex-end') : 'flex-end';
+  }
+
   return isVisible ? (
     <Fragment>
-      <div className={overlay} onClick={close}>
-        <div ref={containerRef} className={container} onClick={containerClick}>
-          <div>
+      <div className={container} style={{ justifyContent: getPosition() }}>
+        <div className={overlay} onClick={close}></div>
+        <div className={pane}>
+          <div className={content} onClick={containerClick}>
             <div className={header}>
               <h3>{props.heading}</h3>
             </div>
-            <div ref={contentRef} className={content}>
+            <div ref={contentRef} className={body}>
               {props.children}
             </div>
             <div className={footer}>{props.actions}</div>
