@@ -115,12 +115,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <th>
                 <GoATableSortHeader name={'cost'}>Cost</GoATableSortHeader>
               </th>
-              {/* <th>GL Account No.</th>
-              <th>Profit Centre</th>
-              <th>Cost Centre</th>
-              <th>Fire No.</th>
-              <th>Internal Order</th>
-              <th>Fund</th> */}
               <th>Internal Order</th>
               <th>Cost centre</th>
               <th>Fund</th>
