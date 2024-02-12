@@ -7,7 +7,7 @@ export interface IProcessedInvoiceTableRowData {
     invoiceReceivedDate: Date;
     vendor: string;
     assignedTo: string;
-    vontractNumber: string;
+    contractNumber: string;
     type: string;
     createdBy: string;
     paymentStatus: string;
