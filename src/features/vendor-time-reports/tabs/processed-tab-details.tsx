@@ -1,6 +1,6 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import PageLoader from '../../../common/page-loader';
+import PageLoader from '@/common/page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
