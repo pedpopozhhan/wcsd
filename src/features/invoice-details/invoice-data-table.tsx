@@ -115,12 +115,17 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <th>
                 <GoATableSortHeader name={'cost'}>Cost</GoATableSortHeader>
               </th>
-              <th>GL Account No.</th>
+              {/* <th>GL Account No.</th>
               <th>Profit Centre</th>
               <th>Cost Centre</th>
               <th>Fire No.</th>
               <th>Internal Order</th>
+              <th>Fund</th> */}
+              <th>Internal Order</th>
+              <th>Cost centre</th>
               <th>Fund</th>
+              <th>Fire No.</th>
+              <th>Account</th>
               <th className={`${stickyColumn} ${end} ${onTop}`}></th>
             </tr>
           </thead>
@@ -153,12 +158,11 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.rateUnit}</td>
                   <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                   <td>{convertToCurrency(x.data.cost)}</td>
-                  <td>{x.data.account}</td>
-                  <td>{x.data.profitCenter}</td>
-                  <td>{x.data.costCenter}</td>
-                  <td>{x.data.fireNumber}</td>
                   <td>{x.data.internalOrder}</td>
+                  <td>{x.data.costCenter}</td>
                   <td>{x.data.fund}</td>
+                  <td>{x.data.fireNumber}</td>
+                  <td>{x.data.account}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>
                       <GoAButton size='compact' type='secondary' disabled={rowData.some((x) => x.isSelected)} onClick={() => addRemoveClicked(x)}>
