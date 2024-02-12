@@ -1,11 +1,13 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import PageLoader from '../page-loader';
-import { IProcessedInvoiceTableRowData } from '@/interfaces/flight-report-dashboard/processed-invoice-table-row-data';
+import PageLoader from '@/common/page-loader';
+import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
+
 import { failedToPerform, publishToast } from '@/common/toast';
+import { useNavigate } from 'react-router-dom';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -33,6 +35,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const [sortDir, setSortDir] = useState(-1);
   const [isSorting, setIsSorting] = useState(false);
   const [contractID, setContractID] = useState<string | undefined>(contractNumber);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(String(contractID)).subscribe({
@@ -95,9 +98,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //#endregion
 
-  function invoiceIdClick(invoiceId?: number) {
-    if (invoiceId) {
-      alert('Invoice ID:' + invoiceId);
+  function invoiceIdClick(invoiceKey?: number) {
+    if (invoiceKey) {
+      navigate(`/ProcessedInvoice/${invoiceKey}`);
     }
   }
 
@@ -129,7 +132,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                         size='compact'
                         type='tertiary'
-                        onClick={() => invoiceIdClick(record?.invoiceId)}
+                        onClick={() => invoiceIdClick(record?.invoiceKey)}
                       >
                         {record.invoiceId}
                       </GoAButton>
@@ -137,7 +140,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     <td>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.paymentStatus}</td>
                     <td>
-                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceId)} />
+                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
                     </td>
                   </tr>
                 ))

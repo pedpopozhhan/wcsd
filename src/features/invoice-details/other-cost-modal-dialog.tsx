@@ -231,13 +231,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   }
 
   const validateOtherCost = () => {
-    if (new Date(yearMonthDay(fromDate)) < minDate) {
+    if (new Date(fromDate) < minDate || fromDateError) {
       setFromDateError(true);
     } else {
       setFromDateError(false);
     }
 
-    if (new Date(yearMonthDay(toDate)) < minDate) {
+    if (new Date(toDate) < minDate || toDateError) {
       setToDateError(true);
     } else {
       setToDateError(false);

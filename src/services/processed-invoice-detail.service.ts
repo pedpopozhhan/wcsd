@@ -1,12 +1,11 @@
-import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
-import IProcessedInvoices from '@/interfaces/processed-invoice/processed-invoices';
+import { IProcessedInvoiceData } from '@/interfaces/processed-invoice/processed-invoice-data';
 interface IProcessedInvoicesGetBody {
-    contractNumber: string;
+    invoiceKey: number;
 }
-class ProcessedInvoicesService {
+class ProcessedInvoiceDetailService {
     private baseUrl: string;
     private apiKeyCode: string;
     private headers: { [key: string]: string };
@@ -20,14 +19,14 @@ class ProcessedInvoicesService {
         };
     }
 
-    getInvoices(contractNumber: string): Observable<IProcessedInvoices> {
+    getInvoiceDetail(invoiceKey: number): Observable<IProcessedInvoiceData> {
         const body: IProcessedInvoicesGetBody = {
-            contractNumber: contractNumber,
+            invoiceKey: invoiceKey,
         };
         return axios
-            .request<IProcessedInvoices>({
+            .request<IProcessedInvoiceData>({
                 method: 'post',
-                url: this.baseUrl + '/GetInvoices',
+                url: this.baseUrl + '/GetInvoiceDetails',
                 headers: this.headers,
                 data: body,
             })
@@ -38,4 +37,4 @@ class ProcessedInvoicesService {
             );
     }
 }
-export default new ProcessedInvoicesService();
+export default new ProcessedInvoiceDetailService();

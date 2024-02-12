@@ -4,7 +4,7 @@ import styles from './process-invoice.module.scss';
 import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
+import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
@@ -16,7 +16,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 export interface IProcessInvoiceModalData {
   open: boolean;
   close: any;
-  data: { timeReportData: IDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[] };
+  data: { timeReportData: ITimeReportDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[] };
   type: string;
 }
 
@@ -28,7 +28,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
-  const {} = props.data.timeReportData;
+  const { } = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
@@ -55,6 +55,8 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
+          if (serviceSheetData) {
+            dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
           if (serviceSheetData) {
             dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
           }
