@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { IDetailsTableRowData } from '@/interfaces/invoice-details/details-table-row-data';
+import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 export interface IInvoiceDetailsSliceState {
   rowData: IDetailsTableRow[];
@@ -44,7 +44,7 @@ export const invoiceDetailsSlice = createSlice({
   name: 'invoiceDetailsSlice',
   initialState,
   reducers: {
-    initializeRowData: (state, action: PayloadAction<IDetailsTableRowData[]>) => {
+    initializeRowData: (state, action: PayloadAction<ITimeReportDetailsTableRowData[]>) => {
       const data = action.payload.slice().map((x, i) => {
         return {
           index: i,

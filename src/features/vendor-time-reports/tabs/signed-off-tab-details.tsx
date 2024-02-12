@@ -1,7 +1,7 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageLoader from '../page-loader';
+import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
@@ -140,15 +140,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
 
   function flightReportClick(flightReportId?: number) {
     if (flightReportId) {
-      if (flightReportId) {
-        // navigate(`/flightReportDetail/${flightReportId}`, {
-        //   state: corporateRegionPaginationResult,
-        // });
-      } else {
-        // navigate(`/flightReportDetail/new`, {
-        //   state: corporateRegionPaginationResult,
-        // });
-      }
+      window.open(import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + flightReportId, '_blank');
     }
   }
 

@@ -1,7 +1,7 @@
 import { Action, PayloadAction, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
-import invoiceDetailsService from '@/services/invoice-details.service';
+import timeReportDetailsService from '@/services/time-report-details.service';
 import { publishToast } from '@/common/toast';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
@@ -15,7 +15,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
     filter((action) => getInvoiceDetails.match(action) || action2.match(action)),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
-        return invoiceDetailsService.getInvoiceDetails(action.payload).pipe(
+        return timeReportDetailsService.getTimeReportDetails(action.payload).pipe(
           mergeMap((results) => of(setRateTypes(results.rateTypes), initializeRowData(results.rows))),
           catchError((error) => {
             console.error(error);

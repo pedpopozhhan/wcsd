@@ -1,4 +1,4 @@
-import { IDetailsTableRowData } from '../invoice-details/details-table-row-data';
+import { ITimeReportDetailsTableRowData } from '../invoice-details/time-report-details-table-row-data';
 import { IOtherCostTableRowData } from '../invoice-details/other-cost-table-row-data';
 import { IServiceSheetData } from './service-sheet-data';
 
@@ -14,7 +14,7 @@ export interface IProcessInvoiceData {
   contractNumber: string;
   type: string;
   createdBy: string;
-  invoiceTimeReportCostDetails : IDetailsTableRowData[];
+  invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
   invoiceOtherCostDetails: IOtherCostTableRowData[];
   invoiceServiceSheet?: IServiceSheetData;
 }
