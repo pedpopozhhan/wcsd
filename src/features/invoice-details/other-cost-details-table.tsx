@@ -79,11 +79,10 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
               <th>Rate</th>
               <th>No. of Units</th>
               <th>Cost</th>
-              <th>GL Account No.</th>
-              <th>Profit Centre</th>
-              <th>Cost Centre</th>
               <th>Internal Order</th>
+              <th>Cost centre</th>
               <th>Fund</th>
+              <th>Account</th>
               <th>Remarks</th>
               <th className={`${stickyColumn} ${end} ${onTop}`}></th>
             </tr>
@@ -98,11 +97,10 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                 <td>{x.data.numberOfUnits}</td>
                 <td>{convertToCurrency(x.data.cost)}</td>
-                <td>{x.data.glAccountNumber}</td>
-                <td>{x.data.profitCentre}</td>
-                <td>{x.data.costCentre}</td>
                 <td>{x.data.internalOrder}</td>
+                <td>{x.data.costCentre}</td>
                 <td>{x.data.fund}</td>
+                <td>{x.data.account}</td>
                 <td>{x.data.remarks}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
