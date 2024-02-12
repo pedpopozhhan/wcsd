@@ -2,7 +2,7 @@ import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/tim
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
-import IInvoiceDetails from '@/interfaces/invoice-details/time-report-details';
+import ITimeReportDetails from '@/interfaces/invoice-details/time-report-details';
 interface IDetailsServiceGetBody {
   timeReportIds: number[];
 }
@@ -19,12 +19,12 @@ class TimeReportDetailsService {
       'x-functions-key': this.apiKeyCode,
     };
   }
-  getTimeReportDetails(timeReportIds: number[]): Observable<IInvoiceDetails> {
+  getTimeReportDetails(timeReportIds: number[]): Observable<ITimeReportDetails> {
     const body: IDetailsServiceGetBody = {
       timeReportIds: timeReportIds,
     };
     return axios
-      .request<IInvoiceDetails>({
+      .request<ITimeReportDetails>({
         method: 'post',
         url: this.baseUrl + '/GetTimeReportDetails',
         headers: this.headers,
