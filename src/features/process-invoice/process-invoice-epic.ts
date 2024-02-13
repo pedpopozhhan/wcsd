@@ -1,6 +1,6 @@
 import { Action, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
 import { setServiceSheetData } from './tabs/service-sheet-slice';
 
@@ -21,7 +21,7 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
             console.error(error);
             publishToast({
               type: 'error',
-              message: 'Server error',
+              message: failedToPerform('search flight reports', 'Server Error'),
               action: action,
             });
             return EMPTY;

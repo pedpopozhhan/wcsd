@@ -14,9 +14,7 @@ import {
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { yearMonthDay } from '@/common/dates';
 import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
-import { IDropDownList } from '@/interfaces/drop-down-list.interface';
 import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 
@@ -87,7 +85,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     ratePerUnit: rate,
     numberOfUnits: numberOfUnits,
     cost: Number(cost),
-    account: glAccount,
+    glAcct: glAccount,
     profitCentre: profitCentre,
     costCentre: costCenter,
     internalOrder: internalOrder,
@@ -114,7 +112,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setCost(Number(props.data?.cost).toString());
       setRateType(String(props.data?.rateType));
       setUnit(String(props.data?.unit));
-      setGlAccount(String(props.data?.account));
+      setGlAccount(String(props.data?.glAcct));
       setProfitCenter(String(props.data?.profitCentre));
       setCostCenter(String(props.data?.costCentre));
       setInternalOrder(String(props.data?.internalOrder));
@@ -461,8 +459,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td colSpan={3}>
-                <GoAFormItem label='GL Account'>
-                  <GoADropdown placeholder='Select GL account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
+                <GoAFormItem label='G/L Acc'>
+                  <GoADropdown placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
                     {glAccounts.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}

@@ -11,7 +11,7 @@ import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
 import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
-import { publishToast } from '@/common/toast';
+import { failedToPerform, publishToast } from '@/common/toast';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -28,7 +28,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
-  const { } = props.data.timeReportData;
+  const {} = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
@@ -57,15 +57,18 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
             dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
+            if (serviceSheetData) {
+              dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
+            }
+            dispatch(setServiceSheetNameChange(false));
+            dispatch(setNotificationStatus(true));
+            publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
           }
-          dispatch(setServiceSheetNameChange(false));
-          dispatch(setNotificationStatus(true));
-          publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
         }
       },
       error: (error) => {
         console.log(error);
-        publishToast({ type: 'error', message: `Error processing invoice ${invoiceData.InvoiceID}.` });
+        publishToast({ type: 'error', message: failedToPerform('create invoice', 'Server Error') });
       },
     });
     props.close();
@@ -84,17 +87,16 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         },
         error: (error) => {
           console.log(error);
-          publishToast({ type: 'error', message: `Error updating invoice.` });
+          publishToast({ type: 'error', message: failedToPerform('update invoice', 'Server Error') });
         },
       });
       props.close();
     }
   }
 
-
   return (
     <Fragment>
-      {props.type == 'finish-invoice' &&
+      {props.type == 'finish-invoice' && (
         <GoAModal
           heading='Process Invoice'
           open={props.open}
@@ -119,9 +121,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             </div>
             <div>Complete payment process in Ariba.</div>
           </div>
-        </GoAModal>}
+        </GoAModal>
+      )}
 
-      {props.type == 'update-service-sheet' &&
+      {props.type == 'update-service-sheet' && (
         <GoAModal
           heading='Updating Service Sheet Name'
           open={props.open}
@@ -145,10 +148,9 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             </div>
             <div>Invoice processing is now complete</div>
           </div>
-        </GoAModal>}
-
+        </GoAModal>
+      )}
     </Fragment>
-
   );
 };
 
