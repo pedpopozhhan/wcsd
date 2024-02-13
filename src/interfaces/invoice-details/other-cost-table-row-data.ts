@@ -7,7 +7,7 @@ export interface IOtherCostTableRowData {
   ratePerUnit: number; //with $0.00 //Unit Cost
   numberOfUnits: number;
   cost: number;
-  glAccountNumber: string | string[];
+  account: string | string[];
   profitCentre: string | string[];
   costCentre: string | string[];
   internalOrder: string | string[];
