@@ -101,25 +101,25 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <th>
                 <GoATableSortHeader name={'flightReportDate'}>Date</GoATableSortHeader>
               </th>
-              <th>Reg No.</th>
-              <th>Report No.</th>
-              <th>AO02 No.</th>
-              <th>Rate Type</th>
+              <th>Reg no.</th>
+              <th>Report no.</th>
+              <th>AO02 no.</th>
+              <th>Rate type</th>
               <th>
                 <GoATableSortHeader name={'noOfUnits'}>No. of Units</GoATableSortHeader>
               </th>
-              <th>Rate Unit</th>
+              <th>Rate unit</th>
               <th>
                 <GoATableSortHeader name={'ratePerUnit'}>Rate / unit</GoATableSortHeader>
               </th>
               <th>
                 <GoATableSortHeader name={'cost'}>Cost</GoATableSortHeader>
               </th>
-              <th>Internal Order</th>
+              <th>Internal order</th>
               <th>Cost centre</th>
               <th>Fund</th>
-              <th>Fire No.</th>
-              <th>Account</th>
+              <th>G/L acct</th>
+              <th>Fire no.</th>
               <th className={`${stickyColumn} ${end} ${onTop}`}></th>
             </tr>
           </thead>
@@ -155,8 +155,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.internalOrder}</td>
                   <td>{x.data.costCenter}</td>
                   <td>{x.data.fund}</td>
+                  <td>{x.data.glAcct}</td>
                   <td>{x.data.fireNumber}</td>
-                  <td>{x.data.account}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>
                       <GoAButton size='compact' type='secondary' disabled={rowData.some((x) => x.isSelected)} onClick={() => addRemoveClicked(x)}>

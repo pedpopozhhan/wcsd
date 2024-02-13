@@ -28,7 +28,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
-  const { } = props.data.timeReportData;
+  const {} = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
@@ -57,12 +57,13 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
             dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-          if (serviceSheetData) {
-            dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
+            if (serviceSheetData) {
+              dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
+            }
+            dispatch(setServiceSheetNameChange(false));
+            dispatch(setNotificationStatus(true));
+            publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
           }
-          dispatch(setServiceSheetNameChange(false));
-          dispatch(setNotificationStatus(true));
-          publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
         }
       },
       error: (error) => {

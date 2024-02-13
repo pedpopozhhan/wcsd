@@ -11,34 +11,14 @@ import {
   GoAButtonType,
   GoABadge,
   GoABadgeType,
-  GoAInput,
-  GoAButton,
-  GoAFormItem,
-  GoAInputDate,
-  GoAModal,
-  GoAButtonGroup,
-  GoADropdown,
-  GoADropdownItem,
-  GoATextArea,
-  GoAButtonType,
-  GoABadge,
-  GoABadgeType,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
-import { yearMonthDay } from '@/common/dates';
 import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
-import { IDropDownList } from '@/interfaces/drop-down-list.interface';
 import { useAppSelector } from '@/app/hooks';
-import { failedToPerform, publishToast } from '@/common/toast';
-import FlyOut from '@/common/fly-out';
+import { publishToast } from '@/common/toast';
 
 interface IOtherCostModalDialog {
-  onAddUpdate: (item: IOtherCostTableRowData) => any;
-  showOtherCostDialog: (value: boolean) => any;
-  isAddition: boolean;
-  visible: boolean;
-  data: IOtherCostTableRowData | undefined;
   onAddUpdate: (item: IOtherCostTableRowData) => any;
   showOtherCostDialog: (value: boolean) => any;
   isAddition: boolean;
@@ -56,24 +36,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [respMessageType, setRespMessageType] = useState<GoABadgeType>('light');
   const [respMessageContent, setRespMessageContent] = useState('');
   const [respMessageIcon, setRespMessageIcon] = useState<boolean>(false);
-  const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.data);
-  const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
-  const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
-  const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
-  const [addButtonType, setAddButtonType] = useState<GoAButtonType>('primary');
-  const [addAnotherButtonlabel, setAddAnotherButtonLabel] = useState<string>('');
-  const [addAnotherButtonType, setAddAnotherButtonType] = useState<GoAButtonType>('tertiary');
-  const [respMessageType, setRespMessageType] = useState<GoABadgeType>('light');
-  const [respMessageContent, setRespMessageContent] = useState('');
-  const [respMessageIcon, setRespMessageIcon] = useState<boolean>(false);
 
-  const [addAnother, setAddAnother] = useState(false);
-  const [iscancelled, setIsCancelled] = useState<boolean>(false);
-  const [saveData, setSaveData] = useState<boolean>(false);
-  const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
-  const [maxDate, setMaxDate] = useState(new Date());
-  const [dialogTitle, setDialogTitle] = useState<string>('');
-  const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
   const [addAnother, setAddAnother] = useState(false);
   const [iscancelled, setIsCancelled] = useState<boolean>(false);
   const [saveData, setSaveData] = useState<boolean>(false);
@@ -90,20 +53,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [toDateError, setToDateError] = useState<boolean>(false);
   const [rateType, setRateType] = useState<string | string[]>('');
   const [unit, setUnit] = useState<string | string[]>('');
-  const [index, setIndex] = useState<number>(0);
-  const [id, setId] = useState<number>(0);
-  const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
-  const [fromDateError, setFromDateError] = useState<boolean>(false);
-  const [toDate, setToDate] = useState<Date>(new Date(Date()));
-  const [toDateError, setToDateError] = useState<boolean>(false);
-  const [rateType, setRateType] = useState<string | string[]>('');
-  const [unit, setUnit] = useState<string | string[]>('');
 
-  const [rate, setRate] = useState<number>(0);
-  const [rateError, setRateError] = useState<boolean>(true);
-  const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
-  const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
-  const [cost, setCost] = useState<string>('');
   const [rate, setRate] = useState<number>(0);
   const [rateError, setRateError] = useState<boolean>(true);
   const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
@@ -117,21 +67,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [fund, setFund] = useState<string | string[]>('');
   const [remarks, setRemarks] = useState<string>('');
   const [invoiceId, setInvoiceId] = useState<string>('');
-  const [glAccount, setGlAccount] = useState<string | string[]>('');
-  const [profitCentre, setProfitCenter] = useState<string>('100063');
-  const [costCenter, setCostCenter] = useState<string | string[]>('');
-  const [internalOrder, setInternalOrder] = useState<string | string[]>('');
-  const [fund, setFund] = useState<string | string[]>('');
-  const [remarks, setRemarks] = useState<string>('');
-  const [invoiceId, setInvoiceId] = useState<string>('');
 
-  // const [rateTypes, setRateTypes] = useState<string[]>([]);
-  const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
-  const [rateUnits, setRateUnits] = useState<string[]>([]);
-  const [glAccounts, setGLAccounts] = useState<string[]>([]);
-  const [costCenters, setCostCenters] = useState<string[]>([]);
-  const [internalOrders, setInternalOrders] = useState<string[]>([]);
-  const [funds, setFunds] = useState<string[]>([]);
   // const [rateTypes, setRateTypes] = useState<string[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
   const [rateUnits, setRateUnits] = useState<string[]>([]);
@@ -149,7 +85,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     ratePerUnit: rate,
     numberOfUnits: numberOfUnits,
     cost: Number(cost),
-    account: glAccount,
+    glAcct: glAccount,
     profitCentre: profitCentre,
     costCentre: costCenter,
     internalOrder: internalOrder,
@@ -161,18 +97,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const xl = '500px';
   const lg = '230px';
   const md = '175px';
-  const xl = '500px';
-  const lg = '230px';
-  const md = '175px';
 
-  useEffect(() => {
-    if (props.isAddition) {
-      setControlsForAddition();
-      clearDialgoControls();
-    } else {
-      setControlsForUpdate();
-      if (props.data?.from !== undefined) setFromDate(props.data?.from);
-      if (props.data?.to !== undefined) setToDate(props.data?.to);
   useEffect(() => {
     if (props.isAddition) {
       setControlsForAddition();
@@ -187,7 +112,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setCost(Number(props.data?.cost).toString());
       setRateType(String(props.data?.rateType));
       setUnit(String(props.data?.unit));
-      setGlAccount(String(props.data?.account));
+      setGlAccount(String(props.data?.glAcct));
       setProfitCenter(String(props.data?.profitCentre));
       setCostCenter(String(props.data?.costCentre));
       setInternalOrder(String(props.data?.internalOrder));
@@ -534,8 +459,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td colSpan={3}>
-                <GoAFormItem label='GL Account'>
-                  <GoADropdown placeholder='Select GL account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
+                <GoAFormItem label='G/L Acc'>
+                  <GoADropdown placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
                     {glAccounts.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}

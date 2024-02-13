@@ -8,7 +8,7 @@ export interface ITimeReportDetailsTableRowData {
   rateUnit: string;
   ratePerUnit: number; //with $0.00
   cost: number; //with $0.00
-  account: number;
+  glAcct: number;
   profitCenter: string;
   costCenter: string;
   fireNumber: string;

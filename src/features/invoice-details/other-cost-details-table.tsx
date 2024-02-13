@@ -74,15 +74,15 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 {' '}
                 <GoATableSortHeader name={'to'}>To</GoATableSortHeader>{' '}
               </th>
-              <th>Rate Type</th>
+              <th>Rate type</th>
               <th>Unit</th>
               <th>Rate</th>
-              <th>No. of Units</th>
+              <th>No. of units</th>
               <th>Cost</th>
-              <th>Internal Order</th>
+              <th>Internal order</th>
               <th>Cost centre</th>
               <th>Fund</th>
-              <th>Account</th>
+              <th>G/L acct</th>
               <th>Remarks</th>
               <th className={`${stickyColumn} ${end} ${onTop}`}></th>
             </tr>
@@ -99,8 +99,8 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{convertToCurrency(x.data.cost)}</td>
                 <td>{x.data.internalOrder}</td>
                 <td>{x.data.costCentre}</td>
+                <td>{x.data.glAcct}</td>
                 <td>{x.data.fund}</td>
-                <td>{x.data.account}</td>
                 <td>{x.data.remarks}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
