@@ -76,7 +76,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       next: (response) => {
         if (response.errorMessage) {
           console.error(response.errorMessage);
-          publishToast({ type: 'error', message: failedToPerform('search flight reports', response.errorMessage) });
+          publishToast({ type: 'info', message: response.errorMessage });
         } else {
           setData(response.data);
           // sort by what default
