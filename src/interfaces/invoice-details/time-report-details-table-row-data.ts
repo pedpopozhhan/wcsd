@@ -13,5 +13,9 @@ export interface ITimeReportDetailsTableRowData {
   costCenter: string;
   fireNumber: string;
   internalOrder: string;
-  fund: string;  
+  fund: string;
+  createdBy?: string;
+  createdByDateTime? : Date;
+  updatedBy?: string;
+  updatedByDateTime?: Date;
 }
