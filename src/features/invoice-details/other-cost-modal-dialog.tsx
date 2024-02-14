@@ -17,6 +17,7 @@ import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-
 import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
 import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
+import FlyOut from '@/common/fly-out';
 
 interface IOtherCostModalDialog {
   onAddUpdate: (item: IOtherCostTableRowData) => any;
@@ -290,9 +291,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
   return (
     <>
-      <GoAModal
+      <FlyOut
         heading={dialogTitle}
         open={props.visible}
+        onClose={hideModalDialog}
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
@@ -403,8 +405,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     error={rateError}
                     max='99999.99'
                     min='0'
-                    prefix='$'
-                    suffix='Per&nbsp;Unit'
+                    leadingContent='$'
+                    trailingContent='Per&nbsp;Unit'
                     onChange={(key, value) => {
                       if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
                         setRateError(true);
@@ -449,7 +451,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     name='cost'
                     width={lg}
                     value={cost.toString()}
-                    prefix='$'
+                    leadingContent='$'
                     disabled
                     onChange={(key, value) => {
                       setCost(Number(value).toFixed(2));
@@ -541,7 +543,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
           </tbody>
         </table>
-      </GoAModal>
+      </FlyOut>
     </>
   );
 };

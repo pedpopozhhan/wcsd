@@ -248,7 +248,7 @@ const InvoiceModalDialog = (props: any) => {
                     value={invoiceAmount.toString()}
                     max='99999999'
                     min='0'
-                    prefix='$'
+                    leadingContent='$'
                     onBlur={(key, value) => {
                       if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                         setInvoiceAmountError(true);
