@@ -1,0 +1,33 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+
+.container {
+  display: grid;
+  padding: 0 $goa-space-s;
+  grid-template-columns: 1fr 1fr;
+  row-gap: $goa-space-m;
+  > div {
+    div:first-child {
+      color: $goa-color-text-secondary;
+      font: $goa-typography-body-xs;
+      line-height: $goa-line-height-1;
+    }
+    div:nth-child(2) {
+      color: $goa-color-text-default;
+      font: $goa-typography-body-s;
+      line-height: $goa-line-height-5;
+    }
+  }
+}
+
+.assignedToHeader {
+  display: flex !important;
+  margin-bottom: 8px;
+}
+
+.assignedToIcon {
+  margin-top: -5px;
+}
+
+.assignedToLabel {
+  margin-top: -25px !important;
+}

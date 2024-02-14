@@ -1,0 +1,179 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+
+.serviceSheetTabContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 50px;
+  line-height: 50px;
+  margin-left: 18px;
+  :nth-child(even) {
+    padding-left: 10px;
+  }
+
+
+  div{
+    border-bottom: 1px solid lightgray;
+  }
+ 
+}
+.serviceSheetTabAltValues{
+  background: #F8F8F8;
+}
+.serviceSheetNameDesc{
+  font-size: small;
+  border: none !important;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+.invoiceAmountLabel {
+  font-family: "Roboto Mono";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.processInvoiceModalDialogContainer{
+  ul.li {
+    display: list-item;
+  }
+  div:nth-child(2){
+    margin-left: 20px;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.content {
+  flex-grow: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  gap: $goa-space-xs;
+  .sideBar {
+    @include thin-scrollbar;
+    overflow-y: auto;
+    background-color: $goa-color-greyscale-100;
+    flex-shrink: 0;
+    width: 394px; // from figma
+    padding: $goa-space-xl $goa-space-l;
+    .header {
+      font: $goa-typography-heading-l;
+      line-height: $goa-line-height-6;
+      margin-bottom: $goa-space-l;
+    }
+    .summaryContainer {
+      margin-top: $goa-space-l;
+    }
+  }
+  .main {
+    overflow-y: auto;
+    overflow: hidden;
+
+    // this is all to make the tabs have a hidden scroll. the goa component wont work that way
+    .tabGroupContainer {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .tabList {
+        width: 250px;
+        border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
+        display: flex;
+        gap: $goa-space-xl;
+
+        [role='tab'] {
+          padding: $goa-space-s $goa-space-m;
+
+          background: none;
+          overflow: hidden;
+          white-space: nowrap;
+          cursor: pointer;
+          border: none;
+          font: $goa-typography-body-m;
+          color: $goa-color-text-default;
+          letter-spacing: 0.03125rem;
+          border-bottom: 4px solid transparent;
+          &:hover:not([aria-selected='true']) {
+            border-bottom: 4px solid $goa-color-greyscale-200;
+          }
+          &[aria-selected='true'] {
+            border-bottom: 4px solid $goa-color-interactive-default;
+            font: $goa-typography-heading-s;
+          }
+        }
+      }
+      .tabContainer {
+        overflow: hidden;
+      }
+    }
+  }
+}
+.footer {
+  display: flex;
+  padding: calc($goa-space-m + $goa-space-3xs)
+    calc($goa-space-l - $goa-space-3xs);
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  gap: calc($goa-space-xs + $goa-space-3xs);
+
+  [name='archive-outline']{
+    vertical-align: top;
+    margin-right: 7px;
+  }
+}
+
+.tableInvoiceHeader {
+  overflow-x: auto;
+  max-width: 100%;
+  tr td {
+    padding: 0;
+  }
+  tr td:nth-child(1) {
+    width: 30%;
+  }
+  tr td:nth-child(2) {
+    width: 65%;
+  }
+  tr td:nth-child(3) {
+    width: 5%;
+  }
+}
+
+.invoiceProcessedNotificationContainer {
+  display: flex;
+  height: 64px;
+  width: 422px;
+  min-width: 360px;
+  max-width: 640px;
+  padding: 10px 30px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 5px;
+  border: 1px solid $goa-color-greyscale-700;
+  background: $goa-color-success-default;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+
+  [type='checkmark-circle']{
+    color: $goa-color-greyscale-white;
+  }
+}
+
+.invoiceProcessedNotificationLabel {
+  color: #FFFFFF;
+  font-family: "arial";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  vertical-align: super;
+  margin-left: 10px;
+}

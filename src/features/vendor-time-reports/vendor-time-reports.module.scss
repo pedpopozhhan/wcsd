@@ -1,0 +1,77 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+
+
+.vendorTimeReportRoot {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin-left: 10px;
+}
+
+.vendorTimeReportMain {
+  height: 100%;
+  width: 75%;
+}
+
+.vendorTimeReportSidePanel {
+  height: 100%;
+  width: 25;
+  border-left: 1px lightgrey solid;
+  margin-left: 50px;
+}
+
+.vendorTimeReportSidePanelContract {
+  margin-left: 20px;
+  margin-top: 60px;
+}
+
+.vendorTimeReportSidePanelContactInfo {
+  margin-left: 20px;
+}
+
+.main {
+  overflow-y: auto;
+  overflow: hidden;
+
+  .tabGroupContainer {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .tabList {
+      border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
+      display: flex;
+      width: fit-content;
+      gap: $goa-space-xl;
+
+      [role='tab'] {
+        padding: $goa-space-s $goa-space-m;
+
+        background: none;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        border: none;
+        font: $goa-typography-body-m;
+        color: $goa-color-text-default;
+        letter-spacing: 0.03125rem;
+        border-bottom: 4px solid transparent;
+
+        &:hover:not([aria-selected='true']) {
+          border-bottom: 4px solid $goa-color-greyscale-200;
+        }
+
+        &[aria-selected='true'] {
+          border-bottom: 4px solid $goa-color-interactive-default;
+          font: $goa-typography-heading-s;
+        }
+      }
+    }
+
+    .tabContainer {
+      overflow: hidden;
+      padding-top: $goa-space-l;
+    }
+  }
+}
