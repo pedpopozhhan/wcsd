@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IDetailsTableRow } from './details-table-row.interface';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 export interface IInvoiceDetailsSliceState {

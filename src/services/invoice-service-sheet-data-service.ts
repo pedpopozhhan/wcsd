@@ -1,5 +1,5 @@
 
-import { IServiceSheetData } from '@/interfaces/process-invoice/service-sheet-data';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 import { Observable, map, of } from 'rxjs';
 
 class InvoiceServiceSheetDataService {

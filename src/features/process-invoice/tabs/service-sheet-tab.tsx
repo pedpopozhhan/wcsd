@@ -4,18 +4,26 @@ import { FC, useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setServiceSheetData, setServiceSheetNameChange } from './service-sheet-slice';
+import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
 import { getServiceSheetData } from '../process-invoice-epic';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 interface IServiceSheetTabProps {
-  InvoiceID: string;
-  InvoiceAmount: number;
+  InvoiceID: string | undefined;
+  InvoiceAmount: number | undefined;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  let { serviceSheetTabContainer, serviceSheetTabLabels, serviceSheetTabAltValues, gridContainer, serviceSheetNameDesc, invoiceAmountLabel } = styles;
+  let {
+    serviceSheetTabContainer,
+    serviceSheetTabLabels,
+    serviceSheetTabAltValues,
+    gridContainer,
+    serviceSheetNameDesc,
+    invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();
-  const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
+  const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
+  //const value = useAppSelector((state) => state.)
   function updateServiceSheetName(val: string) {
     if (serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val) {
       dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: val }));
@@ -65,7 +73,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
       <div className={serviceSheetTabAltValues}>Hour</div>
 
       <div>Price</div>
-      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace('$', '')}</div>
+      <div className={invoiceAmountLabel}>$ {convertToCurrency(Number(props.InvoiceAmount)).replace('$', '')}</div>
     </div>
   );
 };

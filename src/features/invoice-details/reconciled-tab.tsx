@@ -2,7 +2,7 @@ import { useState, useEffect, FC } from 'react';
 import styles from './reconciled-tab.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import OtherCostModalDialog from './other-cost-modal-dialog';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import OtherCostDetailsTable from './other-cost-details-table';
 import { IDetailsTableRow } from './details-table-row.interface';
 import InvoiceDataTable from './invoice-data-table';
@@ -12,7 +12,7 @@ import FlyOut from '@/common/fly-out';
 
 let { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps {}
+interface IReconciledTabProps { }
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
@@ -20,7 +20,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRowData>();
 
-  useEffect(() => {}, [otherCostData]);
+  useEffect(() => { }, [otherCostData]);
 
   const showOtherCostsModal = () => {
     console.log('setParentShowModal(true);');

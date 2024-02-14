@@ -1,4 +1,4 @@
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { Observable, map, of } from 'rxjs';
 
 class InvoiceOtherCostService {

@@ -13,5 +13,5 @@ export interface ITimeReportDetailsTableRowData {
   costCenter: string;
   fireNumber: string;
   internalOrder: string;
-  fund: string;
+  fund: string;  
 }

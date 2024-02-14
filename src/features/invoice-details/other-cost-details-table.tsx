@@ -1,7 +1,7 @@
 import { GoAButton, GoATable, GoATableSortHeader } from '@abgov/react-components';
 import styles from './other-cost-details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';

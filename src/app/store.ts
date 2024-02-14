@@ -9,7 +9,7 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { catchError } from 'rxjs';
 import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-epic';
 
-import serviceSheetDataReducer from '@/features/process-invoice/tabs/service-sheet-slice';
+import processInvoiceTabsSliceReducer from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
 import { processInvoiceEpic } from '@/features/process-invoice/process-invoice-epic';
 
@@ -24,7 +24,7 @@ const persistConfig = {
 const reducers = combineReducers({
   app: appReducer,
   invoiceDetails: invoiceDetailsReducer,
-  serviceSheetData: serviceSheetDataReducer,
+  processInvoiceTabs: processInvoiceTabsSliceReducer,
   processInvoiceNotification: processInvoiceReducer,
 });
 const persistedReducer = persistReducer(persistConfig, reducers);

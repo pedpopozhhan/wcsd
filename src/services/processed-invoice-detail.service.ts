@@ -1,7 +1,7 @@
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
-import { IProcessedInvoiceData } from '@/interfaces/processed-invoice/processed-invoice-data';
+import IProcessedInvoiceDetailResponse from '@/interfaces/processed-invoice/processed-invoice-detail-response';
 interface IProcessedInvoicesGetBody {
     invoiceKey: number;
 }
@@ -19,12 +19,12 @@ class ProcessedInvoiceDetailService {
         };
     }
 
-    getInvoiceDetail(invoiceKey: number): Observable<IProcessedInvoiceData> {
+    getInvoiceDetail(invoiceKey: number): Observable<IProcessedInvoiceDetailResponse> {
         const body: IProcessedInvoicesGetBody = {
             invoiceKey: invoiceKey,
         };
         return axios
-            .request<IProcessedInvoiceData>({
+            .request<IProcessedInvoiceDetailResponse>({
                 method: 'post',
                 url: this.baseUrl + '/GetInvoiceDetails',
                 headers: this.headers,
