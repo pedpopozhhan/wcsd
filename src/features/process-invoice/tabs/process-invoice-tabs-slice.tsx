@@ -24,7 +24,7 @@ const initialState: IProcessInvoiceTabsDataSliceState = {
 }
 
 export const processInvoiceTabsSlice = createSlice({
-  name: 'counter',
+  name: 'sliceProcessInvoiceTabs',
   initialState,
   reducers: {
     setServiceSheetData: (state, action: PayloadAction<IServiceSheetData | undefined>) => {

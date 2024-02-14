@@ -1,13 +1,13 @@
 import { Fragment, useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { publishToast } from '@/common/toast';
-import Summary from '../invoice-details/summary';
-import styles from './processed-invoice.module.scss';
+import Summary from '@/features//invoice-details/summary';
+import styles from '@/features/processed-invoice/processed-invoice.module.scss';
 import { GoAButton, GoAIcon } from '@abgov/react-components';
-import Totalizer from '../process-invoice/invoice-amount-totalizer';
+import Totalizer from '@/features/process-invoice/invoice-amount-totalizer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import ServiceSheetTab from '../process-invoice/tabs/service-sheet-tab';
-import DetailsTab from '../process-invoice/tabs/details-tab';
+import ServiceSheetTab from '@/features/process-invoice/tabs/service-sheet-tab';
+import DetailsTab from '@/features/process-invoice/tabs/details-tab';
 
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
