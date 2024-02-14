@@ -27,7 +27,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
-  const {} = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
@@ -46,7 +45,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       createdByDateTime: new Date(),
       invoiceTimeReportCostDetails: props.data.timeReportData,
       invoiceOtherCostDetails: props.data.otherCostData,
-      invoiceServiceSheet: serviceSheetData,
+      invoiceServiceSheet: JSON.parse(JSON.stringify(serviceSheetData)),
     };
     processInvoiceData.invoiceTimeReportCostDetails.forEach((i) => {
      i.createdBy = processInvoiceData.createdBy;
@@ -68,13 +67,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
             dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            if (serviceSheetData) {
-              dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            }
+          }
             dispatch(setServiceSheetNameChange(false));
             dispatch(setNotificationStatus(true));
             publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
-          }
         }
       },
       error: (error) => {
@@ -87,7 +83,11 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
 
   function updateInvoiceServiceSheet() {
     if (serviceSheetData) {
-      processInvoiceService.updateInvoice(serviceSheetData).subscribe({
+      const invoiceServiceSheet = JSON.parse(JSON.stringify(serviceSheetData));
+      invoiceServiceSheet.updatedBy = 'testUser';
+      invoiceServiceSheet.updatedByDateTime = new Date();
+
+      processInvoiceService.updateInvoice(invoiceServiceSheet).subscribe({
         next: (data) => {
           if (data) {
             dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
