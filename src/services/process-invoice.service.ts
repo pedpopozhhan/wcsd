@@ -2,7 +2,7 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 
 import { Observable, map, of } from 'rxjs';
 import axios from 'axios-observable';
-import { IServiceSheetData } from '@/interfaces/process-invoice/service-sheet-data';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 class ProcessInvoiceService {
   private baseUrl: string;
   private apiKeyCode: string;
@@ -18,36 +18,36 @@ class ProcessInvoiceService {
     };
   }
 
-  createInvoice(processInvoiceData: IProcessInvoiceData) : Observable<number>{
-  return axios
-  .request<number>({
-    method: 'put',
-    url: this.baseUrl + '/CreateInvoice',
-    headers: this.headers,
-    data: processInvoiceData,
-  })
-  .pipe(
-    map((x) => {
-      return x.data;
-    })
-  );
+  createInvoice(processInvoiceData: IProcessInvoiceData): Observable<number> {
+    return axios
+      .request<number>({
+        method: 'put',
+        url: this.baseUrl + '/CreateInvoice',
+        headers: this.headers,
+        data: processInvoiceData,
+      })
+      .pipe(
+        map((x) => {
+          return x.data;
+        })
+      );
   }
 
-  updateInvoice(serviceSheetData: IServiceSheetData) : Observable<string>{
+  updateInvoice(serviceSheetData: IServiceSheetData): Observable<string> {
     return axios
-    .request<string>({
-      method: 'post',
-      url: this.baseUrl + '/UpdateProcessedInvoice',
-      headers: this.headers,
-      data: serviceSheetData,
-    })
-    .pipe(
-      map((x) => {
-        return x.data;
+      .request<string>({
+        method: 'post',
+        url: this.baseUrl + '/UpdateProcessedInvoice',
+        headers: this.headers,
+        data: serviceSheetData,
       })
-    );
-    }
-    
+      .pipe(
+        map((x) => {
+          return x.data;
+        })
+      );
+  }
+
 }
 
 

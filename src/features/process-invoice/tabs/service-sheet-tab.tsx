@@ -1,21 +1,29 @@
 import { GoAInput, GoATable, GoATextArea } from '@abgov/react-components';
-import styles from '../process-invoice.module.scss';
+import styles from '@/features/process-invoice/process-invoice.module.scss';
 import { FC, useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setServiceSheetData, setServiceSheetNameChange } from './service-sheet-slice';
-import { getServiceSheetData } from '../process-invoice-epic';
+import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
+import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  let { serviceSheetTabContainer, serviceSheetTabLabels, serviceSheetTabAltValues, gridContainer, serviceSheetNameDesc, invoiceAmountLabel } = styles;
+  let {
+    serviceSheetTabContainer,
+    serviceSheetTabLabels,
+    serviceSheetTabAltValues,
+    gridContainer,
+    serviceSheetNameDesc,
+    invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();
-  const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
+  const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
+
   function updateServiceSheetName(val: string) {
     if (serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val) {
       dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: val }));

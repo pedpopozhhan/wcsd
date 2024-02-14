@@ -1,293 +1,293 @@
 import {
-  GoAInput,
-  GoAButton,
-  GoAFormItem,
-  GoAInputDate,
-  GoAModal,
-  GoAButtonGroup,
-  GoADropdown,
-  GoADropdownItem,
-  GoATextArea,
-  GoAButtonType,
-  GoABadge,
-  GoABadgeType,
+    GoAInput,
+    GoAButton,
+    GoAFormItem,
+    GoAInputDate,
+    GoAModal,
+    GoAButtonGroup,
+    GoADropdown,
+    GoADropdownItem,
+    GoATextArea,
+    GoAButtonType,
+    GoABadge,
+    GoABadgeType,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
 import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 
 interface IOtherCostModalDialog {
-  onAddUpdate: (item: IOtherCostTableRowData) => any;
-  showOtherCostDialog: (value: boolean) => any;
-  isAddition: boolean;
-  visible: boolean;
-  data: IOtherCostTableRowData | undefined;
+    onAddUpdate: (item: IOtherCostTableRowData) => any;
+    showOtherCostDialog: (value: boolean) => any;
+    isAddition: boolean;
+    visible: boolean;
+    data: IOtherCostTableRowData | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
-  const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.data);
-  const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
-  const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
-  const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
-  const [addButtonType, setAddButtonType] = useState<GoAButtonType>('primary');
-  const [addAnotherButtonlabel, setAddAnotherButtonLabel] = useState<string>('');
-  const [addAnotherButtonType, setAddAnotherButtonType] = useState<GoAButtonType>('tertiary');
-  const [respMessageType, setRespMessageType] = useState<GoABadgeType>('light');
-  const [respMessageContent, setRespMessageContent] = useState('');
-  const [respMessageIcon, setRespMessageIcon] = useState<boolean>(false);
+    const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.data);
+    const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
+    const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
+    const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
+    const [addButtonType, setAddButtonType] = useState<GoAButtonType>('primary');
+    const [addAnotherButtonlabel, setAddAnotherButtonLabel] = useState<string>('');
+    const [addAnotherButtonType, setAddAnotherButtonType] = useState<GoAButtonType>('tertiary');
+    const [respMessageType, setRespMessageType] = useState<GoABadgeType>('light');
+    const [respMessageContent, setRespMessageContent] = useState('');
+    const [respMessageIcon, setRespMessageIcon] = useState<boolean>(false);
 
-  const [addAnother, setAddAnother] = useState(false);
-  const [iscancelled, setIsCancelled] = useState<boolean>(false);
-  const [saveData, setSaveData] = useState<boolean>(false);
-  const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
-  const [maxDate, setMaxDate] = useState(new Date());
-  const [dialogTitle, setDialogTitle] = useState<string>('');
-  const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
+    const [addAnother, setAddAnother] = useState(false);
+    const [iscancelled, setIsCancelled] = useState<boolean>(false);
+    const [saveData, setSaveData] = useState<boolean>(false);
+    const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
+    const [maxDate, setMaxDate] = useState(new Date());
+    const [dialogTitle, setDialogTitle] = useState<string>('');
+    const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
-  const [index, setIndex] = useState<number>(0);
-  const [id, setId] = useState<number>(0);
-  const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
-  const [fromDateError, setFromDateError] = useState<boolean>(false);
-  const [toDate, setToDate] = useState<Date>(new Date(Date()));
-  const [toDateError, setToDateError] = useState<boolean>(false);
-  const [rateType, setRateType] = useState<string | string[]>('');
-  const [unit, setUnit] = useState<string | string[]>('');
+    const [index, setIndex] = useState<number>(0);
+    const [id, setId] = useState<number>(0);
+    const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
+    const [fromDateError, setFromDateError] = useState<boolean>(false);
+    const [toDate, setToDate] = useState<Date>(new Date(Date()));
+    const [toDateError, setToDateError] = useState<boolean>(false);
+    const [rateType, setRateType] = useState<string | string[]>('');
+    const [unit, setUnit] = useState<string | string[]>('');
 
-  const [rate, setRate] = useState<number>(0);
-  const [rateError, setRateError] = useState<boolean>(true);
-  const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
-  const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
-  const [cost, setCost] = useState<string>('');
+    const [rate, setRate] = useState<number>(0);
+    const [rateError, setRateError] = useState<boolean>(true);
+    const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
+    const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
+    const [cost, setCost] = useState<string>('');
 
-  const [glAccount, setGlAccount] = useState<string | string[]>('');
-  const [profitCentre, setProfitCenter] = useState<string>('100063');
-  const [costCenter, setCostCenter] = useState<string | string[]>('');
-  const [internalOrder, setInternalOrder] = useState<string | string[]>('');
-  const [fund, setFund] = useState<string | string[]>('');
-  const [remarks, setRemarks] = useState<string>('');
-  const [invoiceId, setInvoiceId] = useState<string>('');
+    const [glAccount, setGlAccount] = useState<string | string[]>('');
+    const [profitCentre, setProfitCenter] = useState<string>('100063');
+    const [costCenter, setCostCenter] = useState<string | string[]>('');
+    const [internalOrder, setInternalOrder] = useState<string | string[]>('');
+    const [fund, setFund] = useState<string | string[]>('');
+    const [remarks, setRemarks] = useState<string>('');
+    const [invoiceId, setInvoiceId] = useState<string>('');
 
-  // const [rateTypes, setRateTypes] = useState<string[]>([]);
-  const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
-  const [rateUnits, setRateUnits] = useState<string[]>([]);
-  const [glAccounts, setGLAccounts] = useState<string[]>([]);
-  const [costCenters, setCostCenters] = useState<string[]>([]);
-  const [internalOrders, setInternalOrders] = useState<string[]>([]);
-  const [funds, setFunds] = useState<string[]>([]);
+    // const [rateTypes, setRateTypes] = useState<string[]>([]);
+    const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
+    const [rateUnits, setRateUnits] = useState<string[]>([]);
+    const [glAccounts, setGLAccounts] = useState<string[]>([]);
+    const [costCenters, setCostCenters] = useState<string[]>([]);
+    const [internalOrders, setInternalOrders] = useState<string[]>([]);
+    const [funds, setFunds] = useState<string[]>([]);
 
-  const currentOtherCost = {
-    index: index,
-    from: fromDate,
-    to: toDate,
-    rateType: rateType,
-    unit: unit,
-    ratePerUnit: rate,
-    numberOfUnits: numberOfUnits,
-    cost: Number(cost),
-    glAcct: glAccount,
-    profitCentre: profitCentre,
-    costCentre: costCenter,
-    internalOrder: internalOrder,
-    fund: fund,
-    remarks: remarks,
-    invoiceId: invoiceId,
-  };
-
-  const xl = '500px';
-  const lg = '230px';
-  const md = '175px';
-
-  useEffect(() => {
-    if (props.isAddition) {
-      setControlsForAddition();
-      clearDialgoControls();
-    } else {
-      setControlsForUpdate();
-      if (props.data?.from !== undefined) setFromDate(props.data?.from);
-      if (props.data?.to !== undefined) setToDate(props.data?.to);
-
-      setRate(Number(props.data?.ratePerUnit));
-      setNumberOfUnits(Number(props.data?.numberOfUnits));
-      setCost(Number(props.data?.cost).toString());
-      setRateType(String(props.data?.rateType));
-      setUnit(String(props.data?.unit));
-      setGlAccount(String(props.data?.glAcct));
-      setProfitCenter(String(props.data?.profitCentre));
-      setCostCenter(String(props.data?.costCentre));
-      setInternalOrder(String(props.data?.internalOrder));
-      setFund(String(props.data?.fund));
-      setRemarks(String(props.data?.remarks));
-    }
-  }, [isOtherCostAddition, props.data]);
-
-  useEffect(() => {
-    const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists().subscribe({
-      next: (results) => {
-        setRateUnits(results.rateUnits);
-        setCostCenters(results.costCenterList);
-        setGLAccounts(results.glAccountList);
-        setInternalOrders(results.internalOrderList);
-        setFunds(results.fundList);
-      },
-      error: (error) => {
-        console.error(error);
-        publishToast({ type: 'error', message: `Server error` });
-      },
-    });
-
-    return () => {
-      subscription.unsubscribe();
+    const currentOtherCost = {
+        index: index,
+        from: fromDate,
+        to: toDate,
+        rateType: rateType,
+        unit: unit,
+        ratePerUnit: rate,
+        numberOfUnits: numberOfUnits,
+        cost: Number(cost),
+        glAcct: glAccount,
+        profitCentre: profitCentre,
+        costCentre: costCenter,
+        internalOrder: internalOrder,
+        fund: fund,
+        remarks: remarks,
+        invoiceId: invoiceId,
     };
-  }, []);
 
-  function setControlsForAddition() {
-    setDialogTitle('Add other cost');
-    setCancelButtonLabel('Cancel');
-    setCancelButtonType('tertiary');
-    setAddButtonLabel('Add');
-    setAddButtonType('secondary');
-    setAddAnotherButtonLabel('Add Another');
-    setAddAnotherButtonType('primary');
-  }
+    const xl = '500px';
+    const lg = '230px';
+    const md = '175px';
 
-  function setControlsForUpdate() {
-    setDialogTitle('Update other cost');
-    setCancelButtonLabel('Cancel');
-    setCancelButtonType('secondary');
-    setAddButtonLabel('Update');
-    setAddButtonType('primary');
-    setAddAnotherButtonLabel('');
-    setAddAnotherButtonType('tertiary');
-    setRateError(false);
-    setNumberOfUnitsError(false);
-  }
-
-  useEffect(() => {
-    if (saveData) {
-      setSaveData(false);
-      if (fromDateError || toDateError || rateError || numberOfUnitsError) return;
-      else {
+    useEffect(() => {
         if (props.isAddition) {
-          props.onAddUpdate(currentOtherCost);
-          clearDialgoControls();
-          if (!addAnother) {
-            props.showOtherCostDialog(false);
-          } else setIsOtherCostAddition(true);
+            setControlsForAddition();
+            clearDialgoControls();
         } else {
-          props.onAddUpdate(currentOtherCost);
-          setIsCancelled(true);
-          props.showOtherCostDialog(false);
+            setControlsForUpdate();
+            if (props.data?.from !== undefined) setFromDate(props.data?.from);
+            if (props.data?.to !== undefined) setToDate(props.data?.to);
+
+            setRate(Number(props.data?.ratePerUnit));
+            setNumberOfUnits(Number(props.data?.numberOfUnits));
+            setCost(Number(props.data?.cost).toString());
+            setRateType(String(props.data?.rateType));
+            setUnit(String(props.data?.unit));
+            setGlAccount(String(props.data?.glAcct));
+            setProfitCenter(String(props.data?.profitCentre));
+            setCostCenter(String(props.data?.costCentre));
+            setInternalOrder(String(props.data?.internalOrder));
+            setFund(String(props.data?.fund));
+            setRemarks(String(props.data?.remarks));
         }
-      }
-    } else {
-      setRate(Number(rate));
-      setCost((rate * numberOfUnits).toFixed(2).toString());
-    }
-  }, [saveData, rate, numberOfUnits]);
+    }, [isOtherCostAddition, props.data]);
 
-  useEffect(() => {
-    if (iscancelled) {
-      clearDialgoControls();
-      setIsCancelled(false);
-    }
-  }, [iscancelled]);
+    useEffect(() => {
+        const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists().subscribe({
+            next: (results) => {
+                setRateUnits(results.rateUnits);
+                setCostCenters(results.costCenterList);
+                setGLAccounts(results.glAccountList);
+                setInternalOrders(results.internalOrderList);
+                setFunds(results.fundList);
+            },
+            error: (error) => {
+                console.error(error);
+                publishToast({ type: 'error', message: `Server error` });
+            },
+        });
 
-  const clearDialgoControls = () => {
-    clearDataPoints();
-    clearErrors();
-  };
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
 
-  const hideModalDialog = () => {
-    setIsCancelled(true);
-    props.showOtherCostDialog(false);
-  };
-
-  function onRateTypeChange(name: string, value: string | string[]) {
-    setRateType(value);
-  }
-
-  function onUnitChange(name: string, value: string | string[]) {
-    setUnit(value);
-  }
-
-  function onCostCenterChange(name: string, value: string | string[]) {
-    setCostCenter(value);
-  }
-
-  function onGLAccountChange(name: string, value: string | string[]) {
-    setGlAccount(value);
-  }
-
-  function onInternalOrderChange(name: string, value: string | string[]) {
-    setInternalOrder(value);
-  }
-
-  function onFundChange(name: string, value: string | string[]) {
-    setFund(value);
-  }
-
-  const validateOtherCost = () => {
-    if (new Date(fromDate) < minDate || fromDateError) {
-      setFromDateError(true);
-    } else {
-      setFromDateError(false);
+    function setControlsForAddition() {
+        setDialogTitle('Add other cost');
+        setCancelButtonLabel('Cancel');
+        setCancelButtonType('tertiary');
+        setAddButtonLabel('Add');
+        setAddButtonType('secondary');
+        setAddAnotherButtonLabel('Add Another');
+        setAddAnotherButtonType('primary');
     }
 
-    if (new Date(toDate) < minDate || toDateError) {
-      setToDateError(true);
-    } else {
-      setToDateError(false);
+    function setControlsForUpdate() {
+        setDialogTitle('Update other cost');
+        setCancelButtonLabel('Cancel');
+        setCancelButtonType('secondary');
+        setAddButtonLabel('Update');
+        setAddButtonType('primary');
+        setAddAnotherButtonLabel('');
+        setAddAnotherButtonType('tertiary');
+        setRateError(false);
+        setNumberOfUnitsError(false);
     }
 
-    if (Number.isNaN(rate) || rate <= 0 || rate > 99999.99) {
-      setRateError(true);
-    } else {
-      setRateError(false);
+    useEffect(() => {
+        if (saveData) {
+            setSaveData(false);
+            if (fromDateError || toDateError || rateError || numberOfUnitsError) return;
+            else {
+                if (props.isAddition) {
+                    props.onAddUpdate(currentOtherCost);
+                    clearDialgoControls();
+                    if (!addAnother) {
+                        props.showOtherCostDialog(false);
+                    } else setIsOtherCostAddition(true);
+                } else {
+                    props.onAddUpdate(currentOtherCost);
+                    setIsCancelled(true);
+                    props.showOtherCostDialog(false);
+                }
+            }
+        } else {
+            setRate(Number(rate));
+            setCost((rate * numberOfUnits).toFixed(2).toString());
+        }
+    }, [saveData, rate, numberOfUnits]);
+
+    useEffect(() => {
+        if (iscancelled) {
+            clearDialgoControls();
+            setIsCancelled(false);
+        }
+    }, [iscancelled]);
+
+    const clearDialgoControls = () => {
+        clearDataPoints();
+        clearErrors();
+    };
+
+    const hideModalDialog = () => {
+        setIsCancelled(true);
+        props.showOtherCostDialog(false);
+    };
+
+    function onRateTypeChange(name: string, value: string | string[]) {
+        setRateType(value);
     }
 
-    if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0 || numberOfUnits > 99999) {
-      setNumberOfUnitsError(true);
-    } else {
-      setNumberOfUnitsError(false);
+    function onUnitChange(name: string, value: string | string[]) {
+        setUnit(value);
     }
-  };
 
-  const clearErrors = () => {
-    setFromDateError(false);
-    setToDateError(false);
-    setNumberOfUnitsError(false);
-    setRateError(false);
-  };
+    function onCostCenterChange(name: string, value: string | string[]) {
+        setCostCenter(value);
+    }
 
-  const clearDataPoints = () => {
-    setFromDate(new Date());
-    setToDate(new Date());
-    setRateType(' ');
-    setUnit(' ');
-    setRate(0);
-    setNumberOfUnits(0);
-    setCost('');
-    setGlAccount('');
-    setProfitCenter('100063');
-    setCostCenter('');
-    setInternalOrder('');
-    setFund('');
-    setRemarks('');
-  };
+    function onGLAccountChange(name: string, value: string | string[]) {
+        setGlAccount(value);
+    }
 
-  const addOtherCost = () => {
-    setSaveData(true);
-    setAddAnother(false);
-    validateOtherCost();
-  };
+    function onInternalOrderChange(name: string, value: string | string[]) {
+        setInternalOrder(value);
+    }
 
-  const addAnohterOtherCost = () => {
-    setSaveData(true);
-    setAddAnother(true);
-    validateOtherCost();
-  };
+    function onFundChange(name: string, value: string | string[]) {
+        setFund(value);
+    }
+
+    const validateOtherCost = () => {
+        if (new Date(fromDate) < minDate || fromDateError) {
+            setFromDateError(true);
+        } else {
+            setFromDateError(false);
+        }
+
+        if (new Date(toDate) < minDate || toDateError) {
+            setToDateError(true);
+        } else {
+            setToDateError(false);
+        }
+
+        if (Number.isNaN(rate) || rate <= 0 || rate > 99999.99) {
+            setRateError(true);
+        } else {
+            setRateError(false);
+        }
+
+        if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0 || numberOfUnits > 99999) {
+            setNumberOfUnitsError(true);
+        } else {
+            setNumberOfUnitsError(false);
+        }
+    };
+
+    const clearErrors = () => {
+        setFromDateError(false);
+        setToDateError(false);
+        setNumberOfUnitsError(false);
+        setRateError(false);
+    };
+
+    const clearDataPoints = () => {
+        setFromDate(new Date());
+        setToDate(new Date());
+        setRateType(' ');
+        setUnit(' ');
+        setRate(0);
+        setNumberOfUnits(0);
+        setCost('');
+        setGlAccount('');
+        setProfitCenter('100063');
+        setCostCenter('');
+        setInternalOrder('');
+        setFund('');
+        setRemarks('');
+    };
+
+    const addOtherCost = () => {
+        setSaveData(true);
+        setAddAnother(false);
+        validateOtherCost();
+    };
+
+    const addAnohterOtherCost = () => {
+        setSaveData(true);
+        setAddAnother(true);
+        validateOtherCost();
+    };
 
   return (
     <>

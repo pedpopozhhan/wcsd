@@ -1,4 +1,4 @@
-import { IProcessedInvoiceTableRowData } from './processed-invoice-table-row-data';
+import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
 
 export default interface IProcessedInvoices {
     invoices: IProcessedInvoiceTableRowData[];

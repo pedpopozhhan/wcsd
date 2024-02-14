@@ -9,7 +9,7 @@ import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
-import { setServiceSheetData } from '../process-invoice/tabs/service-sheet-slice';
+import { setServiceSheetData } from '../process-invoice/tabs/process-invoice-tabs-slice';
 
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -17,7 +17,7 @@ export default function InvoiceDetails() {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
-  const serviceSheetData = useAppSelector((state) => state.serviceSheetData);
+  const processInvoiceTabs = useAppSelector((state) => state.processInvoiceTabs);
 
   const navigate = useNavigate();
 
@@ -57,8 +57,8 @@ export default function InvoiceDetails() {
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
-    if (invoiceData.InvoiceKey == 0 && serviceSheetData.value) {
-      dispatch(setServiceSheetData({ ...serviceSheetData.value, invoiceKey: 0, uniqueServiceSheetName: '' }));
+    if (invoiceData.InvoiceKey == 0 && processInvoiceTabs) {
+      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceKey: 0, uniqueServiceSheetName: '' }));
     }
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
   }

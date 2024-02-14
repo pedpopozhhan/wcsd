@@ -3,13 +3,13 @@ import { Fragment, useState } from 'react';
 import styles from './process-invoice.module.scss';
 import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
-import { setServiceSheetData, setServiceSheetNameChange } from './tabs/service-sheet-slice';
+import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
 import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 
@@ -25,10 +25,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
-  const serviceSheetData = useAppSelector((state) => state.serviceSheetData.value);
+  const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
-  const {} = props.data.timeReportData;
+  const { } = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
