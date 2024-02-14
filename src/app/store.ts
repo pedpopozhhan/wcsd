@@ -12,6 +12,7 @@ import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-e
 import processInvoiceTabsSliceReducer from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
 import { processInvoiceEpic } from '@/features/process-invoice/process-invoice-epic';
+import authReducer from './auth-slice';
 
 const environment = import.meta.env.VITE_ENV;
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
@@ -21,13 +22,20 @@ const persistConfig = {
   version: 1,
   storage,
 };
+
 const reducers = combineReducers({
+  auth: authReducer,
+});
+const persistedReducers = combineReducers({
   app: appReducer,
   invoiceDetails: invoiceDetailsReducer,
   processInvoiceTabs: processInvoiceTabsSliceReducer,
   processInvoiceNotification: processInvoiceReducer,
 });
-const persistedReducer = persistReducer(persistConfig, reducers);
+const allPersistedReducers = persistReducer(persistConfig, persistedReducers);
+
+const allReducers = combineReducers({ stored: allPersistedReducers, notStored: reducers });
+
 export const epics: any = [
   invoiceDetailsEpic,
   processInvoiceEpic,
@@ -46,7 +54,7 @@ const rootEpic = (action$: any, store$: any, dependencies: any) =>
 const epicMiddleware = createEpicMiddleware();
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: allPersistedReducers,
   middleware: (getDefaultMiddleware) => {
     const middleware = getDefaultMiddleware({
       // Customize the built-in serializability for redux persist
