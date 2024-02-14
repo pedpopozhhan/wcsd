@@ -12,7 +12,8 @@ import { useAppDispatch } from '@/app/hooks';
 
 import { IProcessedInvoiceData } from '@/interfaces/processed-invoice/processed-invoice-data';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
-import { setServiceSheetData, setcostDetailsData, setotherCostsData, setReadOnly, setInvoiceAmount, setInvoiceId } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setServiceSheetData, setcostDetailsData, setotherCostsData, setReadOnly, setInvoiceAmount, setInvoiceId }
+    from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 
 interface IProcessedTabDetailsAllProps {
     contractNumber: string | undefined;
@@ -118,12 +119,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 dispatch(setReadOnly(true));
                 dispatch(setcostDetailsData(results.invoice.invoiceTimeReportCostDetails));
                 dispatch(setotherCostsData(results.invoice.invoiceOtherCostDetails));
-
                 setIsLoading(false);
             },
             error: (error) => {
                 console.error(error);
-                publishToast({ type: 'error', message: `Server error` });
+                publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Server Error') });
             },
         });
         return () => {
