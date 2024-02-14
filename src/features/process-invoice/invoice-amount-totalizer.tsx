@@ -5,16 +5,16 @@ import { convertToCurrency } from '@/common/currency';
 
 let { container, totalizerAmount, totalizerAmountLabel, section } = styles;
 interface IInvoiceAmountTotalizer {
-  invoiceAmount: number;
+  invoiceAmount: number | undefined;
 }
 
 const InvoiceAmountTotalizer: FC<IInvoiceAmountTotalizer> = (props) => {
   return (
     <div className={container}>
-     <div className={section}>
+      <div className={section}>
         <div className={totalizerAmountLabel}>Invoice amount</div>
         <div className={totalizerAmount}>
-          {convertToCurrency(props.invoiceAmount)}
+          {convertToCurrency(Number(props.invoiceAmount))}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { ITimeReportDetailsTableRowData } from '../invoice-details/time-report-details-table-row-data';
-import { IOtherCostTableRowData } from '../invoice-details/other-cost-table-row-data';
-import { IServiceSheetData } from './service-sheet-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 export interface IProcessInvoiceData {
   invoiceKey?: number;

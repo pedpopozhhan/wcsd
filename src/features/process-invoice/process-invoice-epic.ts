@@ -2,7 +2,7 @@ import { Action, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { failedToPerform, publishToast } from '@/common/toast';
 import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
-import { setServiceSheetData } from './tabs/service-sheet-slice';
+import { setServiceSheetData } from './tabs/process-invoice-tabs-slice';
 
 const GET_SERVICE_SHEET_DATA = 'getServiceSheetData';
 const ACTION_2 = 'action2';

@@ -8,10 +8,10 @@ import ServiceSheetTab from './tabs/service-sheet-tab';
 import DetailsTab from './tabs/details-tab';
 import ProcessInvoiceModal from './process-invoice-modal-dialog';
 import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
-export default function ProcessInvoice ()  {
+export default function ProcessInvoice() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -21,10 +21,10 @@ export default function ProcessInvoice ()  {
   const otherCostData: IOtherCostTableRowData[] = reconciledData.state.otherCostData;
   const showSavedInvoiceNotification = useAppSelector((state) => state.processInvoiceNotification.showInvoiceSavedNotification);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
-  const serviceSheet = useAppSelector((state) => state.serviceSheetData);
+  const invoiceTabs = useAppSelector((state) => state.processInvoiceTabs);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
   let dialogType = 'finish-invoice';
-  if(invoiceData.InvoiceKey > 0){
+  if (invoiceData.InvoiceKey > 0) {
     dialogType = 'update-service-sheet';
   }
   let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
@@ -38,12 +38,12 @@ export default function ProcessInvoice ()  {
     });
   }
 
-  function navigateToTimeReports(){
+  function navigateToTimeReports() {
     navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
   }
-  
+
 
   return (
     <div className={container}>
@@ -73,25 +73,25 @@ export default function ProcessInvoice ()  {
         </div>
       </div>
       <div className={footer}>
-      {(invoiceData.InvoiceKey == 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}>
+        {(invoiceData.InvoiceKey == 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}>
           <ion-icon name='archive-outline'></ion-icon>
           <label>Finish</label>
         </GoAButton>
-        <GoAButton type='secondary' onClick={navigateToReconcile}>
-          Back to Reconcile
-        </GoAButton></Fragment>)}
-        {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}  {...(serviceSheet.nameChanged) ? {disabled:false} : {disabled:true}}>
+          <GoAButton type='secondary' onClick={navigateToReconcile}>
+            Back to Reconcile
+          </GoAButton></Fragment>)}
+        {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}  {...(invoiceTabs.nameChanged) ? { disabled: false } : { disabled: true }}>
           <label>Update</label>
         </GoAButton>
-        <GoAButton type='secondary' onClick={navigateToTimeReports}>
-          Close
-        </GoAButton></Fragment>)}
-      
+          <GoAButton type='secondary' onClick={navigateToTimeReports}>
+            Close
+          </GoAButton></Fragment>)}
+
       </div>
       {<ProcessInvoiceModal
         open={showDialog}
         close={setShowDialog}
-        data={{ timeReportData: invoiceTimeReportData, otherCostData: otherCostData}}
+        data={{ timeReportData: invoiceTimeReportData, otherCostData: otherCostData }}
         type={dialogType}
       ></ProcessInvoiceModal>}
     </div>

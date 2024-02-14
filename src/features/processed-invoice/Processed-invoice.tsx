@@ -1,32 +1,32 @@
 import { Fragment, useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { publishToast } from '@/common/toast';
-import Summary from '../invoice-details/summary';
-import styles from './processed-invoice.module.scss';
+import Summary from '@/features//invoice-details/summary';
+import styles from '@/features/processed-invoice/processed-invoice.module.scss';
 import { GoAButton, GoAIcon } from '@abgov/react-components';
-import Totalizer from '../process-invoice/invoice-amount-totalizer';
+import Totalizer from '@/features/process-invoice/invoice-amount-totalizer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import ServiceSheetTab from '../process-invoice/tabs/service-sheet-tab';
-import DetailsTab from '../process-invoice/tabs/details-tab';
+import ServiceSheetTab from '@/features/process-invoice/tabs/service-sheet-tab';
+import DetailsTab from '@/features/process-invoice/tabs/details-tab';
 
-import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
-import { IOtherCostTableRowData } from '@/interfaces/invoice-details/other-cost-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 import { IProcessedInvoiceData } from '@/interfaces/processed-invoice/processed-invoice-data';
-import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 export default function ProcessedInvoice() {
     const { invoiceKey } = useParams();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    // const reconciledData = useLocation();
-    // const timeReportData: IDetailsTableRow[] = reconciledData.state.timeReportData;
-    // const invoiceTimeReportData = timeReportData.map((i) => i.data);
-    // const otherCostData: IOtherCostTableRowData[] = reconciledData.state.otherCostData;
-    // const showSavedInvoiceNotification = useAppSelector((state) => state.processInvoiceNotification.showInvoiceSavedNotification);
-    // const invoiceData = useAppSelector((state) => state.app.invoiceData);
-    //const serviceSheet = useAppSelector((state) => state.serviceSheetData);
+
+    const otherCostData: IOtherCostTableRowData[] | undefined = useAppSelector((state) => state.processInvoiceTabs.otherCostsData);
+    const serviceSheetData: IServiceSheetData | undefined = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
+    const readonly: boolean | undefined = useAppSelector((state) => state.processInvoiceTabs.readonly);
+    const invoiceId: string = useAppSelector((state) => state.processInvoiceTabs.invoiceceId);
+    const invoiceAmount: number = useAppSelector((state) => state.processInvoiceTabs.invoiceAmount);
+
+    const invoiceData = useAppSelector((state) => state.app.invoiceData);
     const [invoiceDetail, setInvoiceDetail] = useState<IProcessedInvoiceData>();
     const serviceSheet = useState([invoiceDetail?.invoiceServiceSheet]);
     const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
@@ -54,31 +54,12 @@ export default function ProcessedInvoice() {
         });
     }
 
-
-    useEffect(() => {
-        const subscription = processedInvoiceDetailService.getInvoiceDetail(Number(invoiceKey)).subscribe({
-            next: (results) => {
-                setIsLoading(true);
-                setInvoiceDetail(results);
-                setIsLoading(false);
-            },
-            error: (error) => {
-                console.error(error);
-                publishToast({ type: 'error', message: `Server error` });
-            },
-        });
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [Number(invoiceKey)]);
-
-
     return (
         <div className={container}>
             <div className={content}>
                 <div className={sideBar}>
                     <div className={header}>Invoice </div>
-                    <Totalizer invoiceAmount={invoiceDetail?.invoiceAmount!} />
+                    <Totalizer invoiceAmount={invoiceAmount} />
                     <div className={summaryContainer}>
                         <Summary />
                     </div>
@@ -94,7 +75,7 @@ export default function ProcessedInvoice() {
                             </button>
                         </div>
                         <div className={tabContainer}>
-                            {tabIndex === 1 && <ServiceSheetTab InvoiceID={invoiceDetail?.invoiceId!} InvoiceAmount={invoiceDetail?.invoiceAmount!} />}
+                            {tabIndex === 1 && <ServiceSheetTab InvoiceID={invoiceId} InvoiceAmount={invoiceAmount} />}
                             {tabIndex === 2 && <DetailsTab />}
                         </div>
                     </div>
