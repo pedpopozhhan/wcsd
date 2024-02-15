@@ -18,9 +18,10 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}>
           <Route key='1' path='/' element={<Reconciliation />} />
+          {/* example usage of protected route 
           <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
             <Route path='/reconciliation2' element={<Reconciliation />} />
-          </Route>
+          </Route>*/}
           <Route key='2' path='reconciliation' element={<Reconciliation />} />
           <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
           <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
