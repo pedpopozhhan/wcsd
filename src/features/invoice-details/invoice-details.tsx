@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData } from '../process-invoice/tabs/process-invoice-tabs-slice';
 
+
 let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {

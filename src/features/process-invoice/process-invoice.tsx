@@ -10,6 +10,7 @@ import ProcessInvoiceModal from './process-invoice-modal-dialog';
 import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 
 export default function ProcessInvoice() {
 
@@ -33,12 +34,14 @@ export default function ProcessInvoice() {
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
   function navigateToReconcile() {
+    dispatch(resetState(true));
     navigate(`/invoice/${invoiceData.InvoiceID}`, {
       state: invoiceData.InvoiceID,
     });
   }
 
   function navigateToTimeReports() {
+    dispatch(resetState(true));
     navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });

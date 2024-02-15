@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 import { IProcessedInvoiceData } from '@/interfaces/processed-invoice/processed-invoice-data';
 import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
+import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 
 export default function ProcessedInvoice() {
     const { invoiceKey } = useParams();
@@ -49,6 +50,7 @@ export default function ProcessedInvoice() {
     const [tabIndex, setTabIndex] = useState<number>(1);
 
     function navigateToTimeReports() {
+        dispatch(resetState(true));
         navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
             state: contractDetails.contractNumber,
         });
