@@ -113,7 +113,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
                 <li>details will no longer be available for future edits or reconciliation</li>
               </ul>
             </div>
-            <div>Complete payment process in Ariba.</div>
           </div>
         </GoAModal>
       )}
