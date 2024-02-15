@@ -14,8 +14,4 @@ export interface IOtherCostTableRowData {
   fund: string | string[];
   remarks: string;
   invoiceId: string;
-  createdBy?: string;
-  createdByDateTime? : Date;
-  updatedBy?: string;
-  updatedByDateTime?: Date;
 }

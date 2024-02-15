@@ -14,8 +14,4 @@ export interface ITimeReportDetailsTableRowData {
   fireNumber: string;
   internalOrder: string;
   fund: string;
-  createdBy?: string;
-  createdByDateTime? : Date;
-  updatedBy?: string;
-  updatedByDateTime?: Date;
 }
