@@ -21,20 +21,18 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  // blacklist the slices that should not be persisted
+  blacklist: ['auth'],
 };
 
 const reducers = combineReducers({
   auth: authReducer,
-});
-const persistedReducers = combineReducers({
   app: appReducer,
   invoiceDetails: invoiceDetailsReducer,
   processInvoiceTabs: processInvoiceTabsSliceReducer,
   processInvoiceNotification: processInvoiceReducer,
 });
-const allPersistedReducers = persistReducer(persistConfig, persistedReducers);
-
-const allReducers = combineReducers({ stored: allPersistedReducers, notStored: reducers });
+const persistedReducers = persistReducer(persistConfig, reducers);
 
 export const epics: any = [
   invoiceDetailsEpic,
@@ -54,7 +52,7 @@ const rootEpic = (action$: any, store$: any, dependencies: any) =>
 const epicMiddleware = createEpicMiddleware();
 
 const store = configureStore({
-  reducer: allPersistedReducers,
+  reducer: persistedReducers,
   middleware: (getDefaultMiddleware) => {
     const middleware = getDefaultMiddleware({
       // Customize the built-in serializability for redux persist
