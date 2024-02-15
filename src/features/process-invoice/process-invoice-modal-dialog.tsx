@@ -58,7 +58,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             }
             dispatch(setServiceSheetNameChange(false));
             dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
+            publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceID} processed.` });
           }
         }
       },
@@ -74,12 +74,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     if (serviceSheetData) {
       processInvoiceService.updateInvoice(serviceSheetData).subscribe({
         next: (data) => {
-          if (data) {
             dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
             dispatch(setServiceSheetNameChange(false));
             dispatch(setNotificationStatus(true));
             publishToast({ type: 'success', message: `Invoice updated successfully.` });
-          }
         },
         error: (error) => {
           console.log(error);
@@ -139,7 +137,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             <div>The following will occur.</div>
             <div>
               <ul>
-                <li>payment scheduling and status changes to the details of invoice</li>
+                <li>payment scheduling and payment status changes to details of invoice</li>
               </ul>
             </div>
             <div>Invoice processing is now complete</div>
