@@ -1,15 +1,12 @@
-import { useState, useEffect, FC } from 'react';
+import { FC } from 'react';
 import styles from '@/features/process-invoice/tabs/details-tab.module.scss';
-
-import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppSelector } from '@/app/hooks';
 
 
-import InvoiceCostDataTable from './invoice-cost-details-table';
-import InvoiceOtherCostTable from './invoice-other-costs-table';
+import InvoiceCostDataTable from '@/features/process-invoice/tabs/invoice-cost-details-table';
+import InvoiceOtherCostTable from '@/features/process-invoice/tabs/invoice-other-costs-table';
 
-let { container, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
+let { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
 interface IReconciledTabProps { }
 
@@ -20,7 +17,7 @@ const InvoiceDetailsTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) 
   return (
     <div className={container}>
       <div className={tabContainer}>
-        <div className={reconciledDetailsDiv}>
+        <div className={costDetailsDiv}>
           <InvoiceCostDataTable data={costDetailsData} />
         </div>
         <div className={otherCostHeader}>Other Costs</div>
