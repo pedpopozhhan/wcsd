@@ -8,6 +8,8 @@ import Reconciliation from './features/reconciliation/reonciliation';
 import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
 import ProcessedInvoice from './features/processed-invoice/Processed-invoice';
+import ProtectedRoute from './app/protectec-route';
+import { PERMISSION } from './common/permission';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -16,6 +18,10 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}>
           <Route key='1' path='/' element={<Reconciliation />} />
+          {/* example usage of protected route 
+          <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
+            <Route path='/reconciliation2' element={<Reconciliation />} />
+          </Route>*/}
           <Route key='2' path='reconciliation' element={<Reconciliation />} />
           <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
           <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
