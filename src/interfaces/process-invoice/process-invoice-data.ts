@@ -13,7 +13,6 @@ export interface IProcessInvoiceData {
   assignedTo: string;
   contractNumber: string;
   type: string;
-  createdBy: string;
   invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
   invoiceOtherCostDetails: IOtherCostTableRowData[];
   invoiceServiceSheet?: IServiceSheetData;

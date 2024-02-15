@@ -27,8 +27,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
-  const [saveInvoiceStatus, setSaveInvoiceStatus] = useState<boolean>(false);
-  const { } = props.data.timeReportData;
   function hideModalDialog() {
     props.close();
   }
@@ -43,7 +41,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       assignedTo: '',
       contractNumber: invoiceData.ContractNumber,
       type: contract.contractType,
-      createdBy: '',
       invoiceTimeReportCostDetails: props.data.timeReportData,
       invoiceOtherCostDetails: props.data.otherCostData,
       invoiceServiceSheet: serviceSheetData,
@@ -51,7 +48,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     processInvoiceService.createInvoice(processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
-          setSaveInvoiceStatus(true);
           dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
@@ -62,7 +58,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             }
             dispatch(setServiceSheetNameChange(false));
             dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice ${invoiceData.InvoiceID} processed.` });
+            publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceID} processed.` });
           }
         }
       },
@@ -78,12 +74,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     if (serviceSheetData) {
       processInvoiceService.updateInvoice(serviceSheetData).subscribe({
         next: (data) => {
-          if (data) {
             dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
             dispatch(setServiceSheetNameChange(false));
             dispatch(setNotificationStatus(true));
             publishToast({ type: 'success', message: `Invoice updated successfully.` });
-          }
         },
         error: (error) => {
           console.log(error);
@@ -119,7 +113,6 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
                 <li>details will no longer be available for future edits or reconciliation</li>
               </ul>
             </div>
-            <div>Complete payment process in Ariba.</div>
           </div>
         </GoAModal>
       )}
@@ -143,7 +136,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
             <div>The following will occur.</div>
             <div>
               <ul>
-                <li>payment scheduling and status changes to the details of invoice</li>
+                <li>payment scheduling and payment status changes to details of invoice</li>
               </ul>
             </div>
             <div>Invoice processing is now complete</div>
