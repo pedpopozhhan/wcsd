@@ -1,5 +1,5 @@
+import { IUser } from '@/interfaces/common/user.interface';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IUser } from '../interfaces/common/user.interface';
 
 export interface IAuthSliceState {
   user: IUser;
