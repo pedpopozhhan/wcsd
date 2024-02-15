@@ -106,7 +106,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <th>AO02 no.</th>
               <th>Rate type</th>
               <th>
-                <GoATableSortHeader name={'noOfUnits'}>No. of Units</GoATableSortHeader>
+                <GoATableSortHeader name={'noOfUnits'}>No. of units</GoATableSortHeader>
               </th>
               <th>Rate unit</th>
               <th>
