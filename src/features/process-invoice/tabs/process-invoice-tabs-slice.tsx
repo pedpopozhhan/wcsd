@@ -5,8 +5,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IProcessInvoiceTabsDataSliceState {
   serviceSheetData: IServiceSheetData | undefined;
-  costDetailsData: ITimeReportDetailsTableRowData[] | undefined;
-  otherCostsData: IOtherCostTableRowData[] | undefined;
+  costDetailsData: ITimeReportDetailsTableRowData[];
+  otherCostsData: IOtherCostTableRowData[];
   nameChanged: boolean;
   readonly: boolean;
   invoiceceId: string;
@@ -15,8 +15,8 @@ interface IProcessInvoiceTabsDataSliceState {
 
 const initialState: IProcessInvoiceTabsDataSliceState = {
   serviceSheetData: undefined,
-  costDetailsData: undefined,
-  otherCostsData: undefined,
+  costDetailsData: [],
+  otherCostsData: [],
   nameChanged: false,
   readonly: false,
   invoiceceId: '',
@@ -30,7 +30,7 @@ export const processInvoiceTabsSlice = createSlice({
     setServiceSheetData: (state, action: PayloadAction<IServiceSheetData | undefined>) => {
       state.serviceSheetData = action.payload;
     },
-    setcostDetailsData: (state, action: PayloadAction<ITimeReportDetailsTableRowData[] | undefined>) => {
+    setcostDetailsData: (state, action: PayloadAction<ITimeReportDetailsTableRowData[]>) => {
       state.costDetailsData = action.payload;
     },
     setotherCostsData: (state, action: PayloadAction<IOtherCostTableRowData[]>) => {
