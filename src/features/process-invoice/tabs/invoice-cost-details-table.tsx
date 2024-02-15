@@ -4,31 +4,45 @@ import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useState, useEffect } from 'react';
 
 
-let { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
-interface IDetailsTabProps {
+let { container, tableContainer } = styles;
+class Row {
+    index: number;
+    data: ITimeReportDetailsTableRowData;
+}
+interface InvoiceCostDataTableProps {
     data: ITimeReportDetailsTableRowData[];
 }
-const InvoiceCostDataTable: React.FC<IDetailsTabProps> = (props) => {
+const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
+    const [rowData, setRowData] = useState<Row[]>([]);
+    useEffect(() => {
+        if (props.data)
+            setRowData(
+                props.data.slice().map((x, i) => {
+                    return {
+                        index: i,
+                        data: x,
+                    };
+                })
+            );
+    }, [props.data]);
 
-    const dispatch = useAppDispatch();
-    const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
 
     function sortData(sortBy: string, sortDir: number) {
         const data = [...rowData];
-        const sorted = data.sort((a: any, b: any) => {
+
+        data.sort((a: any, b: any) => {
             const varA = a.data[sortBy];
             const varB = b.data[sortBy];
             if (typeof varA === 'string' || typeof varB === 'string') {
                 const res = varB.localeCompare(varA);
                 return res * sortDir;
             }
-            if (varA === varB) {
-                return 0;
-            }
             return (varA > varB ? 1 : -1) * sortDir;
         });
+        setRowData(data);
     }
 
     return (
@@ -59,27 +73,26 @@ const InvoiceCostDataTable: React.FC<IDetailsTabProps> = (props) => {
                             <th>Fund</th>
                             <th>G/L acct</th>
                             <th>Fire no.</th>
-                            <th className={`${stickyColumn} ${end} ${onTop}`}></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {rowData.map((x, index) => (
+                        {props.data.map((x, index) => (
                             <tr key={index}>
 
-                                <td>{yearMonthDay(x.data.flightReportDate)}</td>
-                                <td>{x.data.contractRegistrationName}</td>
-                                <td>{x.data.flightReportId}</td>
-                                <td>{x.data.aO02Number}</td>
-                                <td>{x.data.rateType}</td>
-                                <td>{x.data.noOfUnits}</td>
-                                <td>{x.data.rateUnit}</td>
-                                <td>{convertToCurrency(x.data.ratePerUnit)}</td>
-                                <td>{convertToCurrency(x.data.cost)}</td>
-                                <td>{x.data.internalOrder}</td>
-                                <td>{x.data.costCenter}</td>
-                                <td>{x.data.fund}</td>
-                                <td>{x.data.glAcct}</td>
-                                <td>{x.data.fireNumber}</td>
+                                <td>{yearMonthDay(x.flightReportDate)}</td>
+                                <td>{x.contractRegistrationName}</td>
+                                <td>{x.flightReportId}</td>
+                                <td>{x.aO02Number}</td>
+                                <td>{x.rateType}</td>
+                                <td>{x.noOfUnits}</td>
+                                <td>{x.rateUnit}</td>
+                                <td>{convertToCurrency(x.ratePerUnit)}</td>
+                                <td>{convertToCurrency(x.cost)}</td>
+                                <td>{x.internalOrder}</td>
+                                <td>{x.costCenter}</td>
+                                <td>{x.fund}</td>
+                                <td>{x.glAcct}</td>
+                                <td>{x.fireNumber}</td>
                             </tr>
                         ))}
                     </tbody>
