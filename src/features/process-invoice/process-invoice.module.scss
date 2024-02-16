@@ -8,13 +8,13 @@
   line-height: 50px;
   margin-left: 5px;
   :nth-child(even) {
-    padding-left: 10px;
+    padding-left: $goa-space-s;
   }
 
 
   div{
     border-bottom: 1px solid lightgray;
-    padding-left: 10px;
+    padding-left: $goa-space-s;
   }
  
 }
@@ -34,7 +34,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 28px;
-  margin-top: 10px;
+  margin-top: $goa-space-s;
 }
 
 .processInvoiceModalDialogContainer{
