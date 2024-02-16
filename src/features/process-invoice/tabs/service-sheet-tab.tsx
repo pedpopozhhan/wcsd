@@ -23,6 +23,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
 
   const dispatch = useAppDispatch();
   const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
+  const isReadonly = useAppSelector((state) => state.processInvoiceTabs.readonly);
 
   function updateServiceSheetName(val: string) {
     if (serviceSheetData && serviceSheetData.uniqueServiceSheetName !== val) {
@@ -46,6 +47,7 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
           type='text'
           maxLength={10}
           onChange={(key, value) => updateServiceSheetName(value)}
+          disabled={isReadonly}
           value={serviceSheetData ? serviceSheetData.uniqueServiceSheetName : ''}
         />
         <div className={serviceSheetNameDesc}>required from Arriba to finish</div>
