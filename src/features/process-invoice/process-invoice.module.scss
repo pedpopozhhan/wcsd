@@ -6,7 +6,7 @@
   grid-template-columns: 1fr 1fr;
   margin-top: 50px;
   line-height: 50px;
-  margin-left: 5px;
+  margin-left: $goa-space-xs;
   :nth-child(even) {
     padding-left: $goa-space-s;
   }
