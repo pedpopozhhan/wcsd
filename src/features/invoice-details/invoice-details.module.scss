@@ -35,6 +35,7 @@
   }
 
   .main {
+    flex: 1;
     overflow-y: auto;
     overflow: hidden;
 
@@ -84,8 +85,7 @@
 
 .footer {
   display: flex;
-  padding: calc($goa-space-m + $goa-space-3xs)
-    calc($goa-space-l - $goa-space-3xs);
+  padding: calc($goa-space-m + $goa-space-3xs) calc($goa-space-l - $goa-space-3xs);
   flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
