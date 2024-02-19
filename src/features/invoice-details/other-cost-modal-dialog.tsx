@@ -18,16 +18,18 @@ import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-
 import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
+import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
 
 interface IOtherCostModalDialog {
-  onAddUpdate: (item: IOtherCostTableRowData) => any;
+  onAdd: (item: IOtherCostTableRowData) => any;
+  onUpdate: (item: IOtherCostTableRow) => any;
   showOtherCostDialog: (value: boolean) => any;
   isAddition: boolean;
   visible: boolean;
-  data: IOtherCostTableRowData | undefined;
+  rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
-  const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.data);
+  const [otherCostToUpdate, setOtherCostToUpdate] = useState(props.rowToUpdate);
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
   const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
@@ -95,6 +97,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     invoiceId: invoiceId,
   };
 
+
+
   const xl = '500px';
   const lg = '230px';
   const md = '175px';
@@ -105,22 +109,22 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       clearDialgoControls();
     } else {
       setControlsForUpdate();
-      if (props.data?.from !== undefined) setFromDate(props.data?.from);
-      if (props.data?.to !== undefined) setToDate(props.data?.to);
+      if (props.rowToUpdate?.data.from !== undefined) setFromDate(props.rowToUpdate?.data.from);
+      if (props.rowToUpdate?.data.to !== undefined) setToDate(props.rowToUpdate?.data.to);
 
-      setRate(Number(props.data?.ratePerUnit));
-      setNumberOfUnits(Number(props.data?.numberOfUnits));
-      setCost(Number(props.data?.cost).toString());
-      setRateType(String(props.data?.rateType));
-      setUnit(String(props.data?.unit));
-      setGlAccount(String(props.data?.glAcct));
-      setProfitCenter(String(props.data?.profitCentre));
-      setCostCenter(String(props.data?.costCentre));
-      setInternalOrder(String(props.data?.internalOrder));
-      setFund(String(props.data?.fund));
-      setRemarks(String(props.data?.remarks));
+      setRate(Number(props.rowToUpdate?.data.ratePerUnit));
+      setNumberOfUnits(Number(props.rowToUpdate?.data.numberOfUnits));
+      setCost(Number(props.rowToUpdate?.data.cost).toString());
+      setRateType(String(props.rowToUpdate?.data.rateType));
+      setUnit(String(props.rowToUpdate?.data.unit));
+      setGlAccount(String(props.rowToUpdate?.data.glAcct));
+      setProfitCenter(String(props.rowToUpdate?.data.profitCentre));
+      setCostCenter(String(props.rowToUpdate?.data.costCentre));
+      setInternalOrder(String(props.rowToUpdate?.data.internalOrder));
+      setFund(String(props.rowToUpdate?.data.fund));
+      setRemarks(String(props.rowToUpdate?.data.remarks));
     }
-  }, [isOtherCostAddition, props.data]);
+  }, [isOtherCostAddition, props.rowToUpdate?.data]);
 
   useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists().subscribe({
@@ -170,15 +174,18 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       if (fromDateError || toDateError || rateError || numberOfUnitsError) return;
       else {
         if (props.isAddition) {
-          props.onAddUpdate(currentOtherCost);
+          props.onAdd(currentOtherCost);
           clearDialgoControls();
           if (!addAnother) {
             props.showOtherCostDialog(false);
           } else setIsOtherCostAddition(true);
         } else {
-          props.onAddUpdate(currentOtherCost);
-          setIsCancelled(true);
-          props.showOtherCostDialog(false);
+          if (props.rowToUpdate) {
+            props.rowToUpdate.data = currentOtherCost;
+            props.onUpdate(props.rowToUpdate);
+            setIsCancelled(true);
+            props.showOtherCostDialog(false);
+          }
         }
       }
     } else {
