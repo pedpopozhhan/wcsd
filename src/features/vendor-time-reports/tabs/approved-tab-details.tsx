@@ -13,7 +13,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
-let { checboxHeader, checboxControl, } = styles;
+let { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -192,30 +192,22 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
-                <th style={{ maxWidth: '38%' }}>
+                <th className={headerRow} >
                   <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="flightReportId"> */}
+                <th className={headerRow} >
                   Report No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="ao02Number"> */}
+                <th className={headerRow} >
                   AO-02 No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="contractRegistrationName"> */}
+                <th className={headerRow} >
                   Registration No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="totalCost"> */}
+                <th className={headerRow} >
                   Total Cost
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%', textAlign: 'right' }}></th>
+                <th className={headerRow} ></th>
               </tr>
             </thead>
 
