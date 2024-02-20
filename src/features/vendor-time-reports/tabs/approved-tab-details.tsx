@@ -12,6 +12,8 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
+import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
+let { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -180,44 +182,32 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
-                <th style={{ maxWidth: '2%', padding: '12px 0 12px 32px' }}>
+                <th className={checboxHeader}>
                   <input
+                    className={checboxControl}
                     type='checkbox'
                     name='selectAll'
                     checked={pageData.length > 0 && pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
                     disabled={pageData.length === 0}
                     onChange={handleCheckBoxChange}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      verticalAlign: 'bottom',
-                    }}
                   ></input>
                 </th>
-                <th style={{ maxWidth: '38%' }}>
+                <th className={headerRow} >
                   <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="flightReportId"> */}
+                <th className={headerRow} >
                   Report No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="ao02Number"> */}
+                <th className={headerRow} >
                   AO-02 No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="contractRegistrationName"> */}
+                <th className={headerRow} >
                   Registration No.
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%' }}>
-                  {/* <GoATableSortHeader name="totalCost"> */}
+                <th className={headerRow} >
                   Total Cost
-                  {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '12%', textAlign: 'right' }}></th>
+                <th className={headerRow} ></th>
               </tr>
             </thead>
 
@@ -227,16 +217,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                   <tr key={record.flightReportId}>
                     <td style={{ padding: '12px 0 12px 32px' }}>
                       <input
+                        className={checboxControl}
                         type='checkbox'
                         id={record.flightReportId}
                         name={record.flightReportId}
                         onChange={handleCheckBoxChange}
                         checked={record?.isChecked || false}
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          verticalAlign: 'bottom',
-                        }}
                       ></input>
                     </td>
                     <td>{yearMonthDay(record.flightReportDate as string)}</td>
