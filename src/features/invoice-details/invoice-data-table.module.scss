@@ -18,6 +18,7 @@
   }
 
   .tableContainer {
+    flex: 1;
     overflow-x: auto;
     max-width: 100%;
     @include thin-scrollbar;
