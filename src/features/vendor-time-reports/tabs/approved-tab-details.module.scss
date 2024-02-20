@@ -1,9 +1,10 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+
 .checboxHeader {
   max-width: 2%;
-  padding-top: 12px;
-  padding-right: 0px;
-  padding-bottom: 12px;
-  padding-left: 32px;
+  padding-top: $goa-space-m;
+  padding-bottom: $goa-space-m;
+  padding-left: $goa-space-xl;
 }
 
 .checboxControl {
