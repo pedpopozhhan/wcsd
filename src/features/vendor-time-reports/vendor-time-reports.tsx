@@ -1,5 +1,5 @@
 import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './vendor-time-reports.module.scss';
@@ -7,8 +7,9 @@ import styles from './vendor-time-reports.module.scss';
 import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
+import { setRedirectionFromProcessInvoice } from '../process-invoice/process-invoice-slice';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
@@ -17,12 +18,20 @@ const VendorTimeReports = () => {
   const navigate = useNavigate();
 
   const header = vendorForReconciliation.vendorName;
-  const [tabIndex, setTabIndex] = useState<number>(2);
+  const isRedirectedFromProcessInvoice = useAppSelector((state) => state.processInvoice.isRedirectedFromProcessInvoice);
+  const [tabIndex, setTabIndex] = useState<number>(isRedirectedFromProcessInvoice ? 3 : 2);
   const { vendorTimeReportRoot, vendorTimeReportMain, main, tabGroupContainer, tabList, tabContainer } = styles;
+  const dispatch = useAppDispatch();
 
   function BackToContractReconciliationClick() {
     navigate('/reconciliation');
   }
+
+  useEffect(() => {
+    if(isRedirectedFromProcessInvoice){
+      dispatch(setRedirectionFromProcessInvoice(false));
+    }
+  });
 
   return (
     <div className={vendorTimeReportRoot}>
