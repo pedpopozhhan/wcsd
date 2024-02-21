@@ -30,7 +30,7 @@ const reducers = combineReducers({
   app: appReducer,
   invoiceDetails: invoiceDetailsReducer,
   processInvoiceTabs: processInvoiceTabsSliceReducer,
-  processInvoiceNotification: processInvoiceReducer,
+  processInvoice: processInvoiceReducer,
 });
 const persistedReducers = persistReducer(persistConfig, reducers);
 

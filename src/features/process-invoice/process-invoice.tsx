@@ -11,6 +11,7 @@ import { IDetailsTableRow } from '../invoice-details/details-table-row.interface
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
 
 export default function ProcessInvoice() {
 
@@ -20,7 +21,6 @@ export default function ProcessInvoice() {
   const timeReportData: IDetailsTableRow[] = reconciledData.state.timeReportData;
   const invoiceTimeReportData = timeReportData.map((i) => i.data);
   const otherCostData: IOtherCostTableRowData[] = reconciledData.state.otherCostData;
-  const showSavedInvoiceNotification = useAppSelector((state) => state.processInvoiceNotification.showInvoiceSavedNotification);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const invoiceTabs = useAppSelector((state) => state.processInvoiceTabs);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
@@ -42,6 +42,7 @@ export default function ProcessInvoice() {
 
   function navigateToTimeReports() {
     dispatch(resetState(true));
+    dispatch(setRedirectionFromProcessInvoice(true));
     navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });

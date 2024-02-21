@@ -5,21 +5,20 @@ import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
+import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
 
 const { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
-class Row {
-  index: number;
-  data: IOtherCostTableRowData;
-}
+
 interface IOtherCostTableProps {
   data: IOtherCostTableRowData[];
-  onRemoveOtherCost: (item: IOtherCostTableRowData) => any;
-  onUpdateOtherCost: (item: IOtherCostTableRowData) => any;
+  onRemoveOtherCost: (item: IOtherCostTableRow) => any;
+  onUpdateOtherCost: (item: IOtherCostTableRow) => any;
+  onAddOtherCost: (item: IOtherCostTableRowData) => any;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
-  const [rowData, setRowData] = useState<Row[]>([]);
+  const [rowData, setRowData] = useState<IOtherCostTableRow[]>([]);
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
-  const [rowToUpdate, setRowToUpdate] = useState<IOtherCostTableRowData>();
+  const [rowToUpdate, setRowToUpdate] = useState<IOtherCostTableRow>();
 
   useEffect(() => {
     setRowData(
@@ -28,7 +27,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
           index: i,
           data: x,
         };
-      })
+      }),
     );
   }, [props.data]);
 
@@ -47,16 +46,20 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     setRowData(data);
   }
 
-  function editSelectedOtherCost(row: Row) {
-    setRowToUpdate(row.data);
+  function editSelectedOtherCost(item: IOtherCostTableRow) {
+    setRowToUpdate(item);
     setParentShowModal(true);
   }
 
-  function removeSelectedOtherCost(row: Row) {
-    props.onRemoveOtherCost(row.data);
+  function onOtherCostAdded(item: IOtherCostTableRowData) {
+    props.onAddOtherCost(item);
   }
 
-  function onOtherCostUpdated(item: IOtherCostTableRowData) {
+  function removeSelectedOtherCost(item: IOtherCostTableRow) {
+    props.onRemoveOtherCost(item);
+  }
+
+  function onOtherCostUpdated(item: IOtherCostTableRow) {
     props.onUpdateOtherCost(item);
   }
 
@@ -120,9 +123,10 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
       <OtherCostModalDialog
         isAddition={false}
         visible={parentShowModal}
-        onAddUpdate={onOtherCostUpdated}
+        onAdd={onOtherCostAdded}
+        onUpdate={onOtherCostUpdated}
         showOtherCostDialog={setParentShowModal}
-        data={rowToUpdate}
+        rowToUpdate={rowToUpdate}
       />
     </div>
   );
