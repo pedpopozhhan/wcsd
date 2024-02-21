@@ -8,47 +8,39 @@ import { IDetailsTableRow } from './details-table-row.interface';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setOtherCostData, setRowData } from './invoice-details-slice';
-import FlyOut from '@/common/fly-out';
-import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
+import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 
-let { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
+const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps { }
-const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
+interface IReconciledTabProps {}
+const ReconciledTab: FC<IReconciledTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
-  const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRow>();
+  const [otherCostDataToUpdate] = useState<IOtherCostTableRow>();
 
-  useEffect(() => { }, [otherCostData]);
+  useEffect(() => {}, [otherCostData]);
 
   const showOtherCostsModal = () => {
     console.log('setParentShowModal(true);');
     setParentShowModal(true);
   };
 
-  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
-    //update the totalizer
-    console.log(amountToAdjust);
-  }
-
   function onOtherCostAdded(item: IOtherCostTableRowData) {
-    dispatch(
-      setOtherCostData([...otherCostData, item]));
+    dispatch(setOtherCostData([...otherCostData, item]));
   }
 
   function onOtherCostRemoved(item: IOtherCostTableRow) {
-    let items = [...otherCostData];
+    const items = [...otherCostData];
     items.splice(item.index, 1);
     dispatch(setOtherCostData(items));
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRow) {
-    let items = [...otherCostData];
+    const items = [...otherCostData];
     items.splice(item.index, 1);
-    dispatch(
-      setOtherCostData([...items, item.data]));
+    dispatch(setOtherCostData([...items, item.data]));
   }
 
   function removeAll() {
@@ -56,8 +48,8 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
       setRowData(
         rowData.map((x) => {
           return { ...x, isAdded: false };
-        })
-      )
+        }),
+      ),
     );
     dispatch(setOtherCostData([]));
   }
@@ -78,7 +70,12 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
         </div>
         <div className={otherCostHeader}>Other Costs</div>
         <div className={otherCostsDiv}>
-          <OtherCostDetailsTable data={otherCostData} onRemoveOtherCost={onOtherCostRemoved} onUpdateOtherCost={onOtherCostUpdated} onAddOtherCost={onOtherCostAdded} />
+          <OtherCostDetailsTable
+            data={otherCostData}
+            onRemoveOtherCost={onOtherCostRemoved}
+            onUpdateOtherCost={onOtherCostUpdated}
+            onAddOtherCost={onOtherCostAdded}
+          />
         </div>{' '}
       </div>
 

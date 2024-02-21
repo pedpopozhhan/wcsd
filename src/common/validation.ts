@@ -20,6 +20,7 @@ export function phoneNumberValidator(msg?: string): FieldValidator {
 }
 
 export function emailValidator(msg?: string): FieldValidator {
+  // eslint-disable-next-line no-useless-escape
   const regex = new RegExp(/^[\w+-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
   return regexValidator(regex, msg || 'Invalid email address');
 }
@@ -44,13 +45,7 @@ interface DateValidatorOptions {
   start?: Date;
   end?: Date;
 }
-export function dateValidator({
-  invalidMsg,
-  startMsg,
-  endMsg,
-  start,
-  end,
-}: DateValidatorOptions): FieldValidator {
+export function dateValidator({ invalidMsg, startMsg, endMsg, start, end }: DateValidatorOptions): FieldValidator {
   return (date: unknown) => {
     let _date: Date = new Date(0);
 

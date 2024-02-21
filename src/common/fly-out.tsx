@@ -1,13 +1,14 @@
 import styles from './fly-out.module.scss';
 import { Fragment, PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-let { container, overlay, pane, content, body, header, footer } = styles;
+const { container, overlay, pane, content, body, header, footer } = styles;
 interface IProps {
   heading: string;
   open: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actions: any;
   position?: 'left' | 'right';
-  onClose?: () => any;
+  onClose?: () => void;
 }
 const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);

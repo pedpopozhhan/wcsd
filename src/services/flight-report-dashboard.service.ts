@@ -2,7 +2,7 @@ import { IFlightReportDashboard } from '../interfaces/flight-report-dashboard/fl
 import { IPaginationResult } from '../interfaces/pagination-result.interface';
 import { ISearch } from '../interfaces/flight-report-dashboard/search.interface';
 
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 
 class FlightReportDashboardService {
@@ -18,9 +18,7 @@ class FlightReportDashboardService {
       'x-functions-key': this.apiKeyCode,
     };
   }
-  getSearch(
-    objISearch: ISearch
-  ): Observable<IPaginationResult<IFlightReportDashboard>> {
+  getSearch(objISearch: ISearch): Observable<IPaginationResult<IFlightReportDashboard>> {
     const body = {
       search: objISearch.search,
       sortBy: objISearch.sortBy,
@@ -45,7 +43,7 @@ class FlightReportDashboardService {
       .pipe(
         map((x) => {
           return x.data;
-        })
+        }),
       );
   }
 }

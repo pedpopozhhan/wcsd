@@ -1,6 +1,5 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
@@ -13,7 +12,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
-let { checboxHeader, checboxControl, headerRow } = styles;
+const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -21,12 +20,10 @@ interface IFlightReportAllProps {
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
+const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
-  //Navigation
-  const navigate = useNavigate();
   //Data set
   const [data, setData] = useState<IFlightReportDashboard[]>([]);
 
@@ -39,34 +36,33 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [page, setPage] = useState(1);
   //count per page
   const [perPage, setPerPage] = useState(10);
-  const [previousSelectedPerPage, setPreviousSelectedPerPage] = useState(10);
+  const [, setPreviousSelectedPerPage] = useState(10);
 
   //Sorting
   const [sortCol, setSortCol] = useState('flightReportDate');
   const [sortDir, setSortDir] = useState(-1);
-  const [isSorting, setIsSorting] = useState(false);
 
   // Modal Dialog configuration
   const [parentShowModal, setParentShowModal] = useState(false);
-  const [contractID, setContractID] = useState(contractNumber);
+  const [contractID] = useState(contractNumber);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
+    const strSearchValue = searchValue ? searchValue.toLowerCase() : '';
+    const sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
-    let objIPagination: IPagination = {
+    const objIPagination: IPagination = {
       perPage: perPage,
       page: page,
     };
 
-    let objIFilter: IFilter = {
+    const objIFilter: IFilter = {
       contractNumber: contractNumber,
       status: 'approved',
     };
 
-    let objISearch: ISearch = {
+    const objISearch: ISearch = {
       search: strSearchValue,
       sortBy: sortCol,
       sortOrder: sortOrder,
@@ -98,10 +94,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: any, b: any) => {
-      const varA = a[sortBy];
-      const varB = b[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+      const varA = a[sortBy as keyof IFlightReportDashboard];
+      const varB = b[sortBy as keyof IFlightReportDashboard];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
@@ -115,13 +111,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
-    let num = data ? Math.ceil(data.length / perPage) : 0;
+    const num = data ? Math.ceil(data.length / perPage) : 0;
 
     return num;
   }
 
   //Pagination change page
-  function changePage(newPage: any) {
+  function changePage(newPage: number) {
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
@@ -141,9 +137,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   }
 
   const reconcileTimeReports = () => {
-    let items = pageData?.filter((fr: any) => fr.isChecked === true);
+    // TODO: Possible bug here...isChecked is not on the object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const items = pageData?.filter((fr: any) => fr.isChecked === true);
     const trItems: number[] = [];
-    items?.map((record: any) => {
+    items?.map((record: IFlightReportDashboard) => {
       trItems.push(record.flightReportId);
     });
     dispatch(setTimeReportsToReconcile(trItems));
@@ -154,13 +152,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
-      let allTimeReports = pageData?.map((record: any) => {
+      const allTimeReports = pageData?.map((record: IFlightReportDashboard) => {
         return { ...record, isChecked: checked };
       });
       setPageData(allTimeReports);
     } else {
-      let selectedTimeReports = pageData?.map((record: any) =>
-        record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record
+      const selectedTimeReports = pageData?.map((record: IFlightReportDashboard) =>
+        record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record,
       );
       setPageData(selectedTimeReports);
     }
@@ -187,40 +185,36 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
+                    // TODO: Possible bug here...isChecked is not on the object
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     checked={pageData.length > 0 && pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
                     disabled={pageData.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
-                <th className={headerRow} >
+                <th className={headerRow}>
                   <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
-                <th className={headerRow} >
-                  Report No.
-                </th>
-                <th className={headerRow} >
-                  AO-02 No.
-                </th>
-                <th className={headerRow} >
-                  Registration No.
-                </th>
-                <th className={headerRow} >
-                  Total Cost
-                </th>
-                <th className={headerRow} ></th>
+                <th className={headerRow}>Report No.</th>
+                <th className={headerRow}>AO-02 No.</th>
+                <th className={headerRow}>Registration No.</th>
+                <th className={headerRow}>Total Cost</th>
+                <th className={headerRow}></th>
               </tr>
             </thead>
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
-                pageData.map((record: any, index: any) => (
+                // TODO: Possible bug here...isChecked is not on the object
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                pageData.map((record: any) => (
                   <tr key={record.flightReportId}>
                     <td style={{ padding: '12px 0 12px 32px' }}>
                       <input
                         className={checboxControl}
                         type='checkbox'
-                        id={record.flightReportId}
-                        name={record.flightReportId}
+                        id={record.flightReportId.toString()}
+                        name={record.flightReportId.toString()}
                         onChange={handleCheckBoxChange}
                         checked={record?.isChecked || false}
                       ></input>
@@ -238,7 +232,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     </td>
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
-                    {/* <td>{record?.totalCost}</td> */}
                     <td>{formatter.format(record?.totalCost)}</td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
@@ -265,14 +258,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             </div>
             <GoASpacer hSpacing='fill' />
 
-            <GoAPagination
-              variant='links-only'
-              itemCount={data.length}
-              // itemCount={filteredData?.length || 10}
-              perPageCount={perPage}
-              pageNumber={page}
-              onChange={changePage}
-            />
+            <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
         </div>
       </div>

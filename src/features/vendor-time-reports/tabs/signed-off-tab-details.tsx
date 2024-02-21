@@ -1,6 +1,5 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
@@ -17,42 +16,39 @@ interface IFlightReportAllProps {
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
-  //Navigation
-  const navigate = useNavigate();
+const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
   //Data set
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
+  const [, setPageData] = React.useState<IFlightReportDashboard[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
   //count per page
   const [perPage, setPerPage] = React.useState(10);
-  const [previousSelectedPerPage, setPreviousSelectedPerPage] = React.useState(10);
+  const [, setPreviousSelectedPerPage] = React.useState(10);
 
   //Sorting
   const [sortCol, setSortCol] = React.useState('flightReportDate');
   const [sortDir, setSortDir] = React.useState(-1);
-  const [isSorting, setIsSorting] = React.useState(false);
 
   useEffect(() => {
-    let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
+    const strSearchValue = searchValue ? searchValue.toLowerCase() : '';
+    const sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
-    let objIPagination: IPagination = {
+    const objIPagination: IPagination = {
       perPage: perPage,
       page: page,
     };
 
-    let objIFilter: IFilter = {
+    const objIFilter: IFilter = {
       contractNumber: contractNumber,
       status: 'signed off',
     };
 
-    let objISearch: ISearch = {
+    const objISearch: ISearch = {
       search: strSearchValue,
       sortBy: sortCol,
       sortOrder: sortOrder,
@@ -84,10 +80,10 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: any, b: any) => {
-      const varA = a[sortBy];
-      const varB = b[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+      const varA = a[sortBy as keyof IFlightReportDashboard];
+      const varB = b[sortBy as keyof IFlightReportDashboard];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
@@ -101,13 +97,13 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
-    let num = data ? Math.ceil(data.length / perPage) : 0;
+    const num = data ? Math.ceil(data.length / perPage) : 0;
 
     return num;
   }
 
   //Pagination change page
-  function changePage(newPage: any) {
+  function changePage(newPage: number) {
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
@@ -116,23 +112,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       setPerPage(perPage);
       setPage(newPage);
       setPageData(_flightReports);
-    }
-  }
-
-  function changePerPage(name: any, value: any) {
-    if (value) {
-      setIsLoading(true);
-      const newPerPage = parseInt(value, 10);
-      const offset = (page - 1) * newPerPage;
-
-      const _flightReports = data.slice(offset, offset + newPerPage);
-
-      setPageData(_flightReports);
-      //setSearchValue("");
-      setPerPage((p) => {
-        return newPerPage;
-      });
-      setPage(page);
     }
   }
 
@@ -177,7 +156,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {data && data.length > 0 ? (
-                data.map((record: any, index: any) => (
+                data.map((record: IFlightReportDashboard) => (
                   // {filteredData && filteredData.length > 0 ? (
                   // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>

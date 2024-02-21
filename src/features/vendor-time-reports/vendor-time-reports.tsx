@@ -1,4 +1,4 @@
-import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
+import { GoAButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ const VendorTimeReports = () => {
   }
 
   useEffect(() => {
-    if(isRedirectedFromProcessInvoice){
+    if (isRedirectedFromProcessInvoice) {
       dispatch(setRedirectionFromProcessInvoice(false));
     }
   });
@@ -43,19 +43,19 @@ const VendorTimeReports = () => {
           leadingIcon='chevron-back'
           onClick={() => BackToContractReconciliationClick()}
         >
-          {`Back`}
+          {'Back'}
         </GoAButton>
         <h2>{header}</h2>
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Signed-off' role='tab' aria-selected={tabIndex === 1} onClick={(e) => setTabIndex(1)}>
+              <button id='Signed-off' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
                 <span>Signed-off</span>
               </button>
-              <button id='Approved' role='tab' aria-selected={tabIndex === 2} onClick={(e) => setTabIndex(2)}>
+              <button id='Approved' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
                 <span>Approved</span>
               </button>
-              <button id='Processed' role='tab' aria-selected={tabIndex === 3} onClick={(e) => setTabIndex(3)}>
+              <button id='Processed' role='tab' aria-selected={tabIndex === 3} onClick={() => setTabIndex(3)}>
                 <span>Processed</span>
               </button>
             </div>

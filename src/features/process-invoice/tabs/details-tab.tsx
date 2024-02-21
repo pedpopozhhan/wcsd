@@ -2,15 +2,14 @@ import { FC } from 'react';
 import styles from '@/features/process-invoice/tabs/details-tab.module.scss';
 import { useAppSelector } from '@/app/hooks';
 
-
 import InvoiceCostDataTable from '@/features/process-invoice/tabs/invoice-cost-details-table';
 import InvoiceOtherCostTable from '@/features/process-invoice/tabs/invoice-other-costs-table';
 
-let { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
+const { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps { }
+interface IReconciledTabProps {}
 
-const InvoiceDetailsTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
+const InvoiceDetailsTab: FC<IReconciledTabProps> = () => {
   const otherCostData = useAppSelector((state) => state.processInvoiceTabs.otherCostsData);
   const costDetailsData = useAppSelector((state) => state.processInvoiceTabs.costDetailsData);
 

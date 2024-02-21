@@ -1,11 +1,10 @@
 import { GoAButton, GoAButtonGroup, GoAModal } from '@abgov/react-components';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import styles from './process-invoice.module.scss';
 import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
@@ -15,14 +14,13 @@ import { failedToPerform, publishToast } from '@/common/toast';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
-  close: any;
+  close: () => void;
   data: { timeReportData: ITimeReportDetailsTableRowData[]; otherCostData: IOtherCostTableRowData[] };
   type: string;
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
-  let { processInvoiceModalDialogContainer } = styles;
-  const navigate = useNavigate();
+  const { processInvoiceModalDialogContainer } = styles;
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
@@ -74,10 +72,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     if (serviceSheetData) {
       processInvoiceService.updateInvoice(serviceSheetData).subscribe({
         next: (data) => {
-            dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
-            dispatch(setServiceSheetNameChange(false));
-            dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice updated successfully.` });
+          dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
+          dispatch(setServiceSheetNameChange(false));
+          dispatch(setNotificationStatus(true));
+          publishToast({ type: 'success', message: 'Invoice updated successfully.' });
         },
         error: (error) => {
           console.log(error);

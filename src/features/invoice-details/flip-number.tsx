@@ -1,19 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Disabling the rule because this file modifies inline styles
 import styles from './flip-number.module.scss';
 import { FC, useEffect, useState } from 'react';
 
-let {
-  container,
-  fraction,
-  hundreds,
-  thousands,
-  millions,
-  billions,
-  trillions,
-  oneDigit,
-  twoDigits,
-  threeDigits,
-  noDigits,
-} = styles;
+const { container, fraction, hundreds, thousands, millions, billions, trillions, oneDigit, twoDigits, threeDigits, noDigits } = styles;
 interface IFlipNumberProps {
   value: number;
 }
@@ -61,12 +51,7 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
       {
         //trillions
         commaSplits.length >= 5 && (
-          <span
-            className={`${trillions} ${getLeadingZeroClassName(5)}`}
-            style={
-              { '--trillions': commaSplits[commaSplits.length - 5] } as any
-            }
-          >
+          <span className={`${trillions} ${getLeadingZeroClassName(5)}`} style={{ '--trillions': commaSplits[commaSplits.length - 5] } as any}>
             ,
           </span>
         )
@@ -74,10 +59,7 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
       {
         //billions
         commaSplits.length >= 4 && (
-          <span
-            className={`${billions} ${getLeadingZeroClassName(4)}`}
-            style={{ '--billions': commaSplits[commaSplits.length - 4] } as any}
-          >
+          <span className={`${billions} ${getLeadingZeroClassName(4)}`} style={{ '--billions': commaSplits[commaSplits.length - 4] } as any}>
             ,
           </span>
         )
@@ -85,10 +67,7 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
       {
         //millions
         commaSplits.length >= 3 && (
-          <span
-            className={`${millions} ${getLeadingZeroClassName(3)}`}
-            style={{ '--millions': commaSplits[commaSplits.length - 3] } as any}
-          >
+          <span className={`${millions} ${getLeadingZeroClassName(3)}`} style={{ '--millions': commaSplits[commaSplits.length - 3] } as any}>
             ,
           </span>
         )
@@ -96,12 +75,7 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
       {
         //thousands
         commaSplits.length >= 2 && (
-          <span
-            className={`${thousands} ${getLeadingZeroClassName(2)}`}
-            style={
-              { '--thousands': commaSplits[commaSplits.length - 2] } as any
-            }
-          >
+          <span className={`${thousands} ${getLeadingZeroClassName(2)}`} style={{ '--thousands': commaSplits[commaSplits.length - 2] } as any}>
             ,
           </span>
         )
@@ -109,16 +83,10 @@ const FlipNumber: FC<IFlipNumberProps> = ({ value }) => {
       {
         //hundreds
         commaSplits.length >= 1 && (
-          <span
-            className={`${hundreds} ${getLeadingZeroClassName(1)}`}
-            style={{ '--hundreds': commaSplits[commaSplits.length - 1] } as any}
-          ></span>
+          <span className={`${hundreds} ${getLeadingZeroClassName(1)}`} style={{ '--hundreds': commaSplits[commaSplits.length - 1] } as any}></span>
         )
       }
-      <span
-        className={fraction}
-        style={{ '--fraction': fractionVal } as any}
-      ></span>
+      <span className={fraction} style={{ '--fraction': fractionVal } as any}></span>
     </div>
   );
 };

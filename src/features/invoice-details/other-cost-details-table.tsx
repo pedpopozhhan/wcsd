@@ -5,15 +5,15 @@ import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
+import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 
-let { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
+const { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
 
 interface IOtherCostTableProps {
   data: IOtherCostTableRowData[];
-  onRemoveOtherCost: (item: IOtherCostTableRow) => any;
-  onUpdateOtherCost: (item: IOtherCostTableRow) => any;
-  onAddOtherCost: (item: IOtherCostTableRowData) => any;
+  onRemoveOtherCost: (item: IOtherCostTableRow) => void;
+  onUpdateOtherCost: (item: IOtherCostTableRow) => void;
+  onAddOtherCost: (item: IOtherCostTableRowData) => void;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<IOtherCostTableRow[]>([]);
@@ -27,13 +27,14 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
           index: i,
           data: x,
         };
-      })
+      }),
     );
   }, [props.data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-
+    // TODO: Possible bug here...data is not on the object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data.sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];

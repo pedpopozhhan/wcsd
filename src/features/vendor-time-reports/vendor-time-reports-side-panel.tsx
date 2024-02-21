@@ -1,12 +1,4 @@
-import {
-  GoABlock,
-  GoAContainer,
-  GoAFormItem,
-  GoAIcon,
-  GoASpacer,
-  GoATable,
-  GoATwoColumnLayout,
-} from '@abgov/react-components';
+import { GoABlock, GoAFormItem, GoAIcon, GoATable } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
 import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import { ContractType, convertContractType } from '@/types/contract-type';
@@ -16,12 +8,7 @@ interface IContractTimeReportsSidePanelProps {
 }
 
 const VendorTimeReportsSidePanel: React.FC<IContractTimeReportsSidePanelProps> = (props) => {
-  const {
-    vendorTimeReportSidePanel,
-    vendorTimeReportSidePanelSection,
-    vendorTimeReportSidePanelContract,
-    vendorTimeReportSidePanelContactInfo,
-  } = styles;
+  const { vendorTimeReportSidePanel, vendorTimeReportSidePanelContract, vendorTimeReportSidePanelContactInfo } = styles;
   return (
     <div className={vendorTimeReportSidePanel}>
       <GoABlock gap='l'>

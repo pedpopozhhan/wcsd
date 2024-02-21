@@ -1,14 +1,8 @@
 import styles from './summary.module.scss';
-import { useEffect, useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { GoAIconButton } from '@abgov/react-components';
 import { useAppSelector } from '@/app/hooks';
-let { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
-
-interface ISummary {
-  //
-}
-
+const { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
 const Summary: React.FC = () => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);

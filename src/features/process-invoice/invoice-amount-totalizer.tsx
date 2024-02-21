@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { convertToCurrency } from '@/common/currency';
 //import FlipNumber from './flip-number';
 
-let { container, totalizerAmount, totalizerAmountLabel, section } = styles;
+const { container, totalizerAmount, totalizerAmountLabel, section } = styles;
 interface IInvoiceAmountTotalizer {
   invoiceAmount: number | undefined;
 }

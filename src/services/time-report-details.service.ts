@@ -1,5 +1,3 @@
-import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import ITimeReportDetails from '@/interfaces/invoice-details/time-report-details';
@@ -33,7 +31,7 @@ class TimeReportDetailsService {
       .pipe(
         map((x) => {
           return x.data;
-        })
+        }),
       );
   }
 }

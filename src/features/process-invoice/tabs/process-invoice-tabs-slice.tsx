@@ -1,7 +1,7 @@
-import { IServiceSheetData } from "@/interfaces/common/service-sheet-data";
-import { ITimeReportDetailsTableRowData } from "@/interfaces/invoice-details/time-report-details-table-row-data";
-import { IOtherCostTableRowData } from "@/interfaces/common/other-cost-table-row-data";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
+import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
+import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface IProcessInvoiceTabsDataSliceState {
   serviceSheetData: IServiceSheetData | undefined;
@@ -21,7 +21,7 @@ const initialState: IProcessInvoiceTabsDataSliceState = {
   readonly: false,
   invoiceceId: '',
   invoiceAmount: 0,
-}
+};
 
 export const processInvoiceTabsSlice = createSlice({
   name: 'sliceProcessInvoiceTabs',
@@ -49,25 +49,26 @@ export const processInvoiceTabsSlice = createSlice({
       state.invoiceAmount = action.payload;
     },
 
-    resetState: (state, action: PayloadAction<boolean>) => {
+    resetState: (state) => {
       state.serviceSheetData = undefined;
       state.costDetailsData = [];
       state.otherCostsData = [];
       state.invoiceceId = '';
       state.invoiceAmount = 0;
       state.readonly = false;
-    }
-
+    },
   },
 });
 
-export const { setServiceSheetData,
+export const {
+  setServiceSheetData,
   setcostDetailsData,
   setotherCostsData,
   setServiceSheetNameChange,
   setReadOnly,
   setInvoiceId,
   setInvoiceAmount,
-  resetState, } = processInvoiceTabsSlice.actions;
+  resetState,
+} = processInvoiceTabsSlice.actions;
 const processInvoiceTabsSliceReducer = processInvoiceTabsSlice.reducer;
 export default processInvoiceTabsSliceReducer;
