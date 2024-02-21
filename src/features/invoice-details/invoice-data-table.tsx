@@ -5,6 +5,7 @@ import { convertToCurrency } from '@/common/currency';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
+import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
@@ -22,10 +23,10 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-    const sorted = data.filter(filterByRateType).sort((a: any, b: any) => {
-      const varA = a.data[sortBy];
-      const varB = b.data[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    const sorted = data.filter(filterByRateType).sort((a: IDetailsTableRow, b: IDetailsTableRow) => {
+      const varA = a.data[sortBy as keyof ITimeReportDetailsTableRowData];
+      const varB = b.data[sortBy as keyof ITimeReportDetailsTableRowData];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
@@ -47,8 +48,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
           } else {
             return r;
           }
-        })
-      )
+        }),
+      ),
     );
   }
   function checkClicked(row: IDetailsTableRow, checked: boolean) {
@@ -60,8 +61,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
           } else {
             return r;
           }
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -72,8 +73,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
       setRowData(
         rowData.map((r) => {
           return r.isAdded ? r : { ...r, isSelected: !anySelected };
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -136,7 +137,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                           name={`cb${index}`}
                           checked={x.isSelected}
                           disabled={x.isAdded ? true : false}
-                          onChange={(name, checked, value) => {
+                          onChange={(name, checked) => {
                             checkClicked(x, checked);
                           }}
                         ></GoACheckbox>

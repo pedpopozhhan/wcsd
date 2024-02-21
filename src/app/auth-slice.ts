@@ -2,11 +2,11 @@ import { IUser } from '@/interfaces/common/user.interface';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface IAuthSliceState {
-  user: IUser;
+  user?: IUser;
 }
 
 const initialState: IAuthSliceState = {
-  user: null as any,
+  user: null,
 };
 
 export const authSlice = createSlice({

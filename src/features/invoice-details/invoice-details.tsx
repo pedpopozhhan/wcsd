@@ -9,10 +9,7 @@ import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
-import { setServiceSheetData, setcostDetailsData, setotherCostsData, }
-  from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-
-
+import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -63,7 +60,9 @@ export default function InvoiceDetails() {
     if (invoiceData.InvoiceKey == 0 && processInvoiceTabs) {
       dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceKey: 0, uniqueServiceSheetName: '' }));
     }
-    const data = timeReportData.map((x) => { return x.data; });
+    const data = timeReportData.map((x) => {
+      return x.data;
+    });
     dispatch(setcostDetailsData(data));
     dispatch(setotherCostsData(otherCostData));
     navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
@@ -91,10 +90,10 @@ export default function InvoiceDetails() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={(e) => setTabIndex(1)}>
+              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
                 <span>Details</span>
               </button>
-              <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={(e) => setTabIndex(2)}>
+              <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
                 <span>Reconciled</span>
               </button>
             </div>

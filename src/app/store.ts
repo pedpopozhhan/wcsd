@@ -1,4 +1,4 @@
-import { Action, combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import appReducer from './app-slice';
 
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
@@ -34,6 +34,7 @@ const reducers = combineReducers({
 });
 const persistedReducers = persistReducer(persistConfig, reducers);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const epics: any = [
   invoiceDetailsEpic,
   processInvoiceEpic,
@@ -41,13 +42,14 @@ export const epics: any = [
   // epic 3
 ];
 // root epic with global error handling
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rootEpic = (action$: any, store$: any, dependencies: any) =>
   combineEpics(...epics)(action$, store$, dependencies).pipe(
     catchError((error, source) => {
       console.error('Error at rootEpic');
       console.error(error);
       return source;
-    })
+    }),
   );
 const epicMiddleware = createEpicMiddleware();
 

@@ -1,4 +1,4 @@
-import { Action, PayloadAction, createAction } from '@reduxjs/toolkit';
+import { Action, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import timeReportDetailsService from '@/services/time-report-details.service';
@@ -25,7 +25,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
               action: action,
             });
             return EMPTY;
-          })
+          }),
         );
       } else if (action2.match(action)) {
         // This is a placeholder to be used as an example
@@ -35,5 +35,5 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
         console.error(`${action.type} is not handled`);
         return EMPTY;
       }
-    })
+    }),
   );

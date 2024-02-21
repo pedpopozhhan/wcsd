@@ -2,7 +2,6 @@ import styles from './toast.module.scss';
 import { useEffect, useState } from 'react';
 import { GoAIcon } from '@abgov/react-components';
 import { IToast } from '@/interfaces/toast.interface';
-import { Action } from 'redux';
 import { useAppDispatch } from '@/app/hooks';
 
 const { container, label, spacer } = styles;
@@ -15,9 +14,9 @@ export const failedToPerform = (actionPerformed: string, reason: string) => {
   return `Failed to ${actionPerformed}. ${reason}`;
 };
 interface IProps {}
-const Toast: React.FC<IProps> = (props) => {
+const Toast: React.FC<IProps> = () => {
   const dispatch = useAppDispatch();
-  const [toast, setToast] = useState<IToast>({} as any);
+  const [toast, setToast] = useState<IToast>({} as IToast);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   let timeout: NodeJS.Timeout;
   const processToastEvent = (event: CustomEvent) => {
@@ -35,9 +34,11 @@ const Toast: React.FC<IProps> = (props) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     document.addEventListener(TOAST_EVENT, processToastEvent as any);
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       document.removeEventListener(TOAST_EVENT, processToastEvent as any);
     };
   }, []);

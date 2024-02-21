@@ -11,9 +11,9 @@ const { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = s
 
 interface IOtherCostTableProps {
   data: IOtherCostTableRowData[];
-  onRemoveOtherCost: (item: IOtherCostTableRow) => any;
-  onUpdateOtherCost: (item: IOtherCostTableRow) => any;
-  onAddOtherCost: (item: IOtherCostTableRowData) => any;
+  onRemoveOtherCost: (item: IOtherCostTableRow) => void;
+  onUpdateOtherCost: (item: IOtherCostTableRow) => void;
+  onAddOtherCost: (item: IOtherCostTableRowData) => void;
 }
 const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<IOtherCostTableRow[]>([]);
@@ -33,7 +33,8 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
-
+    // TODO: Possible bug here...data is not on the object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data.sort((a: any, b: any) => {
       const varA = a.data[sortBy];
       const varB = b.data[sortBy];

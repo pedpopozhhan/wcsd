@@ -13,12 +13,12 @@ import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
 interface IReconciledTabProps {}
-const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
+const ReconciledTab: FC<IReconciledTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
-  const [otherCostDataToUpdate, setOtherCostDataToUpdate] = useState<IOtherCostTableRow>();
+  const [otherCostDataToUpdate] = useState<IOtherCostTableRow>();
 
   useEffect(() => {}, [otherCostData]);
 
@@ -27,23 +27,18 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
     setParentShowModal(true);
   };
 
-  function onAddUpdateRemoveOtherCost(amountToAdjust: number) {
-    //update the totalizer
-    console.log(amountToAdjust);
-  }
-
   function onOtherCostAdded(item: IOtherCostTableRowData) {
     dispatch(setOtherCostData([...otherCostData, item]));
   }
 
   function onOtherCostRemoved(item: IOtherCostTableRow) {
-    let items = [...otherCostData];
+    const items = [...otherCostData];
     items.splice(item.index, 1);
     dispatch(setOtherCostData(items));
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRow) {
-    let items = [...otherCostData];
+    const items = [...otherCostData];
     items.splice(item.index, 1);
     dispatch(setOtherCostData([...items, item.data]));
   }

@@ -7,7 +7,7 @@ import { setRowData } from './invoice-details-slice';
 
 const { container, buttons } = styles;
 interface IDetailsTabProps {}
-const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
+const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
@@ -24,8 +24,8 @@ const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
       setRowData(
         rowData.map((r) => {
           return !r.isSelected ? r : { ...r, isSelected: false, isAdded: true };
-        })
-      )
+        }),
+      ),
     );
   }
 

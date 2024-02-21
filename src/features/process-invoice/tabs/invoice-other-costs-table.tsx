@@ -11,7 +11,7 @@ class Row {
   data: IOtherCostTableRowData;
 }
 interface IOtherCostTableProps {
-    data: IOtherCostTableRowData[];
+  data: IOtherCostTableRowData[];
 }
 const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
   const [rowData, setRowData] = useState<Row[]>([]);
@@ -23,17 +23,17 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
           index: i,
           data: x,
         };
-      })
+      }),
     );
   }, [props.data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
 
-    data.sort((a: any, b: any) => {
-      const varA = a.data[sortBy];
-      const varB = b.data[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    data.sort((a: Row, b: Row) => {
+      const varA = a.data[sortBy as keyof IOtherCostTableRowData];
+      const varB = b.data[sortBy as keyof IOtherCostTableRowData];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }

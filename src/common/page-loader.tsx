@@ -2,13 +2,13 @@ import { GoACircularProgress } from '@abgov/react-components';
 import * as React from 'react';
 
 interface IPageLoaderProps {
-  visible?:boolean
+  visible?: boolean;
 }
 
-const PageLoader: React.FunctionComponent<IPageLoaderProps> = ({visible,...props}) => {
-  return(
+const PageLoader: React.FunctionComponent<IPageLoaderProps> = ({ visible }) => {
+  return (
     <>
-      <GoACircularProgress variant="fullscreen" size="small" visible={visible}/>
+      <GoACircularProgress variant='fullscreen' size='small' visible={visible} />
     </>
   );
 };

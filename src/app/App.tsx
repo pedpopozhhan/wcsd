@@ -10,15 +10,12 @@ const { mainContainer, outletContainer } = styles;
 
 export function App() {
   const headerTitle = 'Wildfire Support';
-  const menuItems: any[] = [];
 
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <div className={mainContainer}>
-          <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
-            {menuItems}
-          </GoAAppHeader>
+          <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'></GoAAppHeader>
 
           <div className={outletContainer}>
             <Outlet />

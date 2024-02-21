@@ -1,7 +1,6 @@
 import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGroup } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { yearMonthDay } from '@/common/dates';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { publishToast } from './toast';
@@ -15,7 +14,8 @@ export interface IInvoiceData {
   InvoiceReceived: string;
   ContractNumber: string;
 }
-
+// TODO: this should have props
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const InvoiceModalDialog = (props: any) => {
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -32,10 +32,10 @@ const InvoiceModalDialog = (props: any) => {
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
   const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(new Date().toISOString());
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
-  const [maxDate, setMaxDate] = useState<Date>(getDateWithMonthOffset(1));
+  const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
-  const [minDate, setMinDate] = useState<Date>(new Date(1950, 1, 1));
+  const [minDate] = useState<Date>(new Date(1950, 1, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
 
   const invoiceForContext = {
@@ -49,7 +49,6 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const navigate = useNavigate();
-  const defaultErrorDate = new Date(Date());
 
   function getDateWithMonthOffset(offset: number) {
     const d = new Date();
@@ -189,7 +188,7 @@ const InvoiceModalDialog = (props: any) => {
                     maxLength={20}
                     value={invoiceId}
                     error={invoiceIdError}
-                    onBlur={(key, value) => {}}
+                    onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceId(value.trim());
                       if (value.trim().length <= 0) {
@@ -350,6 +349,3 @@ const InvoiceModalDialog = (props: any) => {
 };
 
 export default InvoiceModalDialog;
-function setToast(): any {
-  throw new Error('Function not implemented.');
-}

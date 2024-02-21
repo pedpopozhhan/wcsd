@@ -1,25 +1,17 @@
-import { GoAInput, GoATable, GoATextArea } from '@abgov/react-components';
+import { GoAInput } from '@abgov/react-components';
 import styles from '@/features/process-invoice/process-invoice.module.scss';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
 import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  const {
-    serviceSheetTabContainer,
-    serviceSheetTabLabels,
-    serviceSheetTabAltValues,
-    gridContainer,
-    serviceSheetNameDesc,
-    invoiceAmountLabel } = styles;
+  const { serviceSheetTabContainer, serviceSheetTabAltValues, serviceSheetNameDesc, invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();
   const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);

@@ -3,7 +3,6 @@ import styles from '@/features/process-invoice/tabs/invoice-cost-details-table.m
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useState, useEffect } from 'react';
 
 const { container, tableContainer } = styles;
@@ -24,17 +23,17 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
             index: i,
             data: x,
           };
-        })
+        }),
       );
   }, [props.data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
 
-    data.sort((a: any, b: any) => {
-      const varA = a.data[sortBy];
-      const varB = b.data[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    data.sort((a: Row, b: Row) => {
+      const varA = a.data[sortBy as keyof ITimeReportDetailsTableRowData];
+      const varB = b.data[sortBy as keyof ITimeReportDetailsTableRowData];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }

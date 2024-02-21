@@ -49,25 +49,26 @@ export const processInvoiceTabsSlice = createSlice({
       state.invoiceAmount = action.payload;
     },
 
-    resetState: (state, action: PayloadAction<boolean>) => {
+    resetState: (state) => {
       state.serviceSheetData = undefined;
       state.costDetailsData = [];
       state.otherCostsData = [];
       state.invoiceceId = '';
       state.invoiceAmount = 0;
       state.readonly = false;
-    }
-
+    },
   },
 });
 
-export const { setServiceSheetData,
+export const {
+  setServiceSheetData,
   setcostDetailsData,
   setotherCostsData,
   setServiceSheetNameChange,
   setReadOnly,
   setInvoiceId,
   setInvoiceAmount,
-  resetState, } = processInvoiceTabsSlice.actions;
+  resetState,
+} = processInvoiceTabsSlice.actions;
 const processInvoiceTabsSliceReducer = processInvoiceTabsSlice.reducer;
 export default processInvoiceTabsSliceReducer;

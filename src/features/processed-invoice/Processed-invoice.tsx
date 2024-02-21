@@ -26,7 +26,7 @@ export default function ProcessedInvoice() {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   function navigateToTimeReports() {
-    dispatch(resetState(true));
+    dispatch(resetState());
     navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
