@@ -13,7 +13,7 @@ interface IServiceSheetTabProps {
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  let {
+  const {
     serviceSheetTabContainer,
     serviceSheetTabLabels,
     serviceSheetTabAltValues,

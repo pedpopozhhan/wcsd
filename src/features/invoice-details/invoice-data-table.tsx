@@ -6,7 +6,7 @@ import { IDetailsTableRow } from './details-table-row.interface';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
 
-let { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
+const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
   rateTypeFilter?: string;
@@ -67,7 +67,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 
   function checkAll() {
     // if any selected, uncheck them all
-    let anySelected = rowData.filter((x) => !x.isAdded).some((x) => x.isSelected);
+    const anySelected = rowData.filter((x) => !x.isAdded).some((x) => x.isSelected);
     dispatch(
       setRowData(
         rowData.map((r) => {

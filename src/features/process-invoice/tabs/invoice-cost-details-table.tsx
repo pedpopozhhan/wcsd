@@ -6,7 +6,7 @@ import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/tim
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useState, useEffect } from 'react';
 
-let { container, tableContainer } = styles;
+const { container, tableContainer } = styles;
 class Row {
   index: number;
   data: ITimeReportDetailsTableRowData;

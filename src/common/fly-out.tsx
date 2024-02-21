@@ -1,7 +1,7 @@
 import styles from './fly-out.module.scss';
 import { Fragment, PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-let { container, overlay, pane, content, body, header, footer } = styles;
+const { container, overlay, pane, content, body, header, footer } = styles;
 interface IProps {
   heading: string;
   open: boolean;

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { GoAIconButton } from '@abgov/react-components';
 import { useAppSelector } from '@/app/hooks';
-let { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
+const { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
 
 interface ISummary {
   //

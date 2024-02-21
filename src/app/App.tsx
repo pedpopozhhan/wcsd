@@ -6,14 +6,14 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './store';
 import Toast from '@/common/toast';
 
-let { mainContainer, outletContainer } = styles;
+const { mainContainer, outletContainer } = styles;
 
 export function App() {
   const headerTitle = 'Wildfire Support';
   const menuItems: any[] = [];
 
   return (
-    <Provider store={store as any}>
+    <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <div className={mainContainer}>
           <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>

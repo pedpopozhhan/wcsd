@@ -6,7 +6,7 @@ import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 
-let { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
+const { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
 class Row {
   index: number;
   data: IOtherCostTableRowData;

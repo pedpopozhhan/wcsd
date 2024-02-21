@@ -21,7 +21,7 @@ export interface IProcessInvoiceModalData {
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
-  let { processInvoiceModalDialogContainer } = styles;
+  const { processInvoiceModalDialogContainer } = styles;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -74,10 +74,10 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     if (serviceSheetData) {
       processInvoiceService.updateInvoice(serviceSheetData).subscribe({
         next: (data) => {
-            dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
-            dispatch(setServiceSheetNameChange(false));
-            dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice updated successfully.` });
+          dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
+          dispatch(setServiceSheetNameChange(false));
+          dispatch(setNotificationStatus(true));
+          publishToast({ type: 'success', message: 'Invoice updated successfully.' });
         },
         error: (error) => {
           console.log(error);

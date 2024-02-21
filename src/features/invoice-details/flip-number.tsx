@@ -1,7 +1,7 @@
 import styles from './flip-number.module.scss';
 import { FC, useEffect, useState } from 'react';
 
-let {
+const {
   container,
   fraction,
   hundreds,

@@ -1,6 +1,6 @@
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 class ProcessInvoiceService {
@@ -29,7 +29,7 @@ class ProcessInvoiceService {
       .pipe(
         map((x) => {
           return x.data;
-        })
+        }),
       );
   }
 
@@ -44,11 +44,9 @@ class ProcessInvoiceService {
       .pipe(
         map((x) => {
           return x.data;
-        })
+        }),
       );
   }
-
 }
-
 
 export default new ProcessInvoiceService();

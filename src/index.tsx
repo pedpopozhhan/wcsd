@@ -8,8 +8,6 @@ import Reconciliation from './features/reconciliation/reonciliation';
 import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
 import ProcessedInvoice from './features/processed-invoice/Processed-invoice';
-import ProtectedRoute from './app/protectec-route';
-import { PERMISSION } from './common/permission';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -30,5 +28,5 @@ root.render(
         </Route>
       </Routes>
     </Router>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

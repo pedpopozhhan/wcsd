@@ -1,5 +1,5 @@
 
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface IProcessInvoiceSliceState {
   showInvoiceSavedNotification: boolean;
@@ -7,7 +7,7 @@ interface IProcessInvoiceSliceState {
 
 const initialState: IProcessInvoiceSliceState = {
   showInvoiceSavedNotification: false
-}
+};
 
 export const processInvoiceSlice = createSlice({
   name: 'sliceProcessInvoice',

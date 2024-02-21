@@ -1,10 +1,8 @@
 import { IPaginationResult } from '@/interfaces/pagination-result.interface';
 import { IPagination } from '@/interfaces/pagination.interface';
-import { SearchRequest } from '@/features/reconciliation/search-request';
-import { SearchResponse } from '@/features/reconciliation/search-response';
 import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import axios from 'axios-observable';
-import { Observable, concatMap, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 interface IFlightReportDashboardGetBody {
   filterBy?: {
@@ -54,7 +52,7 @@ class ReconciliationService {
             y.index = index;
             return y;
           });
-        })
+        }),
       );
     // return axios
     //   .post<IPaginationResult<ContractSearchResult>>(

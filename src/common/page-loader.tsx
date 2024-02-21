@@ -8,7 +8,7 @@ interface IPageLoaderProps {
 const PageLoader: React.FunctionComponent<IPageLoaderProps> = ({visible,...props}) => {
   return(
     <>
-        <GoACircularProgress variant="fullscreen" size="small" visible={visible}/>
+      <GoACircularProgress variant="fullscreen" size="small" visible={visible}/>
     </>
   );
 };

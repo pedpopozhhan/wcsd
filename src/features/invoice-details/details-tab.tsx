@@ -5,7 +5,7 @@ import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
 
-let { container, buttons } = styles;
+const { container, buttons } = styles;
 interface IDetailsTabProps {}
 const DetailsTab: React.FC<IDetailsTabProps> = (props) => {
   const dispatch = useAppDispatch();

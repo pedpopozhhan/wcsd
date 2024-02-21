@@ -1,5 +1,5 @@
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import { Observable, map, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 class InvoiceOtherCostService {
   private baseUrl: string;

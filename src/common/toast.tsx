@@ -5,7 +5,7 @@ import { IToast } from '@/interfaces/toast.interface';
 import { Action } from 'redux';
 import { useAppDispatch } from '@/app/hooks';
 
-let { container, label, spacer } = styles;
+const { container, label, spacer } = styles;
 export const TOAST_EVENT = 'toast';
 export const publishToast = (toast: IToast) => {
   const event = new CustomEvent(TOAST_EVENT, { detail: toast });

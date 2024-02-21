@@ -14,7 +14,7 @@ import { setServiceSheetData, setcostDetailsData, setotherCostsData, }
 
 
 
-let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const dispatch = useAppDispatch();

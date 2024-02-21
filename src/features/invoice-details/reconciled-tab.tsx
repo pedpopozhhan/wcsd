@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setOtherCostData, setRowData } from './invoice-details-slice';
 import FlyOut from '@/common/fly-out';
 
-let { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
+const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
 interface IReconciledTabProps { }
 const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
@@ -44,7 +44,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostRemoved(item: IOtherCostTableRowData) {
-    let items = [...otherCostData].filter((p) => p.index != item.index);
+    const items = [...otherCostData].filter((p) => p.index != item.index);
     items.map((x, i) => {
       x.index = i;
       return x;
@@ -53,7 +53,7 @@ const ReconciledTab: FC<IReconciledTabProps> = (props: IReconciledTabProps) => {
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRowData) {
-    let items = [...otherCostData].filter((p) => p.index != item.index);
+    const items = [...otherCostData].filter((p) => p.index != item.index);
     dispatch(
       setOtherCostData(
         [...items, item].map((x, index) => {

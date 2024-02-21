@@ -6,7 +6,7 @@ import { useAppSelector } from '@/app/hooks';
 import InvoiceCostDataTable from '@/features/process-invoice/tabs/invoice-cost-details-table';
 import InvoiceOtherCostTable from '@/features/process-invoice/tabs/invoice-other-costs-table';
 
-let { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
+const { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
 interface IReconciledTabProps { }
 

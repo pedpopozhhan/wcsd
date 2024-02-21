@@ -1,6 +1,5 @@
 import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
@@ -19,12 +18,10 @@ interface IFlightReportAllProps {
   onClickFlightReport?: (flightReportId: number) => void;
 }
 
-const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue, onClickFlightReport, ...props }) => {
+const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
-  //Navigation
-  const navigate = useNavigate();
   //Data set
   const [data, setData] = useState<IFlightReportDashboard[]>([]);
 
@@ -37,34 +34,33 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [page, setPage] = useState(1);
   //count per page
   const [perPage, setPerPage] = useState(10);
-  const [previousSelectedPerPage, setPreviousSelectedPerPage] = useState(10);
+  const [, setPreviousSelectedPerPage] = useState(10);
 
   //Sorting
   const [sortCol, setSortCol] = useState('flightReportDate');
   const [sortDir, setSortDir] = useState(-1);
-  const [isSorting, setIsSorting] = useState(false);
 
   // Modal Dialog configuration
   const [parentShowModal, setParentShowModal] = useState(false);
-  const [contractID, setContractID] = useState(contractNumber);
+  const [contractID] = useState(contractNumber);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    let strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    let sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
+    const strSearchValue = searchValue ? searchValue.toLowerCase() : '';
+    const sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
 
-    let objIPagination: IPagination = {
+    const objIPagination: IPagination = {
       perPage: perPage,
       page: page,
     };
 
-    let objIFilter: IFilter = {
+    const objIFilter: IFilter = {
       contractNumber: contractNumber,
       status: 'approved',
     };
 
-    let objISearch: ISearch = {
+    const objISearch: ISearch = {
       search: strSearchValue,
       sortBy: sortCol,
       sortOrder: sortOrder,
@@ -96,10 +92,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
 
   function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: any, b: any) => {
-      const varA = a[sortBy];
-      const varB = b[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+      const varA = a[sortBy as keyof IFlightReportDashboard];
+      const varB = b[sortBy as keyof IFlightReportDashboard];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
@@ -113,13 +109,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
-    let num = data ? Math.ceil(data.length / perPage) : 0;
+    const num = data ? Math.ceil(data.length / perPage) : 0;
 
     return num;
   }
 
   //Pagination change page
-  function changePage(newPage: any) {
+  function changePage(newPage: number) {
     if (newPage) {
       setIsLoading(true);
       const offset = (newPage - 1) * perPage;
@@ -139,9 +135,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   }
 
   const reconcileTimeReports = () => {
-    let items = pageData?.filter((fr: any) => fr.isChecked === true);
+    // TODO: Possible bug here...isChecked is not on the object
+    const items = pageData?.filter((fr: any) => fr.isChecked === true);
     const trItems: number[] = [];
-    items?.map((record: any) => {
+    items?.map((record: IFlightReportDashboard) => {
       trItems.push(record.flightReportId);
     });
     dispatch(setTimeReportsToReconcile(trItems));
@@ -152,13 +149,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
-      let allTimeReports = pageData?.map((record: any) => {
+      const allTimeReports = pageData?.map((record: any) => {
         return { ...record, isChecked: checked };
       });
       setPageData(allTimeReports);
     } else {
-      let selectedTimeReports = pageData?.map((record: any) =>
-        record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record
+      const selectedTimeReports = pageData?.map((record: any) =>
+        record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record,
       );
       setPageData(selectedTimeReports);
     }

@@ -28,7 +28,7 @@ export default function ProcessInvoice() {
   if (invoiceData.InvoiceKey > 0) {
     dialogType = 'update-service-sheet';
   }
-  let { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
+  const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel } = styles;
 
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -80,15 +80,15 @@ export default function ProcessInvoice() {
           <ion-icon name='archive-outline'></ion-icon>
           <label>Finish</label>
         </GoAButton>
-          <GoAButton type='secondary' onClick={navigateToReconcile}>
+        <GoAButton type='secondary' onClick={navigateToReconcile}>
             Back to Reconcile
-          </GoAButton></Fragment>)}
+        </GoAButton></Fragment>)}
         {(invoiceData.InvoiceKey > 0) && (<Fragment><GoAButton type='primary' onClick={() => setShowDialog(true)}  {...(invoiceTabs.nameChanged) ? { disabled: false } : { disabled: true }}>
           <label>Update</label>
         </GoAButton>
-          <GoAButton type='secondary' onClick={navigateToTimeReports}>
+        <GoAButton type='secondary' onClick={navigateToTimeReports}>
             Close
-          </GoAButton></Fragment>)}
+        </GoAButton></Fragment>)}
 
       </div>
       {<ProcessInvoiceModal
@@ -99,5 +99,5 @@ export default function ProcessInvoice() {
       ></ProcessInvoiceModal>}
     </div>
   );
-};
+}
 

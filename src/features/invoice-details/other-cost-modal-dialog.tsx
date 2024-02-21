@@ -133,7 +133,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: `Server error` });
+        publishToast({ type: 'error', message: 'Server error' });
       },
     });
 

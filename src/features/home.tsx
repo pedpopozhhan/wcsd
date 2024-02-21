@@ -1,5 +1,5 @@
-import { GoABadge, GoAContainer, GoAGrid, GoASpacer } from '@abgov/react-components'
-import { Link } from 'react-router-dom'
+import { GoABadge, GoAContainer, GoAGrid, GoASpacer } from '@abgov/react-components';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
 
@@ -55,5 +55,5 @@ export const Home = () => {
         Get in touch with the design system team on Slack <a href="https://goa-dio.slack.com/archives/C02PLLT9HQ9">#design-system-support</a>
       </GoAContainer> */}
     </main>
-  )
-}
+  );
+};

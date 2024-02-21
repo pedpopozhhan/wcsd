@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IInvoiceData } from '../common/invoice-modal-dialog';
 import { IContractSearchResult } from '../interfaces/reconciliation/contract-search-result';
-import { IToast } from '@/interfaces/toast.interface';
 
 export interface IAppSliceState {
   timeReportsToReconcile: number[];
@@ -11,8 +10,8 @@ export interface IAppSliceState {
 
 const initialState: IAppSliceState = {
   timeReportsToReconcile: [],
-  invoiceData: null as any,
-  contractForReconciliation: null as any,
+  invoiceData: null,
+  contractForReconciliation: null,
 };
 // TODO: I am sure there are patterns to organize reducers and slices, so let's keep that in mind as this grows.
 export const appSlice = createSlice({

@@ -3,7 +3,7 @@ import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/
 import React, { useEffect, useState } from 'react';
 import styles from './contract-search-results.module.scss';
 import { ContractType, convertContractType } from '@/types/contract-type';
-let { chevron, number } = styles;
+const { chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import { setContractForReconciliation } from '@/app/app-slice';
@@ -25,7 +25,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     { value: 'numTimeReports', label: 'Time Reports' },
   ];
 
-  let totalPages = 0;
+  const totalPages = 0;
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
@@ -68,13 +68,13 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }
 
   function getTotalPages() {
-    let num = results ? Math.ceil(results.length / perPage) : 0;
+    const num = results ? Math.ceil(results.length / perPage) : 0;
 
     return num;
   }
 
   function isNextDisabled() {
-    let num = results ? Math.ceil(results.length / perPage) : 0;
+    const num = results ? Math.ceil(results.length / perPage) : 0;
 
     return !num || page === num;
   }
