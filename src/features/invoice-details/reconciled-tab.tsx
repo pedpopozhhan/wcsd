@@ -8,8 +8,7 @@ import { IDetailsTableRow } from './details-table-row.interface';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setOtherCostData, setRowData } from './invoice-details-slice';
-import FlyOut from '@/common/fly-out';
-import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
+import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 
 const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 

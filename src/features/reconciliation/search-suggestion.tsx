@@ -10,8 +10,8 @@ const { search, searchInput, searchInputWrapper, highlight, closeButton, closeBu
 interface ISearchResultsProps {
   options: SearchOption[];
   filterPredicate: (candidate: SearchOption, inputValue: string) => boolean;
-  onEnter: (results: SearchOption[]) => any;
-  onChange: (inputValue: string | SearchOption) => any;
+  onEnter: (results: SearchOption[]) => void;
+  onChange: (inputValue: string | SearchOption) => void;
 }
 const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   const [inputValue, setInputValue] = useState('');
@@ -22,6 +22,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const containerRef: any = useRef(null);
 
   // local array of filtered options for when 'enter' is pressed
@@ -33,6 +34,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
 
   // remember to handle clicking off the menu or input
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleOffMenuClick = (e: any) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setMenuIsOpen(false);
@@ -84,7 +86,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     return filtered.map((data, index) => (
       <div
         className={`${item} ${currentIndex === index ? hover : ''} ${selectedIndex === index ? active : ''}`}
-        onClick={(e) => setSelection(index)}
+        onClick={() => setSelection(index)}
         key={index}
       >
         {highlightLabel(data.label)}
@@ -99,6 +101,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
     props.onEnter([filteredSuggestions[index]]);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleInputKeyDown(e: any) {
     if (e.key === 'Enter') {
       if (!arrowKeyPressed) {
@@ -163,7 +166,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
             onKeyDown={handleInputKeyDown}
             placeholder='Search by Vendor or Business No.'
           ></input>
-          <div data-cy='searchCancel' className={`${closeButton} ${inputValue ? closeButtonActive : ''}`} onClick={(e) => resetInput()}>
+          <div data-cy='searchCancel' className={`${closeButton} ${inputValue ? closeButtonActive : ''}`} onClick={() => resetInput()}>
             <GoAIcon type='close' />
           </div>
         </div>

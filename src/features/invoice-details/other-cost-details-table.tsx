@@ -5,7 +5,7 @@ import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row
 import OtherCostModalDialog from './other-cost-modal-dialog';
 import { useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
+import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 
 const { container, buttonWrapper, tableContainer, stickyColumn, end, onTop } = styles;
 

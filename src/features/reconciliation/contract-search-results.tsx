@@ -25,7 +25,6 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     { value: 'numTimeReports', label: 'Time Reports' },
   ];
 
-  const totalPages = 0;
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
@@ -33,10 +32,10 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
-    results.sort((a: any, b: any) => {
-      const varA = a[sortBy];
-      const varB = b[sortBy];
-      if (typeof varA === 'string' || typeof varB === 'string') {
+    results.sort((a: IContractSearchResult, b: IContractSearchResult) => {
+      const varA = a[sortBy as keyof IContractSearchResult];
+      const varB = b[sortBy as keyof IContractSearchResult];
+      if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
@@ -48,23 +47,16 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage] = useState(10);
   const navigate = useNavigate();
 
-  function changePage(newPage: any) {
+  function changePage(newPage: number) {
     if (newPage) {
       const offset = (newPage - 1) * perPage;
       const pagedResults = results.slice(offset, offset + perPage);
       setPage(newPage);
       setPageResults(pagedResults);
     }
-  }
-  function changePerPage(name: any, value: any) {
-    const newPerPage = parseInt(value, 10);
-    const offset = (page - 1) * newPerPage;
-    const pagedResults = results.slice(offset, offset + newPerPage);
-    setPageResults(pagedResults);
-    setPerPage(newPerPage);
   }
 
   function getTotalPages() {

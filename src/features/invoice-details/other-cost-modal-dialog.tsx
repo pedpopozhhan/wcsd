@@ -18,7 +18,7 @@ import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-
 import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
-import { IOtherCostTableRow } from '@/interfaces/common/other-cost-table-row';
+import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => any;
@@ -96,8 +96,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     remarks: remarks,
     invoiceId: invoiceId,
   };
-
-
 
   const xl = '500px';
   const lg = '230px';

@@ -1,4 +1,4 @@
-import { GoAButton, GoATab, GoATabs } from '@abgov/react-components';
+import { GoAButton } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

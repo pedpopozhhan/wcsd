@@ -1,26 +1,22 @@
-import { GoADropdown, GoADropdownItem, GoAIcon } from '@abgov/react-components';
+import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './reconciliation.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
 import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import searchService from '@/services/reconciliation-search.service';
-import { useLocation } from 'react-router-dom';
 import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
-import { useAppDispatch } from '@/app/hooks';
 import { failedToPerform, publishToast } from '@/common/toast';
 
-const { top, search, invoiceProcessedNotificationContainer, invoiceProcessedNotificationLabel, searchResultsContainer } = styles;
+const { top, search, searchResultsContainer } = styles;
 
 export default function Reconciliation() {
   const header = 'Contracts';
-  const dispatch = useAppDispatch();
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
-  const location = useLocation();
 
   useEffect(() => {
     const subscription = searchService.getAll().subscribe({
@@ -61,7 +57,7 @@ export default function Reconciliation() {
       setSearchResults(
         filtered.filter((x) => {
           return x.businessId?.toString().includes(term) || x.vendorName.toUpperCase().includes(term.toUpperCase());
-        })
+        }),
       );
     } else {
       const splits = searchTerm.label.split(separator);
