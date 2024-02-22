@@ -1,5 +1,5 @@
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
-import { IContractSearchResultResponse } from '@/interfaces/reconciliation/contract-search-result.interface';
+import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
+import { IContractSearchResultResponse } from '@/interfaces/contracts/contract-search-result.interface';
 import axios from 'axios-observable';
 import { Observable, map } from 'rxjs';
 

@@ -2,7 +2,7 @@ import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './contracts.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
+import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import searchService from '@/services/contract-search.service';
 import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';

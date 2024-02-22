@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import App from './app/App';
 import InvoiceDetails from './features/invoice-details/invoice-details';
-import Contracts from './features/reconciliation/contracts';
+import Contracts from './features/contracts/contracts';
 import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
 import ProcessedInvoice from './features/processed-invoice/Processed-invoice';
