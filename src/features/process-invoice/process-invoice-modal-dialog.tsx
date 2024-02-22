@@ -9,8 +9,8 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
-import { setOtherCostData, setRowData } from '../invoice-details/invoice-details-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
 
 export interface IProcessInvoiceModalData {
   open: boolean;

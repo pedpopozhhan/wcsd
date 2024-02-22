@@ -1,8 +1,7 @@
-import { ISearch } from '../interfaces/flight-report-dashboard/search.interface';
-
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import IFlightReportDashboardResponse from '@/interfaces/flight-report-dashboard/flight-report-dashboard-response.interface';
+import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 
 class FlightReportDashboardService {
   private baseUrl: string;

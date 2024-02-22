@@ -1,5 +1,5 @@
 import { IFilter } from './filter.interface';
-import { IPagination } from '../pagination.interface';
+import { IPagination } from '@/interfaces/pagination.interface';
 
 export interface ISearch {
   search?: string | undefined;

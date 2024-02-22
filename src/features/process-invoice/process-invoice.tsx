@@ -1,5 +1,4 @@
 import { Fragment, useState } from 'react';
-import Summary from '../invoice-details/summary';
 import styles from './process-invoice.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import Totalizer from './invoice-amount-totalizer';
@@ -7,11 +6,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ServiceSheetTab from './tabs/service-sheet-tab';
 import DetailsTab from './tabs/details-tab';
 import ProcessInvoiceModal from './process-invoice-modal-dialog';
-import { IDetailsTableRow } from '../invoice-details/details-table-row.interface';
+import { IDetailsTableRow } from '@/features/invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
+import Summary from '@/features/invoice-details/summary';
 
 export default function ProcessInvoice() {
   const dispatch = useAppDispatch();

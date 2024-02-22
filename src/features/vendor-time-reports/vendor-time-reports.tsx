@@ -4,12 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './vendor-time-reports.module.scss';
 
-import SignedOffTabDetails from '../vendor-time-reports/tabs/signed-off-tab-details';
+import SignedOffTabDetails from '@/features/vendor-time-reports/tabs/signed-off-tab-details';
 import ApprovedTabDetails from './tabs/approved-tab-details';
-import VendorTimeReportsSidePanel from '../vendor-time-reports/vendor-time-reports-side-panel';
+import VendorTimeReportsSidePanel from '@/features/vendor-time-reports/vendor-time-reports-side-panel';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
-import { setRedirectionFromProcessInvoice } from '../process-invoice/process-invoice-slice';
+import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
 
 const VendorTimeReports = () => {
   const { contractNumber } = useParams();
