@@ -1,4 +1,4 @@
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
+import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './contract-search-results.module.scss';

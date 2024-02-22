@@ -1,6 +1,6 @@
+import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IInvoiceData } from '../common/invoice-modal-dialog';
-import { IContractSearchResult } from '../interfaces/reconciliation/contract-search-result';
 
 export interface IAppSliceState {
   timeReportsToReconcile: number[];

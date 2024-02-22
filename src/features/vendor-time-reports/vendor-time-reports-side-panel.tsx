@@ -1,6 +1,6 @@
 import { GoABlock, GoAFormItem, GoAIcon, GoATable } from '@abgov/react-components';
 import styles from './vendor-time-reports.module.scss';
-import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
+import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import { ContractType, convertContractType } from '@/types/contract-type';
 
 interface IContractTimeReportsSidePanelProps {

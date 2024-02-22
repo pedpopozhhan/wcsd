@@ -58,14 +58,10 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     setIsLoading(true);
     const subscription = flightReportDashboardService.getSearch(objISearch).subscribe({
       next: (response) => {
-        if (response.errorMessage) {
-          console.error(response.errorMessage);
-          publishToast({ type: 'error', message: failedToPerform('search flight reports', response.errorMessage) });
-        } else {
-          setData(response.data);
-          // sort by what default
-          setPageData(response.data.slice(0, perPage));
-        }
+        setData(response.rows);
+        // sort by what default
+        setPageData(response.rows.slice(0, perPage));
+
         setIsLoading(false);
       },
       error: (error) => {
