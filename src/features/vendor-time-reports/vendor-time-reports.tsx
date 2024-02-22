@@ -24,7 +24,7 @@ const VendorTimeReports = () => {
   const dispatch = useAppDispatch();
 
   function BackToContractReconciliationClick() {
-    navigate('/reconciliation');
+    navigate('/contracts');
   }
 
   useEffect(() => {

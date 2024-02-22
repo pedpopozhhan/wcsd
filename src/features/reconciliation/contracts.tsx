@@ -1,6 +1,6 @@
 import { GoADropdown, GoADropdownItem } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import styles from './reconciliation.module.scss';
+import styles from './contracts.module.scss';
 import { ContractType, typeItems } from '@/types/contract-type';
 import { IContractSearchResult } from '@/interfaces/reconciliation/contract-search-result';
 import searchService from '@/services/contract-search.service';
@@ -11,7 +11,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 
 const { top, search, searchResultsContainer } = styles;
 
-export default function Reconciliation() {
+export default function Contracts() {
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
