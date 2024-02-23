@@ -1,4 +1,4 @@
-import { IServiceSheetData } from "../common/service-sheet-data";
+import { IServiceSheetData } from "@/interfaces/common/service-sheet-data";
 
 export interface IProcessedInvoiceTableRowData {
     invoiceKey: number;
