@@ -145,6 +145,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 </th>
                 <th style={{ maxWidth: '15%' }}>Invoice No.</th>
                 <th style={{ maxWidth: '25%' }}>Invoice Amount</th>
+                <th style={{ maxWidth: '25%' }}>Service Sheet No.</th>
                 <th style={{ maxWidth: '35%' }}>Payment</th>
                 <th style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
@@ -166,7 +167,16 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                       </GoAButton>
                     </td>
                     <td>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.paymentStatus}</td>
+                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName? record.invoiceServiceSheet.uniqueServiceSheetName : "--"}</td>
+                    <td>
+                      {(!record?.paymentStatus) && <label>--</label> }
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== "cleared" &&
+                      <goa-badge type="information" content={record.paymentStatus}></goa-badge>
+                      }
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() === "cleared" &&
+                      <goa-badge type="success" content={record.paymentStatus}></goa-badge>
+                      }
+                      </td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
                     </td>
