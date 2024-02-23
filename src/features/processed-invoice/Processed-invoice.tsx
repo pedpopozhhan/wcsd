@@ -6,10 +6,9 @@ import Totalizer from '@/features/process-invoice/invoice-amount-totalizer';
 import { useNavigate, useParams } from 'react-router-dom';
 import ServiceSheetTab from '@/features/process-invoice/tabs/service-sheet-tab';
 import DetailsTab from '@/features/process-invoice/tabs/details-tab';
-
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
 
 export default function ProcessedInvoice() {
   const { invoiceKey } = useParams();
@@ -27,6 +26,7 @@ export default function ProcessedInvoice() {
 
   function navigateToTimeReports() {
     dispatch(resetState());
+    dispatch(setRedirectionFromProcessInvoice(true));
     navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });

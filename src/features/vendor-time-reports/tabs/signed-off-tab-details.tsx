@@ -8,7 +8,6 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
-import { failedToPerform, publishToast } from '@/common/toast';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -66,7 +65,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
+        setIsLoading(false);
       },
     });
 
