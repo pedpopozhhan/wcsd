@@ -9,6 +9,7 @@ import processedInvoicesService from '@/services/processed-invoices.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
+import {PaymentStatusCleared,PaymentStatusPosted, PaymentStatusSubmitted} from '@/common/types/payment-status';
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
@@ -170,7 +171,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
-                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== 'cleared' && (
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
                         <goa-badge type='information' content={record.paymentStatus}></goa-badge>
                       )}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() === 'cleared' && (

@@ -2,7 +2,7 @@ import { IContractSearchResult } from '@/interfaces/contracts/contract-search-re
 import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './contract-search-results.module.scss';
-import { ContractType, convertContractType } from '@/types/contract-type';
+import { ContractType, convertContractType } from '@/common/types/contract-type';
 const { chevron, number } = styles;
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
