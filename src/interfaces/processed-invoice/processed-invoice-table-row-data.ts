@@ -1,3 +1,5 @@
+import { IServiceSheetData } from "@/interfaces/common/service-sheet-data";
+
 export interface IProcessedInvoiceTableRowData {
     invoiceKey: number;
     invoiceId: string;
@@ -11,4 +13,5 @@ export interface IProcessedInvoiceTableRowData {
     type: string;
     createdBy: string;
     paymentStatus: string;
+    invoiceServiceSheet: IServiceSheetData;
 }

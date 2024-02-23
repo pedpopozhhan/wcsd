@@ -23,6 +23,7 @@ export default function ProcessInvoice() {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const invoiceTabs = useAppSelector((state) => state.processInvoiceTabs);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
+  const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
   let dialogType = 'finish-invoice';
   if (invoiceData.InvoiceKey > 0) {
     dialogType = 'update-service-sheet';
@@ -88,7 +89,7 @@ export default function ProcessInvoice() {
         )}
         {invoiceData.InvoiceKey > 0 && (
           <Fragment>
-            <GoAButton type='primary' onClick={() => setShowDialog(true)} {...(invoiceTabs.nameChanged ? { disabled: false } : { disabled: true })}>
+            <GoAButton type='primary' onClick={() => setShowDialog(true)} {...(invoiceTabs.nameChanged && serviceSheetData?.uniqueServiceSheetName? { disabled: false } : { disabled: true })}>
               <label>Update</label>
             </GoAButton>
             <GoAButton type='secondary' onClick={navigateToTimeReports}>
