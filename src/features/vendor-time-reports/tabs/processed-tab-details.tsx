@@ -167,16 +167,16 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                       </GoAButton>
                     </td>
                     <td>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName? record.invoiceServiceSheet.uniqueServiceSheetName : "--"}</td>
+                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
                     <td>
-                      {(!record?.paymentStatus) && <label>--</label> }
-                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== "cleared" &&
-                      <goa-badge type="information" content={record.paymentStatus}></goa-badge>
-                      }
-                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() === "cleared" &&
-                      <goa-badge type="success" content={record.paymentStatus}></goa-badge>
-                      }
-                      </td>
+                      {!record?.paymentStatus && <label>--</label>}
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== 'cleared' && (
+                        <goa-badge type='information' content={record.paymentStatus}></goa-badge>
+                      )}
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() === 'cleared' && (
+                        <goa-badge type='success' content={record.paymentStatus}></goa-badge>
+                      )}
+                    </td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
                     </td>
