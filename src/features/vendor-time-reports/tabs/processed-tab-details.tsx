@@ -57,7 +57,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
     return () => {
