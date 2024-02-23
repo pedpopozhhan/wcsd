@@ -10,7 +10,6 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
-import { failedToPerform, publishToast } from '@/common/toast';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
@@ -81,7 +80,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       error: (error) => {
         console.error(error);
         setIsLoading(false);
-        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
 
