@@ -66,6 +66,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       },
       error: (error) => {
         console.error(error);
+        setIsLoading(false);
         publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
