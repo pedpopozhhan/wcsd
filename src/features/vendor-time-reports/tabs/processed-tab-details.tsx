@@ -9,7 +9,7 @@ import processedInvoicesService from '@/services/processed-invoices.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
-import {PaymentStatusCleared,PaymentStatusPosted, PaymentStatusSubmitted} from '@/common/types/payment-status';
+import { PaymentStatusCleared } from '@/common/types/payment-status';
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
