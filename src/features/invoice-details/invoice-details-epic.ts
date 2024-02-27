@@ -6,7 +6,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const ACTION_2 = 'action2';
-export const getInvoiceDetails = createAction<number[]>(GET_INVOICE_DETAILS);
+export const getInvoiceDetails = createAction<{ token: string; ids: number[] }>(GET_INVOICE_DETAILS);
 export const action2 = createAction<number>(ACTION_2);
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
@@ -15,7 +15,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
     filter((action) => getInvoiceDetails.match(action) || action2.match(action)),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
-        return timeReportDetailsService.getTimeReportDetails(action.payload).pipe(
+        return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids).pipe(
           mergeMap((results) => of(setRateTypes(results.rateTypes), initializeRowData(results.rows))),
           catchError((error) => {
             console.error(error);

@@ -11,6 +11,7 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
+import { useAuth } from 'react-oidc-context';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -20,6 +21,7 @@ interface IFlightReportAllProps {
 }
 
 const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
+  const auth = useAuth();
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
@@ -69,7 +71,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       pagination: objIPagination,
     };
     setIsLoading(true);
-    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe({
+    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, objISearch).subscribe({
       next: (response) => {
         setData(response.rows);
         // sort by what default

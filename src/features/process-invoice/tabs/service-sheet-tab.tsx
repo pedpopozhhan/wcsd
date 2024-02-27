@@ -5,12 +5,14 @@ import { convertToCurrency } from '@/common/currency';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
 import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
+import { useAuth } from 'react-oidc-context';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
+  const auth = useAuth();
   const { serviceSheetTabContainer, serviceSheetTabAltValues, serviceSheetNameDesc, invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();
@@ -26,9 +28,9 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
 
   useEffect(() => {
     if (!serviceSheetData) {
-      dispatch(getServiceSheetData());
+      dispatch(getServiceSheetData(auth?.user?.access_token));
     }
-  });
+  }, [auth]);
 
   return (
     <div className={serviceSheetTabContainer}>

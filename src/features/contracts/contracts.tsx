@@ -8,10 +8,12 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { useAuth } from 'react-oidc-context';
 
 const { top, search, searchResultsContainer } = styles;
 
 export default function Contracts() {
+  const auth = useAuth();
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
@@ -19,7 +21,7 @@ export default function Contracts() {
   const [contractType, setContractType] = useState('all' as ContractType);
 
   useEffect(() => {
-    const subscription = searchService.getAll().subscribe({
+    const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {
         const data = searchResults.slice();
         data.sort((a, b) => {

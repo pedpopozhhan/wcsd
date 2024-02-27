@@ -11,6 +11,7 @@ import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
+import { useAuth } from 'react-oidc-context';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -20,6 +21,7 @@ export interface IProcessInvoiceModalData {
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
+  const auth = useAuth();
   const { processInvoiceModalDialogContainer } = styles;
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -43,7 +45,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       invoiceOtherCostDetails: props.data.otherCostData,
       invoiceServiceSheet: serviceSheetData,
     };
-    processInvoiceService.createInvoice(processInvoiceData).subscribe({
+    processInvoiceService.createInvoice(auth?.user?.access_token, processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
           dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
@@ -70,7 +72,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
 
   function updateInvoiceServiceSheet() {
     if (serviceSheetData) {
-      processInvoiceService.updateInvoice(serviceSheetData).subscribe({
+      processInvoiceService.updateInvoice(auth?.user?.access_token, serviceSheetData).subscribe({
         next: (data) => {
           dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
           dispatch(setServiceSheetNameChange(false));

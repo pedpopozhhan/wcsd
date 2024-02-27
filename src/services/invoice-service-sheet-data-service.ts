@@ -8,7 +8,8 @@ class InvoiceServiceSheetDataService {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
 
-  getAll(): Observable<IServiceSheetData> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getAll(token: string): Observable<IServiceSheetData> {
     return of(SampleData.GetSampleResults());
   }
 }

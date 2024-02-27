@@ -10,10 +10,12 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { useAuth } from 'react-oidc-context';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
+  const auth = useAuth();
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
@@ -35,8 +37,8 @@ export default function InvoiceDetails() {
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    dispatch(getInvoiceDetails(timeReportsToReconcile));
-  }, [timeReportsToReconcile]);
+    dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
+  }, [timeReportsToReconcile, auth]);
 
   useEffect(() => {
     const total = rowData
