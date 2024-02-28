@@ -23,6 +23,8 @@ jobs:
       VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
       VITE_AVIATION_API_KEY_CODE: "${{ secrets.VITE_AVIATION_API_KEY_CODE }}"
       VITE_API_KEY_CODE: "${{ secrets.VITE_API_KEY_CODE }}"    
+      VITE_AUTHORIZATION_REALM: "${{ secrets.VITE_AUTHORIZATION_REALM }}"
+      VITE_AUTHORIZATION_AUTHSERVERURL: "${{ vars.VITE_AUTHORIZATION_AUTHSERVERURL }}"
 
     steps:
       - uses: actions/checkout@v3
