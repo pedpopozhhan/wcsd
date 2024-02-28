@@ -8,6 +8,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
+import { useAuth } from 'react-oidc-context';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -16,6 +17,7 @@ interface IFlightReportAllProps {
 }
 
 const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
+  const auth = useAuth();
   //Data set
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
@@ -55,7 +57,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       pagination: objIPagination,
     };
     setIsLoading(true);
-    const subscription = flightReportDashboardService.getSearch(objISearch).subscribe({
+    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, objISearch).subscribe({
       next: (response) => {
         setData(response.rows);
         // sort by what default
@@ -72,7 +74,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {

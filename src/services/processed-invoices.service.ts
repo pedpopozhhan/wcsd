@@ -1,24 +1,17 @@
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import IProcessedInvoices from '@/interfaces/processed-invoice/processed-invoices';
+import getHeaders from './headers';
 interface IProcessedInvoicesGetBody {
   contractNumber: string;
 }
 class ProcessedInvoicesService {
   private baseUrl: string;
-  private apiKeyCode: string;
-  private headers: { [key: string]: string };
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
-    this.apiKeyCode = import.meta.env.VITE_API_KEY_CODE;
-    this.headers = {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'x-functions-key': this.apiKeyCode,
-    };
   }
 
-  getInvoices(contractNumber: string): Observable<IProcessedInvoices> {
+  getInvoices(token: string, contractNumber: string): Observable<IProcessedInvoices> {
     const body: IProcessedInvoicesGetBody = {
       contractNumber: contractNumber,
     };
@@ -26,7 +19,7 @@ class ProcessedInvoicesService {
       .request<IProcessedInvoices>({
         method: 'post',
         url: this.baseUrl + '/GetInvoices',
-        headers: this.headers,
+        headers: getHeaders(token),
         data: body,
       })
       .pipe(

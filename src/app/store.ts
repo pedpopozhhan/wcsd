@@ -12,7 +12,6 @@ import { invoiceDetailsEpic } from '@/features/invoice-details/invoice-details-e
 import processInvoiceTabsSliceReducer from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import processInvoiceReducer from '@/features/process-invoice/process-invoice-slice';
 import { processInvoiceEpic } from '@/features/process-invoice/process-invoice-epic';
-import authReducer from './auth-slice';
 
 const environment = import.meta.env.VITE_ENV;
 // https://redux-toolkit.js.org/usage/migrating-to-modern-redux#store-setup-with-configurestore
@@ -22,11 +21,10 @@ const persistConfig = {
   version: 1,
   storage,
   // blacklist the slices that should not be persisted
-  blacklist: ['auth'],
+  blacklist: [''],
 };
 
 const reducers = combineReducers({
-  auth: authReducer,
   app: appReducer,
   invoiceDetails: invoiceDetailsReducer,
   processInvoiceTabs: processInvoiceTabsSliceReducer,
