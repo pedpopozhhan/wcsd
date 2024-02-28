@@ -1,22 +1,22 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from './hooks';
 import { PERMISSION } from '@/common/permission';
+import { useAuth } from 'react-oidc-context';
 
 export interface IProtecedRouteProps {
   permissions: PERMISSION[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProtectedRoute: React.FC<IProtecedRouteProps> = (props) => {
-  const user = useAppSelector((state) => state.auth.user);
-  const isAuthenticated = user ? props.permissions.every((x) => user.permissions.includes(x)) : false;
-  // not sure how to integrate this with platform team, but cross that bridge then
-
-  if (!isAuthenticated) {
+  const auth = useAuth();
+  if (!auth.isAuthenticated) {
+    // also check permissions in future if needed
     console.error('Unauthorized');
+    return <Navigate to='logged-out' replace />;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to='/' replace />;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

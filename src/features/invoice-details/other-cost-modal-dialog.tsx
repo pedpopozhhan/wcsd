@@ -18,6 +18,7 @@ import { useAppSelector } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
+import { useAuth } from 'react-oidc-context';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -28,6 +29,7 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
+  const auth = useAuth();
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
   const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
@@ -122,7 +124,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   }, [isOtherCostAddition, props.rowToUpdate?.data]);
 
   useEffect(() => {
-    const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists().subscribe({
+    const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
         setRateUnits(results.rateUnits);
         setCostCenters(results.costCenterList);

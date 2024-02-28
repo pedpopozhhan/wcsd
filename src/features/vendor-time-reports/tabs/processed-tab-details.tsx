@@ -20,12 +20,14 @@ import {
   setInvoiceAmount,
   setInvoiceId,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { useAuth } from 'react-oidc-context';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
+  const auth = useAuth();
   //Object for the page data
   const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -50,7 +52,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const subscription = processedInvoicesService.getInvoices(String(contractID)).subscribe({
+    const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
         setData(results.invoices);
         setPageData(results.invoices.slice(0, perPage));
@@ -63,7 +65,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     return () => {
       subscription.unsubscribe();
     };
-  }, [contractID]);
+  }, [contractID, auth]);
   // page, perPage, searchValue, sortCol, sortDir,
 
   function sortData(sortBy: string, sortDir: number) {
@@ -104,7 +106,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   //#endregion
 
   function pullDetailsForInvoice(invoiceKey?: number) {
-    const subscription = processedInvoiceDetailService.getInvoiceDetail(Number(invoiceKey)).subscribe({
+    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, Number(invoiceKey)).subscribe({
       next: (results) => {
         setIsLoading(true);
         dispatch(setInvoiceId(results.invoice.invoiceId));

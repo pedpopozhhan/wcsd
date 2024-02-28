@@ -1,15 +1,10 @@
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import { Observable, of } from 'rxjs';
 
 class InvoiceOtherCostService {
   private baseUrl: string;
 
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
-  }
-
-  getAll(): Observable<IOtherCostTableRowData[]> {
-    return of(SampleData.GetSampleResults());
   }
 }
 

@@ -6,7 +6,7 @@ import { setServiceSheetData } from './tabs/process-invoice-tabs-slice';
 
 const GET_SERVICE_SHEET_DATA = 'getServiceSheetData';
 const ACTION_2 = 'action2';
-export const getServiceSheetData = createAction(GET_SERVICE_SHEET_DATA);
+export const getServiceSheetData = createAction<string>(GET_SERVICE_SHEET_DATA);
 export const action2 = createAction<number>(ACTION_2);
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
@@ -15,7 +15,7 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
     filter((action) => getServiceSheetData.match(action) || action2.match(action)),
     switchMap((action: Action) => {
       if (getServiceSheetData.match(action)) {
-        return invoiceServiceSheetDataService.getAll().pipe(
+        return invoiceServiceSheetDataService.getAll(action.payload).pipe(
           mergeMap((results) => of(setServiceSheetData(results))),
           catchError((error) => {
             console.error(error);
@@ -25,7 +25,7 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
               action: action,
             });
             return EMPTY;
-          })
+          }),
         );
       } else if (action2.match(action)) {
         // This is a placeholder to be used as an example
@@ -35,5 +35,5 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
         console.error(`${action.type} is not handled`);
         return EMPTY;
       }
-    })
+    }),
   );
