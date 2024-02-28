@@ -379,7 +379,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <tr>
               <td>
                 <GoAFormItem label='Rate Type'>
-                  <GoADropdown placeholder='Select rate Type' name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
+                  <GoADropdown filterable placeholder='Select rate Type' name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
                     {rateTypes.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -389,7 +389,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td></td>
               <td colSpan={3}>
                 <GoAFormItem label='Unit'>
-                  <GoADropdown placeholder='Select rate unit' name='units' value={unit} onChange={onUnitChange} width={lg}>
+                  <GoADropdown filterable placeholder='Select rate unit' name='units' value={unit} onChange={onUnitChange} width={lg}>
                     {rateUnits.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -465,20 +465,14 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td colSpan={3}>
-                <GoAFormItem label='G/L Acc'>
-                  <GoADropdown placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
-                    {glAccounts.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
-                    })}
-                  </GoADropdown>
-                </GoAFormItem>
+
               </td>
               <td> </td>
             </tr>
             <tr>
               <td>
                 <GoAFormItem label='Cost Center'>
-                  <GoADropdown placeholder='Select cost center' name='costCenter' value={costCenter} onChange={onCostCenterChange} width={lg}>
+                  <GoADropdown filterable placeholder='Select cost center' name='costCenter' value={costCenter} onChange={onCostCenterChange} width={lg}>
                     {costCenters.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -488,7 +482,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td></td>
               <td colSpan={3}>
                 <GoAFormItem label='Fund'>
-                  <GoADropdown placeholder='Select fund' name='fund' value={fund} onChange={onFundChange} width={lg}>
+                  <GoADropdown filterable placeholder='Select fund' name='fund' value={fund} onChange={onFundChange} width={lg}>
                     {funds.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -502,6 +496,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Internal Order'>
                   <GoADropdown
                     placeholder='Select internal order'
+                    filterable
                     name='internalOrder'
                     value={internalOrder}
                     onChange={onInternalOrderChange}
@@ -515,16 +510,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td>
-                <GoAFormItem label='Profit Center'>
-                  <GoAInput
-                    name='profitCenter'
-                    width={lg}
-                    value={profitCentre}
-                    disabled
-                    onChange={(key, value) => {
-                      setProfitCenter(value.trim());
-                    }}
-                  />
+                <GoAFormItem label='G/L Acc'>
+                  <GoADropdown filterable placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
+                    {glAccounts.map((x, i) => {
+                      return <GoADropdownItem key={i} value={x} label={x} />;
+                    })}
+                  </GoADropdown>
                 </GoAFormItem>
               </td>
               <td></td>
