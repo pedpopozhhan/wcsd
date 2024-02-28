@@ -9,6 +9,7 @@ import processedInvoicesService from '@/services/processed-invoices.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
+import { PaymentStatusCleared } from '@/common/types/payment-status';
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
@@ -57,7 +58,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('search flight reports', 'Server Error') });
       },
     });
     return () => {
@@ -145,6 +145,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 </th>
                 <th style={{ maxWidth: '15%' }}>Invoice No.</th>
                 <th style={{ maxWidth: '25%' }}>Invoice Amount</th>
+                <th style={{ maxWidth: '25%' }}>Service Sheet No.</th>
                 <th style={{ maxWidth: '35%' }}>Payment</th>
                 <th style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
@@ -166,7 +167,16 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                       </GoAButton>
                     </td>
                     <td>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.paymentStatus}</td>
+                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
+                    <td>
+                      {!record?.paymentStatus && <label>--</label>}
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
+                        <goa-badge type='information' content={record.paymentStatus}></goa-badge>
+                      )}
+                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() === 'cleared' && (
+                        <goa-badge type='success' content={record.paymentStatus}></goa-badge>
+                      )}
+                    </td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
                     </td>
