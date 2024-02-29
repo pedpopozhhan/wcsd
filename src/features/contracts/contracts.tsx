@@ -9,11 +9,12 @@ import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 const { top, search, searchResultsContainer } = styles;
 
 export default function Contracts() {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);

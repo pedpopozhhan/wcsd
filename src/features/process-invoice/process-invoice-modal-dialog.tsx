@@ -12,6 +12,7 @@ import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-i
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -21,7 +22,7 @@ export interface IProcessInvoiceModalData {
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   const { processInvoiceModalDialogContainer } = styles;
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);

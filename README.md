@@ -13,8 +13,9 @@ VITE_AVIATION_API_BASE_URL=<url to aviation api>
 VITE_AVIATION_API_KEY_CODE=<aviation token>
 VITE_ENV=<dev or stage or uat or prod>
 VITE_AVIATION_APPLICATION_BASE_URL = <URL to aviation application>
-VITE_AUTHORIZATION_REALM: e8a54e8b-ca4a-404a-9ba1-00b593cd3ff8
-VITE_AUTHORIZATION_AUTHSERVERURL: https://access.adsp-dev.gov.ab.ca/auth
+VITE_AUTHORIZATION_REALM e8a54e8b-ca4a-404a-9ba1-00b593cd3ff8
+VITE_AUTHORIZATION_AUTHSERVERURL https://access.adsp-dev.gov.ab.ca/auth
+VITE_ENABLE_AUTHORIZATION 0 or 1
 [Visit Design System](https://ui-components.alberta.ca)
 
 Should be read to go by just running the debugger in visual studio code.

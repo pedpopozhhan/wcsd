@@ -19,6 +19,7 @@ import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -29,7 +30,7 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
   const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
@@ -464,15 +465,20 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 </GoAFormItem>
               </td>
               <td></td>
-              <td colSpan={3}>
-
-              </td>
+              <td colSpan={3}></td>
               <td> </td>
             </tr>
             <tr>
               <td>
                 <GoAFormItem label='Cost Center'>
-                  <GoADropdown filterable placeholder='Select cost center' name='costCenter' value={costCenter} onChange={onCostCenterChange} width={lg}>
+                  <GoADropdown
+                    filterable
+                    placeholder='Select cost center'
+                    name='costCenter'
+                    value={costCenter}
+                    onChange={onCostCenterChange}
+                    width={lg}
+                  >
                     {costCenters.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}

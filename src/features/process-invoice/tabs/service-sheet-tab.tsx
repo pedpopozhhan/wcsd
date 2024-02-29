@@ -6,13 +6,14 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
 import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 interface IServiceSheetTabProps {
   InvoiceID: string;
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   const { serviceSheetTabContainer, serviceSheetTabAltValues, serviceSheetNameDesc, invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();

@@ -12,6 +12,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -21,7 +22,7 @@ interface IFlightReportAllProps {
 }
 
 const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 

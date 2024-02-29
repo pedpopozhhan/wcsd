@@ -9,6 +9,7 @@ import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -17,7 +18,7 @@ interface IFlightReportAllProps {
 }
 
 const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   //Data set
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader

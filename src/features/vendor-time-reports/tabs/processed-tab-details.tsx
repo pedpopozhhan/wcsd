@@ -21,13 +21,14 @@ import {
   setInvoiceId,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   //Object for the page data
   const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
