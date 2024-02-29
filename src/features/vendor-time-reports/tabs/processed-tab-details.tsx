@@ -10,6 +10,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
+import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
@@ -21,13 +22,14 @@ import {
   setInvoiceId,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   //Object for the page data
   const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -50,6 +52,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const [contractID] = useState<string | undefined>(contractNumber);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const {invoiceAmountLabel} = styles;
 
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
@@ -140,7 +144,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       <div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
-            <thead>
+          <thead>
               <tr>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
@@ -168,7 +172,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         {record.invoiceId}
                       </GoAButton>
                     </td>
-                    <td>{convertToCurrency(record?.invoiceAmount)}</td>
+                    <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}

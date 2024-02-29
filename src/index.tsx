@@ -16,30 +16,57 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './app/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
+const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION;
 root.render(
-  <AuthProvider {...oidcConfig}>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <React.StrictMode>
-          <Router>
-            <Routes>
-              <Route path='/' element={<App />}>
-                <Route key='1' path='/' element={<Contracts />} />
-                {/* example usage of protected route 
+  <>
+    {authEnabled && (
+      <AuthProvider {...oidcConfig}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <React.StrictMode>
+              <Router>
+                <Routes>
+                  <Route path='/' element={<App />}>
+                    <Route key='1' path='/' element={<Contracts />} />
+                    {/* example usage of protected route 
           <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
             <Route path='/reconciliation2' element={<Reconciliation />} />
           </Route>*/}
-                <Route key='2' path='contracts' element={<Contracts />} />
-                <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
-                <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
-                <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
-                <Route key='6' path='ProcessedInvoice/:invoiceKey' element={<ProcessedInvoice></ProcessedInvoice>} />
-                <Route key='7' path='logged-out' element={<LoggedOut />} />
-              </Route>
-            </Routes>
-          </Router>
-        </React.StrictMode>{' '}
-      </PersistGate>
-    </Provider>
-  </AuthProvider>,
+                    <Route key='2' path='contracts' element={<Contracts />} />
+                    <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
+                    <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
+                    <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
+                    <Route key='6' path='ProcessedInvoice/:invoiceKey' element={<ProcessedInvoice></ProcessedInvoice>} />
+                    <Route key='7' path='logged-out' element={<LoggedOut />} />
+                  </Route>
+                </Routes>
+              </Router>
+            </React.StrictMode>{' '}
+          </PersistGate>
+        </Provider>
+      </AuthProvider>
+    )}
+    ,
+    {!authEnabled && (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <React.StrictMode>
+            <Router>
+              <Routes>
+                <Route path='/' element={<App />}>
+                  <Route key='1' path='/' element={<Contracts />} />
+                  <Route key='2' path='contracts' element={<Contracts />} />
+                  <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
+                  <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
+                  <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
+                  <Route key='6' path='ProcessedInvoice/:invoiceKey' element={<ProcessedInvoice></ProcessedInvoice>} />
+                  <Route key='7' path='logged-out' element={<LoggedOut />} />
+                </Route>
+              </Routes>
+            </Router>
+          </React.StrictMode>{' '}
+        </PersistGate>
+      </Provider>
+    )}
+  </>,
 );
