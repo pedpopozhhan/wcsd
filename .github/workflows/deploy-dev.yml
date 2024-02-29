@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
+      TARGET: "dev"
       VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
       VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
       VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
@@ -54,6 +55,7 @@ jobs:
     needs: build
     environment: dev
     env:
+      TARGET: "dev"
       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
@@ -77,23 +79,23 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name wcdsstoragewebdev --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -s '$web'
             
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstoragewebdev --auth-mode key -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -d '$web' -s .
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az cdn endpoint purge --subscription "a9b1d048-a7f6-4d5c-ba63-a917e07892b7" \
+              az cdn endpoint purge --subscription ""${{ secrets.ARM_SUBSCRIPTION_ID }}"" \
               --content-paths  "/*" \
-              --profile-name "wcds-web-profile-dev" \
-              --name "wcds-web-dev" \
-              --resource-group "wcds-web-dev"
+              --profile-name "wcds-web-profile-${{ env.TARGET }}" \
+              --name "wcds-web-${{ env.TARGET }}" \
+              --resource-group "wcds-web-${{ env.TARGET }}"
 
   # Azure logout
       - name: logout
