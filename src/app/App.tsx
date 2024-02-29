@@ -4,12 +4,13 @@ import styles from './App.module.scss';
 import Toast from '@/common/toast';
 import { useAuth } from 'react-oidc-context';
 import { useEffect } from 'react';
+import authNoop from '@/common/auth-noop';
 
 const { mainContainer, outletContainer } = styles;
 
 export function App() {
   const headerTitle = 'Wildfire Support';
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   useEffect(() => {
     const isLoggedOutPath = window.location.pathname === 'logged-out';
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {

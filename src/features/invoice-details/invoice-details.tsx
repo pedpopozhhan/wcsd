@@ -11,11 +11,12 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { useAuth } from 'react-oidc-context';
+import authNoop from '@/common/auth-noop';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
-  const auth = useAuth();
+  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
