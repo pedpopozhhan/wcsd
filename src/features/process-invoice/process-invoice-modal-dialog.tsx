@@ -5,14 +5,12 @@ import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -22,7 +20,7 @@ export interface IProcessInvoiceModalData {
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   const { processInvoiceModalDialogContainer } = styles;
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);

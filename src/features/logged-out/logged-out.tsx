@@ -1,10 +1,9 @@
 import { GoAButton } from '@abgov/react-components';
-import { useAuth } from 'react-oidc-context';
 import { useEffect } from 'react';
-import authNoop from '@/common/auth-noop';
+import { useConditionalAuth } from '@/app/hooks';
 
 export const LoggedOut = () => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   useEffect(() => {
     if (!auth.isLoading && auth.isAuthenticated) {
       auth.signoutSilent({ id_token_hint: auth.user?.id_token });

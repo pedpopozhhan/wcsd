@@ -8,8 +8,7 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { useConditionalAuth } from '@/app/hooks';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -18,7 +17,7 @@ interface IFlightReportAllProps {
 }
 
 const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   //Data set
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader

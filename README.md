@@ -15,7 +15,7 @@ VITE_ENV=<dev or stage or uat or prod>
 VITE_AVIATION_APPLICATION_BASE_URL = <URL to aviation application>
 VITE_AUTHORIZATION_REALM
 VITE_AUTHORIZATION_AUTHSERVERURL
-VITE_ENABLE_AUTHORIZATION 0 or 1
+VITE_ENABLE_AUTHORIZATION true or false
 [Visit Design System](https://ui-components.alberta.ca)
 
 Should be read to go by just running the debugger in visual studio code.
