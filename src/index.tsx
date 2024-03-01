@@ -16,7 +16,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './app/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION;
+const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true';
 root.render(
   <>
     {authEnabled && (

@@ -8,13 +8,12 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { useConditionalAuth } from '@/app/hooks';
 
 const { top, search, searchResultsContainer } = styles;
 
 export default function Contracts() {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
