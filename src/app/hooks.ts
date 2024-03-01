@@ -12,14 +12,9 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function useConditionalAuth() {
   const auth = useAuth();
-  const isAuthEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true'; // Make sure this is a boolean
-  //   console.log('isAuthEnabled:', isAuthEnabled); // Confirm the parsed value
-  //   console.log('auth:', auth);
-  //   console.log('authNoop:', authNoop);
+  const isAuthEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true';
   if (isAuthEnabled) {
-    // console.log('auth enabled');
     return auth;
   }
-  //   console.log('auth disabled');
   return authNoop;
 }
