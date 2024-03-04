@@ -121,7 +121,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Server Error') });
+        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Connection Error') });
       },
     });
     return () => {

@@ -63,7 +63,13 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       },
       error: (error) => {
         console.log(error);
-        publishToast({ type: 'error', message: failedToPerform('create invoice', 'Server Error') });
+        publishToast({
+          type: 'error',
+          message: failedToPerform('create invoice', 'Connection Error'),
+          callback: () => {
+            createInvoice();
+          },
+        });
       },
     });
     props.close();
@@ -71,6 +77,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
 
   function updateInvoiceServiceSheet() {
     if (serviceSheetData) {
+      let errored = false;
       processInvoiceService.updateInvoice(auth?.user?.access_token, serviceSheetData).subscribe({
         next: (data) => {
           dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
@@ -79,11 +86,20 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           publishToast({ type: 'success', message: 'Invoice updated successfully.' });
         },
         error: (error) => {
+          errored = true;
           console.log(error);
-          publishToast({ type: 'error', message: failedToPerform('update invoice', 'Server Error') });
+          publishToast({
+            type: 'error',
+            message: failedToPerform('update invoice', 'Connection Error'),
+            callback: () => {
+              updateInvoiceServiceSheet();
+            },
+          });
         },
       });
-      props.close();
+      if (!errored) {
+        props.close();
+      }
     }
   }
 
