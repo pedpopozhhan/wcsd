@@ -44,6 +44,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       invoiceOtherCostDetails: props.data.otherCostData,
       invoiceServiceSheet: serviceSheetData,
     };
+    let errored = false;
     processInvoiceService.createInvoice(auth?.user?.access_token, processInvoiceData).subscribe({
       next: (data) => {
         if (data > 0) {
@@ -62,6 +63,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         }
       },
       error: (error) => {
+        errored = true;
         console.log(error);
         publishToast({
           type: 'error',
@@ -72,7 +74,9 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         });
       },
     });
-    props.close();
+    if (!errored) {
+      props.close();
+    }
   }
 
   function updateInvoiceServiceSheet() {

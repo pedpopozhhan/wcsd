@@ -76,7 +76,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [costCenters, setCostCenters] = useState<string[]>([]);
   const [internalOrders, setInternalOrders] = useState<string[]>([]);
   const [funds, setFunds] = useState<string[]>([]);
-  const [retry, setRetry] = useState<boolean>(false);
+  const [retry, setRetry] = useState<boolean>(true);
 
   const currentOtherCost = {
     index: index,
@@ -123,6 +123,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     }
   }, [isOtherCostAddition, props.rowToUpdate?.data]);
 
+  useEffect(() => {
+    setRetry(false);
+  });
   useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
