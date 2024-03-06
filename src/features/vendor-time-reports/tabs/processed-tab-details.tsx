@@ -8,7 +8,7 @@ import processedInvoicesService from '@/services/processed-invoices.service';
 
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
@@ -21,15 +21,13 @@ import {
   setInvoiceAmount,
   setInvoiceId,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   //Object for the page data
   const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -53,7 +51,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const {invoiceAmountLabel} = styles;
+  const { invoiceAmountLabel } = styles;
 
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
@@ -123,7 +121,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Server Error') });
+        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Connection Error') });
       },
     });
     return () => {
@@ -144,7 +142,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       <div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
-          <thead>
+            <thead>
               <tr>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>

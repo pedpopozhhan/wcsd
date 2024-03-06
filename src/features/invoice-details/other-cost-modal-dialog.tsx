@@ -14,12 +14,10 @@ import {
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -30,7 +28,7 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
   const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
@@ -78,6 +76,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [costCenters, setCostCenters] = useState<string[]>([]);
   const [internalOrders, setInternalOrders] = useState<string[]>([]);
   const [funds, setFunds] = useState<string[]>([]);
+  const [retry, setRetry] = useState<boolean>(true);
 
   const currentOtherCost = {
     index: index,
@@ -125,6 +124,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   }, [isOtherCostAddition, props.rowToUpdate?.data]);
 
   useEffect(() => {
+    setRetry(false);
+  });
+  useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
         setRateUnits(results.rateUnits);
@@ -135,14 +137,20 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: 'Server error' });
+        publishToast({
+          type: 'error',
+          message: 'Connection Error',
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [retry]);
 
   function setControlsForAddition() {
     setDialogTitle('Add other cost');

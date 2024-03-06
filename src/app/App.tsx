@@ -2,15 +2,15 @@ import { GoAAppHeader, GoACircularProgress } from '@abgov/react-components';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './App.module.scss';
 import Toast from '@/common/toast';
-import { useAuth } from 'react-oidc-context';
 import { useEffect } from 'react';
-import authNoop from '@/common/auth-noop';
+import { useConditionalAuth } from './hooks';
 
 const { mainContainer, outletContainer } = styles;
 
 export function App() {
   const headerTitle = 'Wildfire Support';
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
+
   useEffect(() => {
     const isLoggedOutPath = window.location.pathname === 'logged-out';
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {

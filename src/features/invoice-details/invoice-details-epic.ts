@@ -21,7 +21,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
             console.error(error);
             publishToast({
               type: 'error',
-              message: failedToPerform('get invoice details', 'Server error'),
+              message: failedToPerform('get invoice details', 'Connection Error'),
               action: action,
             });
             return EMPTY;

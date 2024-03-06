@@ -8,11 +8,9 @@ import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -22,7 +20,7 @@ interface IFlightReportAllProps {
 }
 
 const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   //Object for the page data
   const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
 
