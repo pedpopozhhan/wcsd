@@ -10,6 +10,7 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
@@ -53,6 +54,13 @@ export default function InvoiceDetails() {
   }, [rowData, otherCostData]);
 
   function cancel() {
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          return { ...r, isAdded: false };
+        }),
+      ),
+    );
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
