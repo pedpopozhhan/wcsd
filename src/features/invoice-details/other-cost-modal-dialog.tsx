@@ -76,6 +76,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [costCenters, setCostCenters] = useState<string[]>([]);
   const [internalOrders, setInternalOrders] = useState<string[]>([]);
   const [funds, setFunds] = useState<string[]>([]);
+  const [retry, setRetry] = useState<boolean>(true);
 
   const currentOtherCost = {
     index: index,
@@ -123,6 +124,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   }, [isOtherCostAddition, props.rowToUpdate?.data]);
 
   useEffect(() => {
+    setRetry(false);
+  });
+  useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
         setRateUnits(results.rateUnits);
@@ -133,14 +137,20 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: 'Server error' });
+        publishToast({
+          type: 'error',
+          message: 'Connection Error',
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [retry]);
 
   function setControlsForAddition() {
     setDialogTitle('Add other cost');

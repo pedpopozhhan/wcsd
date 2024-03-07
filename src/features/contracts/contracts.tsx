@@ -22,7 +22,7 @@ export default function Contracts() {
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
-
+  const [retry, setRetry] = useState<boolean>(false);
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {
@@ -36,18 +36,20 @@ export default function Contracts() {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('search contracts', 'Server error') });
+        publishToast({
+          type: 'error',
+          message: failedToPerform('search contracts', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [JSON.stringify(allData)]);
-  
-  useEffect(() => {
-    dispatch(getServiceSheetData({ token: auth?.user?.access_token}));
-  }, [auth]);
+  }, [JSON.stringify(allData), retry]);
 
   function handleOnEnter(filtered: SearchOption[]) {
     const results = allData.filter((x) => filtered.some((y) => y.value === x.index));

@@ -21,7 +21,7 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
             console.error(error);
             publishToast({
               type: 'error',
-              message: failedToPerform('search flight reports', 'Server Error'),
+              message: failedToPerform('search flight reports', 'Connection Error'),
               action: action,
             });
             return EMPTY;
