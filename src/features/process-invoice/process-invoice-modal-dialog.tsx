@@ -31,31 +31,34 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
     props.close();
   }
   function getInvoiceData() : IProcessInvoiceData {
-  return {
-      invoiceId: invoiceData.InvoiceID,
-      invoiceNumber: invoiceData.InvoiceNumber,
-      invoiceDate: new Date(invoiceData.DateOnInvoice),
-      invoiceAmount: invoiceData.InvoiceAmount,
-      periodEndDate: new Date(invoiceData.PeriodEnding),
-      invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-      vendor: contract.vendorName,
-      assignedTo: '',
-      contractNumber: invoiceData.ContractNumber,
-      type: contract.contractType,
-      uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
-      purchaseGroup: serviceSheetData.purchaseGroup,
-      serviceDescription: serviceSheetData.serviceDescription,
-      communityCode: serviceSheetData.communityCode,
-      materialGroup: serviceSheetData.materialGroup,
-      accountType: serviceSheetData.accountType,
-      quantity: serviceSheetData.quantity,
-      unitOfMeasure: serviceSheetData.unitOfMeasure,
-      price: serviceSheetData.price,
-      invoiceTimeReportCostDetails: props.data.timeReportData,
-      invoiceOtherCostDetails: props.data.otherCostData,
-    };
+    return {
+        invoiceId: invoiceData.InvoiceID,
+        invoiceNumber: invoiceData.InvoiceNumber,
+        invoiceDate: new Date(invoiceData.DateOnInvoice),
+        invoiceAmount: invoiceData.InvoiceAmount,
+        periodEndDate: new Date(invoiceData.PeriodEnding),
+        invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
+        vendor: contract.vendorName,
+        assignedTo: '',
+        contractNumber: invoiceData.ContractNumber,
+        type: contract.contractType,
+        uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
+        purchaseGroup: serviceSheetData.purchaseGroup,
+        serviceDescription: serviceSheetData.serviceDescription,
+        communityCode: serviceSheetData.communityCode,
+        materialGroup: serviceSheetData.materialGroup,
+        accountType: serviceSheetData.accountType,
+        quantity: serviceSheetData.quantity,
+        unitOfMeasure: serviceSheetData.unitOfMeasure,
+        price: serviceSheetData.price,
+        invoiceTimeReportCostDetails: props.data.timeReportData,
+        invoiceOtherCostDetails: props.data.otherCostData,
+      };
+    }
+
+  function createInvoice() {
     let errored = false;
-    processInvoiceService.createInvoice(auth?.user?.access_token, processInvoiceData).subscribe({
+    processInvoiceService.createInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
       next: (data) => {
         if (data.toString() !== EmptyInvoiceId ) {
           dispatch(setInvoiceData({...invoiceData, InvoiceID: data.toString()}))
@@ -84,11 +87,11 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       props.close();
     }
   }
-
+    
   function updateInvoiceServiceSheet() {
-    const processInvoiceData: IProcessInvoiceData =  getInvoiceData();
+    let errored = false;
     if (serviceSheetData) {
-      processInvoiceService.updateInvoice(auth?.user?.access_token, serviceSheetData).subscribe({
+      processInvoiceService.updateInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
         next: (data) => {
           dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
           dispatch(setServiceSheetNameChange(false));
