@@ -9,13 +9,13 @@ import DetailsTab from '@/features/process-invoice/tabs/details-tab';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
+import { EmptyInvoiceId } from '@/common/types/invoice';
 
 export default function ProcessedInvoice() {
-  const { invoiceKey } = useParams();
+  const { invoiceId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const invoiceId: string = useAppSelector((state) => state.processInvoiceTabs.invoiceceId);
   const invoiceAmount: number = useAppSelector((state) => state.processInvoiceTabs.invoiceAmount);
 
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
@@ -53,14 +53,14 @@ export default function ProcessedInvoice() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <ServiceSheetTab InvoiceID={invoiceId} InvoiceAmount={invoiceAmount} />}
+              {tabIndex === 1 && <ServiceSheetTab InvoiceAmount={invoiceAmount} />}
               {tabIndex === 2 && <DetailsTab />}
             </div>
           </div>
         </div>
       </div>
       <div className={footer}>
-        {Number(invoiceKey) > 0 && (
+        {invoiceId !== EmptyInvoiceId && (
           <Fragment>
             <GoAButton type='primary' disabled>
               <label>Update</label>

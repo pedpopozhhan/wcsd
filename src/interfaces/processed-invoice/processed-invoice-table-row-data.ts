@@ -1,8 +1,8 @@
 import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 export interface IProcessedInvoiceTableRowData {
-  invoiceKey: number;
   invoiceId: string;
+  invoiceNumber: string;
   invoiceAmount: number;
   invoiceDate: Date;
   periodEndDate: Date;
@@ -13,5 +13,13 @@ export interface IProcessedInvoiceTableRowData {
   type: string;
   createdBy: string;
   paymentStatus: string;
-  invoiceServiceSheet: IServiceSheetData;
+  uniqueServiceSheetName: string,
+  purchaseGroup: string,
+  serviceDescription: string,
+  communityCode: string,
+  materialGroup: string,
+  accountType: string,
+  quantity: number,
+  unitOfMeasure: string,
+  price: number
 }

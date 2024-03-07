@@ -3,7 +3,7 @@ import axios from 'axios-observable';
 import IProcessedInvoiceDetailResponse from '@/interfaces/processed-invoice/processed-invoice-detail-response';
 import getHeaders from './headers';
 interface IProcessedInvoicesGetBody {
-  invoiceKey: number;
+  invoiceId: string;
 }
 class ProcessedInvoiceDetailService {
   private baseUrl: string;
@@ -11,9 +11,9 @@ class ProcessedInvoiceDetailService {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
 
-  getInvoiceDetail(token: string, invoiceKey: number): Observable<IProcessedInvoiceDetailResponse> {
+  getInvoiceDetail(token: string, invoiceId: string): Observable<IProcessedInvoiceDetailResponse> {
     const body: IProcessedInvoicesGetBody = {
-      invoiceKey: invoiceKey,
+      invoiceId: invoiceId,
     };
     return axios
       .request<IProcessedInvoiceDetailResponse>({
