@@ -3,8 +3,8 @@ import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row
 import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 export interface IProcessedInvoiceData {
-    invoiceKey?: number;
-    invoiceId: string;
+    invoiceId?: string;
+    invoiceNumber: string;
     invoiceDate: Date;
     invoiceAmount: number;
     periodEndDate: Date;
@@ -15,5 +15,13 @@ export interface IProcessedInvoiceData {
     type: string;
     invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
     invoiceOtherCostDetails: IOtherCostTableRowData[];
-    invoiceServiceSheet?: IServiceSheetData;
+    uniqueServiceSheetName: string,
+    purchaseGroup: string,
+    serviceDescription: string,
+    communityCode: string,
+    materialGroup: string,
+    accountType: string,
+    quantity: number,
+    unitOfMeasure: string,
+    price: number,
 }

@@ -4,15 +4,25 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { publishToast } from './toast';
+import { EmptyInvoiceId } from './types/invoice';
 
 export interface IInvoiceData {
-  InvoiceKey: number;
   InvoiceID: string;
+  InvoiceNumber: string;
   DateOnInvoice: string;
   InvoiceAmount: number;
   PeriodEnding: string;
   InvoiceReceived: string;
   ContractNumber: string;
+  UniqueServiceSheetName: string;
+  PurchaseGroup?: string;
+  ServiceDescription?: string;
+  CommunityCode?: string;
+  MaterialGroup?: string;
+  AccountType?: string;
+  Quantity?: string;
+  UnitOfMeasure?: string;
+  Price?: string;
 }
 // TODO: this should have props
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,10 +30,10 @@ const InvoiceModalDialog = (props: any) => {
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
-  const [invoiceId, setInvoiceId] = useState<string>('');
+  const [invoiceNumber, setInvoiceNumber] = useState<string>('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
-  const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
+  const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
@@ -39,13 +49,14 @@ const InvoiceModalDialog = (props: any) => {
   const [dialogTitle, setDialogTitle] = useState<string>('');
 
   const invoiceForContext = {
-    InvoiceKey: 0,
-    InvoiceID: invoiceId,
+    InvoiceID: EmptyInvoiceId,
+    InvoiceNumber: invoiceNumber,
     DateOnInvoice: dateOfInvoice,
     InvoiceAmount: invoiceAmount,
     PeriodEnding: periodEndingDate,
     InvoiceReceived: invoiceReceivedDate,
-    ContractNumber: contractNumber,
+    ContractNumber: contractNumber, 
+    UniqueServiceSheetName: ''
   };
 
   const navigate = useNavigate();
@@ -71,7 +82,7 @@ const InvoiceModalDialog = (props: any) => {
   }, [isInvoiceAddition]);
 
   const setToSessionData = () => {
-    setInvoiceId(invoiceData.InvoiceID);
+    setInvoiceNumber(invoiceData.InvoiceNumber);
     setInvoiceAmount(invoiceData.InvoiceAmount);
     setDateOfInvoice(invoiceData.DateOnInvoice);
     setInvoiceReceivedDate(invoiceData.InvoiceReceived);
@@ -80,7 +91,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const clearErrors = () => {
-    setInvoiceIdError(false);
+    setInvoiceNumberError(false);
     setInvoiceAmountError(false);
     setDateOfInvoiceError(false);
     setPeriodEndingDateError(false);
@@ -88,7 +99,7 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const clearDataPoints = () => {
-    setInvoiceId('');
+    setInvoiceNumber('');
     setInvoiceAmount(0);
     setDateOfInvoice(new Date().toISOString());
     setPeriodEndingDate(new Date().toISOString());
@@ -107,11 +118,11 @@ const InvoiceModalDialog = (props: any) => {
 
   const setInvoice = () => {
     // Validate them and show errors
-    if (invoiceId.trim().length <= 0) {
-      setInvoiceIdError(true);
+    if (invoiceNumber.trim().length <= 0) {
+      setInvoiceNumberError(true);
       return;
     } else {
-      setInvoiceIdError(false);
+      setInvoiceNumberError(false);
     }
 
     if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
@@ -152,7 +163,7 @@ const InvoiceModalDialog = (props: any) => {
       clearErrors();
 
       // Navigate to invoice detail page
-      navigate(`/invoice/${invoiceId}`, { state: invoiceId });
+      navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
       dispatch(setInvoiceData(invoiceForContext));
       publishToast({ type: 'info', message: 'Invoice updated.' });
@@ -183,18 +194,18 @@ const InvoiceModalDialog = (props: any) => {
               <td>
                 <GoAFormItem label='Invoice'>
                   <GoAInput
-                    name='invoiceId'
+                    name='invoiceNumber'
                     width='300px'
                     maxLength={20}
-                    value={invoiceId}
-                    error={invoiceIdError}
+                    value={invoiceNumber}
+                    error={invoiceNumberError}
                     onBlur={() => {}}
                     onChange={(key, value) => {
-                      setInvoiceId(value.trim());
+                      setInvoiceNumber(value.trim());
                       if (value.trim().length <= 0) {
-                        setInvoiceIdError(true);
+                        setInvoiceNumberError(true);
                       } else {
-                        setInvoiceIdError(false);
+                        setInvoiceNumberError(false);
                         setPageHasError(false);
                       }
                     }}

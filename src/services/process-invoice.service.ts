@@ -25,13 +25,13 @@ class ProcessInvoiceService {
       );
   }
 
-  updateInvoice(token: string, serviceSheetData: IServiceSheetData): Observable<string> {
+  updateInvoice(token: string, invoiceData: IProcessInvoiceData): Observable<string> {
     return axios
       .request<string>({
         method: 'post',
         url: this.baseUrl + '/UpdateProcessedInvoice',
         headers: getHeaders(token),
-        data: serviceSheetData,
+        data: invoiceData,
       })
       .pipe(
         map((x) => {

@@ -67,7 +67,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [internalOrder, setInternalOrder] = useState<string | string[]>('');
   const [fund, setFund] = useState<string | string[]>('');
   const [remarks, setRemarks] = useState<string>('');
-  const [invoiceId] = useState<string>('');
+  const [invoiceNumber] = useState<string>('');
 
   // const [rateTypes, setRateTypes] = useState<string[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
@@ -83,17 +83,17 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     from: fromDate,
     to: toDate,
     rateType: rateType,
-    unit: unit,
+    rateUnit: unit,
     ratePerUnit: rate,
-    numberOfUnits: numberOfUnits,
+    noOfUnits: numberOfUnits,
     cost: Number(cost),
-    glAcct: glAccount,
+    account: glAccount,
     profitCentre: profitCentre,
     costCentre: costCenter,
     internalOrder: internalOrder,
     fund: fund,
     remarks: remarks,
-    invoiceId: invoiceId,
+    invoiceNumber: invoiceNumber
   };
 
   const xl = '500px';
@@ -110,11 +110,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       if (props.rowToUpdate?.data.to !== undefined) setToDate(props.rowToUpdate?.data.to);
 
       setRate(Number(props.rowToUpdate?.data.ratePerUnit));
-      setNumberOfUnits(Number(props.rowToUpdate?.data.numberOfUnits));
+      setNumberOfUnits(Number(props.rowToUpdate?.data.noOfUnits));
       setCost(Number(props.rowToUpdate?.data.cost).toString());
       setRateType(String(props.rowToUpdate?.data.rateType));
-      setUnit(String(props.rowToUpdate?.data.unit));
-      setGlAccount(String(props.rowToUpdate?.data.glAcct));
+      setUnit(String(props.rowToUpdate?.data.rateUnit));
+      setGlAccount(String(props.rowToUpdate?.data.account));
       setProfitCenter(String(props.rowToUpdate?.data.profitCentre));
       setCostCenter(String(props.rowToUpdate?.data.costCentre));
       setInternalOrder(String(props.rowToUpdate?.data.internalOrder));

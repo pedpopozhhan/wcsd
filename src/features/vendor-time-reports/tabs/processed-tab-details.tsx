@@ -19,8 +19,9 @@ import {
   setotherCostsData,
   setReadOnly,
   setInvoiceAmount,
-  setInvoiceId,
+  setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -107,13 +108,27 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //#endregion
 
-  function pullDetailsForInvoice(invoiceKey?: number) {
-    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, Number(invoiceKey)).subscribe({
+  function mapServiceSheetData(data: any): IServiceSheetData {
+    return {
+      uniqueServiceSheetName: data.uniqueServiceSheetName,
+      purchaseGroup: data.purchaseGroup,
+      serviceDescription: data.serviceDescription,
+      communityCode: data.communityCode,
+      materialGroup: data.materialGroup,
+      accountType: data.accountType,
+      quantity: data.quantity,
+      unitOfMeasure: data.unitOfMeasure,
+      price: data.price
+    };
+  }
+
+  function pullDetailsForInvoice(invoiceId: string) {
+    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
       next: (results) => {
         setIsLoading(true);
-        dispatch(setInvoiceId(results.invoice.invoiceId));
+        dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setServiceSheetData(results.invoice.invoiceServiceSheet));
+        dispatch(setServiceSheetData(mapServiceSheetData(results.invoice)));
         dispatch(setReadOnly(true));
         dispatch(setcostDetailsData(results.invoice.invoiceTimeReportCostDetails));
         dispatch(setotherCostsData(results.invoice.invoiceOtherCostDetails));
@@ -129,10 +144,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     };
   }
 
-  function invoiceIdClick(invoiceKey?: number) {
-    if (invoiceKey) {
-      pullDetailsForInvoice(invoiceKey);
-      navigate(`/ProcessedInvoice/${invoiceKey}`);
+  function invoiceNumberClick(invoiceId: string) {
+    if (invoiceId) {
+      pullDetailsForInvoice(invoiceId);
+      navigate(`/ProcessedInvoice/${invoiceId}`);
     }
   }
 
@@ -158,20 +173,20 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
                 pageData.map((record: IProcessedInvoiceTableRowData) => (
-                  <tr key={record.invoiceId}>
+                  <tr key={record.invoiceNumber}>
                     <td>{yearMonthDay(record.invoiceDate)}</td>
                     <td>
                       <GoAButton
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                         size='compact'
                         type='tertiary'
-                        onClick={() => invoiceIdClick(record?.invoiceKey)}
+                        onClick={() => invoiceNumberClick(record?.invoiceId)}
                       >
-                        {record.invoiceId}
+                        {record.invoiceNumber}
                       </GoAButton>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
+                    <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
@@ -182,7 +197,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                       )}
                     </td>
                     <td>
-                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
+                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
                     </td>
                   </tr>
                 ))

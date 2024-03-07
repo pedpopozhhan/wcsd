@@ -9,6 +9,8 @@ import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
+import { setReadOnly, setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { EmptyInvoiceId } from '@/common/types/invoice';
 import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRowData } from './invoice-details-slice';
 
@@ -66,15 +68,16 @@ export default function InvoiceDetails() {
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
-    if (invoiceData.InvoiceKey == 0 && processInvoiceTabs) {
-      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceKey: 0, uniqueServiceSheetName: '' }));
+    if (invoiceData.InvoiceID == EmptyInvoiceId && processInvoiceTabs) {
+      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceId: EmptyInvoiceId, uniqueServiceSheetName: '', price: invoiceData.InvoiceAmount }));
+      dispatch(setReadOnly(false));
     }
     const data = timeReportData.map((x) => {
       return x.data;
     });
     dispatch(setcostDetailsData(data));
     dispatch(setotherCostsData(otherCostData));
-    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
+    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
 
   return (
