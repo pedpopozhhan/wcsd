@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks'
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setReadOnly, setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { EmptyInvoiceId } from '@/common/types/invoice';
-import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
