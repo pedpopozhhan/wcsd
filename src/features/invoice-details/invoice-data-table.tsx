@@ -147,7 +147,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{yearMonthDay(x.data.flightReportDate)}</td>
                   <td>{x.data.contractRegistrationName}</td>
                   <td>{x.data.flightReportId}</td>
-                  <td>{x.data.aO02Number}</td>
+                  <td>{x.data.ao02Number}</td>
                   <td>{x.data.rateType}</td>
                   <td>{x.data.noOfUnits}</td>
                   <td>{x.data.rateUnit}</td>
@@ -156,7 +156,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.internalOrder}</td>
                   <td>{x.data.costCenter}</td>
                   <td>{x.data.fund}</td>
-                  <td>{x.data.glAcct}</td>
+                  <td>{x.data.account}</td>
                   <td>{x.data.fireNumber}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>

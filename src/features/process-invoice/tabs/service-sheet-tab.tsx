@@ -7,7 +7,6 @@ import { setServiceSheetData, setServiceSheetNameChange } from './process-invoic
 import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
 
 interface IServiceSheetTabProps {
-  InvoiceID: string;
   InvoiceAmount: number;
 }
 const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
@@ -47,28 +46,28 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
       </div>
 
       <div>Purchase group</div>
-      <div className={serviceSheetTabAltValues}>W01 (FP_W01)</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.purchaseGroup}</div>
 
       <div>Service description</div>
       <div>{serviceSheetData?.serviceDescription}</div>
 
       <div>Commodity code</div>
-      <div className={serviceSheetTabAltValues}>[Determined from Contract]</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.communityCode}</div>
 
       <div>Material group</div>
-      <div className={serviceSheetTabAltValues}>[Determined from Contract]</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.materialGroup}</div>
 
       <div>Account type</div>
-      <div className={serviceSheetTabAltValues}>Expense</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.accountType}</div>
 
       <div>Quantity</div>
-      <div className={serviceSheetTabAltValues}>1</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.quantity}</div>
 
       <div>Unit of measure</div>
-      <div className={serviceSheetTabAltValues}>Hour</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.unitOfMeasure}</div>
 
       <div>Price</div>
-      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace('$', '')}</div>
+      <div className={invoiceAmountLabel}>$ {convertToCurrency(serviceSheetData?.price).replace('$', '')}</div>
     </div>
   );
 };

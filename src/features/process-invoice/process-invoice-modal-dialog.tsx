@@ -11,6 +11,7 @@ import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
+import { EmptyInvoiceId } from '@/common/types/invoice';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -29,37 +30,45 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   function hideModalDialog() {
     props.close();
   }
+  function getInvoiceData() : IProcessInvoiceData {
+    return {
+        invoiceId: invoiceData.InvoiceID,
+        invoiceNumber: invoiceData.InvoiceNumber,
+        invoiceDate: new Date(invoiceData.DateOnInvoice),
+        invoiceAmount: invoiceData.InvoiceAmount,
+        periodEndDate: new Date(invoiceData.PeriodEnding),
+        invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
+        vendor: contract.vendorName,
+        assignedTo: '',
+        contractNumber: invoiceData.ContractNumber,
+        type: contract.contractType,
+        uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
+        purchaseGroup: serviceSheetData.purchaseGroup,
+        serviceDescription: serviceSheetData.serviceDescription,
+        communityCode: serviceSheetData.communityCode,
+        materialGroup: serviceSheetData.materialGroup,
+        accountType: serviceSheetData.accountType,
+        quantity: serviceSheetData.quantity,
+        unitOfMeasure: serviceSheetData.unitOfMeasure,
+        price: serviceSheetData.price,
+        invoiceTimeReportCostDetails: props.data.timeReportData,
+        invoiceOtherCostDetails: props.data.otherCostData,
+      };
+    }
+
   function createInvoice() {
-    const processInvoiceData: IProcessInvoiceData = {
-      invoiceId: invoiceData.InvoiceID,
-      invoiceDate: new Date(invoiceData.DateOnInvoice),
-      invoiceAmount: invoiceData.InvoiceAmount,
-      periodEndDate: new Date(invoiceData.PeriodEnding),
-      invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-      vendor: contract.vendorName,
-      assignedTo: '',
-      contractNumber: invoiceData.ContractNumber,
-      type: contract.contractType,
-      invoiceTimeReportCostDetails: props.data.timeReportData,
-      invoiceOtherCostDetails: props.data.otherCostData,
-      invoiceServiceSheet: serviceSheetData,
-    };
     let errored = false;
-    processInvoiceService.createInvoice(auth?.user?.access_token, processInvoiceData).subscribe({
+    processInvoiceService.createInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
       next: (data) => {
-        if (data > 0) {
-          dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
+        if (data.toString() !== EmptyInvoiceId ) {
+          dispatch(setInvoiceData({...invoiceData, InvoiceID: data.toString()}))
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
-            dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            if (serviceSheetData) {
-              dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            }
             dispatch(setServiceSheetNameChange(false));
-            dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceID} processed.` });
           }
+          dispatch(setNotificationStatus(true));
+          publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceNumber} processed.` });
         }
       },
       error: (error) => {
@@ -78,11 +87,11 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       props.close();
     }
   }
-
+    
   function updateInvoiceServiceSheet() {
+    let errored = false;
     if (serviceSheetData) {
-      let errored = false;
-      processInvoiceService.updateInvoice(auth?.user?.access_token, serviceSheetData).subscribe({
+      processInvoiceService.updateInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
         next: (data) => {
           dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
           dispatch(setServiceSheetNameChange(false));
