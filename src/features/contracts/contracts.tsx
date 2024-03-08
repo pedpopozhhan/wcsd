@@ -9,6 +9,7 @@ import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
+import { navigateTo } from '@/common/navigate';
 
 const { top, search, searchResultsContainer } = styles;
 
@@ -33,6 +34,11 @@ export default function Contracts() {
       },
       error: (error) => {
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          console.error('Access denied. The server returned a 403 Forbidden response.');
+          navigateTo('unauthorized');
+          // go to unauthorized
+        }
         publishToast({
           type: 'error',
           message: failedToPerform('search contracts', 'Connection Error'),

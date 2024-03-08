@@ -8,7 +8,7 @@ export const parseToken = (token: string) => {
 
 export const hasResourceRole = (resource: string, permission: string, token: string): boolean => {
   const tokenObj = parseToken(token);
-  const resourceAccess = tokenObj.resource_access;
+  const resourceAccess = tokenObj?.resource_access;
   if (!resourceAccess) return false;
   const roles = resourceAccess[resource || '']?.roles || [];
   return roles.indexOf(permission) !== -1;
