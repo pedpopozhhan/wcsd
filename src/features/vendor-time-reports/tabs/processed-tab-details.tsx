@@ -108,7 +108,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //#endregion
 
-  function mapServiceSheetData(data: any): IServiceSheetData {
+  function mapServiceSheetData(data: IServiceSheetData): IServiceSheetData {
     return {
       uniqueServiceSheetName: data.uniqueServiceSheetName,
       purchaseGroup: data.purchaseGroup,

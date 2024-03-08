@@ -18,6 +18,7 @@ import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
+import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-response';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -72,10 +73,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   // const [rateTypes, setRateTypes] = useState<string[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
   const [rateUnits, setRateUnits] = useState<string[]>([]);
-  const [glAccounts, setGLAccounts] = useState<string[]>([]);
-  const [costCenters, setCostCenters] = useState<string[]>([]);
-  const [internalOrders, setInternalOrders] = useState<string[]>([]);
-  const [funds, setFunds] = useState<string[]>([]);
+  const [glAccounts, setGLAccounts] = useState<IDropDownListResponse[]>([]);
+  const [costCenters, setCostCenters] = useState<IDropDownListResponse[]>([]);
+  const [internalOrders, setInternalOrders] = useState<IDropDownListResponse[]>([]);
+  const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
   const [retry, setRetry] = useState<boolean>(true);
 
   const currentOtherCost = {
@@ -488,7 +489,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     width={lg}
                   >
                     {costCenters.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -498,7 +499,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Fund'>
                   <GoADropdown filterable placeholder='Select fund' name='fund' value={fund} onChange={onFundChange} width={lg}>
                     {funds.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -517,7 +518,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     width={lg}
                   >
                     {internalOrders.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -527,7 +528,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='G/L Acc'>
                   <GoADropdown filterable placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
                     {glAccounts.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
