@@ -9,8 +9,6 @@ import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
-//import { getServiceSheetData } from '../process-invoice/process-invoice-epic';
-
 
 const { top, search, searchResultsContainer } = styles;
 
