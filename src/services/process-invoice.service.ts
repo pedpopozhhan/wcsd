@@ -2,7 +2,6 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 import getHeaders from './headers';
 class ProcessInvoiceService {
   private baseUrl: string;
@@ -25,13 +24,13 @@ class ProcessInvoiceService {
       );
   }
 
-  updateInvoice(token: string, serviceSheetData: IServiceSheetData): Observable<string> {
+  updateInvoice(token: string, invoiceData: IProcessInvoiceData): Observable<string> {
     return axios
       .request<string>({
         method: 'post',
         url: this.baseUrl + '/UpdateProcessedInvoice',
         headers: getHeaders(token),
-        data: serviceSheetData,
+        data: invoiceData,
       })
       .pipe(
         map((x) => {

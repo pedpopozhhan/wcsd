@@ -9,7 +9,7 @@ interface IProcessInvoiceTabsDataSliceState {
   otherCostsData: IOtherCostTableRowData[];
   nameChanged: boolean;
   readonly: boolean;
-  invoiceceId: string;
+  invoiceNumber: string;
   invoiceAmount: number;
 }
 
@@ -19,8 +19,8 @@ const initialState: IProcessInvoiceTabsDataSliceState = {
   otherCostsData: [],
   nameChanged: false,
   readonly: false,
-  invoiceceId: '',
-  invoiceAmount: 0,
+  invoiceNumber: '',
+  invoiceAmount: 0
 };
 
 export const processInvoiceTabsSlice = createSlice({
@@ -42,8 +42,8 @@ export const processInvoiceTabsSlice = createSlice({
     setReadOnly: (state, action: PayloadAction<boolean>) => {
       state.readonly = action.payload;
     },
-    setInvoiceId: (state, action: PayloadAction<string>) => {
-      state.invoiceceId = action.payload;
+    setInvoiceNumber: (state, action: PayloadAction<string>) => {
+      state.invoiceNumber = action.payload;
     },
     setInvoiceAmount: (state, action: PayloadAction<number>) => {
       state.invoiceAmount = action.payload;
@@ -53,7 +53,7 @@ export const processInvoiceTabsSlice = createSlice({
       state.serviceSheetData = undefined;
       state.costDetailsData = [];
       state.otherCostsData = [];
-      state.invoiceceId = '';
+      state.invoiceNumber = '';
       state.invoiceAmount = 0;
       state.readonly = false;
     },
@@ -66,7 +66,7 @@ export const {
   setotherCostsData,
   setServiceSheetNameChange,
   setReadOnly,
-  setInvoiceId,
+  setInvoiceNumber,
   setInvoiceAmount,
   resetState,
 } = processInvoiceTabsSlice.actions;
