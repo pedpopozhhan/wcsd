@@ -18,6 +18,7 @@ import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
+import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-response';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -67,15 +68,15 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [internalOrder, setInternalOrder] = useState<string | string[]>('');
   const [fund, setFund] = useState<string | string[]>('');
   const [remarks, setRemarks] = useState<string>('');
-  const [invoiceId] = useState<string>('');
+  const [invoiceNumber] = useState<string>('');
 
   // const [rateTypes, setRateTypes] = useState<string[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
   const [rateUnits, setRateUnits] = useState<string[]>([]);
-  const [glAccounts, setGLAccounts] = useState<string[]>([]);
-  const [costCenters, setCostCenters] = useState<string[]>([]);
-  const [internalOrders, setInternalOrders] = useState<string[]>([]);
-  const [funds, setFunds] = useState<string[]>([]);
+  const [glAccounts, setGLAccounts] = useState<IDropDownListResponse[]>([]);
+  const [costCenters, setCostCenters] = useState<IDropDownListResponse[]>([]);
+  const [internalOrders, setInternalOrders] = useState<IDropDownListResponse[]>([]);
+  const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
   const [retry, setRetry] = useState<boolean>(true);
 
   const currentOtherCost = {
@@ -83,17 +84,17 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     from: fromDate,
     to: toDate,
     rateType: rateType,
-    unit: unit,
+    rateUnit: unit,
     ratePerUnit: rate,
-    numberOfUnits: numberOfUnits,
+    noOfUnits: numberOfUnits,
     cost: Number(cost),
-    glAcct: glAccount,
+    account: glAccount,
     profitCentre: profitCentre,
     costCentre: costCenter,
     internalOrder: internalOrder,
     fund: fund,
     remarks: remarks,
-    invoiceId: invoiceId,
+    invoiceNumber: invoiceNumber
   };
 
   const xl = '500px';
@@ -110,11 +111,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       if (props.rowToUpdate?.data.to !== undefined) setToDate(props.rowToUpdate?.data.to);
 
       setRate(Number(props.rowToUpdate?.data.ratePerUnit));
-      setNumberOfUnits(Number(props.rowToUpdate?.data.numberOfUnits));
+      setNumberOfUnits(Number(props.rowToUpdate?.data.noOfUnits));
       setCost(Number(props.rowToUpdate?.data.cost).toString());
       setRateType(String(props.rowToUpdate?.data.rateType));
-      setUnit(String(props.rowToUpdate?.data.unit));
-      setGlAccount(String(props.rowToUpdate?.data.glAcct));
+      setUnit(String(props.rowToUpdate?.data.rateUnit));
+      setGlAccount(String(props.rowToUpdate?.data.account));
       setProfitCenter(String(props.rowToUpdate?.data.profitCentre));
       setCostCenter(String(props.rowToUpdate?.data.costCentre));
       setInternalOrder(String(props.rowToUpdate?.data.internalOrder));
@@ -488,7 +489,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     width={lg}
                   >
                     {costCenters.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -498,7 +499,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Fund'>
                   <GoADropdown filterable placeholder='Select fund' name='fund' value={fund} onChange={onFundChange} width={lg}>
                     {funds.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -517,7 +518,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     width={lg}
                   >
                     {internalOrders.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>
@@ -527,7 +528,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='G/L Acc'>
                   <GoADropdown filterable placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
                     {glAccounts.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x} label={x} />;
+                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
                     })}
                   </GoADropdown>
                 </GoAFormItem>

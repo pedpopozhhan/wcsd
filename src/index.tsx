@@ -40,13 +40,13 @@ root.render(
                       <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
+                      <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
+                      <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='6' path='ProcessedInvoice/:invoiceKey' element={<ProcessedInvoice></ProcessedInvoice>} />
+                      <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessedInvoice></ProcessedInvoice>} />
                     </Route>
                     <Route key='7' path='logged-out' element={<LoggedOut />} />
 
@@ -70,9 +70,9 @@ root.render(
                   <Route key='1' path='/' element={<Contracts />} />
                   <Route key='2' path='contracts' element={<Contracts />} />
                   <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
-                  <Route key='4' path='invoice/:invoiceId' element={<InvoiceDetails />} />
-                  <Route key='5' path='invoice/:invoiceId/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
-                  <Route key='6' path='ProcessedInvoice/:invoiceKey' element={<ProcessedInvoice></ProcessedInvoice>} />
+                  <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
+                  <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
+                  <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessedInvoice></ProcessedInvoice>} />
                   <Route key='7' path='logged-out' element={<LoggedOut />} />
                 </Route>
               </Routes>
