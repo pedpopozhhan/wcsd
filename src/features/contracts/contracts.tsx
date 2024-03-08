@@ -35,9 +35,7 @@ export default function Contracts() {
       error: (error) => {
         console.error(error);
         if (error.response && error.response.status === 403) {
-          console.error('Access denied. The server returned a 403 Forbidden response.');
           navigateTo('unauthorized');
-          // go to unauthorized
         }
         publishToast({
           type: 'error',

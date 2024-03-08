@@ -19,6 +19,7 @@ import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-response';
+import { navigateTo } from '@/common/navigate';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -94,7 +95,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     internalOrder: internalOrder,
     fund: fund,
     remarks: remarks,
-    invoiceNumber: invoiceNumber
+    invoiceNumber: invoiceNumber,
   };
 
   const xl = '500px';
@@ -138,6 +139,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       },
       error: (error) => {
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
         publishToast({
           type: 'error',
           message: 'Connection Error',

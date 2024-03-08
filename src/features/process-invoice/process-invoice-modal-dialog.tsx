@@ -12,6 +12,7 @@ import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-i
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
 import { EmptyInvoiceId } from '@/common/types/invoice';
+import { navigateTo } from '@/common/navigate';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -74,6 +75,9 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       error: (error) => {
         errored = true;
         console.log(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
         publishToast({
           type: 'error',
           message: failedToPerform('create invoice', 'Connection Error'),
@@ -101,6 +105,9 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
         error: (error) => {
           errored = true;
           console.log(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
           publishToast({
             type: 'error',
             message: failedToPerform('update invoice', 'Connection Error'),
