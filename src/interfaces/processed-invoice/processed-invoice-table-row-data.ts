@@ -1,5 +1,3 @@
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
-
 export interface IProcessedInvoiceTableRowData {
   invoiceId: string;
   invoiceNumber: string;

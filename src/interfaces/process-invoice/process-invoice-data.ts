@@ -1,5 +1,4 @@
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 export interface IProcessInvoiceData {

@@ -2,7 +2,6 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 import getHeaders from './headers';
 class ProcessInvoiceService {
   private baseUrl: string;

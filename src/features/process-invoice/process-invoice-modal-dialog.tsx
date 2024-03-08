@@ -30,38 +30,38 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   function hideModalDialog() {
     props.close();
   }
-  function getInvoiceData() : IProcessInvoiceData {
+  function getInvoiceData(): IProcessInvoiceData {
     return {
-        invoiceId: invoiceData.InvoiceID,
-        invoiceNumber: invoiceData.InvoiceNumber,
-        invoiceDate: new Date(invoiceData.DateOnInvoice),
-        invoiceAmount: invoiceData.InvoiceAmount,
-        periodEndDate: new Date(invoiceData.PeriodEnding),
-        invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-        vendor: contract.vendorName,
-        assignedTo: '',
-        contractNumber: invoiceData.ContractNumber,
-        type: contract.contractType,
-        uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
-        purchaseGroup: serviceSheetData.purchaseGroup,
-        serviceDescription: serviceSheetData.serviceDescription,
-        communityCode: serviceSheetData.communityCode,
-        materialGroup: serviceSheetData.materialGroup,
-        accountType: serviceSheetData.accountType,
-        quantity: serviceSheetData.quantity,
-        unitOfMeasure: serviceSheetData.unitOfMeasure,
-        price: serviceSheetData.price,
-        invoiceTimeReportCostDetails: props.data.timeReportData,
-        invoiceOtherCostDetails: props.data.otherCostData,
-      };
-    }
+      invoiceId: invoiceData.InvoiceID,
+      invoiceNumber: invoiceData.InvoiceNumber,
+      invoiceDate: new Date(invoiceData.DateOnInvoice),
+      invoiceAmount: invoiceData.InvoiceAmount,
+      periodEndDate: new Date(invoiceData.PeriodEnding),
+      invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
+      vendor: contract.vendorName,
+      assignedTo: '',
+      contractNumber: invoiceData.ContractNumber,
+      type: contract.contractType,
+      uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
+      purchaseGroup: serviceSheetData.purchaseGroup,
+      serviceDescription: serviceSheetData.serviceDescription,
+      communityCode: serviceSheetData.communityCode,
+      materialGroup: serviceSheetData.materialGroup,
+      accountType: serviceSheetData.accountType,
+      quantity: serviceSheetData.quantity,
+      unitOfMeasure: serviceSheetData.unitOfMeasure,
+      price: serviceSheetData.price,
+      invoiceTimeReportCostDetails: props.data.timeReportData,
+      invoiceOtherCostDetails: props.data.otherCostData,
+    };
+  }
 
   function createInvoice() {
     let errored = false;
     processInvoiceService.createInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
       next: (data) => {
-        if (data.toString() !== EmptyInvoiceId ) {
-          dispatch(setInvoiceData({...invoiceData, InvoiceID: data.toString()}))
+        if (data.toString() !== EmptyInvoiceId) {
+          dispatch(setInvoiceData({ ...invoiceData, InvoiceID: data.toString() }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
@@ -87,7 +87,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       props.close();
     }
   }
-    
+
   function updateInvoiceServiceSheet() {
     let errored = false;
     if (serviceSheetData) {

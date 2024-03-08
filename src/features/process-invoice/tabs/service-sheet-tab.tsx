@@ -9,7 +9,7 @@ import { getServiceSheetData } from '@/features/process-invoice/process-invoice-
 interface IServiceSheetTabProps {
   InvoiceAmount: number;
 }
-const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
+const ServiceSheetTab: FC<IServiceSheetTabProps> = () => {
   const auth = useConditionalAuth();
   const { serviceSheetTabContainer, serviceSheetTabAltValues, serviceSheetNameDesc, invoiceAmountLabel } = styles;
 

@@ -8,15 +8,14 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
-import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
-import { getServiceSheetData } from '../process-invoice/process-invoice-epic';
+import { useConditionalAuth } from '@/app/hooks';
+//import { getServiceSheetData } from '../process-invoice/process-invoice-epic';
 
 
 const { top, search, searchResultsContainer } = styles;
 
 export default function Contracts() {
   const auth = useConditionalAuth();
-  const dispatch = useAppDispatch();
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
