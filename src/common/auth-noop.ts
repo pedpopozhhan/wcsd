@@ -3,7 +3,7 @@
 class AuthNoop {
   isLoading = false;
   isAuthenticated = true;
-  user?: any = null;
+  user?: any;
   clearStaleState() {}
   signinRedirect() {}
   signoutSilent(param: any) {}
@@ -11,3 +11,4 @@ class AuthNoop {
 
 const authNoop = new AuthNoop();
 export default authNoop;
+[];

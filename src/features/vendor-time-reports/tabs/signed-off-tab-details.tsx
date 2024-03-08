@@ -9,6 +9,7 @@ import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
+import { navigateTo } from '@/common/navigate';
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -66,8 +67,11 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
         setIsLoading(false);
       },
       error: (error) => {
-        console.error(error);
         setIsLoading(false);
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
       },
     });
 
