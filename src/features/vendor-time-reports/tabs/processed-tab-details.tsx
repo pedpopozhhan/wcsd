@@ -22,7 +22,6 @@ import {
   setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
-import { navigateTo } from '@/common/navigate';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -63,11 +62,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         setIsLoading(false);
       },
       error: (error) => {
-        setIsLoading(false);
         console.error(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
       },
     });
     return () => {
@@ -123,7 +118,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       accountType: data.accountType,
       quantity: data.quantity,
       unitOfMeasure: data.unitOfMeasure,
-      price: data.price,
+      price: data.price
     };
   }
 
@@ -140,11 +135,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         setIsLoading(false);
       },
       error: (error) => {
-        setIsLoading(false);
         console.error(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
         publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Connection Error') });
       },
     });
