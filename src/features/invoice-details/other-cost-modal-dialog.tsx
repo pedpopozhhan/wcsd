@@ -483,7 +483,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                       }
                     }}
                     isSearchable={true}
-                    className='controlPadding'
+                    className='css-other-cost-control-width'
                   />
                 </GoAFormItem>
               </td>
@@ -501,7 +501,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     }}
                     menuPosition='fixed'
                     isSearchable={true}
-                    className='controlPadding'
+                    className='css-other-cost-control-width'
                   />
                 </GoAFormItem>
               </td>
@@ -521,7 +521,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     }}
                     menuPosition='fixed'
                     isSearchable={true}
-                    className='controlPadding'
+                    className='css-other-cost-control-width'
                   />
                 </GoAFormItem>
               </td>
@@ -539,7 +539,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     }}
                     menuPosition='fixed'
                     isSearchable={true}
-                    className='controlPadding'
+                    className='css-other-cost-control-width'
                   />
                 </GoAFormItem>
               </td>
