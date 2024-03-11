@@ -10,6 +10,7 @@ import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
 import { setReadOnly, setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setOtherCostData } from './invoice-details-slice';
 import { EmptyInvoiceId } from '@/common/types/invoice';
 import { setRowData } from './invoice-details-slice';
 
@@ -62,6 +63,7 @@ export default function InvoiceDetails() {
         }),
       ),
     );
+    dispatch(setOtherCostData([]));
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
