@@ -41,3 +41,7 @@
 .css-1nmdiq5-menu {
     scroll-snap-type: proximity;
 }
+
+.css-other-cost-control-width {
+    max-width: 230px;
+}
