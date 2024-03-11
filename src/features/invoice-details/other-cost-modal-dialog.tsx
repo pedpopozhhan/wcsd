@@ -19,6 +19,9 @@ import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-response';
+import Select from 'react-select';
+import Styles from './other-cost-modal-dialog.module.scss';
+import './other-cost-modal-dialog.css';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -62,15 +65,15 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
   const [cost, setCost] = useState<string>('');
 
-  const [glAccount, setGlAccount] = useState<string | string[]>('');
+  const [glAccount, setGlAccount] = useState<string>('');
   const [profitCentre, setProfitCenter] = useState<string>('100063');
-  const [costCenter, setCostCenter] = useState<string | string[]>('');
-  const [internalOrder, setInternalOrder] = useState<string | string[]>('');
-  const [fund, setFund] = useState<string | string[]>('');
+  const [costCenter, setCostCenter] = useState<string>('');
+  const [internalOrder, setInternalOrder] = useState<string>('');
+  const [fund, setFund] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [invoiceNumber] = useState<string>('');
 
-  // const [rateTypes, setRateTypes] = useState<string[]>([]);
+  //const [rateTypes, setRateTypes] = useState<IDropDownListResponse[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
   const [rateUnits, setRateUnits] = useState<string[]>([]);
   const [glAccounts, setGLAccounts] = useState<IDropDownListResponse[]>([]);
@@ -78,6 +81,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [internalOrders, setInternalOrders] = useState<IDropDownListResponse[]>([]);
   const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
   const [retry, setRetry] = useState<boolean>(true);
+  const { tableFormatter } = Styles;
 
   const currentOtherCost = {
     index: index,
@@ -130,6 +134,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
+        //setRateTypes(results.rateTypes);
         setRateUnits(results.rateUnits);
         setCostCenters(results.costCenterList);
         setGLAccounts(results.glAccountList);
@@ -226,21 +231,22 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setUnit(value);
   }
 
-  function onCostCenterChange(name: string, value: string | string[]) {
-    setCostCenter(value);
-  }
+  // function onCostCenterChange(name: string, value: string | string[]) {
+  //   setCostCenter(value);
+  // }
 
-  function onGLAccountChange(name: string, value: string | string[]) {
-    setGlAccount(value);
-  }
+  // function onGLAccountChange(name: string, value: string | string[]) {
+  //   setGlAccount(value);
+  // }
 
-  function onInternalOrderChange(name: string, value: string | string[]) {
-    setInternalOrder(value);
-  }
 
-  function onFundChange(name: string, value: string | string[]) {
-    setFund(value);
-  }
+  // function onInternalOrderChange(name: string, value: string | string[]) {
+  //   setInternalOrder(value);
+  // }
+
+  // function onFundChange(name: string, value: string | string[]) {
+  //   setFund(value);
+  // }
 
   const validateOtherCost = () => {
     if (new Date(fromDate) < minDate || fromDateError) {
@@ -282,7 +288,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setUnit(' ');
     setRate(0);
     setNumberOfUnits(0);
-    setCost('');
+    setCost(' ');
     setGlAccount('');
     setProfitCenter('100063');
     setCostCenter('');
@@ -324,10 +330,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
           </GoAButtonGroup>
         }
       >
-        <table>
+        <table className={tableFormatter}>
           <tbody>
-            <tr>
-              <td>
+            <tr >
+              <td >
                 <GoAFormItem label='From'>
                   <GoAInputDate
                     name='fromDate'
@@ -389,7 +395,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <tr>
               <td>
                 <GoAFormItem label='Rate Type'>
-                  <GoADropdown filterable placeholder='Select rate Type' name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
+                  <GoADropdown filterable placeholder="----------Select----------" name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
                     {rateTypes.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -399,7 +405,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td></td>
               <td colSpan={3}>
                 <GoAFormItem label='Unit'>
-                  <GoADropdown filterable placeholder='Select rate unit' name='units' value={unit} onChange={onUnitChange} width={lg}>
+                  <GoADropdown filterable placeholder="----------Select----------" name='units' value={unit} onChange={onUnitChange} width={lg}>
                     {rateUnits.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -478,30 +484,37 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td> </td>
             </tr>
             <tr>
-              <td>
+              <td >
                 <GoAFormItem label='Cost Center'>
-                  <GoADropdown
-                    filterable
-                    placeholder='Select cost center'
-                    name='costCenter'
-                    value={costCenter}
-                    onChange={onCostCenterChange}
-                    width={lg}
-                  >
-                    {costCenters.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
-                    })}
-                  </GoADropdown>
+                  <Select
+                    options={costCenters}
+                    placeholder="----------Select----------"
+                    value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setCostCenter(value.value);
+                      }
+                    }}
+                    isSearchable={true}
+                    className='controlPadding'
+                  />
                 </GoAFormItem>
               </td>
               <td></td>
-              <td colSpan={3}>
+              <td>
                 <GoAFormItem label='Fund'>
-                  <GoADropdown filterable placeholder='Select fund' name='fund' value={fund} onChange={onFundChange} width={lg}>
-                    {funds.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
-                    })}
-                  </GoADropdown>
+                  <Select
+                    options={funds}
+                    placeholder="----------Select----------"
+                    value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setFund(value.value);
+                      }
+                    }}
+                    isSearchable={true}
+                    className='controlPadding'
+                  />
                 </GoAFormItem>
               </td>
               <td></td>
@@ -509,28 +522,35 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <tr>
               <td>
                 <GoAFormItem label='Internal Order'>
-                  <GoADropdown
-                    placeholder='Select internal order'
-                    filterable
-                    name='internalOrder'
-                    value={internalOrder}
-                    onChange={onInternalOrderChange}
-                    width={lg}
-                  >
-                    {internalOrders.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
-                    })}
-                  </GoADropdown>
+                  <Select
+                    options={internalOrders}
+                    placeholder="----------Select----------"
+                    value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
+                    onChange={async (value: IDropDownListResponse | null) => {
+                      if (value.value) {
+                        setInternalOrder(value.value);
+                      }
+                    }}
+                    isSearchable={true}
+                    className='controlPadding'
+                  />
                 </GoAFormItem>
               </td>
               <td></td>
               <td>
                 <GoAFormItem label='G/L Acc'>
-                  <GoADropdown filterable placeholder='Select G/L account' name='glAccount' value={glAccount} onChange={onGLAccountChange} width={lg}>
-                    {glAccounts.map((x, i) => {
-                      return <GoADropdownItem key={i} value={x.value} label={x.label} />;
-                    })}
-                  </GoADropdown>
+                  <Select
+                    options={glAccounts}
+                    placeholder="----------Select----------"
+                    value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setGlAccount(value.value);
+                      }
+                    }}
+                    isSearchable={true}
+                    className='controlPadding'
+                  />
                 </GoAFormItem>
               </td>
               <td></td>
