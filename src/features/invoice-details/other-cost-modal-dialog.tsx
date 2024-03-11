@@ -22,6 +22,7 @@ import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-respon
 import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
+import { navigateTo } from '@/common/navigate';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -98,7 +99,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     internalOrder: internalOrder,
     fund: fund,
     remarks: remarks,
-    invoiceNumber: invoiceNumber
+    invoiceNumber: invoiceNumber,
   };
 
   const xl = '500px';
@@ -143,6 +144,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       },
       error: (error) => {
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
         publishToast({
           type: 'error',
           message: 'Connection Error',

@@ -11,6 +11,7 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
+import { navigateTo } from '@/common/navigate';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -80,6 +81,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       },
       error: (error) => {
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
         setIsLoading(false);
       },
     });
