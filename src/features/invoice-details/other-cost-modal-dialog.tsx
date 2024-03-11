@@ -105,6 +105,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const xl = '500px';
   const lg = '230px';
   const md = '175px';
+  const placeHolderForDDL = '----------Select----------';
 
   useEffect(() => {
     if (props.isAddition) {
@@ -399,7 +400,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <tr>
               <td>
                 <GoAFormItem label='Rate Type'>
-                  <GoADropdown filterable placeholder="----------Select----------" name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
+                  <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
                     {rateTypes.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -409,7 +410,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td></td>
               <td colSpan={3}>
                 <GoAFormItem label='Unit'>
-                  <GoADropdown filterable placeholder="----------Select----------" name='units' value={unit} onChange={onUnitChange} width={lg}>
+                  <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
                     {rateUnits.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
@@ -492,7 +493,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Cost Center'>
                   <Select
                     options={costCenters}
-                    placeholder="----------Select----------"
+                    placeholder={placeHolderForDDL}
                     value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
                     menuPosition='fixed'
                     onChange={async (value: IDropDownListResponse) => {
@@ -510,7 +511,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Fund'>
                   <Select
                     options={funds}
-                    placeholder="----------Select----------"
+                    placeholder={placeHolderForDDL}
                     value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
@@ -530,7 +531,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='Internal Order'>
                   <Select
                     options={internalOrders}
-                    placeholder="----------Select----------"
+                    placeholder={placeHolderForDDL}
                     value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
                     onChange={async (value: IDropDownListResponse | null) => {
                       if (value.value) {
@@ -548,7 +549,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 <GoAFormItem label='G/L Acc'>
                   <Select
                     options={glAccounts}
-                    placeholder="----------Select----------"
+                    placeholder={placeHolderForDDL}
                     value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
