@@ -490,6 +490,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     options={costCenters}
                     placeholder="----------Select----------"
                     value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
+                    menuPosition='fixed'
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
                         setCostCenter(value.value);
@@ -512,6 +513,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setFund(value.value);
                       }
                     }}
+                    menuPosition='fixed'
                     isSearchable={true}
                     className='controlPadding'
                   />
@@ -531,6 +533,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setInternalOrder(value.value);
                       }
                     }}
+                    menuPosition='fixed'
                     isSearchable={true}
                     className='controlPadding'
                   />
@@ -548,6 +551,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setGlAccount(value.value);
                       }
                     }}
+                    menuPosition='fixed'
                     isSearchable={true}
                     className='controlPadding'
                   />
