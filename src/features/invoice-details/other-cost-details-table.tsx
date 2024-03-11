@@ -103,8 +103,8 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{convertToCurrency(x.data.cost)}</td>
                 <td>{x.data.internalOrder}</td>
                 <td>{x.data.costCentre}</td>
-                <td>{x.data.account}</td>
                 <td>{x.data.fund}</td>
+                <td>{x.data.account}</td>
                 <td>{x.data.remarks}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>
