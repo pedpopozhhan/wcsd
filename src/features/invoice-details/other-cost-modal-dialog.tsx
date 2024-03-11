@@ -74,7 +74,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [remarks, setRemarks] = useState<string>('');
   const [invoiceNumber] = useState<string>('');
 
-  //const [rateTypes, setRateTypes] = useState<IDropDownListResponse[]>([]);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
   const [rateUnits, setRateUnits] = useState<string[]>([]);
   const [glAccounts, setGLAccounts] = useState<IDropDownListResponse[]>([]);
@@ -136,7 +135,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   useEffect(() => {
     const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
       next: (results) => {
-        //setRateTypes(results.rateTypes);
         setRateUnits(results.rateUnits);
         setCostCenters(results.costCenterList);
         setGLAccounts(results.glAccountList);
@@ -235,23 +233,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   function onUnitChange(name: string, value: string | string[]) {
     setUnit(value);
   }
-
-  // function onCostCenterChange(name: string, value: string | string[]) {
-  //   setCostCenter(value);
-  // }
-
-  // function onGLAccountChange(name: string, value: string | string[]) {
-  //   setGlAccount(value);
-  // }
-
-
-  // function onInternalOrderChange(name: string, value: string | string[]) {
-  //   setInternalOrder(value);
-  // }
-
-  // function onFundChange(name: string, value: string | string[]) {
-  //   setFund(value);
-  // }
 
   const validateOtherCost = () => {
     if (new Date(fromDate) < minDate || fromDateError) {
