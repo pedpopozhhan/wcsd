@@ -1,0 +1,47 @@
+/* classes to over ride the behavior of react-select  ------------------------------------------------------------------ */
+
+.css-1nmdiq5-menu {
+    z-index: 1 !important;
+}
+
+.css-1jqq78o-placeholder {
+    color: var(--goa-color-text-default) !important;
+}
+
+.css-1xc3v61-indicatorContainer {
+    color: var(--goa-color-text-default) !important;
+}
+
+.css-13cymwt-control {
+    min-height: 42px !important;
+    /* width: 230px !important; */
+    border-color: var(--goa-color-text-default) !important;
+}
+
+.css-13cymwt-control:hover {
+    box-shadow: 0 0 0 2px var(--goa-color-interactive-hover) !important;
+}
+
+.css-13cymwt-control:active {
+    box-shadow: 0 0 0 2px var(--goa-color-interactive-focus) !important;
+    border-color: var(--goa-color-interactive-focus) !important;
+}
+
+.css-t3ipsp-control {
+    min-height: 42px !important;
+    /* max-width: 230px !important; */
+    box-shadow: 0 0 0 2px var(--goa-color-interactive-focus) !important;
+    border-color: var(--goa-color-interactive-focus) !important;
+}
+
+.css-t3ipsp-control:hover {
+    border-color: var(--goa-color-interactive-hover) !important;
+}
+
+.css-1nmdiq5-menu {
+    scroll-snap-type: proximity;
+}
+
+.css-other-cost-control-width {
+    max-width: 230px;
+}

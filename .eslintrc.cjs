@@ -21,7 +21,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint', 'react', 'react-hooks'],
-  ignorePatterns: ['**.scss'],
+  ignorePatterns: ['**.scss', '**.css'],
   settings: {
     react: { version: 'detect' },
   },
