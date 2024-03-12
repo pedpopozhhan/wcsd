@@ -141,7 +141,6 @@ const InvoiceModalDialog = (props: any) => {
         } else {
           setInvoiceNumberErrorLabel('');
           processFields();
-          props.showInvoiceDialog(false);
         }
       },
       error: (error) => {
@@ -216,6 +215,7 @@ const InvoiceModalDialog = (props: any) => {
   function getHelperText() {
     return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
   }
+
   return (
     <>
       <GoAModal
