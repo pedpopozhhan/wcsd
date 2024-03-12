@@ -8,7 +8,8 @@ export interface IProcessInvoiceData {
   invoiceAmount: number;
   periodEndDate: Date;
   invoiceReceivedDate: Date;
-  vendor: string;
+  vendorBusinessId: string;
+  vendorName: string;
   assignedTo: string;
   contractNumber: string;
   type: string;
