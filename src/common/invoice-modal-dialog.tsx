@@ -8,7 +8,8 @@ import { EmptyInvoiceId } from './types/invoice';
 import processInvoiceService from '@/services/process-invoice.service';
 import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
-
+import styles from './invoice-modal-dialog.module.scss';
+const { container } = styles;
 export interface IInvoiceData {
   InvoiceID: string;
   InvoiceNumber: string;
@@ -107,6 +108,7 @@ const InvoiceModalDialog = (props: any) => {
     setDateOfInvoiceError(false);
     setPeriodEndingDateError(false);
     setInvoiceReceivedDateError(false);
+    setInvoiceNumberErrorLabel('');
   };
 
   const clearDataPoints = () => {
@@ -128,7 +130,6 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   function setInvoice() {
-    let errored = false;
     if (subscription) {
       subscription.unsubscribe();
     }
@@ -140,10 +141,10 @@ const InvoiceModalDialog = (props: any) => {
         } else {
           setInvoiceNumberErrorLabel('');
           processFields();
+          props.showInvoiceDialog(false);
         }
       },
       error: (error) => {
-        errored = true;
         console.log(error);
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
@@ -154,9 +155,6 @@ const InvoiceModalDialog = (props: any) => {
         });
       },
     });
-    if (!errored) {
-      props.showInvoiceDialog(false);
-    }
   }
   function processFields() {
     // Validate them and show errors
@@ -215,6 +213,9 @@ const InvoiceModalDialog = (props: any) => {
     }
   }
 
+  function getHelperText() {
+    return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
+  }
   return (
     <>
       <GoAModal
@@ -225,17 +226,17 @@ const InvoiceModalDialog = (props: any) => {
             <GoAButton type='secondary' onClick={() => hideModalDialog()}>
               Cancel
             </GoAButton>
-            <GoAButton type='primary' onClick={setInvoice}>
+            <GoAButton type='primary' onClick={() => setInvoice()}>
               {labelforInvoiceOperation}
             </GoAButton>
           </GoAButtonGroup>
         }
       >
-        <table>
+        <table className={container}>
           <tbody>
             <tr>
               <td>
-                <GoAFormItem label='Invoice' helpText='Number on invoice. Must be unique.' error={invoiceNumberErrorLabel}>
+                <GoAFormItem label='Invoice' helpText={getHelperText()} error={invoiceNumberErrorLabel}>
                   <GoAInput
                     name='invoiceNumber'
                     width='300px'

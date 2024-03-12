@@ -11,11 +11,18 @@ class ProcessInvoiceService {
 
   doesInvoiceNumberExist(token: string, invoiceNumber: string): Observable<boolean> {
     const url = `${this.baseUrl}/DoesInvoiceNumberExist?invoiceNumber=${invoiceNumber}`;
-    return axios.get<boolean>(url).pipe(
-      map((x) => {
-        return x.data;
-      }),
-    );
+
+    return axios
+      .request<boolean>({
+        method: 'get',
+        url: url,
+        headers: getHeaders(token),
+      })
+      .pipe(
+        map((x) => {
+          return x.data;
+        }),
+      );
   }
 
   createInvoice(token: string, processInvoiceData: IProcessInvoiceData): Observable<number> {
