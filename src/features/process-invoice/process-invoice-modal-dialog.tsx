@@ -39,7 +39,7 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
       invoiceAmount: invoiceData.InvoiceAmount,
       periodEndDate: new Date(invoiceData.PeriodEnding),
       invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-      vendorBusinessId: contract.businessId,
+      vendorBusinessId: contract.businessId.toString(),
       vendorName: contract.vendorName,
       assignedTo: '',
       contractNumber: invoiceData.ContractNumber,
