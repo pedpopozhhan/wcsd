@@ -1,10 +1,13 @@
 import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGroup } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
-import { publishToast } from './toast';
+import { failedToPerform, publishToast } from './toast';
 import { EmptyInvoiceId } from './types/invoice';
+import processInvoiceService from '@/services/process-invoice.service';
+import { navigateTo } from './navigate';
+import { Subscription } from 'rxjs';
 
 export interface IInvoiceData {
   InvoiceID: string;
@@ -28,12 +31,14 @@ export interface IInvoiceData {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const InvoiceModalDialog = (props: any) => {
   const dispatch = useAppDispatch();
+  const auth = useConditionalAuth();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [invoiceNumber, setInvoiceNumber] = useState<string>('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
+  const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
@@ -47,7 +52,7 @@ const InvoiceModalDialog = (props: any) => {
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
-
+  let subscription: Subscription;
   const invoiceForContext = {
     InvoiceID: EmptyInvoiceId,
     InvoiceNumber: invoiceNumber,
@@ -55,8 +60,8 @@ const InvoiceModalDialog = (props: any) => {
     InvoiceAmount: invoiceAmount,
     PeriodEnding: periodEndingDate,
     InvoiceReceived: invoiceReceivedDate,
-    ContractNumber: contractNumber, 
-    UniqueServiceSheetName: ''
+    ContractNumber: contractNumber,
+    UniqueServiceSheetName: '',
   };
 
   const navigate = useNavigate();
@@ -66,7 +71,13 @@ const InvoiceModalDialog = (props: any) => {
     d.setMonth(d.getMonth() + offset);
     return d;
   }
-
+  useEffect(() => {
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  });
   useEffect(() => {
     if (props.isAddition === 'false') {
       setDialogTitle('Update invoice');
@@ -116,9 +127,41 @@ const InvoiceModalDialog = (props: any) => {
     props.showInvoiceDialog(false);
   };
 
-  const setInvoice = () => {
+  function setInvoice() {
+    let errored = false;
+    if (subscription) {
+      subscription.unsubscribe();
+    }
+    subscription = processInvoiceService.doesInvoiceNumberExist(auth?.user?.access_token, invoiceNumber).subscribe({
+      next: (data) => {
+        if (data) {
+          setInvoiceNumberErrorLabel('Number on invoice must be unique.');
+          setInvoiceNumberError(true);
+        } else {
+          setInvoiceNumberErrorLabel('');
+          processFields();
+        }
+      },
+      error: (error) => {
+        errored = true;
+        console.log(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('check invoice number exists', 'Connection Error'),
+        });
+      },
+    });
+    if (!errored) {
+      props.showInvoiceDialog(false);
+    }
+  }
+  function processFields() {
     // Validate them and show errors
-    if (invoiceNumber.trim().length <= 0) {
+
+    if (invoiceNumber.trim().length <= 0 || invoiceNumberErrorLabel) {
       setInvoiceNumberError(true);
       return;
     } else {
@@ -170,7 +213,7 @@ const InvoiceModalDialog = (props: any) => {
       clearErrors();
       props.showInvoiceDialog(false);
     }
-  };
+  }
 
   return (
     <>
@@ -182,7 +225,7 @@ const InvoiceModalDialog = (props: any) => {
             <GoAButton type='secondary' onClick={() => hideModalDialog()}>
               Cancel
             </GoAButton>
-            <GoAButton type='primary' onClick={() => setInvoice()}>
+            <GoAButton type='primary' onClick={setInvoice}>
               {labelforInvoiceOperation}
             </GoAButton>
           </GoAButtonGroup>
@@ -192,7 +235,7 @@ const InvoiceModalDialog = (props: any) => {
           <tbody>
             <tr>
               <td>
-                <GoAFormItem label='Invoice'>
+                <GoAFormItem label='Invoice' helpText='Number on invoice. Must be unique.' error={invoiceNumberErrorLabel}>
                   <GoAInput
                     name='invoiceNumber'
                     width='300px'

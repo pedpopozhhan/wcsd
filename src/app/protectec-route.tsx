@@ -11,9 +11,11 @@ export interface IProtecedRouteProps {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProtectedRoute: React.FC<IProtecedRouteProps> = (props) => {
   const auth = useConditionalAuth();
+  console.dir(auth?.user);
   const hasPermissions = props.permissions.some((x) => {
     return hasResourceRole('finance', x, auth?.user?.access_token);
   });
+  console.log('hasPermissions: ' + hasPermissions);
   if (!auth.isAuthenticated || !hasPermissions) {
     // also check permissions in future if needed
     console.error('Unauthorized');
