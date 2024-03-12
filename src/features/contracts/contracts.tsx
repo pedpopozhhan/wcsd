@@ -41,7 +41,7 @@ export default function Contracts() {
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('search contracts', 'Connection Error'),
+          message: failedToPerform('Load Contracts', 'Connection Error'),
           callback: () => {
             setRetry(!retry);
           },
@@ -55,7 +55,7 @@ export default function Contracts() {
   }, [JSON.stringify(allData), retry]);
 
   useEffect(() => {
-    dispatch(getServiceSheetData({ token: auth?.user?.access_token}));
+    dispatch(getServiceSheetData({ token: auth?.user?.access_token }));
   }, [auth]);
 
   function handleOnEnter(filtered: SearchOption[]) {
