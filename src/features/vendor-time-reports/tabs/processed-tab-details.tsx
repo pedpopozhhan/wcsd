@@ -14,8 +14,8 @@ import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.mo
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
-  setcostDetailsData,
-  setotherCostsData,
+  setCostDetailsData,
+  setOtherCostsData,
   setInvoiceAmount,
   setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
@@ -115,8 +115,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         setIsLoading(true);
         dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setcostDetailsData(results.invoice.invoiceTimeReportCostDetails));
-        dispatch(setotherCostsData(results.invoice.invoiceOtherCostDetails));
+        dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
+        dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
         setIsLoading(false);
       },
       error: (error) => {

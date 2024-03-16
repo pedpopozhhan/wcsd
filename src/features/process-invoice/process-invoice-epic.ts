@@ -7,21 +7,45 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 import { setInvoiceChanged, setInvoiceId, setServiceSheetName } from '@/app/app-slice';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
 import { setNotificationStatus } from './process-invoice-slice';
+import { StateObservable } from 'redux-observable';
+import { RootState } from '@/app/store';
 
 const CREATE_INVOICE = 'createInvoice';
 const UPDATE_INVOICE = 'updateInvoice';
-export const createInvoice = createAction<{ token: string; invoiceData: IProcessInvoiceData }>(CREATE_INVOICE);
-export const updateInvoice = createAction<{ token: string; invoiceData: IProcessInvoiceData }>(UPDATE_INVOICE);
+export const createInvoice = createAction<{ token: string }>(CREATE_INVOICE);
+export const updateInvoice = createAction<{ token: string }>(UPDATE_INVOICE);
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
-export const processInvoiceEpic = (actions$: Observable<Action>) =>
+export const processInvoiceEpic = (actions$: Observable<Action>, state$: StateObservable<RootState>) =>
   actions$.pipe(
     filter((action) => createInvoice.match(action) || updateInvoice.match(action)),
     switchMap((action: Action) => {
       if (createInvoice.match(action)) {
-        return processInvoiceService.createInvoice(action.payload.token, action.payload.invoiceData).pipe(
+        const invoiceData = state$.value.app.invoiceData;
+        const contractDetails = state$.value.app.contractForReconciliation;
+        const otherCostData = state$.value.processInvoiceTabs.otherCostsData;
+        const timeReportData = state$.value.processInvoiceTabs.timeReportData;
+        const invoiceTimeReportData = timeReportData.map((i) => i.data);
+
+        const payload: IProcessInvoiceData = {
+          invoiceId: invoiceData.InvoiceID,
+          invoiceNumber: invoiceData.InvoiceNumber,
+          invoiceDate: invoiceData.DateOnInvoice,
+          invoiceAmount: invoiceData.InvoiceAmount,
+          periodEndDate: invoiceData.PeriodEnding,
+          invoiceReceivedDate: invoiceData.InvoiceReceived,
+          vendorBusinessId: contractDetails.businessId.toString(),
+          vendorName: contractDetails.vendorName,
+          assignedTo: '',
+          contractNumber: invoiceData.ContractNumber,
+          type: contractDetails.contractType,
+          uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
+          invoiceTimeReportCostDetails: invoiceTimeReportData,
+          invoiceOtherCostDetails: otherCostData,
+        };
+        return processInvoiceService.createInvoice(action.payload.token, payload).pipe(
           mergeMap((data) => {
-            publishToast({ type: 'success', message: `Invoice #${action.payload.invoiceData.invoiceNumber} processed.` });
+            publishToast({ type: 'success', message: `Invoice # ${invoiceData.InvoiceNumber} processed.` });
             return of(setInvoiceId(data), setRowData([]), setOtherCostData([]), setNotificationStatus(true), setInvoiceChanged(false));
           }),
           catchError((error) => {
@@ -38,7 +62,29 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
           }),
         );
       } else if (updateInvoice.match(action)) {
-        return processInvoiceService.updateInvoice(action.payload.token, action.payload.invoiceData).pipe(
+        const invoiceData = state$.value.app.invoiceData;
+        const contractDetails = state$.value.app.contractForReconciliation;
+        const otherCostData = state$.value.processInvoiceTabs.otherCostsData;
+        const timeReportData = state$.value.processInvoiceTabs.timeReportData;
+        const invoiceTimeReportData = timeReportData.map((i) => i.data);
+
+        const payload: IProcessInvoiceData = {
+          invoiceId: invoiceData.InvoiceID,
+          invoiceNumber: invoiceData.InvoiceNumber,
+          invoiceDate: invoiceData.DateOnInvoice,
+          invoiceAmount: invoiceData.InvoiceAmount,
+          periodEndDate: invoiceData.PeriodEnding,
+          invoiceReceivedDate: invoiceData.InvoiceReceived,
+          vendorBusinessId: contractDetails.businessId.toString(),
+          vendorName: contractDetails.vendorName,
+          assignedTo: '',
+          contractNumber: invoiceData.ContractNumber,
+          type: contractDetails.contractType,
+          uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
+          invoiceTimeReportCostDetails: invoiceTimeReportData,
+          invoiceOtherCostDetails: otherCostData,
+        };
+        return processInvoiceService.updateInvoice(action.payload.token, payload).pipe(
           mergeMap((data) => {
             publishToast({ type: 'success', message: 'Invoice updated successfully.' });
             return of(setServiceSheetName(data), setNotificationStatus(true), setInvoiceChanged(false));

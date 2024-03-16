@@ -9,7 +9,7 @@ import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
-import { setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
@@ -70,9 +70,10 @@ export default function InvoiceDetails() {
     const data = timeReportData.map((x) => {
       return x.data;
     });
-    dispatch(setcostDetailsData(data));
-    dispatch(setotherCostsData(otherCostData));
-    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`, { state: { timeReportData, otherCostData } });
+    dispatch(setCostDetailsData(data));
+    dispatch(setOtherCostsData(otherCostData));
+    dispatch(setTimeReportData(timeReportData));
+    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`);
   }
 
   return (
