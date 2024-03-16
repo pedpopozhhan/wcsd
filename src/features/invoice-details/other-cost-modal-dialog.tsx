@@ -53,9 +53,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
   const [index] = useState<number>(0);
-  const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
+  const [fromDate, setFromDate] = useState<string>(new Date().toISOString());
   const [fromDateError, setFromDateError] = useState<boolean>(false);
-  const [toDate, setToDate] = useState<Date>(new Date(Date()));
+  const [toDate, setToDate] = useState<string>(new Date().toISOString());
   const [toDateError, setToDateError] = useState<boolean>(false);
   const [rateType, setRateType] = useState<string | string[]>('');
   const [unit, setUnit] = useState<string | string[]>('');
@@ -268,8 +268,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   };
 
   const clearDataPoints = () => {
-    setFromDate(new Date());
-    setToDate(new Date());
+    setFromDate(new Date().toISOString());
+    setToDate(new Date().toISOString());
     setRateType(' ');
     setUnit(' ');
     setRate(0);
@@ -318,13 +318,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       >
         <table className={tableFormatter}>
           <tbody>
-            <tr >
-              <td >
+            <tr>
+              <td>
                 <GoAFormItem label='From'>
                   <GoAInputDate
                     name='fromDate'
                     placeholder='YYYY-MM-DD'
-                    value={fromDate}
+                    value={new Date(fromDate)}
                     error={fromDateError}
                     min={minDate}
                     max={maxDate}
@@ -336,7 +336,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setToDateError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setFromDate(propertyValue);
+                        setFromDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setFromDateError(true);
                         } else {
@@ -354,7 +354,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     name='dateOnInvoice'
                     placeholder='YYYY-MM-DD'
                     error={toDateError}
-                    value={toDate}
+                    value={new Date(toDate)}
                     min={minDate}
                     max={maxDate}
                     width={lg}
@@ -365,7 +365,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setToDateError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setToDate(propertyValue);
+                        setToDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setToDateError(true);
                         } else {
@@ -470,7 +470,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td> </td>
             </tr>
             <tr>
-              <td >
+              <td>
                 <GoAFormItem label='Cost Center'>
                   <Select
                     options={costCenters}

@@ -1,23 +1,32 @@
 import { Action, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { failedToPerform, publishToast } from '@/common/toast';
-import invoiceServiceSheetDataService from '@/services/invoice-service-sheet-data-service';
-import { setServiceSheetData } from './tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
+import processInvoiceService from '@/services/process-invoice.service';
+import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
+import { setInvoiceChanged, setInvoiceId, setServiceSheetName } from '@/app/app-slice';
+import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
+import { setNotificationStatus } from './process-invoice-slice';
+import { StateObservable } from 'redux-observable';
+import { RootState } from '@/app/store';
 
-const GET_SERVICE_SHEET_DATA = 'getServiceSheetData';
-const ACTION_2 = 'action2';
-export const getServiceSheetData = createAction<{ token: string }>(GET_SERVICE_SHEET_DATA);
-export const action2 = createAction<number>(ACTION_2);
+const CREATE_INVOICE = 'createInvoice';
+const UPDATE_INVOICE = 'updateInvoice';
+export const createInvoice = createAction<{ token: string; invoiceData: IProcessInvoiceData }>(CREATE_INVOICE);
+export const updateInvoice = createAction<{ token: string; invoiceData: IProcessInvoiceData }>(UPDATE_INVOICE);
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
-export const processInvoiceEpic = (actions$: Observable<Action>) =>
+export const processInvoiceEpic = (actions$: Observable<Action>, state$: StateObservable<RootState>) =>
   actions$.pipe(
-    filter((action) => getServiceSheetData.match(action) || action2.match(action)),
+    filter((action) => createInvoice.match(action) || updateInvoice.match(action)),
     switchMap((action: Action) => {
-      if (getServiceSheetData.match(action)) {
-        return invoiceServiceSheetDataService.getAll(action.payload.token).pipe(
-          mergeMap((results) => of(setServiceSheetData(results))),
+      if (createInvoice.match(action)) {
+        state$.value.
+        return processInvoiceService.createInvoice(action.payload.token, action.payload.invoiceData).pipe(
+          mergeMap((data) => {
+            publishToast({ type: 'success', message: `Invoice #${action.payload.invoiceData.invoiceNumber} processed.` });
+            return of(setInvoiceId(data), setRowData([]), setOtherCostData([]), setNotificationStatus(true), setInvoiceChanged(false));
+          }),
           catchError((error) => {
             console.error(error);
             if (error.response && error.response.status === 403) {
@@ -25,16 +34,31 @@ export const processInvoiceEpic = (actions$: Observable<Action>) =>
             }
             publishToast({
               type: 'error',
-              message: failedToPerform('search flight reports', 'Connection Error'),
+              message: failedToPerform('create invoice', 'Connection Error'),
               action: action,
             });
             return EMPTY;
           }),
         );
-      } else if (action2.match(action)) {
-        // This is a placeholder to be used as an example
-        console.log('in second action');
-        return EMPTY;
+      } else if (updateInvoice.match(action)) {
+        return processInvoiceService.updateInvoice(action.payload.token, action.payload.invoiceData).pipe(
+          mergeMap((data) => {
+            publishToast({ type: 'success', message: 'Invoice updated successfully.' });
+            return of(setServiceSheetName(data), setNotificationStatus(true), setInvoiceChanged(false));
+          }),
+          catchError((error) => {
+            console.error(error);
+            if (error.response && error.response.status === 403) {
+              navigateTo('unauthorized');
+            }
+            publishToast({
+              type: 'error',
+              message: failedToPerform('update invoice', 'Connection Error'),
+              action: action,
+            });
+            return EMPTY;
+          }),
+        );
       } else {
         console.error(`${action.type} is not handled`);
         return EMPTY;
