@@ -3,7 +3,7 @@ name: 'Web Build/Deloy'
 on:
   push:
     branches:
-    - uat
+    - stage
 
 #Special permissions required for OIDC authentication
 permissions:
@@ -16,7 +16,7 @@ jobs:
  # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
   build:
     runs-on: ubuntu-latest
-    environment: uat
+    environment: stage
     env:
       VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
       VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
@@ -52,7 +52,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: uat
+    environment: stage
     env:
       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
@@ -77,13 +77,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name wcdsstoragewebuat --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name wcdsstoragewebstage --auth-mode key -s '$web'
             
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstoragewebuat --auth-mode key -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsstoragewebstage --auth-mode key -d '$web' -s .
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
@@ -91,9 +91,9 @@ jobs:
           inlineScript: |
               az cdn endpoint purge --subscription "a9b1d048-a7f6-4d5c-ba63-a917e07892b7" \
               --content-paths  "/*" \
-              --profile-name "wcds-web-profile-uat" \
-              --name "wcds-web-uat" \
-              --resource-group "goa-cc-wdp-rg-wcds-web-uat"
+              --profile-name "wcds-web-profile-stage" \
+              --name "wcds-web-stage" \
+              --resource-group "goa-cc-wdp-rg-wcds-web-stage"
 
   # Azure logout
       - name: logout
