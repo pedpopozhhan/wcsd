@@ -79,13 +79,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name wcdsweb${{ env.TARGET }} --auth-mode key -s '$web'
             
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsweb${{ env.TARGET }} --auth-mode key -d '$web' -s .
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
