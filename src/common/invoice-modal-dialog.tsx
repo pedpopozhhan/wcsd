@@ -213,7 +213,7 @@ const InvoiceModalDialog = (props: any) => {
   }
 
   function getHelperText() {
-    return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
+    return invoiceNumberErrorLabel ? '' : 'Invoice already exists. Must be unique.';
   }
 
   return (
