@@ -3,7 +3,7 @@ name: 'Web Build/Deloy'
 on:
   push:
     branches:
-    - dev
+    - stage
 
 #Special permissions required for OIDC authentication
 permissions:
@@ -16,9 +16,9 @@ jobs:
  # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
   build:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: stage
     env:
-      TARGET: "dev"
+      TARGET: "stage"
       VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
       VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
       VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
@@ -53,9 +53,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: dev
+    environment: stage
     env:
-      TARGET: "dev"
+      TARGET: "stage"
       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
@@ -79,23 +79,23 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name wcdsweb${{ env.TARGET }} --auth-mode key -s '$web'
             
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az storage blob upload-batch --account-name wcdsstorageweb${{ env.TARGET }} --auth-mode key -d '$web' -s .
+              az storage blob upload-batch --account-name wcdsweb${{ env.TARGET }} --auth-mode key -d '$web' -s .
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-              az cdn endpoint purge --subscription ""${{ secrets.ARM_SUBSCRIPTION_ID }}"" \
+              az cdn endpoint purge --subscription "${{ secrets.ARM_SUBSCRIPTION_ID }}" \
               --content-paths  "/*" \
               --profile-name "wcds-web-profile-${{ env.TARGET }}" \
               --name "wcds-web-${{ env.TARGET }}" \
-              --resource-group "wcds-web-${{ env.TARGET }}"
+              --resource-group "goa-cc-wdp-rg-wcds-web-${{ env.TARGET }}"
 
   # Azure logout
       - name: logout
