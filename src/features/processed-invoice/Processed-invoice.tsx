@@ -4,7 +4,6 @@ import styles from '@/features/processed-invoice/processed-invoice.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import Totalizer from '@/features/process-invoice/invoice-amount-totalizer';
 import { useNavigate, useParams } from 'react-router-dom';
-import ServiceSheetTab from '@/features/process-invoice/tabs/service-sheet-tab';
 import DetailsTab from '@/features/process-invoice/tabs/details-tab';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
@@ -45,17 +44,11 @@ export default function ProcessedInvoice() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='ServiceSheet' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Service sheet</span>
-              </button>
-              <button id='Details' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
+              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
                 <span>Details</span>
               </button>
             </div>
-            <div className={tabContainer}>
-              {tabIndex === 1 && <ServiceSheetTab InvoiceAmount={invoiceAmount} />}
-              {tabIndex === 2 && <DetailsTab />}
-            </div>
+            <div className={tabContainer}>{tabIndex === 1 && <DetailsTab />}</div>
           </div>
         </div>
       </div>

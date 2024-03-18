@@ -1,5 +1,5 @@
 export interface ITimeReportDetailsTableRowData {
-  flightReportDate: Date;
+  flightReportDate: string;
   contractRegistrationName: string;
   flightReportId: number;
   ao02Number: string;
