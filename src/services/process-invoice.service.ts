@@ -25,9 +25,9 @@ class ProcessInvoiceService {
       );
   }
 
-  createInvoice(token: string, processInvoiceData: IProcessInvoiceData): Observable<number> {
+  createInvoice(token: string, processInvoiceData: IProcessInvoiceData): Observable<string> {
     return axios
-      .request<number>({
+      .request<string>({
         method: 'put',
         url: this.baseUrl + '/CreateInvoice',
         headers: getHeaders(token),
