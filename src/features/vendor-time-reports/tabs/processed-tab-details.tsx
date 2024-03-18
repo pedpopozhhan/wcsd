@@ -14,14 +14,11 @@ import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.mo
 
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
-  setServiceSheetData,
-  setcostDetailsData,
-  setotherCostsData,
-  setReadOnly,
+  setCostDetailsData,
+  setOtherCostsData,
   setInvoiceAmount,
   setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
 import { navigateTo } from '@/common/navigate';
 
 interface IProcessedTabDetailsAllProps {
@@ -112,31 +109,14 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   }
 
   //#endregion
-
-  function mapServiceSheetData(data: IServiceSheetData): IServiceSheetData {
-    return {
-      uniqueServiceSheetName: data.uniqueServiceSheetName,
-      purchaseGroup: data.purchaseGroup,
-      serviceDescription: data.serviceDescription,
-      communityCode: data.communityCode,
-      materialGroup: data.materialGroup,
-      accountType: data.accountType,
-      quantity: data.quantity,
-      unitOfMeasure: data.unitOfMeasure,
-      price: data.price,
-    };
-  }
-
   function pullDetailsForInvoice(invoiceId: string) {
     const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
       next: (results) => {
         setIsLoading(true);
         dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setServiceSheetData(mapServiceSheetData(results.invoice)));
-        dispatch(setReadOnly(true));
-        dispatch(setcostDetailsData(results.invoice.invoiceTimeReportCostDetails));
-        dispatch(setotherCostsData(results.invoice.invoiceOtherCostDetails));
+        dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
+        dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
         setIsLoading(false);
       },
       error: (error) => {

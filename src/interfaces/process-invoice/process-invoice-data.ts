@@ -4,24 +4,16 @@ import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/tim
 export interface IProcessInvoiceData {
   invoiceId?: string;
   invoiceNumber: string;
-  invoiceDate: Date;
+  invoiceDate: string;
   invoiceAmount: number;
-  periodEndDate: Date;
-  invoiceReceivedDate: Date;
+  periodEndDate: string;
+  invoiceReceivedDate: string;
   vendorBusinessId: string;
   vendorName: string;
   assignedTo: string;
   contractNumber: string;
   type: string;
   uniqueServiceSheetName: string;
-  purchaseGroup?: string;
-  serviceDescription?: string;
-  communityCode?: string;
-  materialGroup?: string;
-  accountType?: string;
-  quantity?: number;
-  unitOfMeasure?: string;
-  price?: number;
   invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
   invoiceOtherCostDetails: IOtherCostTableRowData[];
 }
