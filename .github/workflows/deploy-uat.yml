@@ -97,6 +97,7 @@ jobs:
               --name "wcds-web-${{ env.TARGET }}" \
               --resource-group "goa-cc-wdp-rg-wcds-web-${{ env.TARGET }}"
 
+
   # Azure logout
       - name: logout
         run: |
