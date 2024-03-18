@@ -5,14 +5,14 @@ import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { setNotificationStatus } from './process-invoice-slice';
 import { setServiceSheetData, setServiceSheetNameChange } from './tabs/process-invoice-tabs-slice';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { EmptyInvoiceId } from '@/common/types/invoice';
+import { navigateTo } from '@/common/navigate';
 
 export interface IProcessInvoiceModalData {
   open: boolean;
@@ -22,7 +22,7 @@ export interface IProcessInvoiceModalData {
 }
 
 const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   const { processInvoiceModalDialogContainer } = styles;
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -31,49 +31,72 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
   function hideModalDialog() {
     props.close();
   }
-  function createInvoice() {
-    const processInvoiceData: IProcessInvoiceData = {
+  function getInvoiceData(): IProcessInvoiceData {
+    return {
       invoiceId: invoiceData.InvoiceID,
+      invoiceNumber: invoiceData.InvoiceNumber,
       invoiceDate: new Date(invoiceData.DateOnInvoice),
       invoiceAmount: invoiceData.InvoiceAmount,
       periodEndDate: new Date(invoiceData.PeriodEnding),
       invoiceReceivedDate: new Date(invoiceData.InvoiceReceived),
-      vendor: contract.vendorName,
+      vendorBusinessId: contract.businessId.toString(),
+      vendorName: contract.vendorName,
       assignedTo: '',
       contractNumber: invoiceData.ContractNumber,
       type: contract.contractType,
+      uniqueServiceSheetName: serviceSheetData.uniqueServiceSheetName,
+      purchaseGroup: serviceSheetData.purchaseGroup,
+      serviceDescription: serviceSheetData.serviceDescription,
+      communityCode: serviceSheetData.communityCode,
+      materialGroup: serviceSheetData.materialGroup,
+      accountType: serviceSheetData.accountType,
+      quantity: serviceSheetData.quantity,
+      unitOfMeasure: serviceSheetData.unitOfMeasure,
+      price: serviceSheetData.price,
       invoiceTimeReportCostDetails: props.data.timeReportData,
       invoiceOtherCostDetails: props.data.otherCostData,
-      invoiceServiceSheet: serviceSheetData,
     };
-    processInvoiceService.createInvoice(auth?.user?.access_token, processInvoiceData).subscribe({
+  }
+
+  function createInvoice() {
+    let errored = false;
+    processInvoiceService.createInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
       next: (data) => {
-        if (data > 0) {
-          dispatch(setInvoiceData({ ...invoiceData, InvoiceKey: data }));
+        if (data.toString() !== EmptyInvoiceId) {
+          dispatch(setInvoiceData({ ...invoiceData, InvoiceID: data.toString() }));
           dispatch(setRowData([]));
           dispatch(setOtherCostData([]));
           if (serviceSheetData) {
-            dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            if (serviceSheetData) {
-              dispatch(setServiceSheetData({ ...serviceSheetData, invoiceKey: data }));
-            }
             dispatch(setServiceSheetNameChange(false));
-            dispatch(setNotificationStatus(true));
-            publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceID} processed.` });
           }
+          dispatch(setNotificationStatus(true));
+          publishToast({ type: 'success', message: `Invoice #${invoiceData.InvoiceNumber} processed.` });
         }
       },
       error: (error) => {
+        errored = true;
         console.log(error);
-        publishToast({ type: 'error', message: failedToPerform('create invoice', 'Server Error') });
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('create invoice', 'Connection Error'),
+          callback: () => {
+            createInvoice();
+          },
+        });
       },
     });
-    props.close();
+    if (!errored) {
+      props.close();
+    }
   }
 
   function updateInvoiceServiceSheet() {
+    let errored = false;
     if (serviceSheetData) {
-      processInvoiceService.updateInvoice(auth?.user?.access_token, serviceSheetData).subscribe({
+      processInvoiceService.updateInvoice(auth?.user?.access_token, getInvoiceData()).subscribe({
         next: (data) => {
           dispatch(setServiceSheetData({ ...serviceSheetData, uniqueServiceSheetName: data }));
           dispatch(setServiceSheetNameChange(false));
@@ -81,11 +104,23 @@ const ProcessInvoiceModal: React.FC<IProcessInvoiceModalData> = (props) => {
           publishToast({ type: 'success', message: 'Invoice updated successfully.' });
         },
         error: (error) => {
+          errored = true;
           console.log(error);
-          publishToast({ type: 'error', message: failedToPerform('update invoice', 'Server Error') });
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('update invoice', 'Connection Error'),
+            callback: () => {
+              updateInvoiceServiceSheet();
+            },
+          });
         },
       });
-      props.close();
+      if (!errored) {
+        props.close();
+      }
     }
   }
 

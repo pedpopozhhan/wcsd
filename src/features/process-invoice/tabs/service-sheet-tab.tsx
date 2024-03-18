@@ -2,18 +2,15 @@ import { GoAInput } from '@abgov/react-components';
 import styles from '@/features/process-invoice/process-invoice.module.scss';
 import { FC, useEffect } from 'react';
 import { convertToCurrency } from '@/common/currency';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setServiceSheetData, setServiceSheetNameChange } from './process-invoice-tabs-slice';
 import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
 
 interface IServiceSheetTabProps {
-  InvoiceID: string;
   InvoiceAmount: number;
 }
-const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+const ServiceSheetTab: FC<IServiceSheetTabProps> = () => {
+  const auth = useConditionalAuth();
   const { serviceSheetTabContainer, serviceSheetTabAltValues, serviceSheetNameDesc, invoiceAmountLabel } = styles;
 
   const dispatch = useAppDispatch();
@@ -49,28 +46,28 @@ const ServiceSheetTab: FC<IServiceSheetTabProps> = (props: IServiceSheetTabProps
       </div>
 
       <div>Purchase group</div>
-      <div className={serviceSheetTabAltValues}>W01 (FP_W01)</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.purchaseGroup}</div>
 
       <div>Service description</div>
       <div>{serviceSheetData?.serviceDescription}</div>
 
       <div>Commodity code</div>
-      <div className={serviceSheetTabAltValues}>[Determined from Contract]</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.communityCode}</div>
 
       <div>Material group</div>
-      <div className={serviceSheetTabAltValues}>[Determined from Contract]</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.materialGroup}</div>
 
       <div>Account type</div>
-      <div className={serviceSheetTabAltValues}>Expense</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.accountType}</div>
 
       <div>Quantity</div>
-      <div className={serviceSheetTabAltValues}>1</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.quantity}</div>
 
       <div>Unit of measure</div>
-      <div className={serviceSheetTabAltValues}>Hour</div>
+      <div className={serviceSheetTabAltValues}>{serviceSheetData?.unitOfMeasure}</div>
 
       <div>Price</div>
-      <div className={invoiceAmountLabel}>$ {convertToCurrency(props.InvoiceAmount).replace('$', '')}</div>
+      <div className={invoiceAmountLabel}>$ {convertToCurrency(serviceSheetData?.price).replace('$', '')}</div>
     </div>
   );
 };

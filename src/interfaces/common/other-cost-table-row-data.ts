@@ -3,15 +3,15 @@ export interface IOtherCostTableRowData {
   from: Date;
   to: Date;
   rateType: string | string[];
-  unit: string | string[];
+  rateUnit: string | string[];
   ratePerUnit: number; //with $0.00 //Unit Cost
-  numberOfUnits: number;
+  noOfUnits: number;
   cost: number;
-  glAcct: string | string[];
+  account: string | string[];
   profitCentre: string | string[];
   costCentre: string | string[];
   internalOrder: string | string[];
   fund: string | string[];
   remarks: string;
-  invoiceId: string;
+  invoiceNumber: string;
 }

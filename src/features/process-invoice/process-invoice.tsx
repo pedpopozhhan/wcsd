@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { resetState } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
 import Summary from '@/features/invoice-details/summary';
+import { EmptyInvoiceId } from '@/common/types/invoice';
 
 export default function ProcessInvoice() {
   const dispatch = useAppDispatch();
@@ -25,7 +26,7 @@ export default function ProcessInvoice() {
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
   const serviceSheetData = useAppSelector((state) => state.processInvoiceTabs.serviceSheetData);
   let dialogType = 'finish-invoice';
-  if (invoiceData.InvoiceKey > 0) {
+  if (invoiceData.InvoiceID != EmptyInvoiceId) {
     dialogType = 'update-service-sheet';
   }
   const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
@@ -35,8 +36,8 @@ export default function ProcessInvoice() {
 
   function navigateToReconcile() {
     dispatch(resetState());
-    navigate(`/invoice/${invoiceData.InvoiceID}`, {
-      state: invoiceData.InvoiceID,
+    navigate(`/invoice/${invoiceData.InvoiceNumber}`, {
+      state: invoiceData.InvoiceNumber,
     });
   }
 
@@ -69,14 +70,14 @@ export default function ProcessInvoice() {
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <ServiceSheetTab InvoiceID={invoiceData.InvoiceID} InvoiceAmount={invoiceData.InvoiceAmount} />}
+              {tabIndex === 1 && <ServiceSheetTab InvoiceAmount={invoiceData.InvoiceAmount} />}
               {tabIndex === 2 && <DetailsTab />}
             </div>
           </div>
         </div>
       </div>
       <div className={footer}>
-        {invoiceData.InvoiceKey == 0 && (
+        {invoiceData.InvoiceID == EmptyInvoiceId && (
           <Fragment>
             <GoAButton type='primary' onClick={() => setShowDialog(true)}>
               <ion-icon name='archive-outline'></ion-icon>
@@ -87,7 +88,7 @@ export default function ProcessInvoice() {
             </GoAButton>
           </Fragment>
         )}
-        {invoiceData.InvoiceKey > 0 && (
+        {invoiceData.InvoiceID != EmptyInvoiceId  && (
           <Fragment>
             <GoAButton type='primary' onClick={() => setShowDialog(true)} {...(invoiceTabs.nameChanged && serviceSheetData?.uniqueServiceSheetName? { disabled: false } : { disabled: true })}>
               <label>Update</label>

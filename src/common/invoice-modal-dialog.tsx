@@ -1,29 +1,45 @@
 import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGroup } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
-import { publishToast } from './toast';
-
+import { failedToPerform, publishToast } from './toast';
+import { EmptyInvoiceId } from './types/invoice';
+import processInvoiceService from '@/services/process-invoice.service';
+import { navigateTo } from './navigate';
+import { Subscription } from 'rxjs';
+import styles from './invoice-modal-dialog.module.scss';
+const { container } = styles;
 export interface IInvoiceData {
-  InvoiceKey: number;
   InvoiceID: string;
+  InvoiceNumber: string;
   DateOnInvoice: string;
   InvoiceAmount: number;
   PeriodEnding: string;
   InvoiceReceived: string;
   ContractNumber: string;
+  UniqueServiceSheetName: string;
+  PurchaseGroup?: string;
+  ServiceDescription?: string;
+  CommunityCode?: string;
+  MaterialGroup?: string;
+  AccountType?: string;
+  Quantity?: string;
+  UnitOfMeasure?: string;
+  Price?: string;
 }
 // TODO: this should have props
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const InvoiceModalDialog = (props: any) => {
   const dispatch = useAppDispatch();
+  const auth = useConditionalAuth();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
-  const [invoiceId, setInvoiceId] = useState<string>('');
+  const [invoiceNumber, setInvoiceNumber] = useState<string>('');
   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isAddition);
-  const [invoiceIdError, setInvoiceIdError] = useState<boolean>(false);
+  const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
+  const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
@@ -37,15 +53,16 @@ const InvoiceModalDialog = (props: any) => {
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 1));
   const [dialogTitle, setDialogTitle] = useState<string>('');
-
+  let subscription: Subscription;
   const invoiceForContext = {
-    InvoiceKey: 0,
-    InvoiceID: invoiceId,
+    InvoiceID: EmptyInvoiceId,
+    InvoiceNumber: invoiceNumber,
     DateOnInvoice: dateOfInvoice,
     InvoiceAmount: invoiceAmount,
     PeriodEnding: periodEndingDate,
     InvoiceReceived: invoiceReceivedDate,
     ContractNumber: contractNumber,
+    UniqueServiceSheetName: '',
   };
 
   const navigate = useNavigate();
@@ -55,7 +72,13 @@ const InvoiceModalDialog = (props: any) => {
     d.setMonth(d.getMonth() + offset);
     return d;
   }
-
+  useEffect(() => {
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  });
   useEffect(() => {
     if (props.isAddition === 'false') {
       setDialogTitle('Update invoice');
@@ -71,7 +94,7 @@ const InvoiceModalDialog = (props: any) => {
   }, [isInvoiceAddition]);
 
   const setToSessionData = () => {
-    setInvoiceId(invoiceData.InvoiceID);
+    setInvoiceNumber(invoiceData.InvoiceNumber);
     setInvoiceAmount(invoiceData.InvoiceAmount);
     setDateOfInvoice(invoiceData.DateOnInvoice);
     setInvoiceReceivedDate(invoiceData.InvoiceReceived);
@@ -80,15 +103,16 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const clearErrors = () => {
-    setInvoiceIdError(false);
+    setInvoiceNumberError(false);
     setInvoiceAmountError(false);
     setDateOfInvoiceError(false);
     setPeriodEndingDateError(false);
     setInvoiceReceivedDateError(false);
+    setInvoiceNumberErrorLabel('');
   };
 
   const clearDataPoints = () => {
-    setInvoiceId('');
+    setInvoiceNumber('');
     setInvoiceAmount(0);
     setDateOfInvoice(new Date().toISOString());
     setPeriodEndingDate(new Date().toISOString());
@@ -105,13 +129,40 @@ const InvoiceModalDialog = (props: any) => {
     props.showInvoiceDialog(false);
   };
 
-  const setInvoice = () => {
+  function setInvoice() {
+    if (subscription) {
+      subscription.unsubscribe();
+    }
+    subscription = processInvoiceService.doesInvoiceNumberExist(auth?.user?.access_token, invoiceNumber).subscribe({
+      next: (data) => {
+        if (data) {
+          setInvoiceNumberErrorLabel('Number on invoice must be unique.');
+          setInvoiceNumberError(true);
+        } else {
+          setInvoiceNumberErrorLabel('');
+          processFields();
+        }
+      },
+      error: (error) => {
+        console.log(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('check invoice number exists', 'Connection Error'),
+        });
+      },
+    });
+  }
+  function processFields() {
     // Validate them and show errors
-    if (invoiceId.trim().length <= 0) {
-      setInvoiceIdError(true);
+
+    if (invoiceNumber.trim().length <= 0 || invoiceNumberErrorLabel) {
+      setInvoiceNumberError(true);
       return;
     } else {
-      setInvoiceIdError(false);
+      setInvoiceNumberError(false);
     }
 
     if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
@@ -152,14 +203,18 @@ const InvoiceModalDialog = (props: any) => {
       clearErrors();
 
       // Navigate to invoice detail page
-      navigate(`/invoice/${invoiceId}`, { state: invoiceId });
+      navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
       dispatch(setInvoiceData(invoiceForContext));
       publishToast({ type: 'info', message: 'Invoice updated.' });
       clearErrors();
       props.showInvoiceDialog(false);
     }
-  };
+  }
+
+  function getHelperText() {
+    return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
+  }
 
   return (
     <>
@@ -177,24 +232,24 @@ const InvoiceModalDialog = (props: any) => {
           </GoAButtonGroup>
         }
       >
-        <table>
+        <table className={container}>
           <tbody>
             <tr>
               <td>
-                <GoAFormItem label='Invoice'>
+                <GoAFormItem label='Invoice' helpText={getHelperText()} error={invoiceNumberErrorLabel}>
                   <GoAInput
-                    name='invoiceId'
+                    name='invoiceNumber'
                     width='300px'
                     maxLength={20}
-                    value={invoiceId}
-                    error={invoiceIdError}
+                    value={invoiceNumber}
+                    error={invoiceNumberError}
                     onBlur={() => {}}
                     onChange={(key, value) => {
-                      setInvoiceId(value.trim());
+                      setInvoiceNumber(value.trim());
                       if (value.trim().length <= 0) {
-                        setInvoiceIdError(true);
+                        setInvoiceNumberError(true);
                       } else {
-                        setInvoiceIdError(false);
+                        setInvoiceNumberError(false);
                         setPageHasError(false);
                       }
                     }}

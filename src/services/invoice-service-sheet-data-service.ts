@@ -26,6 +26,7 @@ export class SampleData {
       quantity: 1,
       unitOfMeasure: 'Hour',
       price: 0,
+      invoiceId: '00000000-0000-0000-0000-000000000000'
     };
     return results;
   }

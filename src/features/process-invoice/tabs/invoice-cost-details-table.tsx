@@ -78,7 +78,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
                 <td>{yearMonthDay(x.flightReportDate)}</td>
                 <td>{x.contractRegistrationName}</td>
                 <td>{x.flightReportId}</td>
-                <td>{x.aO02Number}</td>
+                <td>{x.ao02Number}</td>
                 <td>{x.rateType}</td>
                 <td>{x.noOfUnits}</td>
                 <td>{x.rateUnit}</td>
@@ -87,7 +87,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
                 <td>{x.internalOrder}</td>
                 <td>{x.costCenter}</td>
                 <td>{x.fund}</td>
-                <td>{x.glAcct}</td>
+                <td>{x.account}</td>
                 <td>{x.fireNumber}</td>
               </tr>
             ))}

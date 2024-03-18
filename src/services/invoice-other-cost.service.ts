@@ -18,17 +18,17 @@ export class SampleData {
         from: new Date(date + 86400000 * i),
         to: new Date(date + 86400000 * i),
         rateType: `${i}`,
-        unit: `${i}`,
+        rateUnit: `${i}`,
         ratePerUnit: 1234.25,
-        numberOfUnits: i,
+        noOfUnits: i,
         cost: i * 1234.25, //with $0.00
-        glAcct: `${i}`,
+        account: `${i}`,
         profitCentre: `${i}`,
         costCentre: `${i}`,
         remarks: `${i}`,
         internalOrder: `${i}`,
         fund: `${i}`,
-        invoiceId: `${i}`,
+        invoiceNumber: `${i}`,
       });
     }
 

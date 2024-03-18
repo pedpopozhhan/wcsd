@@ -97,14 +97,14 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{yearMonthDay(x.data.from)}</td>
                 <td>{yearMonthDay(x.data.to)}</td>
                 <td>{x.data.rateType}</td>
-                <td>{x.data.unit}</td>
+                <td>{x.data.rateUnit}</td>
                 <td>{convertToCurrency(x.data.ratePerUnit)}</td>
-                <td>{x.data.numberOfUnits}</td>
+                <td>{x.data.noOfUnits}</td>
                 <td>{convertToCurrency(x.data.cost)}</td>
                 <td>{x.data.internalOrder}</td>
                 <td>{x.data.costCentre}</td>
-                <td>{x.data.glAcct}</td>
                 <td>{x.data.fund}</td>
+                <td>{x.data.account}</td>
                 <td>{x.data.remarks}</td>
                 <td className={`${stickyColumn} ${end}`}>
                   <div className={buttonWrapper}>

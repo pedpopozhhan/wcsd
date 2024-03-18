@@ -8,19 +8,21 @@ import { SearchOption } from './search-option';
 import SearchSuggestion from './search-suggestion';
 import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
+import { navigateTo } from '@/common/navigate';
+import { getServiceSheetData } from '@/features/process-invoice/process-invoice-epic';
 
 const { top, search, searchResultsContainer } = styles;
 
 export default function Contracts() {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
+  const dispatch = useAppDispatch();
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState('' as string | SearchOption);
   const [contractType, setContractType] = useState('all' as ContractType);
-
+  const [retry, setRetry] = useState<boolean>(false);
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {
@@ -34,14 +36,27 @@ export default function Contracts() {
       },
       error: (error) => {
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('search contracts', 'Server error') });
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Load Contracts', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [JSON.stringify(allData)]);
+  }, [JSON.stringify(allData), retry]);
+
+  useEffect(() => {
+    dispatch(getServiceSheetData({ token: auth?.user?.access_token }));
+  }, [auth]);
 
   function handleOnEnter(filtered: SearchOption[]) {
     const results = allData.filter((x) => filtered.some((y) => y.value === x.index));

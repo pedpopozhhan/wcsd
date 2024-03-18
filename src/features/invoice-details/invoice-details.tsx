@@ -7,16 +7,17 @@ import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getInvoiceDetails } from './invoice-details-epic';
-import { setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { setReadOnly, setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { setOtherCostData } from './invoice-details-slice';
+import { EmptyInvoiceId } from '@/common/types/invoice';
+import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
@@ -55,20 +56,29 @@ export default function InvoiceDetails() {
   }, [rowData, otherCostData]);
 
   function cancel() {
+    dispatch(
+      setRowData(
+        rowData.map((r) => {
+          return { ...r, isAdded: false };
+        }),
+      ),
+    );
+    dispatch(setOtherCostData([]));
     // navigate to time reports page
     navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
-    if (invoiceData.InvoiceKey == 0 && processInvoiceTabs) {
-      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceKey: 0, uniqueServiceSheetName: '' }));
+    if (invoiceData.InvoiceID == EmptyInvoiceId && processInvoiceTabs) {
+      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceId: EmptyInvoiceId, uniqueServiceSheetName: '', price: invoiceData.InvoiceAmount }));
+      dispatch(setReadOnly(false));
     }
     const data = timeReportData.map((x) => {
       return x.data;
     });
     dispatch(setcostDetailsData(data));
     dispatch(setotherCostsData(otherCostData));
-    navigate(`/Invoice/${invoiceData.InvoiceID}/processInvoice`, { state: { timeReportData, otherCostData } });
+    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`, { state: { timeReportData, otherCostData } });
   }
 
   return (

@@ -18,7 +18,10 @@ class ContractSearchService {
       })
       .pipe(
         map((x) => {
-          return x.data.rows;
+          return x.data.rows.map((y: IContractSearchResult, index: number) => {
+            y.index = index;
+            return y;
+          });
         }),
       );
   }

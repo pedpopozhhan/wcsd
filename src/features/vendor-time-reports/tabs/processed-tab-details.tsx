@@ -8,7 +8,7 @@ import processedInvoicesService from '@/services/processed-invoices.service';
 
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
@@ -19,17 +19,17 @@ import {
   setotherCostsData,
   setReadOnly,
   setInvoiceAmount,
-  setInvoiceId,
+  setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { useAuth } from 'react-oidc-context';
-import authNoop from '@/common/auth-noop';
+import { IServiceSheetData } from '@/interfaces/common/service-sheet-data';
+import { navigateTo } from '@/common/navigate';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
-  const auth = import.meta.env.VITE_ENABLE_AUTHORIZATION ? useAuth() : authNoop;
+  const auth = useConditionalAuth();
   //Object for the page data
   const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
 
@@ -53,7 +53,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const {invoiceAmountLabel} = styles;
+  const { invoiceAmountLabel } = styles;
 
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
@@ -63,7 +63,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         setIsLoading(false);
       },
       error: (error) => {
+        setIsLoading(false);
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
       },
     });
     return () => {
@@ -109,21 +113,39 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //#endregion
 
-  function pullDetailsForInvoice(invoiceKey?: number) {
-    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, Number(invoiceKey)).subscribe({
+  function mapServiceSheetData(data: IServiceSheetData): IServiceSheetData {
+    return {
+      uniqueServiceSheetName: data.uniqueServiceSheetName,
+      purchaseGroup: data.purchaseGroup,
+      serviceDescription: data.serviceDescription,
+      communityCode: data.communityCode,
+      materialGroup: data.materialGroup,
+      accountType: data.accountType,
+      quantity: data.quantity,
+      unitOfMeasure: data.unitOfMeasure,
+      price: data.price,
+    };
+  }
+
+  function pullDetailsForInvoice(invoiceId: string) {
+    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
       next: (results) => {
         setIsLoading(true);
-        dispatch(setInvoiceId(results.invoice.invoiceId));
+        dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setServiceSheetData(results.invoice.invoiceServiceSheet));
+        dispatch(setServiceSheetData(mapServiceSheetData(results.invoice)));
         dispatch(setReadOnly(true));
         dispatch(setcostDetailsData(results.invoice.invoiceTimeReportCostDetails));
         dispatch(setotherCostsData(results.invoice.invoiceOtherCostDetails));
         setIsLoading(false);
       },
       error: (error) => {
+        setIsLoading(false);
         console.error(error);
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Server Error') });
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Connection Error') });
       },
     });
     return () => {
@@ -131,10 +153,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     };
   }
 
-  function invoiceIdClick(invoiceKey?: number) {
-    if (invoiceKey) {
-      pullDetailsForInvoice(invoiceKey);
-      navigate(`/ProcessedInvoice/${invoiceKey}`);
+  function invoiceNumberClick(invoiceId: string) {
+    if (invoiceId) {
+      pullDetailsForInvoice(invoiceId);
+      navigate(`/ProcessedInvoice/${invoiceId}`);
     }
   }
 
@@ -144,7 +166,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       <div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
-          <thead>
+            <thead>
               <tr>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
@@ -160,20 +182,20 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
                 pageData.map((record: IProcessedInvoiceTableRowData) => (
-                  <tr key={record.invoiceId}>
+                  <tr key={record.invoiceNumber}>
                     <td>{yearMonthDay(record.invoiceDate)}</td>
                     <td>
                       <GoAButton
                         {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                         size='compact'
                         type='tertiary'
-                        onClick={() => invoiceIdClick(record?.invoiceKey)}
+                        onClick={() => invoiceNumberClick(record?.invoiceId)}
                       >
-                        {record.invoiceId}
+                        {record.invoiceNumber}
                       </GoAButton>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.invoiceServiceSheet?.uniqueServiceSheetName ? record.invoiceServiceSheet.uniqueServiceSheetName : '--'}</td>
+                    <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
@@ -184,7 +206,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                       )}
                     </td>
                     <td>
-                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceIdClick(record?.invoiceKey)} />
+                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
                     </td>
                   </tr>
                 ))

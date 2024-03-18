@@ -3,6 +3,7 @@ import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from '
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import timeReportDetailsService from '@/services/time-report-details.service';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { navigateTo } from '@/common/navigate';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const ACTION_2 = 'action2';
@@ -19,9 +20,12 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
           mergeMap((results) => of(setRateTypes(results.rateTypes), initializeRowData(results.rows))),
           catchError((error) => {
             console.error(error);
+            if (error.response && error.response.status === 403) {
+              navigateTo('unauthorized');
+            }
             publishToast({
               type: 'error',
-              message: failedToPerform('get invoice details', 'Server error'),
+              message: failedToPerform('get invoice details', 'Connection Error'),
               action: action,
             });
             return EMPTY;

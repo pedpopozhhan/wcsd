@@ -31,7 +31,7 @@ const Summary: React.FC = () => {
       </div>
       <div>
         <div>Invoice no.</div>
-        <div>{invoiceData.InvoiceID}</div>
+        <div>{invoiceData.InvoiceNumber}</div>
       </div>
       <div>
         <div>Invoice date</div>
