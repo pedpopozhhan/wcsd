@@ -95,7 +95,7 @@ jobs:
               --content-paths  "/*" \
               --profile-name "wcds-web-profile-${{ env.TARGET }}" \
               --name "wcds-web-${{ env.TARGET }}" \
-              --resource-group "wcds-web-${{ env.TARGET }}"
+              --resource-group "goa-cc-wdp-rg-wcds-web-${{ env.TARGET }}"
 
   # Azure logout
       - name: logout
