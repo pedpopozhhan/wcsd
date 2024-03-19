@@ -6,6 +6,7 @@
   grid-template-columns: 1fr 1fr;
   row-gap: $goa-space-m;
   > div {
+    word-break: break-all;
     div:first-child {
       color: $goa-color-text-secondary;
       font: $goa-typography-body-xs;
