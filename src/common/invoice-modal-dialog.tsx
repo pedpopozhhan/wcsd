@@ -136,7 +136,7 @@ const InvoiceModalDialog = (props: any) => {
     subscription = processInvoiceService.doesInvoiceNumberExist(auth?.user?.access_token, invoiceNumber).subscribe({
       next: (data) => {
         if (data) {
-          setInvoiceNumberErrorLabel('Invoice already exist. Must be unique.');
+          setInvoiceNumberErrorLabel('Invoice already exists. Must be unique.');
           setInvoiceNumberError(true);
         } else {
           setInvoiceNumberErrorLabel('');
