@@ -17,6 +17,9 @@
       line-height: $goa-line-height-5;
     }
   }
+  a {
+    text-decoration: underline;
+  }
 }
 
 .assignedToHeader {
