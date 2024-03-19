@@ -1,6 +1,6 @@
 import styles from './summary.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { GoAIconButton } from '@abgov/react-components';
+import { GoAIcon, GoAIconButton } from '@abgov/react-components';
 import { useAppSelector } from '@/app/hooks';
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
@@ -67,7 +67,15 @@ const Summary: React.FC<ISummaryProps> = (props) => {
       {showSheet && (
         <>
           <div>
-            <div>Service sheet{invoiceData.UniqueServiceSheetName && <GoAIconButton onClick={serviceSheetClick} icon='pencil'></GoAIconButton>}</div>
+            <div>
+              Service sheet
+              {invoiceData.UniqueServiceSheetName && (
+                <a onClick={serviceSheetClick}>
+                  <GoAIcon type='pencil' theme='outline'></GoAIcon>
+                </a>
+              )}
+              {/* //   <GoAIconButton onClick={serviceSheetClick} icon='pencil' theme='filled'></GoAIconButton>} */}
+            </div>
             <div>
               {!invoiceData.UniqueServiceSheetName && <a onClick={serviceSheetClick}>Enter name</a>}
               {invoiceData.UniqueServiceSheetName && <>{invoiceData.UniqueServiceSheetName}</>}
