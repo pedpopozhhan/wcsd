@@ -130,6 +130,12 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   function setInvoice() {
+    if (invoiceNumber.trim().length <= 0 || invoiceNumberErrorLabel) {
+      setInvoiceNumberError(true);
+      return;
+    } else {
+      setInvoiceNumberError(false);
+    }
     if (subscription) {
       subscription.unsubscribe();
     }
