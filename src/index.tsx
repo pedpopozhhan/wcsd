@@ -67,7 +67,7 @@ root.render(
             <Router>
               <Routes>
                 <Route path='/' element={<App />}>
-                  <Route key='1' path='/' element={<Contracts />} />
+                  <Route key='1' index element={<Contracts />} />
                   <Route key='2' path='contracts' element={<Contracts />} />
                   <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
                   <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
