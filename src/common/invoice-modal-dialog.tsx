@@ -246,6 +246,9 @@ const InvoiceModalDialog = (props: any) => {
                     onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
+                      if (!value) {
+                        setInvoiceNumberErrorLabel('');
+                      }
                       if (value.trim().length <= 0) {
                         setInvoiceNumberError(true);
                       } else {
