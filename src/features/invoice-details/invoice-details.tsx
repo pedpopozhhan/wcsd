@@ -38,7 +38,7 @@ export default function InvoiceDetails() {
 
   useEffect(() => {
     dispatch(resetInvoiceDetails());
-    dispatch(getRateTypes());
+    dispatch(getRateTypes({ token: auth?.user?.access_token }));
     if (timeReportsToReconcile.length > 0) {
       dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
     }
