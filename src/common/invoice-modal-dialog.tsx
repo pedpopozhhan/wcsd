@@ -73,6 +73,12 @@ const InvoiceModalDialog = (props: any) => {
     return d;
   }
   useEffect(() => {
+      const re = /^[a-zA-Z0-9\b]+$/;
+      if(!re.test(invoiceNumber)){
+        setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9]/gi, ''))
+      }
+  });
+  useEffect(() => {
     return () => {
       if (subscription) {
         subscription.unsubscribe();
@@ -246,7 +252,7 @@ const InvoiceModalDialog = (props: any) => {
                   <GoAInput
                     name='invoiceNumber'
                     width='300px'
-                    maxLength={20}
+                    maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
                     onBlur={() => {}}
