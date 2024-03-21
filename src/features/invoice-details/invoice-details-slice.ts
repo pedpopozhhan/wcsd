@@ -15,31 +15,6 @@ const initialState: IInvoiceDetailsSliceState = {
   rateTypes: [],
 };
 
-const setRateTypesReducer = (state: IInvoiceDetailsSliceState, action: PayloadAction<string[]>) => {
-  const allowedRateTypes = [
-    'Accommodation',
-    'Airport Fee',
-    'Basing',
-    'Basing Non-Core',
-    'Basing Penalty',
-    'Charter Minimums',
-    'Crew Exp - Breakfast',
-    'Crew Exp - Lunch',
-    'Crew Exp - Dinner',
-    'Crew Expenses',
-    'Double Crew',
-    'Flat',
-    'Fuel',
-    'Landing Fee',
-    'Nav Canada',
-    'Passenger Fee',
-    'Standby',
-    'Vehicle Rental',
-  ];
-  const filtered = action.payload.filter((x) => allowedRateTypes.includes(x));
-  state.rateTypes = filtered;
-};
-
 export const invoiceDetailsSlice = createSlice({
   name: 'invoiceDetailsSlice',
   initialState,
@@ -61,7 +36,9 @@ export const invoiceDetailsSlice = createSlice({
     setOtherCostData: (state, action: PayloadAction<IOtherCostTableRowData[]>) => {
       state.otherCostData = action.payload;
     },
-    setRateTypes: setRateTypesReducer,
+    setRateTypes: (state: IInvoiceDetailsSliceState, action: PayloadAction<string[]>) => {
+      state.rateTypes = action.payload;
+    },
     resetInvoiceDetails: (state) => {
       state.rowData = [];
       state.otherCostData = [];

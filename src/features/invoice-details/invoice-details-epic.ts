@@ -1,5 +1,5 @@
 import { Action, createAction } from '@reduxjs/toolkit';
-import { EMPTY, Observable, catchError, filter, map, of, switchMap } from 'rxjs';
+import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
 import { initializeRowData, setRateTypes } from './invoice-details-slice';
 import timeReportDetailsService from '@/services/time-report-details.service';
 import { failedToPerform, publishToast } from '@/common/toast';
@@ -18,7 +18,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
         return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids).pipe(
-          map((timeReportResults) => of(initializeRowData(timeReportResults.rows))),
+          mergeMap((timeReportResults) => of(initializeRowData(timeReportResults.rows))),
           catchError((error) => {
             console.error(error);
             if (error.response && error.response.status === 403) {
@@ -34,7 +34,9 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
         );
       } else if (getRateTypes.match(action)) {
         return dropDownListService.getOtherCostDropDownLists(action.payload.token).pipe(
-          map((dropDownLists) => of(setRateTypes(dropDownLists.rateTypes))),
+          mergeMap((dropDownLists) => {
+            return of(setRateTypes(dropDownLists.rateTypes));
+          }),
           catchError((error) => {
             console.error(error);
             if (error.response && error.response.status === 403) {
