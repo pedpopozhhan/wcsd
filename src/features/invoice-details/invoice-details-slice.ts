@@ -62,9 +62,13 @@ export const invoiceDetailsSlice = createSlice({
       state.otherCostData = action.payload;
     },
     setRateTypes: setRateTypesReducer,
+    resetInvoiceDetails: (state) => {
+      state.rowData = [];
+      state.otherCostData = [];
+    },
   },
 });
 
-export const { setRowData, setOtherCostData, setRateTypes, initializeRowData } = invoiceDetailsSlice.actions;
+export const { setRowData, setOtherCostData, setRateTypes, initializeRowData, resetInvoiceDetails } = invoiceDetailsSlice.actions;
 const invoiceDetailsReducer = invoiceDetailsSlice.reducer;
 export default invoiceDetailsReducer;
