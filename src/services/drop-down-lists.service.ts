@@ -3,7 +3,7 @@ import axios from 'axios-observable';
 import IOtherCostDropDownLists from '@/interfaces/invoice-details/other-cost-drop-down-lists';
 import getHeaders from './headers';
 
-class InvoiceOtherCostDDLService {
+class DropDownListService {
   private baseUrl: string;
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -36,4 +36,4 @@ class InvoiceOtherCostDDLService {
       );
   }
 }
-export default new InvoiceOtherCostDDLService();
+export default new DropDownListService();
