@@ -72,6 +72,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [internalOrder, setInternalOrder] = useState<string>('');
   const [fund, setFund] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
+  const [remarksError, setRemarksError] = useState<boolean>(true);
+  // const [remarksErrorLabel, setRemarksErrorLabel] = useState<string>('');
   const [invoiceNumber] = useState<string>('');
 
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
@@ -181,12 +183,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setAddAnotherButtonType('tertiary');
     setRateError(false);
     setNumberOfUnitsError(false);
+    setRemarksError(false);
   }
 
   useEffect(() => {
     if (saveData) {
       setSaveData(false);
-      if (fromDateError || toDateError || rateError || numberOfUnitsError) return;
+      if (fromDateError || toDateError || rateError || numberOfUnitsError || remarksError) return;
       else {
         if (props.isAddition) {
           props.onAdd(currentOtherCost);
@@ -206,8 +209,14 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     } else {
       setRate(Number(rate));
       setCost((rate * numberOfUnits).toFixed(2).toString());
+      if (remarks.trim().length > 300) {
+        setRemarksError(true);
+      }
+      else {
+        setRemarksError(false);
+      }
     }
-  }, [saveData, rate, numberOfUnits]);
+  }, [saveData, rate, numberOfUnits, remarks]);
 
   useEffect(() => {
     if (iscancelled) {
@@ -258,6 +267,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     } else {
       setNumberOfUnitsError(false);
     }
+    if (remarks.trim().length > 300) {
+      setRemarksError(true);
+    } else {
+      setRemarksError(false);
+    }
+
   };
 
   const clearErrors = () => {
@@ -265,6 +280,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setToDateError(false);
     setNumberOfUnitsError(false);
     setRateError(false);
+    setRemarksError(false);
   };
 
   const clearDataPoints = () => {
@@ -547,8 +563,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td colSpan={10}>
-                <GoAFormItem label='Remarks'>
+                <GoAFormItem label='Remarks' >
                   <GoATextArea
+                    error={remarksError}
                     name='remkarks'
                     width={xl}
                     countBy='character'
@@ -556,6 +573,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     value={remarks}
                     onChange={(key, value) => {
                       setRemarks(value.trim());
+                      if (remarks.trim().length > 300) {
+                        setRemarksError(true);
+                      }
+                      else {
+                        setRemarksError(false);
+                      }
                     }}
                   />
                 </GoAFormItem>
