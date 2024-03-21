@@ -13,7 +13,7 @@ import {
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
+import invoiceOtherCostDDLService from '@/services/drop-down-lists.service';
 import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
@@ -210,8 +210,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setCost((rate * numberOfUnits).toFixed(2).toString());
       if (remarks.trim().length > 300) {
         setRemarksError(true);
-      }
-      else {
+      } else {
         setRemarksError(false);
       }
     }
@@ -271,7 +270,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     } else {
       setRemarksError(false);
     }
-
   };
 
   const clearErrors = () => {
@@ -562,7 +560,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td colSpan={10}>
-                <GoAFormItem label='Remarks' >
+                <GoAFormItem label='Remarks'>
                   <GoATextArea
                     error={remarksError}
                     name='remkarks'
@@ -574,8 +572,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                       setRemarks(value.trim());
                       if (remarks.trim().length > 300) {
                         setRemarksError(true);
-                      }
-                      else {
+                      } else {
                         setRemarksError(false);
                       }
                     }}

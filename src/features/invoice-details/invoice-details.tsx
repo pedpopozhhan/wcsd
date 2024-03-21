@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getInvoiceDetails } from './invoice-details-epic';
+import { getInvoiceDetails, getRateTypes } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { setOtherCostData } from './invoice-details-slice';
+import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
@@ -37,7 +37,11 @@ export default function InvoiceDetails() {
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
+    dispatch(resetInvoiceDetails());
+    dispatch(getRateTypes({ token: auth?.user?.access_token }));
+    if (timeReportsToReconcile.length > 0) {
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
+    }
   }, [timeReportsToReconcile, auth]);
 
   useEffect(() => {
