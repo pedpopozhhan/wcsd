@@ -101,7 +101,7 @@ export default function Contracts() {
   function filterPredicate(candidate: SearchOption, inputValue: string) {
     const upCase = inputValue.toUpperCase();
     const splits = candidate.label.split(separator);
-    const found = splits.some((x) => x.toUpperCase().startsWith(upCase));
+    const found = splits.some((x) => x.toUpperCase().includes(upCase));
     return found;
   }
 
