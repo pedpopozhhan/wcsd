@@ -73,7 +73,6 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [fund, setFund] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [remarksError, setRemarksError] = useState<boolean>(true);
-  // const [remarksErrorLabel, setRemarksErrorLabel] = useState<string>('');
   const [invoiceNumber] = useState<string>('');
 
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
