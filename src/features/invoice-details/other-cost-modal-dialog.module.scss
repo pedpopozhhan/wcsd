@@ -2,5 +2,24 @@
 @import '@mixins/scrollbar.mixin.scss';
 
 .tableFormatter {
-    border-spacing: 3px;
+  border-spacing: 3px;
+}
+.gridContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 0 $goa-space-s;
+  grid-template-columns: 1fr 1fr;
+  row-gap: $goa-space-m;
+  column-gap: $goa-space-m;
+  > div {
+    display: flex;
+    gap: $goa-space-m;
+    div:first-child {
+    }
+    div:nth-child(2) {
+    }
+  }
+  // a {
+  //   text-decoration: underline;
+  // }
 }
