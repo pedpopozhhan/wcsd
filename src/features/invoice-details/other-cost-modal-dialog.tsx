@@ -11,7 +11,7 @@ import {
   GoABadge,
   GoABadgeType,
 } from '@abgov/react-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import invoiceOtherCostDDLService from '@/services/drop-down-lists.service';
 import { useAppSelector, useConditionalAuth } from '@/app/hooks';
@@ -33,6 +33,7 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
+  const tableRef = useRef<HTMLTableElement>(null);
   const auth = useConditionalAuth();
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
@@ -83,7 +84,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
   const [retry, setRetry] = useState<boolean>(true);
   const { tableFormatter } = Styles;
-
+  const [visible, setVisible] = useState<boolean>(false);
   const currentOtherCost = {
     index: index,
     from: fromDate,
@@ -106,6 +107,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lg = '230px';
   const md = '175px';
   const placeHolderForDDL = '----------Select----------';
+  useEffect(() => {
+    setVisible(props.visible);
+  }, [props.visible]);
 
   useEffect(() => {
     if (props.isAddition) {
@@ -302,18 +306,23 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     validateOtherCost();
   };
 
-  const addAnohterOtherCost = () => {
+  const addAnotherOtherCost = () => {
     setSaveData(true);
     setAddAnother(true);
     validateOtherCost();
   };
 
+  function flyoutOpened(): void {
+    tableRef.current.focus();
+  }
+
   return (
     <>
       <FlyOut
         heading={dialogTitle}
-        open={props.visible}
+        open={visible}
         onClose={hideModalDialog}
+        onOpen={flyoutOpened}
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
@@ -323,13 +332,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={addButtonType} onClick={addOtherCost}>
               {addButtonlabel}
             </GoAButton>
-            <GoAButton type={addAnotherButtonType} onClick={addAnohterOtherCost}>
+            <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
         }
       >
-        <table className={tableFormatter}>
+        <table className={tableFormatter} ref={tableRef} tabIndex={0}>
           <tbody>
             <tr>
               <td>

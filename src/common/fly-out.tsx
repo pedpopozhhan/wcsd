@@ -9,6 +9,7 @@ interface IProps {
   actions: any;
   position?: 'left' | 'right';
   onClose?: () => void;
+  onOpen?: () => void;
 }
 const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -18,6 +19,11 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
     setIsVisible(props.open);
   }, [props.open]);
 
+  useEffect(() => {
+    if (isVisible) {
+      props.onOpen();
+    }
+  }, [isVisible]);
   function close() {
     setIsVisible(false);
     if (props.onClose) {
