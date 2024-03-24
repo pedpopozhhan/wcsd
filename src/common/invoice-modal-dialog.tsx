@@ -73,6 +73,12 @@ const InvoiceModalDialog = (props: any) => {
     return d;
   }
   useEffect(() => {
+      const re = /^[a-zA-Z0-9\b]+$/;
+      if(!re.test(invoiceNumber)){
+        setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9]/gi, ''))
+      }
+  });
+  useEffect(() => {
     return () => {
       if (subscription) {
         subscription.unsubscribe();
@@ -130,13 +136,19 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   function setInvoice() {
+    if (invoiceNumber.trim().length <= 0 || invoiceNumberErrorLabel) {
+      setInvoiceNumberError(true);
+      return;
+    } else {
+      setInvoiceNumberError(false);
+    }
     if (subscription) {
       subscription.unsubscribe();
     }
     subscription = processInvoiceService.doesInvoiceNumberExist(auth?.user?.access_token, invoiceNumber).subscribe({
       next: (data) => {
         if (data) {
-          setInvoiceNumberErrorLabel('Number on invoice must be unique.');
+          setInvoiceNumberErrorLabel('Invoice already exists. Must be unique.');
           setInvoiceNumberError(true);
         } else {
           setInvoiceNumberErrorLabel('');
@@ -240,12 +252,15 @@ const InvoiceModalDialog = (props: any) => {
                   <GoAInput
                     name='invoiceNumber'
                     width='300px'
-                    maxLength={20}
+                    maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
                     onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
+                      if (!value) {
+                        setInvoiceNumberErrorLabel('');
+                      }
                       if (value.trim().length <= 0) {
                         setInvoiceNumberError(true);
                       } else {

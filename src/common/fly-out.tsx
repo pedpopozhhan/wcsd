@@ -18,13 +18,7 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
     setIsVisible(props.open);
   }, [props.open]);
 
-  function containerClick(event: React.MouseEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    console.dir(event.target);
-  }
   function close() {
-    console.log('closing');
     setIsVisible(false);
     if (props.onClose) {
       props.onClose();
@@ -40,7 +34,7 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
       <div className={container} style={{ justifyContent: getPosition() }}>
         <div className={overlay} onClick={close}></div>
         <div className={pane}>
-          <div className={content} onClick={containerClick}>
+          <div className={content}>
             <div className={header}>
               <h3>{props.heading}</h3>
             </div>

@@ -8,10 +8,9 @@ import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getInvoiceDetails } from './invoice-details-epic';
-import { setReadOnly, setServiceSheetData, setcostDetailsData, setotherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { setOtherCostData } from './invoice-details-slice';
-import { EmptyInvoiceId } from '@/common/types/invoice';
+import { getInvoiceDetails, getRateTypes } from './invoice-details-epic';
+import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
@@ -21,7 +20,6 @@ export default function InvoiceDetails() {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
-  const processInvoiceTabs = useAppSelector((state) => state.processInvoiceTabs);
 
   const navigate = useNavigate();
 
@@ -39,7 +37,11 @@ export default function InvoiceDetails() {
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
+    dispatch(resetInvoiceDetails());
+    dispatch(getRateTypes({ token: auth?.user?.access_token }));
+    if (timeReportsToReconcile.length > 0) {
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
+    }
   }, [timeReportsToReconcile, auth]);
 
   useEffect(() => {
@@ -69,16 +71,13 @@ export default function InvoiceDetails() {
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
-    if (invoiceData.InvoiceID == EmptyInvoiceId && processInvoiceTabs) {
-      dispatch(setServiceSheetData({ ...processInvoiceTabs.serviceSheetData, invoiceId: EmptyInvoiceId, uniqueServiceSheetName: '', price: invoiceData.InvoiceAmount }));
-      dispatch(setReadOnly(false));
-    }
     const data = timeReportData.map((x) => {
       return x.data;
     });
-    dispatch(setcostDetailsData(data));
-    dispatch(setotherCostsData(otherCostData));
-    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`, { state: { timeReportData, otherCostData } });
+    dispatch(setCostDetailsData(data));
+    dispatch(setOtherCostsData(otherCostData));
+    dispatch(setTimeReportData(timeReportData));
+    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`);
   }
 
   return (

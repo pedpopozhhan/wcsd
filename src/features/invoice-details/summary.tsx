@@ -1,11 +1,30 @@
 import styles from './summary.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { GoAIconButton } from '@abgov/react-components';
+import { GoAIcon, GoAIconButton } from '@abgov/react-components';
 import { useAppSelector } from '@/app/hooks';
+import { useEffect, useState } from 'react';
+import SheetNameModal from './sheet-name-modal';
 const { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
-const Summary: React.FC = () => {
+interface ISummaryProps {
+  showSheet?: boolean;
+}
+const Summary: React.FC<ISummaryProps> = (props) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
+  const [showSheet, setShowSheet] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setShowSheet(props.showSheet);
+  }, [props]);
+  function serviceSheetClick() {
+    // launch modal
+    setOpenModal(true);
+  }
+  function onCloseModal() {
+    setOpenModal(false);
+  }
+
   return (
     <div className={container}>
       <div>
@@ -45,6 +64,30 @@ const Summary: React.FC = () => {
         <div>Period ending</div>
         <div>{yearMonthDay(invoiceData.PeriodEnding)}</div>
       </div>
+      {showSheet && (
+        <>
+          <div>
+            <div>
+              Service sheet
+              {invoiceData.UniqueServiceSheetName && (
+                <a onClick={serviceSheetClick}>
+                  <GoAIcon type='pencil' theme='outline'></GoAIcon>
+                </a>
+              )}
+              {/* //   <GoAIconButton onClick={serviceSheetClick} icon='pencil' theme='filled'></GoAIconButton>} */}
+            </div>
+            <div>
+              {!invoiceData.UniqueServiceSheetName && <a onClick={serviceSheetClick}>Enter name</a>}
+              {invoiceData.UniqueServiceSheetName && <>{invoiceData.UniqueServiceSheetName}</>}
+            </div>
+          </div>
+          <div>
+            <div>Service description</div>
+            <div>Professional services</div>
+          </div>
+          <SheetNameModal open={openModal} onClose={onCloseModal}></SheetNameModal>
+        </>
+      )}
     </div>
   );
 };

@@ -13,7 +13,7 @@ import {
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import invoiceOtherCostDDLService from '@/services/invoice-other-cost-drop-down-lists.service';
+import invoiceOtherCostDDLService from '@/services/drop-down-lists.service';
 import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
@@ -53,9 +53,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [isOtherCostAddition, setIsOtherCostAddition] = useState<boolean>(props.isAddition);
 
   const [index] = useState<number>(0);
-  const [fromDate, setFromDate] = useState<Date>(new Date(Date()));
+  const [fromDate, setFromDate] = useState<string>(new Date().toISOString());
   const [fromDateError, setFromDateError] = useState<boolean>(false);
-  const [toDate, setToDate] = useState<Date>(new Date(Date()));
+  const [toDate, setToDate] = useState<string>(new Date().toISOString());
   const [toDateError, setToDateError] = useState<boolean>(false);
   const [rateType, setRateType] = useState<string | string[]>('');
   const [unit, setUnit] = useState<string | string[]>('');
@@ -72,6 +72,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [internalOrder, setInternalOrder] = useState<string>('');
   const [fund, setFund] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
+  const [remarksError, setRemarksError] = useState<boolean>(true);
   const [invoiceNumber] = useState<string>('');
 
   const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
@@ -181,12 +182,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setAddAnotherButtonType('tertiary');
     setRateError(false);
     setNumberOfUnitsError(false);
+    setRemarksError(false);
   }
 
   useEffect(() => {
     if (saveData) {
       setSaveData(false);
-      if (fromDateError || toDateError || rateError || numberOfUnitsError) return;
+      if (fromDateError || toDateError || rateError || numberOfUnitsError || remarksError) return;
       else {
         if (props.isAddition) {
           props.onAdd(currentOtherCost);
@@ -206,8 +208,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     } else {
       setRate(Number(rate));
       setCost((rate * numberOfUnits).toFixed(2).toString());
+      if (remarks.trim().length > 300) {
+        setRemarksError(true);
+      } else {
+        setRemarksError(false);
+      }
     }
-  }, [saveData, rate, numberOfUnits]);
+  }, [saveData, rate, numberOfUnits, remarks]);
 
   useEffect(() => {
     if (iscancelled) {
@@ -258,6 +265,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     } else {
       setNumberOfUnitsError(false);
     }
+    if (remarks.trim().length > 300) {
+      setRemarksError(true);
+    } else {
+      setRemarksError(false);
+    }
   };
 
   const clearErrors = () => {
@@ -265,11 +277,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setToDateError(false);
     setNumberOfUnitsError(false);
     setRateError(false);
+    setRemarksError(false);
   };
 
   const clearDataPoints = () => {
-    setFromDate(new Date());
-    setToDate(new Date());
+    setFromDate(new Date().toISOString());
+    setToDate(new Date().toISOString());
     setRateType(' ');
     setUnit(' ');
     setRate(0);
@@ -318,13 +331,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       >
         <table className={tableFormatter}>
           <tbody>
-            <tr >
-              <td >
+            <tr>
+              <td>
                 <GoAFormItem label='From'>
                   <GoAInputDate
                     name='fromDate'
                     placeholder='YYYY-MM-DD'
-                    value={fromDate}
+                    value={new Date(fromDate)}
                     error={fromDateError}
                     min={minDate}
                     max={maxDate}
@@ -336,7 +349,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setToDateError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setFromDate(propertyValue);
+                        setFromDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setFromDateError(true);
                         } else {
@@ -354,7 +367,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     name='dateOnInvoice'
                     placeholder='YYYY-MM-DD'
                     error={toDateError}
-                    value={toDate}
+                    value={new Date(toDate)}
                     min={minDate}
                     max={maxDate}
                     width={lg}
@@ -365,7 +378,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setToDateError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setToDate(propertyValue);
+                        setToDate(propertyValue.toISOString());
                         if (propertyValue < minDate) {
                           setToDateError(true);
                         } else {
@@ -470,7 +483,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td> </td>
             </tr>
             <tr>
-              <td >
+              <td>
                 <GoAFormItem label='Cost Center'>
                   <Select
                     options={costCenters}
@@ -549,6 +562,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td colSpan={10}>
                 <GoAFormItem label='Remarks'>
                   <GoATextArea
+                    error={remarksError}
                     name='remkarks'
                     width={xl}
                     countBy='character'
@@ -556,6 +570,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     value={remarks}
                     onChange={(key, value) => {
                       setRemarks(value.trim());
+                      if (remarks.trim().length > 300) {
+                        setRemarksError(true);
+                      } else {
+                        setRemarksError(false);
+                      }
                     }}
                   />
                 </GoAFormItem>
