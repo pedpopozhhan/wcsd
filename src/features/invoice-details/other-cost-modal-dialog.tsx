@@ -11,7 +11,7 @@ import {
   GoABadge,
   GoABadgeType,
 } from '@abgov/react-components';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import invoiceOtherCostDDLService from '@/services/drop-down-lists.service';
 import { useAppSelector, useConditionalAuth } from '@/app/hooks';
@@ -33,7 +33,6 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const auth = useConditionalAuth();
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
@@ -312,17 +311,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     validateOtherCost();
   };
 
-  function flyoutOpened(): void {
-    tableRef.current.focus();
-  }
-
   return (
     <>
       <FlyOut
         heading={dialogTitle}
         open={visible}
         onClose={hideModalDialog}
-        onOpen={flyoutOpened}
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
@@ -338,7 +332,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
           </GoAButtonGroup>
         }
       >
-        <table className={tableFormatter} ref={tableRef} tabIndex={0}>
+        <table className={tableFormatter}>
           <tbody>
             <tr>
               <td>

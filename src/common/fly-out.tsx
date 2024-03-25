@@ -22,6 +22,7 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
   useEffect(() => {
     if (isVisible) {
       props.onOpen();
+      contentRef.current.focus();
     }
   }, [isVisible]);
   function close() {
@@ -44,7 +45,7 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
             <div className={header}>
               <h3>{props.heading}</h3>
             </div>
-            <div ref={contentRef} className={body}>
+            <div ref={contentRef} className={body} tabIndex={-1}>
               {props.children}
             </div>
             <div className={footer}>{props.actions}</div>
