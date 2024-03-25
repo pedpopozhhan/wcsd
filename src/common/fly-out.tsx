@@ -21,7 +21,9 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
 
   useEffect(() => {
     if (isVisible) {
-      props.onOpen();
+      if (props.onOpen) {
+        props.onOpen();
+      }
       contentRef.current.focus();
     }
   }, [isVisible]);
