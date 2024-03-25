@@ -73,10 +73,10 @@ const InvoiceModalDialog = (props: any) => {
     return d;
   }
   useEffect(() => {
-      const re = /^[a-zA-Z0-9\b]+$/;
-      if(!re.test(invoiceNumber)){
-        setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9]/gi, ''))
-      }
+    const re = /^[a-zA-Z0-9\b]+$/;
+    if (!re.test(invoiceNumber)) {
+      setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9]/gi, ''));
+    }
   });
   useEffect(() => {
     return () => {
