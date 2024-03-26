@@ -23,7 +23,7 @@ import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
 import { navigateTo } from '@/common/navigate';
-const { gridContainer } = Styles;
+
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
   onUpdate: (item: IOtherCostTableRow) => void;
@@ -105,7 +105,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const xl = '500px';
   const lg = '230px';
   const md = '175px';
-  const placeHolderForDDL = '----------Select----------';
+  const placeHolderForDDL = ''; //'----------Select----------';
   useEffect(() => {
     setVisible(props.visible);
   }, [props.visible]);
@@ -323,452 +323,270 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
               {cancelButtonlabel}
             </GoAButton>
-            <GoAButton type={addButtonType} onClick={addOtherCost}>
-              {addButtonlabel}
-            </GoAButton>
             <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
+            </GoAButton>
+            <GoAButton type={addButtonType} onClick={addOtherCost}>
+              {addButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
         }
       >
-        <div className={gridContainer}>
-          <div>
-            <GoAFormItem label='From'>
-              <GoAInputDate
-                name='fromDate'
-                placeholder='YYYY-MM-DD'
-                value={new Date(fromDate)}
-                error={fromDateError}
-                min={minDate}
-                max={maxDate}
-                width={lg}
-                onChange={(name, value) => {
-                  if (value === '') {
-                    setFromDateError(true);
-                  } else if (isNaN(Date.parse(value.toString()))) {
-                    setToDateError(true);
-                  } else {
-                    const propertyValue: Date = new Date(value);
-                    setFromDate(propertyValue.toISOString());
-                    if (propertyValue < minDate) {
-                      setFromDateError(true);
-                    } else {
-                      setFromDateError(false);
-                    }
-                  }
-                }}
-              />
-            </GoAFormItem>
-
-            <GoAFormItem label='To'>
-              <GoAInputDate
-                name='dateOnInvoice'
-                placeholder='YYYY-MM-DD'
-                error={toDateError}
-                value={new Date(toDate)}
-                min={minDate}
-                max={maxDate}
-                width={lg}
-                onChange={(name, value) => {
-                  if (value === '') {
-                    setToDateError(true);
-                  } else if (isNaN(Date.parse(value.toString()))) {
-                    setToDateError(true);
-                  } else {
-                    const propertyValue: Date = new Date(value);
-                    setToDate(propertyValue.toISOString());
-                    if (propertyValue < minDate) {
-                      setToDateError(true);
-                    } else {
-                      setToDateError(false);
-                    }
-                  }
-                }}
-              />
-            </GoAFormItem>
-          </div>
-          <div>
-            <GoAFormItem label='Rate Type'>
-              <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
-                {rateTypes.map((x, i) => {
-                  return <GoADropdownItem key={i} value={x} label={x} />;
-                })}
-              </GoADropdown>
-            </GoAFormItem>
-          </div>
-          <div>
-            <GoAFormItem label='Rate Unit'>
-              <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
-                {rateUnits.map((x, i) => {
-                  return <GoADropdownItem key={i} value={x} label={x} />;
-                })}
-              </GoADropdown>
-            </GoAFormItem>
-          </div>
-          <div>
-            <GoAFormItem label='Rate'>
-              <GoAInput
-                name='rate'
-                type='number'
-                width={lg}
-                value={rate.toString()}
-                error={rateError}
-                max='99999.99'
-                min='0'
-                leadingContent='$'
-                trailingContent='Per&nbsp;unit'
-                onChange={(key, value) => {
-                  if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
-                    setRateError(true);
-                  } else {
-                    setRate(Number(value));
-                    setCost((rate * numberOfUnits).toFixed(2).toString());
-                    setRateError(false);
-                  }
-                }}
-              />
-            </GoAFormItem>
-            <GoAFormItem label='No. of Units'>
-              <GoAInput
-                name='numberOfUnits'
-                type='number'
-                width={md}
-                value={numberOfUnits.toString()}
-                error={numberOfUnitsError}
-                max='99999'
-                min='0'
-                onChange={(key, value) => {
-                  if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
-                    setNumberOfUnitsError(true);
-                  } else {
-                    setNumberOfUnits(Number(value));
-                    setCost((rate * numberOfUnits).toFixed(2).toString());
-                    setNumberOfUnitsError(false);
-                  }
-                }}
-              />
-            </GoAFormItem>
-          </div>
-          <div>
-            <GoAFormItem label='Unit Cost'>
-              <GoAInput
-                name='cost'
-                width={lg}
-                value={cost.toString()}
-                leadingContent='$'
-                disabled
-                onChange={(key, value) => {
-                  setCost(Number(value).toFixed(2));
-                }}
-              />
-            </GoAFormItem>
-          </div>
-          <div>
-            <div>
-              <GoAFormItem label='GL Account'>
-                <Select
-                  options={glAccounts}
-                  placeholder={placeHolderForDDL}
-                  value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
-                  onChange={async (value: IDropDownListResponse) => {
-                    if (value.value) {
-                      setGlAccount(value.value);
-                    }
-                  }}
-                  menuPosition='fixed'
-                  isSearchable={true}
-                  className='css-other-cost-control-width'
-                />
-              </GoAFormItem>
-              <GoAFormItem label='Cost Center'>
-                <Select
-                  options={costCenters}
-                  placeholder={placeHolderForDDL}
-                  value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
-                  menuPosition='fixed'
-                  onChange={async (value: IDropDownListResponse) => {
-                    if (value.value) {
-                      setCostCenter(value.value);
-                    }
-                  }}
-                  isSearchable={true}
-                  className='css-other-cost-control-width'
-                />
-              </GoAFormItem>
-              <GoAFormItem label='GL Account'>
-                <Select
-                  options={glAccounts}
-                  placeholder={placeHolderForDDL}
-                  value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
-                  onChange={async (value: IDropDownListResponse) => {
-                    if (value.value) {
-                      setGlAccount(value.value);
-                    }
-                  }}
-                  menuPosition='fixed'
-                  isSearchable={true}
-                  className='css-other-cost-control-width'
-                />
-              </GoAFormItem>
-            </div>
-          </div>
-        </div>
-        {false && (
-          <table className={tableFormatter}>
-            <tbody>
-              <tr>
-                <td>
-                  <GoAFormItem label='From'>
-                    <GoAInputDate
-                      name='fromDate'
-                      placeholder='YYYY-MM-DD'
-                      value={new Date(fromDate)}
-                      error={fromDateError}
-                      min={minDate}
-                      max={maxDate}
-                      width={lg}
-                      onChange={(name, value) => {
-                        if (value === '') {
+        <table className={tableFormatter}>
+          <tbody>
+            <tr>
+              <td>
+                <GoAFormItem label='From'>
+                  <GoAInputDate
+                    name='fromDate'
+                    placeholder='YYYY-MM-DD'
+                    value={new Date(fromDate)}
+                    error={fromDateError}
+                    min={minDate}
+                    max={maxDate}
+                    width={lg}
+                    onChange={(name, value) => {
+                      if (value === '') {
+                        setFromDateError(true);
+                      } else if (isNaN(Date.parse(value.toString()))) {
+                        setToDateError(true);
+                      } else {
+                        const propertyValue: Date = new Date(value);
+                        setFromDate(propertyValue.toISOString());
+                        if (propertyValue < minDate) {
                           setFromDateError(true);
-                        } else if (isNaN(Date.parse(value.toString()))) {
+                        } else {
+                          setFromDateError(false);
+                        }
+                      }
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td colSpan={3}>
+                <GoAFormItem label='To'>
+                  <GoAInputDate
+                    name='dateOnInvoice'
+                    placeholder='YYYY-MM-DD'
+                    error={toDateError}
+                    value={new Date(toDate)}
+                    min={minDate}
+                    max={maxDate}
+                    width={lg}
+                    onChange={(name, value) => {
+                      if (value === '') {
+                        setToDateError(true);
+                      } else if (isNaN(Date.parse(value.toString()))) {
+                        setToDateError(true);
+                      } else {
+                        const propertyValue: Date = new Date(value);
+                        setToDate(propertyValue.toISOString());
+                        if (propertyValue < minDate) {
                           setToDateError(true);
                         } else {
-                          const propertyValue: Date = new Date(value);
-                          setFromDate(propertyValue.toISOString());
-                          if (propertyValue < minDate) {
-                            setFromDateError(true);
-                          } else {
-                            setFromDateError(false);
-                          }
+                          setToDateError(false);
                         }
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td colSpan={3}>
-                  <GoAFormItem label='To'>
-                    <GoAInputDate
-                      name='dateOnInvoice'
-                      placeholder='YYYY-MM-DD'
-                      error={toDateError}
-                      value={new Date(toDate)}
-                      min={minDate}
-                      max={maxDate}
-                      width={lg}
-                      onChange={(name, value) => {
-                        if (value === '') {
-                          setToDateError(true);
-                        } else if (isNaN(Date.parse(value.toString()))) {
-                          setToDateError(true);
-                        } else {
-                          const propertyValue: Date = new Date(value);
-                          setToDate(propertyValue.toISOString());
-                          if (propertyValue < minDate) {
-                            setToDateError(true);
-                          } else {
-                            setToDateError(false);
-                          }
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <GoAFormItem label='Rate Type'>
-                    <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
-                      {rateTypes.map((x, i) => {
-                        return <GoADropdownItem key={i} value={x} label={x} />;
-                      })}
-                    </GoADropdown>
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td colSpan={3}>
-                  <GoAFormItem label='Rate Unit'>
-                    <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
-                      {rateUnits.map((x, i) => {
-                        return <GoADropdownItem key={i} value={x} label={x} />;
-                      })}
-                    </GoADropdown>
-                  </GoAFormItem>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <GoAFormItem label='Rate'>
-                    <GoAInput
-                      name='rate'
-                      type='number'
-                      width={lg}
-                      value={rate.toString()}
-                      error={rateError}
-                      max='99999.99'
-                      min='0'
-                      leadingContent='$'
-                      trailingContent='Per&nbsp;unit'
-                      onChange={(key, value) => {
-                        if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
-                          setRateError(true);
-                        } else {
-                          setRate(Number(value));
-                          setCost((rate * numberOfUnits).toFixed(2).toString());
-                          setRateError(false);
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td>
-                  <GoAFormItem label='No. of Units'>
-                    <GoAInput
-                      name='numberOfUnits'
-                      type='number'
-                      width={md}
-                      value={numberOfUnits.toString()}
-                      error={numberOfUnitsError}
-                      max='99999'
-                      min='0'
-                      onChange={(key, value) => {
-                        if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
-                          setNumberOfUnitsError(true);
-                        } else {
-                          setNumberOfUnits(Number(value));
-                          setCost((rate * numberOfUnits).toFixed(2).toString());
-                          setNumberOfUnitsError(false);
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <GoAFormItem label='Unit Cost'>
-                    <GoAInput
-                      name='cost'
-                      width={lg}
-                      value={cost.toString()}
-                      leadingContent='$'
-                      disabled
-                      onChange={(key, value) => {
-                        setCost(Number(value).toFixed(2));
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td colSpan={3}></td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td>
-                  <GoAFormItem label='Cost Center'>
-                    <Select
-                      options={costCenters}
-                      placeholder={placeHolderForDDL}
-                      value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
-                      menuPosition='fixed'
-                      onChange={async (value: IDropDownListResponse) => {
-                        if (value.value) {
-                          setCostCenter(value.value);
-                        }
-                      }}
-                      isSearchable={true}
-                      className='css-other-cost-control-width'
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td>
-                  <GoAFormItem label='Fund'>
-                    <Select
-                      options={funds}
-                      placeholder={placeHolderForDDL}
-                      value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
-                      onChange={async (value: IDropDownListResponse) => {
-                        if (value.value) {
-                          setFund(value.value);
-                        }
-                      }}
-                      menuPosition='fixed'
-                      isSearchable={true}
-                      className='css-other-cost-control-width'
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <GoAFormItem label='Internal Order'>
-                    <Select
-                      options={internalOrders}
-                      placeholder={placeHolderForDDL}
-                      value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
-                      onChange={async (value: IDropDownListResponse | null) => {
-                        if (value.value) {
-                          setInternalOrder(value.value);
-                        }
-                      }}
-                      menuPosition='fixed'
-                      isSearchable={true}
-                      className='css-other-cost-control-width'
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-                <td>
-                  <GoAFormItem label='GL Account'>
-                    <Select
-                      options={glAccounts}
-                      placeholder={placeHolderForDDL}
-                      value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
-                      onChange={async (value: IDropDownListResponse) => {
-                        if (value.value) {
-                          setGlAccount(value.value);
-                        }
-                      }}
-                      menuPosition='fixed'
-                      isSearchable={true}
-                      className='css-other-cost-control-width'
-                    />
-                  </GoAFormItem>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={10}>
-                  <GoAFormItem label='Remarks'>
-                    <GoATextArea
-                      error={remarksError}
-                      name='remkarks'
-                      width={xl}
-                      countBy='character'
-                      maxCount={300}
-                      value={remarks}
-                      onChange={(key, value) => {
-                        setRemarks(value.trim());
-                        if (remarks.trim().length > 300) {
-                          setRemarksError(true);
-                        } else {
-                          setRemarksError(false);
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        )}
+                      }
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <GoAFormItem label='Rate type'>
+                  <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
+                    {rateTypes.map((x, i) => {
+                      return <GoADropdownItem key={i} value={x} label={x} />;
+                    })}
+                  </GoADropdown>
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td colSpan={3}>
+                <GoAFormItem label='Rate unit'>
+                  <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
+                    {rateUnits.map((x, i) => {
+                      return <GoADropdownItem key={i} value={x} label={x} />;
+                    })}
+                  </GoADropdown>
+                </GoAFormItem>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <GoAFormItem label='Rate'>
+                  <GoAInput
+                    name='rate'
+                    type='number'
+                    width={lg}
+                    value={rate.toString()}
+                    error={rateError}
+                    max='99999.99'
+                    min='0'
+                    leadingContent='$'
+                    trailingContent='Per&nbsp;unit'
+                    onChange={(key, value) => {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
+                        setRateError(true);
+                      } else {
+                        setRate(Number(value));
+                        setCost((rate * numberOfUnits).toFixed(2).toString());
+                        setRateError(false);
+                      }
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td>
+                <GoAFormItem label='No. of units'>
+                  <GoAInput
+                    name='numberOfUnits'
+                    type='number'
+                    width={md}
+                    value={numberOfUnits.toString()}
+                    error={numberOfUnitsError}
+                    max='99999'
+                    min='0'
+                    onChange={(key, value) => {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
+                        setNumberOfUnitsError(true);
+                      } else {
+                        setNumberOfUnits(Number(value));
+                        setCost((rate * numberOfUnits).toFixed(2).toString());
+                        setNumberOfUnitsError(false);
+                      }
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <GoAFormItem label='Unit cost'>
+                  <GoAInput
+                    name='cost'
+                    width={lg}
+                    value={cost.toString()}
+                    leadingContent='$'
+                    disabled
+                    onChange={(key, value) => {
+                      setCost(Number(value).toFixed(2));
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td colSpan={3}></td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>
+                <GoAFormItem label='Cost center'>
+                  <Select
+                    options={costCenters}
+                    placeholder={placeHolderForDDL}
+                    value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
+                    menuPosition='fixed'
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setCostCenter(value.value);
+                      }
+                    }}
+                    isSearchable={true}
+                    className='css-other-cost-control-width'
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td>
+                <GoAFormItem label='G/L acct'>
+                  <Select
+                    options={glAccounts}
+                    placeholder={placeHolderForDDL}
+                    value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setGlAccount(value.value);
+                      }
+                    }}
+                    menuPosition='fixed'
+                    isSearchable={true}
+                    className='css-other-cost-control-width'
+                  />
+                </GoAFormItem>
+              </td>
+
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <GoAFormItem label='Fund'>
+                  <Select
+                    options={funds}
+                    placeholder={placeHolderForDDL}
+                    value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setFund(value.value);
+                      }
+                    }}
+                    menuPosition='fixed'
+                    isSearchable={true}
+                    className='css-other-cost-control-width'
+                  />
+                </GoAFormItem>
+              </td>
+              <td></td>
+              <td>
+                <GoAFormItem label='Internal order'>
+                  <Select
+                    options={internalOrders}
+                    placeholder={placeHolderForDDL}
+                    value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
+                    onChange={async (value: IDropDownListResponse | null) => {
+                      if (value.value) {
+                        setInternalOrder(value.value);
+                      }
+                    }}
+                    menuPosition='fixed'
+                    isSearchable={true}
+                    className='css-other-cost-control-width'
+                  />
+                </GoAFormItem>
+              </td>
+
+              <td></td>
+            </tr>
+            <tr>
+              <td colSpan={10}>
+                <GoAFormItem label='Remarks'>
+                  <GoATextArea
+                    error={remarksError}
+                    name='remkarks'
+                    width={xl}
+                    countBy='character'
+                    maxCount={300}
+                    value={remarks}
+                    onChange={(key, value) => {
+                      setRemarks(value.trim());
+                      if (remarks.trim().length > 300) {
+                        setRemarksError(true);
+                      } else {
+                        setRemarksError(false);
+                      }
+                    }}
+                  />
+                </GoAFormItem>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </FlyOut>
     </>
   );
