@@ -105,7 +105,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const xl = '500px';
   const lg = '230px';
   const md = '175px';
-  const placeHolderForDDL = '----------Select----------';
+  const placeHolderForDDL = ''; //'----------Select----------';
   useEffect(() => {
     setVisible(props.visible);
   }, [props.visible]);
@@ -170,9 +170,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setCancelButtonLabel('Cancel');
     setCancelButtonType('tertiary');
     setAddButtonLabel('Add');
-    setAddButtonType('secondary');
+    setAddButtonType('primary');
     setAddAnotherButtonLabel('Add Another');
-    setAddAnotherButtonType('primary');
+    setAddAnotherButtonType('secondary');
   }
 
   function setControlsForUpdate() {
@@ -323,11 +323,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
               {cancelButtonlabel}
             </GoAButton>
-            <GoAButton type={addButtonType} onClick={addOtherCost}>
-              {addButtonlabel}
-            </GoAButton>
             <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
+            </GoAButton>
+            <GoAButton type={addButtonType} onClick={addOtherCost}>
+              {addButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
         }
@@ -396,7 +396,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Rate Type'>
+                <GoAFormItem label='Rate type'>
                   <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
                     {rateTypes.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
@@ -406,7 +406,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td colSpan={3}>
-                <GoAFormItem label='Unit'>
+                <GoAFormItem label='Rate unit'>
                   <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
                     {rateUnits.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
@@ -428,7 +428,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     max='99999.99'
                     min='0'
                     leadingContent='$'
-                    trailingContent='Per&nbsp;Unit'
+                    trailingContent='Per&nbsp;unit'
                     onChange={(key, value) => {
                       if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
                         setRateError(true);
@@ -468,7 +468,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Cost'>
+                <GoAFormItem label='Unit cost'>
                   <GoAInput
                     name='cost'
                     width={lg}
@@ -487,7 +487,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Cost Center'>
+                <GoAFormItem label='Cost center'>
                   <Select
                     options={costCenters}
                     placeholder={placeHolderForDDL}
@@ -504,6 +504,27 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 </GoAFormItem>
               </td>
               <td></td>
+              <td>
+                <GoAFormItem label='G/L acct'>
+                  <Select
+                    options={glAccounts}
+                    placeholder={placeHolderForDDL}
+                    value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
+                    onChange={async (value: IDropDownListResponse) => {
+                      if (value.value) {
+                        setGlAccount(value.value);
+                      }
+                    }}
+                    menuPosition='fixed'
+                    isSearchable={true}
+                    className='css-other-cost-control-width'
+                  />
+                </GoAFormItem>
+              </td>
+
+              <td></td>
+            </tr>
+            <tr>
               <td>
                 <GoAFormItem label='Fund'>
                   <Select
@@ -522,10 +543,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                 </GoAFormItem>
               </td>
               <td></td>
-            </tr>
-            <tr>
               <td>
-                <GoAFormItem label='Internal Order'>
+                <GoAFormItem label='Internal order'>
                   <Select
                     options={internalOrders}
                     placeholder={placeHolderForDDL}
@@ -541,24 +560,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                   />
                 </GoAFormItem>
               </td>
-              <td></td>
-              <td>
-                <GoAFormItem label='G/L Acc'>
-                  <Select
-                    options={glAccounts}
-                    placeholder={placeHolderForDDL}
-                    value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
-                    onChange={async (value: IDropDownListResponse) => {
-                      if (value.value) {
-                        setGlAccount(value.value);
-                      }
-                    }}
-                    menuPosition='fixed'
-                    isSearchable={true}
-                    className='css-other-cost-control-width'
-                  />
-                </GoAFormItem>
-              </td>
+
               <td></td>
             </tr>
             <tr>
