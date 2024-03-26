@@ -9,6 +9,7 @@ interface IProps {
   actions: any;
   position?: 'left' | 'right';
   onClose?: () => void;
+  onOpen?: () => void;
 }
 const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -18,6 +19,14 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
     setIsVisible(props.open);
   }, [props.open]);
 
+  useEffect(() => {
+    if (isVisible) {
+      if (props.onOpen) {
+        props.onOpen();
+      }
+      contentRef.current.focus();
+    }
+  }, [isVisible]);
   function close() {
     setIsVisible(false);
     if (props.onClose) {
@@ -38,7 +47,7 @@ const FlyOut: React.FC<PropsWithChildren<IProps>> = (props) => {
             <div className={header}>
               <h3>{props.heading}</h3>
             </div>
-            <div ref={contentRef} className={body}>
+            <div ref={contentRef} className={body} tabIndex={-1}>
               {props.children}
             </div>
             <div className={footer}>{props.actions}</div>

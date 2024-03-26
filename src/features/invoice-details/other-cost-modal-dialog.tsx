@@ -83,7 +83,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
   const [retry, setRetry] = useState<boolean>(true);
   const { tableFormatter } = Styles;
-
+  const [visible, setVisible] = useState<boolean>(false);
   const currentOtherCost = {
     index: index,
     from: fromDate,
@@ -106,6 +106,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lg = '230px';
   const md = '175px';
   const placeHolderForDDL = '----------Select----------';
+  useEffect(() => {
+    setVisible(props.visible);
+  }, [props.visible]);
 
   useEffect(() => {
     if (props.isAddition) {
@@ -302,7 +305,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     validateOtherCost();
   };
 
-  const addAnohterOtherCost = () => {
+  const addAnotherOtherCost = () => {
     setSaveData(true);
     setAddAnother(true);
     validateOtherCost();
@@ -312,7 +315,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     <>
       <FlyOut
         heading={dialogTitle}
-        open={props.visible}
+        open={visible}
         onClose={hideModalDialog}
         actions={
           <GoAButtonGroup alignment='end'>
@@ -323,7 +326,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={addButtonType} onClick={addOtherCost}>
               {addButtonlabel}
             </GoAButton>
-            <GoAButton type={addAnotherButtonType} onClick={addAnohterOtherCost}>
+            <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
