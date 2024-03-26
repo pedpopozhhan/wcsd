@@ -38,7 +38,7 @@ export default function ProcessedInvoice() {
           <div className={header}>Invoice </div>
           <Totalizer invoiceAmount={invoiceAmount} />
           <div className={summaryContainer}>
-            <Summary />
+            <Summary showSheet />
           </div>
         </div>
         <div className={main}>
