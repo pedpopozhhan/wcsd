@@ -93,8 +93,8 @@ jobs:
           inlineScript: |
               az cdn endpoint purge --subscription "${{ secrets.ARM_SUBSCRIPTION_ID }}" \
               --content-paths  "/*" \
-              --profile-name "wcds-web-profile-${{ env.TARGET }}" \
-              --name "wcds-web-${{ env.TARGET }}" \
+              --profile-name "wcds-web-profile" \
+              --name "wcds-web" \
               --resource-group "goa-cc-wdp-rg-wcds-web-${{ env.TARGET }}"
 
 

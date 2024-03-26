@@ -3,7 +3,7 @@ name: 'Web Build/Deloy'
 on:
   pull_request:
     branches:
-    - uat
+    - master
 
 #Special permissions required for OIDC authentication
 permissions:
@@ -16,9 +16,9 @@ jobs:
  # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
   build:
     runs-on: ubuntu-latest
-    environment: uat
+    environment: prod
     env:
-      TARGET: "uat"
+      TARGET: "prod"
       VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
       VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
       VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
