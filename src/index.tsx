@@ -7,7 +7,6 @@ import InvoiceDetails from './features/invoice-details/invoice-details';
 import Contracts from './features/contracts/contracts';
 import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
-import ProcessedInvoice from './features/processed-invoice/Processed-invoice';
 import { AuthProvider } from 'react-oidc-context';
 import { oidcConfig } from './common/kc-config';
 import { LoggedOut } from './features/auth/logged-out';
@@ -46,7 +45,7 @@ root.render(
                       <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessedInvoice></ProcessedInvoice>} />
+                      <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route key='7' path='logged-out' element={<LoggedOut />} />
 
@@ -72,7 +71,7 @@ root.render(
                   <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
                   <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
                   <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
-                  <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessedInvoice></ProcessedInvoice>} />
+                  <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='7' path='logged-out' element={<LoggedOut />} />
                 </Route>
               </Routes>
