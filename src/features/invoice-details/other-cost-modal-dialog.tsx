@@ -170,9 +170,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setCancelButtonLabel('Cancel');
     setCancelButtonType('tertiary');
     setAddButtonLabel('Add');
-    setAddButtonType('secondary');
+    setAddButtonType('primary');
     setAddAnotherButtonLabel('Add Another');
-    setAddAnotherButtonType('primary');
+    setAddAnotherButtonType('secondary');
   }
 
   function setControlsForUpdate() {
