@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import styles from './search-suggestion.module.scss';
 import { SearchOption } from '@/features/contracts/search-option';
+import { escapeRegularExpression } from '@/common/special-characters';
 
 const { search, searchInput, searchInputWrapper, highlight, closeButton, closeButtonActive, container, item, active, hover, showMenu, hideMenu } =
   styles;
@@ -62,7 +63,7 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
   }
 
   function highlightLabel(label: string) {
-    const regex = new RegExp(inputValue, 'gi');
+    const regex = new RegExp(escapeRegularExpression(inputValue), 'gi');
     const parts = label.split(regex);
     const matches = label.match(regex) || [];
     return (
@@ -132,7 +133,8 @@ const SearchSuggestion: React.FC<ISearchResultsProps> = (props) => {
       containerRef.current.children[newIndex].scrollIntoView({
         block: 'nearest',
       });
-    } else {
+    }
+    else {
       // any other key pressed
       // backspace unselects option
       // entering new character unselects option
