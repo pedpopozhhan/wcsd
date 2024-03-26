@@ -1,0 +1,51 @@
+name: 'Web Build/Deloy'
+
+on:
+  pull_request:
+    branches:
+    - uat
+
+#Special permissions required for OIDC authentication
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+ # Builds the application for production. 
+ # You should configure this environment as close as possible to the production environment, e.g. using Ubuntu for Linux apps, using the same Node version
+  build:
+    runs-on: ubuntu-latest
+    environment: uat
+    env:
+      TARGET: "uat"
+      VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
+      VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
+      VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
+      VITE_AVIATION_API_KEY_CODE: "${{ secrets.VITE_AVIATION_API_KEY_CODE }}"
+      VITE_API_KEY_CODE: "${{ secrets.VITE_API_KEY_CODE }}"    
+      VITE_AUTHORIZATION_REALM: "${{ secrets.VITE_AUTHORIZATION_REALM }}"
+      VITE_AUTHORIZATION_AUTHSERVERURL: "${{ vars.VITE_AUTHORIZATION_AUTHSERVERURL }}"
+      VITE_ENABLE_AUTHORIZATION: "${{ vars.VITE_ENABLE_AUTHORIZATION }}"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+         # Other scripts if configured should be added here, such as linting, formating
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-app
+          path: dist # This should be your distribution path, not the root path
+ 
