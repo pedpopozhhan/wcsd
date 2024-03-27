@@ -11,6 +11,7 @@
 }
 table {
   @include thin-scrollbar;
+  table-layout: fixed;
 }
 th {
   vertical-align: middle;
