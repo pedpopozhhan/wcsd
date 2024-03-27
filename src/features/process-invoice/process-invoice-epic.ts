@@ -40,6 +40,7 @@ export const processInvoiceEpic = (actions$: Observable<Action>, state$: StateOb
           contractNumber: invoiceData.ContractNumber,
           type: contractDetails.contractType,
           uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
+          serviceDescription: invoiceData.ServiceDescription,
           invoiceTimeReportCostDetails: invoiceTimeReportData,
           invoiceOtherCostDetails: otherCostData,
         };
