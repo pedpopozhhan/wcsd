@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
-
+const { headerRow } = styles;
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
   setCostDetailsData,
@@ -164,11 +164,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '15%' }}>Invoice No.</th>
-                <th style={{ maxWidth: '25%' }}>Invoice Amount</th>
-                <th style={{ maxWidth: '25%' }}>Service Sheet No.</th>
-                <th style={{ maxWidth: '35%' }}>Payment</th>
-                <th style={{ maxWidth: '10%', textAlign: 'right' }}></th>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
+                  Invoice No.
+                </th>
+                <th className={headerRow} style={{ maxWidth: '25%' }}>
+                  Invoice Amount
+                </th>
+                <th className={headerRow} style={{ maxWidth: '25%' }}>
+                  Service Sheet No.
+                </th>
+                <th className={headerRow} style={{ maxWidth: '35%' }}>
+                  Payment
+                </th>
+                <th className={headerRow} style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 

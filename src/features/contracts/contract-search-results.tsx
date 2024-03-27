@@ -3,7 +3,7 @@ import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/
 import React, { useEffect, useState } from 'react';
 import styles from './contract-search-results.module.scss';
 import { ContractType, convertContractType } from '@/common/types/contract-type';
-const { chevron, number } = styles;
+const { chevron, number, tableContainer } = styles;
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import { setContractForReconciliation } from '@/app/app-slice';
@@ -94,8 +94,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   //   }
 
   return (
-    <>
-      {/* <div className={table}> */}
+    <div className={tableContainer}>
       <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
@@ -170,7 +169,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
           </GoABlock>
         </GoABlock>
       </GoABlock>
-    </>
+    </div>
   );
 };
 export default ContractSearchResults;
