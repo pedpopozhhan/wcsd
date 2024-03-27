@@ -11,13 +11,18 @@
 }
 table {
   @include thin-scrollbar;
-  table-layout: fixed;
+  //   table-layout: fixed;
 }
 th {
   vertical-align: middle;
 }
 .number {
   font-family: $goa-font-family-number;
+}
+.tableContainer {
+  table {
+    table-layout: fixed;
+  }
 }
 .div {
   flex-direction: row;
