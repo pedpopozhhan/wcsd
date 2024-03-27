@@ -10,6 +10,8 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
+import styles from './signed-off-tab-details.module.scss';
+const { headerRow } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -136,22 +138,22 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                 <th style={{ maxWidth: '40%' }}>
                   <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="flightReportId"> */}
                   Report No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="ao02Number"> */}
                   AO-02 No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="contractRegistrationName"> */}
                   Registration No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%', textAlign: 'right' }}></th>
+                <th className={headerRow} style={{ maxWidth: '15%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 

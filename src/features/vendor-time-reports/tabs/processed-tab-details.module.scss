@@ -1,7 +1,7 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 
 .invoiceAmountLabel {
-  font-family: "Roboto Mono";
+  font-family: 'Roboto Mono';
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -9,3 +9,6 @@
   margin-top: $goa-space-s;
 }
 
+.headerRow {
+  vertical-align: middle;
+}
