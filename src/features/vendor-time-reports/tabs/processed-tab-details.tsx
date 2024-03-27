@@ -20,6 +20,7 @@ import {
   setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
+import { setInvoiceData } from '@/app/app-slice';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -113,6 +114,18 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
       next: (results) => {
         setIsLoading(true);
+        const invoiceForContext = {
+          InvoiceID: results.invoice.invoiceId,
+          InvoiceNumber: results.invoice.invoiceNumber,
+          DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
+          InvoiceAmount: results.invoice.invoiceAmount,
+          PeriodEnding: new Date(results.invoice.periodEndDate).toISOString(),
+          InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
+          ContractNumber: contractNumber,
+          UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
+        };
+
+        dispatch(setInvoiceData(invoiceForContext));
         dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
         dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
