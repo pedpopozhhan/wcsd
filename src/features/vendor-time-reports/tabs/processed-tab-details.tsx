@@ -37,6 +37,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   //Loader
   const [loading, setIsLoading] = useState(true);
 
+  const [retry, setRetry] = useState<boolean>(false);
+
   //Pagination
   // page number
   const [page, setPage] = useState(1);
@@ -66,12 +68,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Failed to load invoices.', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
     return () => {
       subscription.unsubscribe();
     };
-  }, [contractID, auth]);
+  }, [contractID, auth, retry]);
   // page, perPage, searchValue, sortCol, sortDir,
 
   function sortData(sortBy: string, sortDir: number) {
