@@ -18,6 +18,11 @@ th {
 .number {
   font-family: $goa-font-family-number;
 }
+.tableContainer {
+  table {
+    table-layout: fixed;
+  }
+}
 .div {
   flex-direction: row;
   justify-content: space-between;

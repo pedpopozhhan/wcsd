@@ -83,7 +83,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
           </div>
           <div>
             <div>Service description</div>
-            <div>Professional services</div>
+            <div>{invoiceData.ServiceDescription}</div>
           </div>
           <SheetNameModal open={openModal} onClose={onCloseModal}></SheetNameModal>
         </>

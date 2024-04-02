@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
-
+const { headerRow } = styles;
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import {
   setCostDetailsData,
@@ -20,6 +20,7 @@ import {
   setInvoiceNumber,
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
+import { setInvoiceData } from '@/app/app-slice';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -35,6 +36,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //Loader
   const [loading, setIsLoading] = useState(true);
+
+  const [retry, setRetry] = useState<boolean>(false);
 
   //Pagination
   // page number
@@ -65,12 +68,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Failed to load invoices.', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
     return () => {
       subscription.unsubscribe();
     };
-  }, [contractID, auth]);
+  }, [contractID, auth, retry]);
   // page, perPage, searchValue, sortCol, sortDir,
 
   function sortData(sortBy: string, sortDir: number) {
@@ -113,6 +123,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
       next: (results) => {
         setIsLoading(true);
+        const invoiceForContext = {
+          InvoiceID: results.invoice.invoiceId,
+          InvoiceNumber: results.invoice.invoiceNumber,
+          DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
+          InvoiceAmount: results.invoice.invoiceAmount,
+          PeriodEnding: new Date(results.invoice.periodEndDate).toISOString(),
+          InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
+          ContractNumber: contractNumber,
+          UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
+          ServiceDescription: results.invoice.serviceDescription,
+        };
+
+        dispatch(setInvoiceData(invoiceForContext));
         dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
         dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
         dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
@@ -151,11 +174,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '15%' }}>Invoice No.</th>
-                <th style={{ maxWidth: '25%' }}>Invoice Amount</th>
-                <th style={{ maxWidth: '25%' }}>Service Sheet No.</th>
-                <th style={{ maxWidth: '35%' }}>Payment</th>
-                <th style={{ maxWidth: '10%', textAlign: 'right' }}></th>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
+                  Invoice No.
+                </th>
+                <th className={headerRow} style={{ maxWidth: '25%' }}>
+                  Invoice Amount
+                </th>
+                <th className={headerRow} style={{ maxWidth: '25%' }}>
+                  Service Sheet No.
+                </th>
+                <th className={headerRow} style={{ maxWidth: '35%' }}>
+                  Payment
+                </th>
+                <th className={headerRow} style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 
