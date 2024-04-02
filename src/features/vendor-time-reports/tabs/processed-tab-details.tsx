@@ -123,6 +123,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
           ContractNumber: contractNumber,
           UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
+          ServiceDescription: results.invoice.serviceDescription,
         };
 
         dispatch(setInvoiceData(invoiceForContext));

@@ -1,0 +1,23 @@
+{
+  "timeReportsToReconcile": [],
+  "invoiceData": {
+    "InvoiceID": "1761f0eb-0da3-4ead-64b5-08dc5321c8a0",
+    "InvoiceNumber": "jeremy1",
+    "DateOnInvoice": "2024-04-02T20:32:26.307Z",
+    "InvoiceAmount": 1,
+    "PeriodEnding": "2024-04-02T20:32:26.307Z",
+    "InvoiceReceived": "2024-04-02T20:32:26.307Z",
+    "ContractNumber": "23AFD203",
+    "UniqueServiceSheetName": ""
+  },
+  "contractForReconciliation": {
+    "vendorName": "AIR SPRAY (1967) LTD.",
+    "businessId": "0020090236",
+    "contractId": 84739,
+    "contractNumber": "23AFD203",
+    "contractType": "long",
+    "numTimeReports": 0,
+    "index": 2
+  },
+  "invoiceChanged": false
+}
