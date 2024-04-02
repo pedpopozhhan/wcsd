@@ -10,6 +10,9 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
+import styles from './signed-off-tab-details.module.scss';
+import { failedToPerform, publishToast } from '@/common/toast';
+const { headerRow } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -23,6 +26,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
+  const [retry, setRetry] = React.useState<boolean>(false);
 
   //Pagination
   const [, setPageData] = React.useState<IFlightReportDashboard[]>([]);
@@ -72,13 +76,20 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Failed to load flight reports', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth, retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
@@ -136,22 +147,22 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                 <th style={{ maxWidth: '40%' }}>
                   <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="flightReportId"> */}
                   Report No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="ao02Number"> */}
                   AO-02 No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%' }}>
+                <th className={headerRow} style={{ maxWidth: '15%' }}>
                   {/* <GoATableSortHeader name="contractRegistrationName"> */}
                   Registration No.
                   {/* </GoATableSortHeader> */}
                 </th>
-                <th style={{ maxWidth: '15%', textAlign: 'right' }}></th>
+                <th className={headerRow} style={{ maxWidth: '15%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 

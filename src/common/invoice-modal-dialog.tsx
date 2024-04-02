@@ -71,6 +71,7 @@ const InvoiceModalDialog = (props: any) => {
     InvoiceReceived: invoiceReceivedDate,
     ContractNumber: contractNumber,
     UniqueServiceSheetName: '',
+    ServiceDescription: 'Professional Services'
   };
 
   const navigate = useNavigate();

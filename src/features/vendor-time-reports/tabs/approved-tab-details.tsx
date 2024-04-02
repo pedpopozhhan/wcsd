@@ -12,6 +12,7 @@ import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
+import { failedToPerform, publishToast } from '@/common/toast';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -30,6 +31,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
   //Loader
   const [loading, setIsLoading] = useState(true);
+
+  const [retry, setRetry] = useState<boolean>(false);
 
   //Pagination
 
@@ -84,6 +87,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Failed to load flight reports', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
         setIsLoading(false);
       },
     });
@@ -91,7 +101,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber,retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {

@@ -14,6 +14,7 @@ export interface IProcessInvoiceData {
   contractNumber: string;
   type: string;
   uniqueServiceSheetName: string;
+  serviceDescription: string;
   invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
   invoiceOtherCostDetails: IOtherCostTableRowData[];
 }
