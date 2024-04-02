@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
+import { failedToPerform, publishToast } from '@/common/toast';
 const { headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -25,6 +26,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
+  const [retry, setRetry] = React.useState<boolean>(false);
 
   //Pagination
   const [, setPageData] = React.useState<IFlightReportDashboard[]>([]);
@@ -74,13 +76,20 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Failed to load flight reports', 'Connection Error'),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth, retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
