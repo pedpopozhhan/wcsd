@@ -9,8 +9,8 @@ class ProcessInvoiceService {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
 
-  doesInvoiceNumberExist(token: string, invoiceNumber: string): Observable<boolean> {
-    const url = `${this.baseUrl}/DoesInvoiceNumberExist?invoiceNumber=${invoiceNumber}`;
+  doesInvoiceNumberExistForContract(token: string, invoiceNumber: string, contractNumber: string): Observable<boolean> {
+    const url = `${this.baseUrl}/DoesInvoiceNumberExist?invoiceNumber=${invoiceNumber}&contractNumber=${contractNumber}`;
 
     return axios
       .request<boolean>({
