@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -101,7 +101,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber,retry]);
+  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
@@ -139,12 +139,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   }
 
   //#endregion
-
-  function flightReportClick(flightReportId?: number) {
-    if (flightReportId) {
-      window.open(import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + flightReportId, '_blank');
-    }
-  }
 
   const reconcileTimeReports = () => {
     // TODO: Possible bug here...isChecked is not on the object
@@ -231,20 +225,25 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     </td>
                     <td>{yearMonthDay(record.flightReportDate as string)}</td>
                     <td>
-                      <GoAButton
-                        {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
-                        size='compact'
-                        type='tertiary'
-                        onClick={() => flightReportClick(record?.flightReportId)}
+                      <a
+                        href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
+                        target='_blank'
+                        rel='noreferrer'
                       >
                         {record.flightReportId}
-                      </GoAButton>
+                      </a>
                     </td>
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
                     <td>{formatter.format(record?.totalCost)}</td>
                     <td>
-                      <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
+                      <a
+                        href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        <GoAIcon type='chevron-forward' />
+                      </a>
                     </td>
                   </tr>
                 ))

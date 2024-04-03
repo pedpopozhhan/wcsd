@@ -53,7 +53,7 @@ root.render(
                   </Route>
                 </Routes>
               </Router>
-            </React.StrictMode>{' '}
+            </React.StrictMode>
           </PersistGate>
         </Provider>
       </AuthProvider>
@@ -76,7 +76,7 @@ root.render(
                 </Route>
               </Routes>
             </Router>
-          </React.StrictMode>{' '}
+          </React.StrictMode>
         </PersistGate>
       </Provider>
     )}
