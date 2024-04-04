@@ -62,8 +62,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
   const [rate, setRate] = useState<number>(0);
   const [rateError, setRateError] = useState<boolean>(true);
+  const [rateErrorLabel, setRateErrorLabel] = useState<string>('');
   const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
   const [numberOfUnitsError, setNumberOfUnitsError] = useState<boolean>(true);
+  const [numberOfUnitsErrorLabel, setNumberOfUnitsErrorLabel] = useState<string>('');
   const [cost, setCost] = useState<string>('');
 
   const [glAccount, setGlAccount] = useState<string>('');
@@ -106,7 +108,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lg = '230px';
   const md = '175px';
   const placeHolderForDDL = ''; //'----------Select----------';
-  
+
+  const rateErrorLabelText = 'Rate cannot be $0.00';
+  const numberOfUnitsErrorLabelText = 'No. of units cannot be 0';
+
   useEffect(() => {
     setVisible(props.visible);
     if (props.isAddition) {
@@ -257,15 +262,20 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
     if (Number.isNaN(rate) || rate <= 0 || rate > 99999.99) {
       setRateError(true);
+      setRateErrorLabel(rateErrorLabelText);
     } else {
       setRateError(false);
+      setRateErrorLabel('');
     }
 
     if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0 || numberOfUnits > 99999) {
       setNumberOfUnitsError(true);
+      setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
     } else {
       setNumberOfUnitsError(false);
+      setNumberOfUnitsErrorLabel('');
     }
+
     if (remarks.trim().length > 300) {
       setRemarksError(true);
     } else {
@@ -416,7 +426,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Rate'>
+                <GoAFormItem label='Rate' error={rateErrorLabel}>
                   <GoAInput
                     name='rate'
                     type='number'
@@ -430,10 +440,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     onChange={(key, value) => {
                       if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
                         setRateError(true);
+                        setRate(0);
+                        setRateErrorLabel(rateErrorLabelText);
                       } else {
                         setRate(Number(value));
                         setCost((rate * numberOfUnits).toFixed(2).toString());
                         setRateError(false);
+                        setRateErrorLabel('');
                       }
                     }}
                   />
@@ -441,7 +454,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td>
-                <GoAFormItem label='No. of units'>
+                <GoAFormItem label='No. of units' error={numberOfUnitsErrorLabel}>
                   <GoAInput
                     name='numberOfUnits'
                     type='number'
@@ -453,10 +466,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     onChange={(key, value) => {
                       if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
                         setNumberOfUnitsError(true);
+                        setNumberOfUnits(0);
+                        setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
                       } else {
                         setNumberOfUnits(Number(value));
                         setCost((rate * numberOfUnits).toFixed(2).toString());
                         setNumberOfUnitsError(false);
+                        setNumberOfUnitsErrorLabel('');
                       }
                     }}
                   />
