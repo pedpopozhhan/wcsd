@@ -89,7 +89,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('Failed to load flight reports', 'Connection Error'),
+          message: failedToPerform('load flight reports', 'Connection Error'),
           callback: () => {
             setRetry(!retry);
           },
