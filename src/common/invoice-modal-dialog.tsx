@@ -101,10 +101,6 @@ const InvoiceModalDialog = (props: any) => {
     setIsVisible(props.visible);
   }, [props.visible]);
 
-  // useEffect(() => {
-
-  // }, [invoiceAmountErrorLabel]);
-
   useEffect(() => {
     if (props.isAddition === 'false') {
       setDialogTitle('Update invoice');
@@ -287,6 +283,7 @@ const InvoiceModalDialog = (props: any) => {
                           } else {
                             setInvoiceNumberError(false);
                             setPageHasError(false);
+                            setInvoiceNumberErrorLabel('');
                           }
                         }}
                       />
@@ -362,10 +359,17 @@ const InvoiceModalDialog = (props: any) => {
                             setPageHasError(true);
                             setInvoiceAmount(0);
                           } else {
-                            setInvoiceAmount(Number(value));
-                            setInvoiceAmountError(false);
-                            setInvoiceAmountErrorLabel('');
-                            setPageHasError(false);
+                            if (Number(value) <= 0) {
+                              setInvoiceAmountError(true);
+                              setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
+                              setPageHasError(true);
+                              setInvoiceAmount(0);
+                            } else {
+                              setInvoiceAmount(Number(value));
+                              setInvoiceAmountError(false);
+                              setInvoiceAmountErrorLabel('');
+                              setPageHasError(false);
+                            }
                           }
                         }}
                       />
