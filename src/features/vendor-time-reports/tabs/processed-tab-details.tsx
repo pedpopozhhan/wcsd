@@ -70,7 +70,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('Failed to load invoices.', 'Connection Error'),
+          message: failedToPerform('load invoices.', 'Connection Error'),
           callback: () => {
             setRetry(!retry);
           },
