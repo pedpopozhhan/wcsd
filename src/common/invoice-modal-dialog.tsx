@@ -45,6 +45,7 @@ const InvoiceModalDialog = (props: any) => {
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
+  const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
   const [periodEndingDate, setPeriodEndingDate] = useState<string>(new Date().toISOString());
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
   const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(new Date().toISOString());
@@ -74,6 +75,7 @@ const InvoiceModalDialog = (props: any) => {
     ServiceDescription: 'Professional Services',
   };
 
+  const invoiceAmountErrorLabelText = 'Cannot invoice for $0.00';
   const navigate = useNavigate();
   //   const contentRef = useRef<HTMLDivElement | null>(null);
   function getDateWithMonthOffset(offset: number) {
@@ -129,6 +131,7 @@ const InvoiceModalDialog = (props: any) => {
     setPeriodEndingDateError(false);
     setInvoiceReceivedDateError(false);
     setInvoiceNumberErrorLabel('');
+    setInvoiceAmountErrorLabel('');
   };
 
   const clearDataPoints = () => {
@@ -153,13 +156,12 @@ const InvoiceModalDialog = (props: any) => {
     if (invoiceNumber.trim().length <= 0 /* || invoiceNumberErrorLabel*/) {
       setInvoiceNumberError(true);
       return;
-    } else {
-      setInvoiceNumberError(false);
     }
+
     if (subscription) {
       subscription.unsubscribe();
     }
-    setInvoiceNumberErrorLabel('');
+
     subscription = processInvoiceService.doesInvoiceNumberExistForContract(auth?.user?.access_token, invoiceNumber, contractNumber).subscribe({
       next: (data) => {
         if (data) {
@@ -182,21 +184,15 @@ const InvoiceModalDialog = (props: any) => {
       },
     });
   }
+
   function processFields() {
-    // Validate them and show errors
-
-    if (invoiceNumber.trim().length <= 0 || invoiceNumberErrorLabel) {
-      setInvoiceNumberError(true);
-      return;
-    } else {
-      setInvoiceNumberError(false);
-    }
-
     if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
       setInvoiceAmountError(true);
+      setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
       return;
     } else {
       setInvoiceAmountError(false);
+      setInvoiceAmountErrorLabel('');
     }
 
     //if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
@@ -276,7 +272,7 @@ const InvoiceModalDialog = (props: any) => {
                         maxLength={16}
                         value={invoiceNumber}
                         error={invoiceNumberError}
-                        onBlur={() => {}}
+                        onBlur={() => { }}
                         onChange={(key, value) => {
                           setInvoiceNumber(value.trim());
                           if (!value) {
@@ -287,6 +283,7 @@ const InvoiceModalDialog = (props: any) => {
                           } else {
                             setInvoiceNumberError(false);
                             setPageHasError(false);
+                            setInvoiceNumberErrorLabel('');
                           }
                         }}
                       />
@@ -332,7 +329,7 @@ const InvoiceModalDialog = (props: any) => {
               <tr>
                 <td>
                   <div tabIndex={2}>
-                    <GoAFormItem label='Invoice amount'>
+                    <GoAFormItem label='Invoice amount' error={invoiceAmountErrorLabel}>
                       <GoAInput
                         name='ctrlInvoiceAmount'
                         type='number'
@@ -346,22 +343,33 @@ const InvoiceModalDialog = (props: any) => {
                         onBlur={(key, value) => {
                           if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                             setInvoiceAmountError(true);
+                            setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
                             setPageHasError(true);
                           } else {
                             setInvoiceAmount(Number(value));
                             setInvoiceAmountError(false);
+                            setInvoiceAmountErrorLabel('');
                             setPageHasError(false);
                           }
                         }}
                         onChange={(key, value) => {
                           if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                             setInvoiceAmountError(true);
+                            setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
                             setPageHasError(true);
                             setInvoiceAmount(0);
                           } else {
-                            setInvoiceAmount(Number(value));
-                            setInvoiceAmountError(false);
-                            setPageHasError(false);
+                            if (Number(value) <= 0) {
+                              setInvoiceAmountError(true);
+                              setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
+                              setPageHasError(true);
+                              setInvoiceAmount(0);
+                            } else {
+                              setInvoiceAmount(Number(value));
+                              setInvoiceAmountError(false);
+                              setInvoiceAmountErrorLabel('');
+                              setPageHasError(false);
+                            }
                           }
                         }}
                       />
