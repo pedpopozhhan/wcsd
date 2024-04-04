@@ -152,7 +152,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
         }
         publishToast({
           type: 'error',
-          message: 'Connection Error',
+          message: error.response.data,
           callback: () => {
             setRetry(!retry);
           },
