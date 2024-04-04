@@ -106,11 +106,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lg = '230px';
   const md = '175px';
   const placeHolderForDDL = ''; //'----------Select----------';
+  
   useEffect(() => {
     setVisible(props.visible);
-  }, [props.visible]);
-
-  useEffect(() => {
     if (props.isAddition) {
       setControlsForAddition();
       clearDialgoControls();
@@ -131,7 +129,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setFund(String(props.rowToUpdate?.data.fund));
       setRemarks(String(props.rowToUpdate?.data.remarks));
     }
-  }, [isOtherCostAddition, props.rowToUpdate?.data]);
+  }, [isOtherCostAddition, props.rowToUpdate?.data, props.visible]);
 
   useEffect(() => {
     setRetry(false);
