@@ -289,6 +289,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     setNumberOfUnitsError(false);
     setRateError(false);
     setRemarksError(false);
+    setRateErrorLabel('');
+    setNumberOfUnitsErrorLabel('');
   };
 
   const clearDataPoints = () => {
