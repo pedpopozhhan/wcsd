@@ -179,7 +179,7 @@ const InvoiceModalDialog = (props: any) => {
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('check invoice number exists', 'Connection Error'),
+          message: failedToPerform('check invoice number exists', error.response.data),
         });
       },
     });
@@ -272,7 +272,7 @@ const InvoiceModalDialog = (props: any) => {
                         maxLength={16}
                         value={invoiceNumber}
                         error={invoiceNumberError}
-                        onBlur={() => { }}
+                        onBlur={() => {}}
                         onChange={(key, value) => {
                           setInvoiceNumber(value.trim());
                           if (!value) {

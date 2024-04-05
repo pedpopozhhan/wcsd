@@ -70,7 +70,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('load invoices.', 'Connection Error'),
+          message: failedToPerform('load invoices.', error.response.data),
           callback: () => {
             setRetry(!retry);
           },
@@ -148,7 +148,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', 'Connection Error') });
+        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', error.response.data) });
       },
     });
     return () => {

@@ -39,7 +39,7 @@ export default function Contracts() {
         }
         publishToast({
           type: 'error',
-          message: failedToPerform('Load Contracts', 'Connection Error'),
+          message: failedToPerform('Load Contracts', error.response.data),
           callback: () => {
             setRetry(!retry);
           },
