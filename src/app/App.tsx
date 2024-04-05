@@ -8,7 +8,7 @@ import { NAVIGATE_EVENT } from '@/common/navigate';
 
 const { mainContainer, outletContainer } = styles;
 export function App() {
-  const headerTitle = 'Wildfire Support';
+  const headerTitle = 'Wildfire Finance';
   const auth = useConditionalAuth();
   const navigate = useNavigate();
 
