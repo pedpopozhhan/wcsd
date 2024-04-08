@@ -43,6 +43,7 @@ const InvoiceModalDialog = (props: any) => {
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
+  const [dateOfInvoiceErrorLabel, setDateOfInvoiceErrorLabel] = useState<string>('');
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
   const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
@@ -53,7 +54,7 @@ const InvoiceModalDialog = (props: any) => {
   const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
-  const [minDate] = useState<Date>(new Date(1950, 1, 1));
+  const [minDate] = useState<Date>(new Date(1950, 1, 2));
   const [dialogTitle, setDialogTitle] = useState<string>('');
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isOnScreen, contentRef] = useOnScreen<HTMLDivElement>();
@@ -76,6 +77,12 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const invoiceAmountErrorLabelText = 'Cannot invoice for $0.00';
+  const dateOfInvoiceErrorLabelText = 'Date cannot be 1950/02/01 or earlier'; //
+  const dateOfInvoiceEarlierThanPEDErrorLabelText = 'Cannot be earlier than period ending date';
+  const modalDialogWidth = '620px';
+  const leftColumnControlWidth = '270px';
+  const righColumnControlWidth = '280px';
+
   const navigate = useNavigate();
   //   const contentRef = useRef<HTMLDivElement | null>(null);
   function getDateWithMonthOffset(offset: number) {
@@ -132,6 +139,7 @@ const InvoiceModalDialog = (props: any) => {
     setInvoiceReceivedDateError(false);
     setInvoiceNumberErrorLabel('');
     setInvoiceAmountErrorLabel('');
+    setDateOfInvoiceErrorLabel('');
   };
 
   const clearDataPoints = () => {
@@ -198,16 +206,24 @@ const InvoiceModalDialog = (props: any) => {
     //if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
     if (new Date(dateOfInvoice) < minDate || dateOfInvoiceError) {
       setDateOfInvoiceError(true);
+      setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
       return;
     } else {
       setDateOfInvoiceError(false);
+      setDateOfInvoiceErrorLabel('');
     }
 
     if (new Date(periodEndingDate) < minDate || periodEndingDateError) {
       setPeriodEndingDateError(true);
       return;
     } else {
-      setPeriodEndingDateError(false);
+      if (new Date(dateOfInvoice) < new Date(periodEndingDate)) {
+        setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
+        return;
+      } else {
+        setDateOfInvoiceErrorLabel('');
+        setPeriodEndingDateError(false);
+      }
     }
 
     if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
@@ -244,6 +260,7 @@ const InvoiceModalDialog = (props: any) => {
       <GoAModal
         heading={dialogTitle}
         open={isVisible}
+        maxWidth={modalDialogWidth}
         actions={
           <GoAButtonGroup alignment='end'>
             <GoAButton type='secondary' onClick={() => hideModalDialog()}>
@@ -262,177 +279,194 @@ const InvoiceModalDialog = (props: any) => {
               <tr>
                 <td>
                   <GoAFormItem label='Invoice' helpText={getHelperText()} error={invoiceNumberErrorLabel}>
-                    <GoAInput
-                      name='invoiceNumber'
-                      width='300px'
-                      maxLength={16}
-                      value={invoiceNumber}
-                      error={invoiceNumberError}
-                      onBlur={() => {}}
-                      onChange={(key, value) => {
-                        setInvoiceNumber(value.trim());
-                        if (!value) {
-                          setInvoiceNumberErrorLabel('');
-                        }
-                        if (value.trim().length <= 0) {
-                          setInvoiceNumberError(true);
-                        } else {
-                          setInvoiceNumberError(false);
-                          setPageHasError(false);
-                          setInvoiceNumberErrorLabel('');
-                        }
-                      }}
-                    />
+                    <div tabIndex={0}>
+                      <GoAInput
+                        name='invoiceNumber'
+                        width={leftColumnControlWidth}
+                        maxLength={16}
+                        value={invoiceNumber}
+                        error={invoiceNumberError}
+                        onBlur={() => {}}
+                        onChange={(key, value) => {
+                          setInvoiceNumber(value.trim());
+                          if (!value) {
+                            setInvoiceNumberErrorLabel('');
+                          }
+                          if (value.trim().length <= 0) {
+                            setInvoiceNumberError(true);
+                          } else {
+                            setInvoiceNumberError(false);
+                            setPageHasError(false);
+                            setInvoiceNumberErrorLabel('');
+                          }
+                        }}
+                      />
+                    </div>
                   </GoAFormItem>
                 </td>
                 <td></td>
                 <td>
-                  <GoAFormItem label='Date on invoice'>
-                    <GoAInputDate
-                      name='dateOnInvoice'
-                      placeholder='YYYY-MM-DD'
-                      error={dateOfInvoiceError}
-                      value={dateOfInvoice}
-                      min={minDate}
-                      max={maxDate}
-                      width='200px'
-                      onChange={(name, value) => {
-                        if (value === '') {
-                          setDateOfInvoiceError(true);
-                          setPageHasError(true);
-                        } else if (isNaN(Date.parse(value.toString()))) {
-                          setDateOfInvoiceError(true);
-                          setPageHasError(true);
-                        } else {
-                          const propertyValue: Date = new Date(value);
-                          setDateOfInvoice(propertyValue.toISOString());
-                          if (propertyValue < minDate) {
+                  <div tabIndex={1}>
+                    <GoAFormItem label='Date on invoice' error={dateOfInvoiceErrorLabel}>
+                      <GoAInputDate
+                        name='dateOnInvoice'
+                        placeholder='YYYY-MM-DD'
+                        error={dateOfInvoiceError}
+                        value={dateOfInvoice}
+                        min={minDate}
+                        max={maxDate}
+                        width={righColumnControlWidth}
+                        onChange={(name, value) => {
+                          if (value === '') {
+                            setDateOfInvoiceError(true);
+                            setPageHasError(true);
+                          } else if (isNaN(Date.parse(value.toString()))) {
                             setDateOfInvoiceError(true);
                             setPageHasError(true);
                           } else {
-                            setDateOfInvoiceError(false);
-                            setPageHasError(false);
+                            const propertyValue: Date = new Date(value);
+                            setDateOfInvoice(propertyValue.toISOString());
+                            if (propertyValue < minDate) {
+                              setDateOfInvoiceError(true);
+                              setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
+                              setPageHasError(true);
+                            } else {
+                              setDateOfInvoiceError(false);
+                              setDateOfInvoiceErrorLabel('');
+                              setPageHasError(false);
+                            }
                           }
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
+                        }}
+                      />
+                    </GoAFormItem>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <GoAFormItem label='Invoice amount' error={invoiceAmountErrorLabel}>
-                    <GoAInput
-                      name='ctrlInvoiceAmount'
-                      type='number'
-                      width='300px'
-                      maxLength={10}
-                      error={invoiceAmountError}
-                      value={invoiceAmount.toString()}
-                      max='99999999'
-                      min='0'
-                      leadingContent='$'
-                      onBlur={(key, value) => {
-                        if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
-                          setInvoiceAmountError(true);
-                          setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
-                          setPageHasError(true);
-                        } else {
-                          setInvoiceAmount(Number(value));
-                          setInvoiceAmountError(false);
-                          setInvoiceAmountErrorLabel('');
-                          setPageHasError(false);
-                        }
-                      }}
-                      onChange={(key, value) => {
-                        if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
-                          setInvoiceAmountError(true);
-                          setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
-                          setPageHasError(true);
-                          setInvoiceAmount(0);
-                        } else {
-                          if (Number(value) <= 0) {
+                  <div tabIndex={2}>
+                    <GoAFormItem label='Invoice amount' error={invoiceAmountErrorLabel}>
+                      <GoAInput
+                        name='ctrlInvoiceAmount'
+                        type='number'
+                        width={leftColumnControlWidth}
+                        maxLength={10}
+                        error={invoiceAmountError}
+                        value={invoiceAmount.toString()}
+                        max='99999999'
+                        min='0'
+                        leadingContent='$'
+                        onBlur={(key, value) => {
+                          if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
                             setInvoiceAmountError(true);
                             setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
                             setPageHasError(true);
-                            setInvoiceAmount(0);
                           } else {
                             setInvoiceAmount(Number(value));
                             setInvoiceAmountError(false);
                             setInvoiceAmountErrorLabel('');
                             setPageHasError(false);
                           }
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
+                        }}
+                        onChange={(key, value) => {
+                          if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value))) {
+                            setInvoiceAmountError(true);
+                            setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
+                            setPageHasError(true);
+                            setInvoiceAmount(0);
+                          } else {
+                            if (Number(value) <= 0) {
+                              setInvoiceAmountError(true);
+                              setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
+                              setPageHasError(true);
+                              setInvoiceAmount(0);
+                            } else {
+                              setInvoiceAmount(Number(value));
+                              setInvoiceAmountError(false);
+                              setInvoiceAmountErrorLabel('');
+                              setPageHasError(false);
+                            }
+                          }
+                        }}
+                      />
+                    </GoAFormItem>
+                  </div>
                 </td>
                 <td></td>
                 <td>
-                  <GoAFormItem label='Period ending'>
-                    <GoAInputDate
-                      name='periodEndingDate'
-                      placeholder='yyyy-MM-DD'
-                      value={periodEndingDate}
-                      error={periodEndingDateError}
-                      min={minDate}
-                      max={maxDate}
-                      width='200px'
-                      onChange={(name, value) => {
-                        if (value === '') {
-                          setPeriodEndingDateError(true);
-                          setPageHasError(true);
-                        } else if (isNaN(Date.parse(value.toString()))) {
-                          setPeriodEndingDateError(true);
-                          setPageHasError(true);
-                        } else {
-                          const propertyValue: Date = new Date(value);
-                          setPeriodEndingDate(propertyValue.toISOString());
-                          if (propertyValue < minDate) {
+                  <div tabIndex={3}>
+                    <GoAFormItem label='Period ending'>
+                      <GoAInputDate
+                        name='periodEndingDate'
+                        placeholder='yyyy-MM-DD'
+                        value={periodEndingDate}
+                        error={periodEndingDateError}
+                        min={minDate}
+                        max={maxDate}
+                        width={righColumnControlWidth}
+                        onChange={(name, value) => {
+                          if (value === '') {
+                            setPeriodEndingDateError(true);
+                            setPageHasError(true);
+                          } else if (isNaN(Date.parse(value.toString()))) {
                             setPeriodEndingDateError(true);
                             setPageHasError(true);
                           } else {
-                            setPeriodEndingDateError(false);
-                            setPageHasError(false);
+                            const propertyValue: Date = new Date(value);
+                            setPeriodEndingDate(propertyValue.toISOString());
+                            if (propertyValue < minDate) {
+                              setPeriodEndingDateError(true);
+                              setPageHasError(true);
+                            } else {
+                              if (new Date(dateOfInvoice) < propertyValue) {
+                                setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
+                              } else {
+                                setDateOfInvoiceErrorLabel('');
+                                setPeriodEndingDateError(false);
+                                setPageHasError(false);
+                              }
+                            }
                           }
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
+                        }}
+                      />
+                    </GoAFormItem>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <GoAFormItem label='Invoice received'>
-                    <GoAInputDate
-                      name='invoiceReceivedDate'
-                      placeholder='YYYY-MM-DD'
-                      value={invoiceReceivedDate}
-                      error={invoiceReceivedDateError}
-                      min={minDate}
-                      max={maxDate}
-                      width='200px'
-                      onChange={(name, value) => {
-                        if (value === '') {
-                          setInvoiceReceivedDateError(true);
-                          setPageHasError(true);
-                        } else if (isNaN(Date.parse(value.toString()))) {
-                          setInvoiceReceivedDateError(true);
-                          setPageHasError(true);
-                        } else {
-                          const propertyValue: Date = new Date(value);
-                          setInvoiceReceivedDate(propertyValue.toISOString());
-                          if (propertyValue < minDate) {
+                  <div tabIndex={4}>
+                    <GoAFormItem label='Invoice received'>
+                      <GoAInputDate
+                        name='invoiceReceivedDate'
+                        placeholder='YYYY-MM-DD'
+                        value={invoiceReceivedDate}
+                        error={invoiceReceivedDateError}
+                        min={minDate}
+                        max={maxDate}
+                        width={leftColumnControlWidth}
+                        onChange={(name, value) => {
+                          if (value === '') {
+                            setInvoiceReceivedDateError(true);
+                            setPageHasError(true);
+                          } else if (isNaN(Date.parse(value.toString()))) {
                             setInvoiceReceivedDateError(true);
                             setPageHasError(true);
                           } else {
-                            setInvoiceReceivedDateError(false);
-                            setPageHasError(false);
+                            const propertyValue: Date = new Date(value);
+                            setInvoiceReceivedDate(propertyValue.toISOString());
+                            if (propertyValue < minDate) {
+                              setInvoiceReceivedDateError(true);
+                              setPageHasError(true);
+                            } else {
+                              setInvoiceReceivedDateError(false);
+                              setPageHasError(false);
+                            }
                           }
-                        }
-                      }}
-                    />
-                  </GoAFormItem>
+                        }}
+                      />
+                    </GoAFormItem>
+                  </div>
                 </td>
                 <td></td>
               </tr>
