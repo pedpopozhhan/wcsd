@@ -43,6 +43,7 @@ const InvoiceModalDialog = (props: any) => {
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
+  const [dateOfInvoiceErrorLabel, setDateOfInvoiceErrorLabel] = useState<string>('');
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
   const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
@@ -53,7 +54,7 @@ const InvoiceModalDialog = (props: any) => {
   const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
-  const [minDate] = useState<Date>(new Date(1950, 1, 1));
+  const [minDate] = useState<Date>(new Date(1950, 1, 2));
   const [dialogTitle, setDialogTitle] = useState<string>('');
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isOnScreen, contentRef] = useOnScreen<HTMLDivElement>();
@@ -76,6 +77,14 @@ const InvoiceModalDialog = (props: any) => {
   };
 
   const invoiceAmountErrorLabelText = 'Cannot invoice for $0.00';
+  const dateOfInvoiceErrorLabelText = 'Date cannot be 1950/02/01 or earlier'; //
+  const dateOfInvoiceEarlierThanPEDErrorLabelText = 'Cannot be earlier than period ending date';
+  const modalDialogWidth = '620px';
+  const leftColumnControlWidth = '270px';
+  const righColumnControlWidth = '280px';
+
+
+
   const navigate = useNavigate();
   //   const contentRef = useRef<HTMLDivElement | null>(null);
   function getDateWithMonthOffset(offset: number) {
@@ -132,6 +141,7 @@ const InvoiceModalDialog = (props: any) => {
     setInvoiceReceivedDateError(false);
     setInvoiceNumberErrorLabel('');
     setInvoiceAmountErrorLabel('');
+    setDateOfInvoiceErrorLabel('');
   };
 
   const clearDataPoints = () => {
@@ -198,16 +208,26 @@ const InvoiceModalDialog = (props: any) => {
     //if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
     if (new Date(dateOfInvoice) < minDate || dateOfInvoiceError) {
       setDateOfInvoiceError(true);
+      setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
       return;
     } else {
       setDateOfInvoiceError(false);
+      setDateOfInvoiceErrorLabel('');
     }
 
     if (new Date(periodEndingDate) < minDate || periodEndingDateError) {
       setPeriodEndingDateError(true);
       return;
     } else {
-      setPeriodEndingDateError(false);
+
+      if (new Date(dateOfInvoice) < new Date(periodEndingDate)) {
+        setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
+        return;
+      }
+      else {
+        setDateOfInvoiceErrorLabel('');
+        setPeriodEndingDateError(false);
+      }
     }
 
     if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
@@ -244,6 +264,7 @@ const InvoiceModalDialog = (props: any) => {
       <GoAModal
         heading={dialogTitle}
         open={isVisible}
+        maxWidth={modalDialogWidth}
         actions={
           <GoAButtonGroup alignment='end'>
             <div tabIndex={6}>
@@ -268,11 +289,11 @@ const InvoiceModalDialog = (props: any) => {
                     <div tabIndex={0}>
                       <GoAInput
                         name='invoiceNumber'
-                        width='300px'
+                        width={leftColumnControlWidth}
                         maxLength={16}
                         value={invoiceNumber}
                         error={invoiceNumberError}
-                        onBlur={() => {}}
+                        onBlur={() => { }}
                         onChange={(key, value) => {
                           setInvoiceNumber(value.trim());
                           if (!value) {
@@ -293,7 +314,7 @@ const InvoiceModalDialog = (props: any) => {
                 <td></td>
                 <td>
                   <div tabIndex={1}>
-                    <GoAFormItem label='Date on invoice'>
+                    <GoAFormItem label='Date on invoice' error={dateOfInvoiceErrorLabel}>
                       <GoAInputDate
                         name='dateOnInvoice'
                         placeholder='YYYY-MM-DD'
@@ -301,7 +322,7 @@ const InvoiceModalDialog = (props: any) => {
                         value={dateOfInvoice}
                         min={minDate}
                         max={maxDate}
-                        width='200px'
+                        width={righColumnControlWidth}
                         onChange={(name, value) => {
                           if (value === '') {
                             setDateOfInvoiceError(true);
@@ -314,9 +335,11 @@ const InvoiceModalDialog = (props: any) => {
                             setDateOfInvoice(propertyValue.toISOString());
                             if (propertyValue < minDate) {
                               setDateOfInvoiceError(true);
+                              setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
                               setPageHasError(true);
                             } else {
                               setDateOfInvoiceError(false);
+                              setDateOfInvoiceErrorLabel('');
                               setPageHasError(false);
                             }
                           }
@@ -333,7 +356,7 @@ const InvoiceModalDialog = (props: any) => {
                       <GoAInput
                         name='ctrlInvoiceAmount'
                         type='number'
-                        width='300px'
+                        width={leftColumnControlWidth}
                         maxLength={10}
                         error={invoiceAmountError}
                         value={invoiceAmount.toString()}
@@ -387,7 +410,7 @@ const InvoiceModalDialog = (props: any) => {
                         error={periodEndingDateError}
                         min={minDate}
                         max={maxDate}
-                        width='200px'
+                        width={righColumnControlWidth}
                         onChange={(name, value) => {
                           if (value === '') {
                             setPeriodEndingDateError(true);
@@ -402,8 +425,14 @@ const InvoiceModalDialog = (props: any) => {
                               setPeriodEndingDateError(true);
                               setPageHasError(true);
                             } else {
-                              setPeriodEndingDateError(false);
-                              setPageHasError(false);
+                              if (new Date(dateOfInvoice) < propertyValue) {
+                                setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
+                              }
+                              else {
+                                setDateOfInvoiceErrorLabel('');
+                                setPeriodEndingDateError(false);
+                                setPageHasError(false);
+                              }
                             }
                           }
                         }}
@@ -423,7 +452,7 @@ const InvoiceModalDialog = (props: any) => {
                         error={invoiceReceivedDateError}
                         min={minDate}
                         max={maxDate}
-                        width='200px'
+                        width={leftColumnControlWidth}
                         onChange={(name, value) => {
                           if (value === '') {
                             setInvoiceReceivedDateError(true);
