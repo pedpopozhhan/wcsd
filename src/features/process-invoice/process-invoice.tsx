@@ -25,7 +25,6 @@ export default function ProcessInvoice() {
 
   function navigateToReconcile() {
     dispatch(setInvoiceChanged(false));
-    dispatch(resetState());
     navigate(`/invoice/${invoiceData.InvoiceNumber}`, {
       state: invoiceData.InvoiceNumber,
     });
