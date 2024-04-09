@@ -542,14 +542,14 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Fund'>
+                <GoAFormItem label='Internal order'>
                   <Select
-                    options={funds}
+                    options={internalOrders}
                     placeholder={placeHolderForDDL}
-                    value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
-                    onChange={async (value: IDropDownListResponse) => {
+                    value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
+                    onChange={async (value: IDropDownListResponse | null) => {
                       if (value.value) {
-                        setFund(value.value);
+                        setInternalOrder(value.value);
                       }
                     }}
                     menuPosition='fixed'
@@ -560,14 +560,14 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               </td>
               <td></td>
               <td>
-                <GoAFormItem label='Internal order'>
+                <GoAFormItem label='Fund'>
                   <Select
-                    options={internalOrders}
+                    options={funds}
                     placeholder={placeHolderForDDL}
-                    value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
-                    onChange={async (value: IDropDownListResponse | null) => {
+                    value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
+                    onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
-                        setInternalOrder(value.value);
+                        setFund(value.value);
                       }
                     }}
                     menuPosition='fixed'
