@@ -28,11 +28,6 @@ export default function InvoiceDetails() {
 
   const [tabIndex, setTabIndex] = useState<number>(1);
 
-  // Modal Dialog configuration
-  const [parentShowModal, setParentShowModal] = useState(false);
-  const editInvoice = () => {
-    setParentShowModal(true);
-  };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
@@ -85,10 +80,8 @@ export default function InvoiceDetails() {
       <div className={content}>
         <div className={sideBar}>
           <div className={header}>
-            Invoice{' '}
-            <GoAButton type='tertiary' onClick={editInvoice}>
-              Edit
-            </GoAButton>
+            Invoice
+            <InvoiceModalDialog />
           </div>
           <Totalizer
             invoiceAmount={invoiceData.InvoiceAmount}
@@ -124,7 +117,6 @@ export default function InvoiceDetails() {
           Cancel
         </GoAButton>
       </div>
-      <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} />
     </div>
   );
 }
