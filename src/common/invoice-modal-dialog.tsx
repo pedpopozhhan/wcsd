@@ -105,7 +105,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
 
   useEffect(() => {
     if (!props.isNew) {
-      setEditMode(false);
+      setEditMode(true);
       setDialogTitle('Update invoice');
       setIsInvoiceAddition(false);
       setlabelforInvoiceOperation('Update');
@@ -114,7 +114,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         setToSessionData();
       }
     } else {
-      setEditMode(true);
+      setEditMode(false);
       setDialogTitle('Create invoice');
     }
   }, [isInvoiceAddition]);
