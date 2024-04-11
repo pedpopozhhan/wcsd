@@ -32,7 +32,6 @@ export default function InvoiceDetails() {
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    dispatch(resetInvoiceDetails());
     dispatch(getRateTypes({ token: auth?.user?.access_token }));
     if (timeReportsToReconcile.length > 0) {
       dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));

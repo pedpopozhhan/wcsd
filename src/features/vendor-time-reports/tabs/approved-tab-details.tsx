@@ -13,6 +13,7 @@ import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -148,6 +149,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       trItems.push(record.flightReportId);
     });
     dispatch(setTimeReportsToReconcile(trItems));
+    if (trItems.length == 0) {
+      dispatch(resetInvoiceDetails());
+    }
   };
 
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
