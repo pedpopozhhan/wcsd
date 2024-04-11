@@ -154,6 +154,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       if (invoiceData != null) setToSessionData();
     }
     clearErrors();
+    setIsVisible(false);
     if (props.onClose) {
       props.onClose();
     }
