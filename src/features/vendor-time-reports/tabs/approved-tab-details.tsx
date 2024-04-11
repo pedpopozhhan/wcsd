@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -13,6 +13,7 @@ import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -47,7 +48,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [sortDir, setSortDir] = useState(-1);
 
   // Modal Dialog configuration
-  const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID] = useState(contractNumber);
 
   const dispatch = useAppDispatch();
@@ -149,8 +149,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       trItems.push(record.flightReportId);
     });
     dispatch(setTimeReportsToReconcile(trItems));
-    // setTimeReportsToReconcile(trItems);
-    setParentShowModal(true);
+    if (trItems.length == 0) {
+      dispatch(resetInvoiceDetails());
+    }
   };
 
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,9 +178,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     <>
       <PageLoader visible={loading} />
       <div>
-        <GoAButton size='compact' type='primary' onClick={reconcileTimeReports}>
-          Reconcile
-        </GoAButton>
+        <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -271,7 +270,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
           </GoABlock>
         </div>
       </div>
-      <InvoiceModalDialog isAddition='true' visible={parentShowModal} showInvoiceDialog={setParentShowModal} contract={contractID} />
     </>
   );
 };
