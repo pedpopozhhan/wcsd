@@ -37,8 +37,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   // page number
   const [page, setPage] = useState(1);
   //count per page
-  const [perPage, setPerPage] = useState(5);
-  const [, setPreviousSelectedPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(10);
+  const [, setPreviousSelectedPerPage] = useState(10);
 
   // Modal Dialog configuration
   const [contractID] = useState(contractNumber);
