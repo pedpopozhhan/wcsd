@@ -2,9 +2,6 @@ import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHe
 import * as React from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
-import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
-import { IPagination } from '@/interfaces/pagination.interface';
-import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useEffect } from 'react';
@@ -37,32 +34,14 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const [, setPreviousSelectedPerPage] = React.useState(10);
 
   //Sorting
-  const [sortCol, setSortCol] = React.useState('flightReportDate');
-  const [sortDir, setSortDir] = React.useState(-1);
 
   useEffect(() => {
-    const strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    const sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-
-    const objIPagination: IPagination = {
-      perPage: perPage,
-      page: page,
-    };
-
-    const objIFilter: IFilter = {
+    const request = {
       contractNumber: contractNumber,
       status: 'signed off',
     };
-
-    const objISearch: ISearch = {
-      search: strSearchValue,
-      sortBy: sortCol,
-      sortOrder: sortOrder,
-      filterBy: objIFilter,
-      pagination: objIPagination,
-    };
     setIsLoading(true);
-    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, objISearch).subscribe({
+    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         setData(response.rows);
         // sort by what default
@@ -89,7 +68,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, auth, retry]);
+  }, [searchValue, contractNumber, auth, retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
@@ -104,8 +83,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     setData(data.slice());
     setPageData(data.slice(0, perPage));
     setPage(1);
-    setSortCol(sortBy);
-    setSortDir(sortDir);
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
