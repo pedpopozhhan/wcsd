@@ -43,12 +43,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   // page number
   const [page, setPage] = useState(1);
   //count per page
-  const [perPage, setPerPage] = useState(5);
-  const [, setPreviousSelectedPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(10);
+  const [, setPreviousSelectedPerPage] = useState(10);
 
   //Sorting
-  const [, setSortCol] = useState('invoiceDate');
-  const [, setSortDir] = useState(-1);
   const [contractID] = useState<string | undefined>(contractNumber);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -81,7 +79,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       subscription.unsubscribe();
     };
   }, [contractID, auth, retry]);
-  // page, perPage, searchValue, sortCol, sortDir,
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IProcessedInvoiceTableRowData, b: IProcessedInvoiceTableRowData) => {
@@ -96,8 +93,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setData(data.slice());
     setPageData(data.slice(0, perPage));
     setPage(1);
-    setSortCol(sortBy);
-    setSortDir(sortDir);
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
