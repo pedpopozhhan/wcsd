@@ -247,6 +247,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       dispatch(setInvoiceData(invoiceForContext));
       publishToast({ type: 'info', message: 'Invoice updated.' });
       clearErrors();
+      setIsVisible(false);
       if (props.onClose) {
         props.onClose();
       }
