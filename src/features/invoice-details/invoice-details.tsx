@@ -13,7 +13,7 @@ import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/feat
 import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
-const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+const { container, content, sideBar, main, footer, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -78,7 +78,7 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div className={header}>
+          <div>
             Invoice
             <InvoiceModalDialog />
           </div>
