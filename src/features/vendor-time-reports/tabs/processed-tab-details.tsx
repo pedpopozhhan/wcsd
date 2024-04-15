@@ -167,7 +167,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
             <thead>
               <tr>
                 <th style={{ maxWidth: '15%' }}>
-                  <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
+                  <GoATableSortHeader name='invoiceDate'>Invoice Date</GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
                   Invoice No.
