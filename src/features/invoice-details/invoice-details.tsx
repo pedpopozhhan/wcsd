@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getInvoiceDetails, getRateTypes } from './invoice-details-epic';
+import { getRateTypes } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
+import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
 const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
@@ -23,7 +23,6 @@ export default function InvoiceDetails() {
 
   const navigate = useNavigate();
 
-  const timeReportsToReconcile = useAppSelector((state) => state.app.timeReportsToReconcile);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [tabIndex, setTabIndex] = useState<number>(1);
@@ -33,10 +32,7 @@ export default function InvoiceDetails() {
 
   useEffect(() => {
     dispatch(getRateTypes({ token: auth?.user?.access_token }));
-    if (timeReportsToReconcile.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
-    }
-  }, [timeReportsToReconcile, auth]);
+  }, [auth]);
 
   useEffect(() => {
     const total = rowData

@@ -6,11 +6,11 @@ import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
-import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
+import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -122,7 +122,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     items?.map((record: IFlightReportDashboard) => {
       trItems.push(record.flightReportId);
     });
-    dispatch(setTimeReportsToReconcile(trItems));
+
+    if (trItems.length > 0) {
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
+    }
     if (trItems.length == 0) {
       dispatch(resetInvoiceDetails());
     }

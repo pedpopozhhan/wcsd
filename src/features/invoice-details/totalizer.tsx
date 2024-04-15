@@ -1,5 +1,5 @@
 import styles from './totalizer.module.scss';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { convertToCurrency } from '@/common/currency';
 import FlipNumber from './flip-number';
 
@@ -11,26 +11,31 @@ interface ITotalizerProps {
 }
 
 const Totalizer: FC<ITotalizerProps> = (props) => {
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+
+  useEffect(() => {
+    setFirstLoad(false);
+  }, [props.invoiceAmount]);
   return (
     <div className={container}>
       <div className={section}>
         <div className={totalizerAmountLabel}>Invoice amount</div>
 
-        <div className={totalizerAmount}>
-          {convertToCurrency(props.invoiceAmount)}
-        </div>
+        <div className={totalizerAmount}>{convertToCurrency(props.invoiceAmount)}</div>
       </div>
       <div className={section}>
         <div className={totalizerAmountLabel}>Reconciled Amount</div>
 
         <div className={totalizerAmount}>
-          <FlipNumber value={props.reconciledAmount}></FlipNumber>
+          {firstLoad && props.reconciledAmount}
+          {!firstLoad && <FlipNumber value={props.reconciledAmount}></FlipNumber>}
         </div>
       </div>
       <div className={section}>
         <div className={totalizerAmountLabel}>Remaining Amount</div>
         <div className={totalizerAmount}>
-          <FlipNumber value={props.remainingAmount}></FlipNumber>
+          {firstLoad && props.remainingAmount}
+          {!firstLoad && <FlipNumber value={props.remainingAmount}></FlipNumber>}
         </div>
       </div>
     </div>
