@@ -77,6 +77,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   };
 
   const invoiceAmountErrorLabelText = 'Cannot invoice for $0.00';
+  const maxInvoiceAmountErrorLabelText = 'Cannot invoice over $999,999,999';
+  const maxInvoiceAmount = 999999999;
   const dateOfInvoiceErrorLabelText = 'Date cannot be 1950/02/01 or earlier'; //
   const dateOfInvoiceEarlierThanPEDErrorLabelText = 'Cannot be earlier than period ending date';
   const modalDialogWidth = '620px';
@@ -194,16 +196,20 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   }
 
   function processFields() {
-    if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null || invoiceAmount > 999999999.99) {
+    if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null) {
       setInvoiceAmountError(true);
       setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
       return;
-    } else {
+    }
+    else if (invoiceAmount > maxInvoiceAmount) {
+      setInvoiceAmountError(true);
+      setInvoiceAmountErrorLabel(maxInvoiceAmountErrorLabelText);
+    }
+    else {
       setInvoiceAmountError(false);
       setInvoiceAmountErrorLabel('');
     }
 
-    //if (new Date(yearMonthDay(dateOfInvoice)) < minDate || dateOfInvoiceError) {
     if (new Date(dateOfInvoice) < minDate || dateOfInvoiceError) {
       setDateOfInvoiceError(true);
       setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
@@ -217,7 +223,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       setPeriodEndingDateError(true);
       return;
     } else {
-      if (new Date(dateOfInvoice) < new Date(periodEndingDate)) {
+      if (new Date(dateOfInvoice).toLocaleDateString() < new Date(periodEndingDate).toLocaleDateString()) {
         setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
         return;
       } else {
@@ -303,7 +309,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => {}}
+                    onBlur={() => { }}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {
@@ -366,7 +372,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={10}
                     error={invoiceAmountError}
                     value={invoiceAmount.toString()}
-                    max='99999999'
+                    max={maxInvoiceAmount}
                     min='0'
                     leadingContent='$'
                     onBlur={(key, value) => {
@@ -393,7 +399,14 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
                           setPageHasError(true);
                           setInvoiceAmount(0);
-                        } else {
+                        }
+                        else if (Number(value) >= maxInvoiceAmount) {
+                          setInvoiceAmountError(true);
+                          setInvoiceAmountErrorLabel(maxInvoiceAmountErrorLabelText);
+                          setPageHasError(true);
+                          setInvoiceAmount(0);
+                        }
+                        else {
                           setInvoiceAmount(Number(value));
                           setInvoiceAmountError(false);
                           setInvoiceAmountErrorLabel('');
