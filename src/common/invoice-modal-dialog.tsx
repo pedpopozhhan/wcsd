@@ -401,7 +401,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setPageHasError(true);
                           setInvoiceAmount(0);
                         }
-                        else if (Number(value) >= maxInvoiceAmount) {
+                        else if (Number(value) > maxInvoiceAmount) {
                           setInvoiceAmountError(true);
                           setInvoiceAmountErrorLabel(maxInvoiceAmountErrorLabelText);
                           setPageHasError(true);
