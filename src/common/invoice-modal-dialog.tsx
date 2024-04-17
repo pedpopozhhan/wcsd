@@ -9,6 +9,7 @@ import processInvoiceService from '@/services/process-invoice.service';
 import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
 import styles from './invoice-modal-dialog.module.scss';
+import moment from 'moment';
 const { container } = styles;
 export interface IInvoiceData {
   InvoiceID: string;
@@ -36,6 +37,9 @@ interface InvoiceModalProps {
 }
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
+  function currentDate() {
+    return moment().startOf('day').toISOString();
+  }
   const dispatch = useAppDispatch();
   const auth = useConditionalAuth();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -45,15 +49,15 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isNew);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
-  const [dateOfInvoice, setDateOfInvoice] = useState<string>(new Date().toISOString());
+  const [dateOfInvoice, setDateOfInvoice] = useState<string>(currentDate());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [dateOfInvoiceErrorLabel, setDateOfInvoiceErrorLabel] = useState<string>('');
   const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
   const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
   const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
-  const [periodEndingDate, setPeriodEndingDate] = useState<string>(new Date().toISOString());
+  const [periodEndingDate, setPeriodEndingDate] = useState<string>(currentDate());
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
-  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(new Date().toISOString());
+  const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(currentDate());
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [contractNumber, setContractNumber] = useState(props.contract);
@@ -142,11 +146,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   };
 
   const clearDataPoints = () => {
+    const dt = currentDate();
     setInvoiceNumber('');
     setInvoiceAmount(0);
-    setDateOfInvoice(new Date().toISOString());
-    setPeriodEndingDate(new Date().toISOString());
-    setInvoiceReceivedDate(new Date().toISOString());
+    setDateOfInvoice(dt);
+    setPeriodEndingDate(dt);
+    setInvoiceReceivedDate(dt);
   };
 
   const hideModalDialog = () => {
@@ -200,13 +205,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       setInvoiceAmountError(true);
       setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
       return;
-    }
-    else if (invoiceAmount > maxInvoiceAmount) {
+    } else if (invoiceAmount > maxInvoiceAmount) {
       setInvoiceAmountError(true);
       setInvoiceAmountErrorLabel(maxInvoiceAmountErrorLabelText);
       return;
-    }
-    else {
+    } else {
       setInvoiceAmountError(false);
       setInvoiceAmountErrorLabel('');
     }
@@ -224,7 +227,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       setPeriodEndingDateError(true);
       return;
     } else {
-      if (new Date(dateOfInvoice).toLocaleDateString() < new Date(periodEndingDate).toLocaleDateString()) {
+      if (dateOfInvoice < periodEndingDate) {
         setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
         return;
       } else {
@@ -310,7 +313,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => { }}
+                    onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {
@@ -400,14 +403,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
                           setPageHasError(true);
                           setInvoiceAmount(0);
-                        }
-                        else if (Number(value) > maxInvoiceAmount) {
+                        } else if (Number(value) > maxInvoiceAmount) {
                           setInvoiceAmountError(true);
                           setInvoiceAmountErrorLabel(maxInvoiceAmountErrorLabelText);
                           setPageHasError(true);
                           setInvoiceAmount(0);
-                        }
-                        else {
+                        } else {
                           setInvoiceAmount(Number(value));
                           setInvoiceAmountError(false);
                           setInvoiceAmountErrorLabel('');
