@@ -19,6 +19,7 @@
     "array-sort": "^1.0.0",
     "axios": "^1.6.2",
     "axios-observable": "^2.0.0",
+    "focus-trap-react": "^10.2.3",
     "immer": "^10.0.3",
     "moment": "^2.29.4",
     "oidc-client-ts": "^3.0.1",

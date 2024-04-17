@@ -1,18 +1,16 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
-import { IFilter } from '@/interfaces/flight-report-dashboard/filter.interface';
-import { IPagination } from '@/interfaces/pagination.interface';
-import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import { yearMonthDay } from '@/common/dates';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
-import { setTimeReportsToReconcile } from '@/app/app-slice';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
+import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
+import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
 interface IFlightReportAllProps {
@@ -42,39 +40,18 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [perPage, setPerPage] = useState(10);
   const [, setPreviousSelectedPerPage] = useState(10);
 
-  //Sorting
-  const [sortCol, setSortCol] = useState('flightReportDate');
-  const [sortDir, setSortDir] = useState(-1);
-
   // Modal Dialog configuration
-  const [parentShowModal, setParentShowModal] = useState(false);
   const [contractID] = useState(contractNumber);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const strSearchValue = searchValue ? searchValue.toLowerCase() : '';
-    const sortOrder = sortDir === -1 ? 'ASC' : 'DESC';
-
-    const objIPagination: IPagination = {
-      perPage: perPage,
-      page: page,
-    };
-
-    const objIFilter: IFilter = {
+    setIsLoading(true);
+    const request = {
       contractNumber: contractNumber,
       status: 'approved',
     };
-
-    const objISearch: ISearch = {
-      search: strSearchValue,
-      sortBy: sortCol,
-      sortOrder: sortOrder,
-      filterBy: objIFilter,
-      pagination: objIPagination,
-    };
-    setIsLoading(true);
-    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, objISearch).subscribe({
+    const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         setData(response.rows);
         // sort by what default
@@ -101,7 +78,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [page, perPage, searchValue, sortCol, sortDir, contractNumber, retry]);
+  }, [searchValue, contractNumber, retry]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
@@ -116,8 +93,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setData(data.slice());
     setPageData(data.slice(0, perPage));
     setPage(1);
-    setSortCol(sortBy);
-    setSortDir(sortDir);
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
@@ -129,7 +104,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   //Pagination change page
   function changePage(newPage: number) {
     if (newPage) {
-      setIsLoading(true);
       const offset = (newPage - 1) * perPage;
       const _flightReports = data.slice(offset, offset + perPage);
       setPerPage(perPage);
@@ -148,9 +122,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     items?.map((record: IFlightReportDashboard) => {
       trItems.push(record.flightReportId);
     });
-    dispatch(setTimeReportsToReconcile(trItems));
-    // setTimeReportsToReconcile(trItems);
-    setParentShowModal(true);
+
+    if (trItems.length > 0) {
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
+    }
+    if (trItems.length == 0) {
+      dispatch(resetInvoiceDetails());
+    }
   };
 
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,9 +155,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     <>
       <PageLoader visible={loading} />
       <div>
-        <GoAButton size='compact' type='primary' onClick={reconcileTimeReports}>
-          Reconcile
-        </GoAButton>
+        <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -271,7 +247,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
           </GoABlock>
         </div>
       </div>
-      <InvoiceModalDialog isAddition='true' visible={parentShowModal} showInvoiceDialog={setParentShowModal} contract={contractID} />
     </>
   );
 };

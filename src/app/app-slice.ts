@@ -4,14 +4,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface IAppSliceState {
   invoiceChanged: boolean;
-  timeReportsToReconcile: number[];
   invoiceData: IInvoiceData;
   contractForReconciliation: IContractSearchResult;
 }
 
 const initialState: IAppSliceState = {
   invoiceChanged: false,
-  timeReportsToReconcile: [],
   invoiceData: null,
   contractForReconciliation: null,
 };
@@ -20,9 +18,6 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setTimeReportsToReconcile: (state, action: PayloadAction<number[]>) => {
-      state.timeReportsToReconcile = action.payload;
-    },
     setInvoiceData: (state, action: PayloadAction<IInvoiceData>) => {
       state.invoiceChanged = false;
       state.invoiceData = action.payload;
@@ -46,8 +41,6 @@ export const appSlice = createSlice({
 });
 
 // exports
-export const timeReportsToReconcile = (state: IAppSliceState) => state.timeReportsToReconcile;
-export const { setTimeReportsToReconcile, setInvoiceData, setContractForReconciliation, setServiceSheetName, setInvoiceId, setInvoiceChanged } =
-  appSlice.actions;
+export const { setInvoiceData, setContractForReconciliation, setServiceSheetName, setInvoiceId, setInvoiceChanged } = appSlice.actions;
 
 export default appSlice.reducer;

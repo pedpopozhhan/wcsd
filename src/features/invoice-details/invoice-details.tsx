@@ -8,12 +8,12 @@ import { useEffect, useState } from 'react';
 import { GoAButton } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getInvoiceDetails, getRateTypes } from './invoice-details-epic';
+import { getRateTypes } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
+import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
-const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+const { container, content, sideBar, main, footer, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -23,26 +23,16 @@ export default function InvoiceDetails() {
 
   const navigate = useNavigate();
 
-  const timeReportsToReconcile = useAppSelector((state) => state.app.timeReportsToReconcile);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [tabIndex, setTabIndex] = useState<number>(1);
 
-  // Modal Dialog configuration
-  const [parentShowModal, setParentShowModal] = useState(false);
-  const editInvoice = () => {
-    setParentShowModal(true);
-  };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
   const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
   useEffect(() => {
-    dispatch(resetInvoiceDetails());
     dispatch(getRateTypes({ token: auth?.user?.access_token }));
-    if (timeReportsToReconcile.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
-    }
-  }, [timeReportsToReconcile, auth]);
+  }, [auth]);
 
   useEffect(() => {
     const total = rowData
@@ -84,11 +74,9 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div className={header}>
-            Invoice{' '}
-            <GoAButton type='tertiary' onClick={editInvoice}>
-              Edit
-            </GoAButton>
+          <div>
+            Invoice
+            <InvoiceModalDialog />
           </div>
           <Totalizer
             invoiceAmount={invoiceData.InvoiceAmount}
@@ -124,7 +112,6 @@ export default function InvoiceDetails() {
           Cancel
         </GoAButton>
       </div>
-      <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} />
     </div>
   );
 }

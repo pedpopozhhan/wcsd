@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import styles from './process-invoice.module.scss';
 import { GoAButton } from '@abgov/react-components';
 import Totalizer from './invoice-amount-totalizer';
@@ -19,13 +19,10 @@ export default function ProcessInvoice() {
   const formChanged = useAppSelector((state) => state.app.invoiceChanged);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
-  const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
-
-  const [tabIndex, setTabIndex] = useState<number>(1);
+  const { container, content, sideBar, main, footer, header, tabGroupContainer, detailsHeader, tabContainer, summaryContainer } = styles;
 
   function navigateToReconcile() {
     dispatch(setInvoiceChanged(false));
-    dispatch(resetState());
     navigate(`/invoice/${invoiceData.InvoiceNumber}`, {
       state: invoiceData.InvoiceNumber,
     });
@@ -51,12 +48,10 @@ export default function ProcessInvoice() {
         </div>
         <div className={main}>
           <div className={tabGroupContainer}>
-            <div className={tabList}>
-              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Details</span>
-              </button>
+            <div className={detailsHeader}>Details</div>
+            <div className={tabContainer}>
+              <DetailsTab />
             </div>
-            <div className={tabContainer}>{tabIndex === 1 && <DetailsTab />}</div>
           </div>
         </div>
       </div>
