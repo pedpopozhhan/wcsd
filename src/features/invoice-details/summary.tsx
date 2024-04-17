@@ -25,6 +25,12 @@ const Summary: React.FC<ISummaryProps> = (props) => {
     setOpenModal(false);
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key === 'Enter' || e.code === 'Space') {
+      setOpenModal(true);
+    }
+  }
+
   return (
     <div className={container}>
       <div>
@@ -70,7 +76,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
             <div>
               Service sheet
               {invoiceData.UniqueServiceSheetName && (
-                <a onClick={serviceSheetClick} tabIndex={0}>
+                <a onClick={serviceSheetClick} tabIndex={0} onKeyDown={handleKeyDown}>
                   <GoAIcon type='pencil' theme='outline'></GoAIcon>
                 </a>
               )}
@@ -78,7 +84,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
             </div>
             <div>
               {!invoiceData.UniqueServiceSheetName && (
-                <a onClick={serviceSheetClick} tabIndex={0}>
+                <a onClick={serviceSheetClick} tabIndex={0} onKeyDown={handleKeyDown}>
                   Enter name
                 </a>
               )}
