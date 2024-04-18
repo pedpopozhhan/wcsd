@@ -81,6 +81,11 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   function getFilter() {
     return props.filter ? props.filter : (x: IDetailsTableRow) => x;
   }
+
+  function getFireNumberRow(x: ITimeReportDetailsTableRowData) {
+    return `${x.fireNumber}-${x.fireYear ? x.fireYear : ''}`;
+  }
+
   return (
     <div className={container}>
       <div className={tableContainer}>
@@ -157,7 +162,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.costCenter}</td>
                   <td>{x.data.fund}</td>
                   <td>{x.data.account}</td>
-                  <td>{x.data.fireNumber}</td>
+                  <td>{getFireNumberRow(x.data)}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>
                       <GoAButton size='compact' type='secondary' disabled={rowData.some((x) => x.isSelected)} onClick={() => addRemoveClicked(x)}>
