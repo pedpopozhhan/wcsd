@@ -2,7 +2,7 @@ import { GoATable, GoATableSortHeader } from '@abgov/react-components';
 import styles from '@/features/process-invoice/tabs/invoice-cost-details-table.module.scss';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
-import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
+import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { useState, useEffect } from 'react';
 
 const { container, tableContainer } = styles;
@@ -88,7 +88,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
                 <td>{x.costCenter}</td>
                 <td>{x.fund}</td>
                 <td>{x.account}</td>
-                <td>{x.fireNumber}</td>
+                <td>{getFireNumberRow(x)}</td>
               </tr>
             ))}
           </tbody>
