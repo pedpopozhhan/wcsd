@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import styles from './process-invoice.module.scss';
-import { GoAButton } from '@abgov/react-components';
+import { GoAButton, GoANotification } from '@abgov/react-components';
 import Totalizer from './invoice-amount-totalizer';
 import { useNavigate } from 'react-router-dom';
 import DetailsTab from './tabs/details-tab';
@@ -19,7 +19,7 @@ export default function ProcessInvoice() {
   const formChanged = useAppSelector((state) => state.app.invoiceChanged);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contractDetails = useAppSelector((state) => state.app.contractForReconciliation);
-  const { container, content, sideBar, main, footer, header, tabGroupContainer, detailsHeader, tabContainer, summaryContainer } = styles;
+  const { container, content, banner, sideBar, main, footer, header, tabGroupContainer, detailsHeader, tabContainer, summaryContainer } = styles;
 
   function navigateToReconcile() {
     dispatch(setInvoiceChanged(false));
@@ -53,6 +53,9 @@ export default function ProcessInvoice() {
               <DetailsTab />
             </div>
           </div>
+        </div>
+        <div className={banner}>
+          <GoANotification type='information'>Confirm invoice submission with service sheet name.</GoANotification>
         </div>
       </div>
       <div className={footer}>
