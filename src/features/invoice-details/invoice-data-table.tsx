@@ -5,7 +5,7 @@ import { convertToCurrency } from '@/common/currency';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
-import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
+import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
@@ -80,10 +80,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 
   function getFilter() {
     return props.filter ? props.filter : (x: IDetailsTableRow) => x;
-  }
-
-  function getFireNumberRow(x: ITimeReportDetailsTableRowData) {
-    return `${x.fireNumber}-${x.fireYear ? x.fireYear : ''}`;
   }
 
   return (
