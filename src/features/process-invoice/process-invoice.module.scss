@@ -51,11 +51,18 @@
   width: 100%;
 }
 .content {
+  position: relative;
   flex-grow: 1;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   gap: $goa-space-xs;
+  .banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
   .sideBar {
     @include thin-scrollbar;
     overflow-y: auto;
