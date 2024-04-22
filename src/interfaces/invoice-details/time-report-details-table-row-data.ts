@@ -16,3 +16,6 @@ export interface ITimeReportDetailsTableRowData {
   internalOrder: string;
   fund: string;
 }
+export function getFireNumberRow(x: ITimeReportDetailsTableRowData) {
+  return `${x.fireNumber}${x.fireYear ? '-' + x.fireYear : ''}`;
+}
