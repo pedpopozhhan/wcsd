@@ -33,7 +33,7 @@ export default function ProcessInvoice() {
     dispatch(setInvoiceChanged(false));
     dispatch(resetState());
     dispatch(setRedirectionFromProcessInvoice(true));
-    navigate(`/VendorTimeReports/${contractDetails.contractNumber}`, {
+    navigate(`/invoice-processing/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
   }

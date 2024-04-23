@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
 import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
 
-const VendorTimeReports = () => {
+const InvoiceProcessing = () => {
   const { contractNumber } = useParams();
   const vendorForReconciliation = useAppSelector((state) => state.app.contractForReconciliation);
 
@@ -72,4 +72,4 @@ const VendorTimeReports = () => {
   );
 };
 
-export default VendorTimeReports;
+export default InvoiceProcessing;

@@ -57,7 +57,7 @@ export default function InvoiceDetails() {
     );
     dispatch(setOtherCostData([]));
     // navigate to time reports page
-    navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
+    navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);

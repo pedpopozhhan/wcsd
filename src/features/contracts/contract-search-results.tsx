@@ -74,7 +74,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   function timeReportsClick(selectedVendor: IContractSearchResult) {
     dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
-      navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {
+      navigate(`/invoice-processing/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,
       });
     }
