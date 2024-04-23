@@ -17,7 +17,7 @@ const InvoiceProcessing = () => {
 
   const navigate = useNavigate();
 
-  const header = vendorForReconciliation.vendorName;
+  const header = 'Invoice Processing';
   const isRedirectedFromProcessInvoice = useAppSelector((state) => state.processInvoice.isRedirectedFromProcessInvoice);
   const [tabIndex, setTabIndex] = useState<number>(isRedirectedFromProcessInvoice ? 3 : 2);
   const { vendorTimeReportRoot, vendorTimeReportMain, main, tabGroupContainer, tabList, tabContainer } = styles;
