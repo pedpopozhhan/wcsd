@@ -54,9 +54,11 @@ export default function ProcessInvoice() {
             </div>
           </div>
         </div>
-        <div className={banner}>
-          <GoANotification type='information'>Confirm invoice submission with service sheet name.</GoANotification>
-        </div>
+        {!invoiceData.UniqueServiceSheetName && (
+          <div className={banner}>
+            <GoANotification type='information'>Confirm invoice submission with service sheet name.</GoANotification>
+          </div>
+        )}
       </div>
       <div className={footer}>
         {invoiceData.InvoiceID == EmptyInvoiceId && (
