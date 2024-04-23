@@ -83,6 +83,13 @@
   flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
+
+  .icon {
+    display: inline-block;
+    transform: rotate(270deg);
+    vertical-align: text-bottom;
+    margin-right: 4px;
+  }
 }
 
 .tableInvoiceHeader {
