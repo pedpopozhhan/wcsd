@@ -178,7 +178,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
           </GoATable>
         </div>
 
-        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'}>
+        {data && data.length > 0 && (
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
@@ -196,7 +196,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
               onChange={changePage}
             />
           </GoABlock>
-        </div>
+        )}
       </div>
     </>
   );

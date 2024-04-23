@@ -234,7 +234,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
           </GoATable>
         </div>
 
-        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'}>
+        {data && data.length > 0 && (
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
               <span style={{ whiteSpace: 'nowrap' }}>
@@ -245,7 +245,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
             <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
-        </div>
+        )}
       </div>
     </>
   );
