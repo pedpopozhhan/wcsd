@@ -90,8 +90,8 @@ export default function InvoiceDetails() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Details</span>
+              <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+                <span>Payables</span>
               </button>
               <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
                 <span>Reconciled</span>
