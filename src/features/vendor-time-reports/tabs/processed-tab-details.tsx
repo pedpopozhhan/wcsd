@@ -227,18 +227,20 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           </GoATable>
         </div>
 
-        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'} style={{ paddingTop: '50px' }}>
-          <GoABlock alignment='center'>
-            <div style={{ display: 'flex', alignSelf: 'center' }}>
-              <span style={{ whiteSpace: 'nowrap' }}>
-                Page {page} of {getTotalPages()}
-              </span>
-            </div>
-            <GoASpacer hSpacing='fill' />
+        {data && data.length > 0 && (
+          <div style={{ paddingTop: '50px' }}>
+            <GoABlock alignment='center'>
+              <div style={{ display: 'flex', alignSelf: 'center' }}>
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  Page {page} of {getTotalPages()}
+                </span>
+              </div>
+              <GoASpacer hSpacing='fill' />
 
-            <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
-          </GoABlock>
-        </div>
+              <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
+            </GoABlock>
+          </div>
+        )}
       </div>
     </>
   );
