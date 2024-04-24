@@ -9,6 +9,7 @@ import { NAVIGATE_EVENT } from '@/common/navigate';
 const { mainContainer, outletContainer } = styles;
 export function App() {
   const headerTitle = 'Wildfire Finance';
+  const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();
   const navigate = useNavigate();
 
@@ -31,6 +32,7 @@ export function App() {
 
   useEffect(() => {
     const isLoggedOutPath = window.location.pathname === 'logged-out';
+
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {
       if (window.location.search) {
         window.location.href = window.location.origin;
@@ -40,12 +42,12 @@ export function App() {
       }
     }
   }, [auth]);
-
+  //auth.user.profile.email
   return (
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-          <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
+          <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
             <Link to='logged-out'>Log out</Link>
           </GoAAppHeader>
 
