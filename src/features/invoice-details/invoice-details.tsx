@@ -5,7 +5,7 @@ import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
-import { GoAButton } from '@abgov/react-components';
+import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getRateTypes } from './invoice-details-epic';
@@ -13,7 +13,7 @@ import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/feat
 import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
-const { container, content, sideBar, main, footer, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -57,7 +57,7 @@ export default function InvoiceDetails() {
     );
     dispatch(setOtherCostData([]));
     // navigate to time reports page
-    navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
+    navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
@@ -90,8 +90,8 @@ export default function InvoiceDetails() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Details</span>
+              <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+                <span>Payables</span>
               </button>
               <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
                 <span>Reconciled</span>
@@ -106,7 +106,10 @@ export default function InvoiceDetails() {
       </div>
       <div className={footer}>
         <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}>
-          Process
+          <div className={icon}>
+            <GoAIcon type='download'></GoAIcon>
+          </div>
+          Next
         </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
           Cancel
