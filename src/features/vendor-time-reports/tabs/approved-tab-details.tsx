@@ -13,6 +13,9 @@ import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
 const { checboxHeader, checboxControl, headerRow } = styles;
 
+interface IRowItem extends IFlightReportDashboard {
+  isChecked: boolean;
+}
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
   searchValue?: string;
@@ -22,10 +25,10 @@ interface IFlightReportAllProps {
 const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
   const auth = useConditionalAuth();
   //Object for the page data
-  const [pageData, setPageData] = useState<IFlightReportDashboard[]>([]);
+  const [pageData, setPageData] = useState<IRowItem[]>([]);
 
   //Data set
-  const [data, setData] = useState<IFlightReportDashboard[]>([]);
+  const [data, setData] = useState<IRowItem[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
@@ -53,9 +56,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        setData(response.rows);
+        const rows = response.rows.map((x) => {
+          return { isChecked: false, ...x };
+        });
+        setData(rows);
         // sort by what default
-        setPageData(response.rows.slice(0, perPage));
+        setPageData(rows.slice(0, perPage));
 
         setIsLoading(false);
       },
@@ -80,6 +86,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     };
   }, [searchValue, contractNumber, retry]);
 
+  useEffect(() => {
+    const offset = (page - 1) * perPage;
+    const _flightReports = data.slice(offset, offset + perPage);
+    setPageData(_flightReports);
+  }, [data]);
+
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
       const varA = a[sortBy as keyof IFlightReportDashboard];
@@ -101,7 +113,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return num;
   }
 
-  //Pagination change page
   function changePage(newPage: number) {
     if (newPage) {
       const offset = (newPage - 1) * perPage;
@@ -112,12 +123,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     }
   }
 
-  //#endregion
-
   const reconcileTimeReports = () => {
-    // TODO: Possible bug here...isChecked is not on the object
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const items = pageData?.filter((fr: any) => fr.isChecked === true);
+    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
     const trItems: number[] = [];
     items?.map((record: IFlightReportDashboard) => {
       trItems.push(record.flightReportId);
@@ -134,15 +141,15 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
-      const allTimeReports = pageData?.map((record: IFlightReportDashboard) => {
+      const allTimeReports = data?.map((record: IRowItem) => {
         return { ...record, isChecked: checked };
       });
-      setPageData(allTimeReports);
+      setData(allTimeReports);
     } else {
-      const selectedTimeReports = pageData?.map((record: IFlightReportDashboard) =>
+      const selectedTimeReports = data?.map((record: IRowItem) =>
         record.flightReportId?.toString() === name ? { ...record, isChecked: checked } : record,
       );
-      setPageData(selectedTimeReports);
+      setData(selectedTimeReports);
     }
   };
 
@@ -165,10 +172,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    // TODO: Possible bug here...isChecked is not on the object
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    checked={pageData.length > 0 && pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
-                    disabled={pageData.length === 0}
+                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
+                    disabled={data.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
@@ -185,9 +190,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
-                // TODO: Possible bug here...isChecked is not on the object
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                pageData.map((record: any) => (
+                pageData.map((record: IRowItem) => (
                   <tr key={record.flightReportId}>
                     <td style={{ padding: '12px 0 12px 32px' }}>
                       <input
