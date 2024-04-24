@@ -113,7 +113,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return num;
   }
 
-  //Pagination change page
   function changePage(newPage: number) {
     if (newPage) {
       const offset = (newPage - 1) * perPage;
@@ -123,8 +122,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       setPageData(_flightReports);
     }
   }
-
-  //#endregion
 
   const reconcileTimeReports = () => {
     const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
@@ -175,8 +172,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    // checked={pageData.length > 0 && pageData?.filter((item: any) => item?.isChecked !== true).length < 1}
-                    // disabled={pageData.length === 0}
                     checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
                     disabled={data.length === 0}
                     onChange={handleCheckBoxChange}
@@ -195,9 +190,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
-                // TODO: Possible bug here...isChecked is not on the object
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                pageData.map((record: any) => (
+                pageData.map((record: IRowItem) => (
                   <tr key={record.flightReportId}>
                     <td style={{ padding: '12px 0 12px 32px' }}>
                       <input
