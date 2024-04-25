@@ -15,3 +15,12 @@ html {
   overflow-y: auto;
   display: flex;
 }
+
+.account {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: $goa-space-xs;
+    margin-right: $goa-space-xs;
+  }
+}
