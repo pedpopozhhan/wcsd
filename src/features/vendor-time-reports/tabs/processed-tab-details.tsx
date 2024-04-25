@@ -15,7 +15,6 @@ import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.mo
 const { checboxHeader, checboxControl, headerRow } = styles;
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 
-
 import {
   setCostDetailsData,
   setOtherCostsData,
