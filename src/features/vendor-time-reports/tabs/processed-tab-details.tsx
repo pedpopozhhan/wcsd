@@ -11,8 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
-const { headerRow } = styles;
+
+const { checboxHeader, checboxControl, headerRow } = styles;
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
+
+
 import {
   setCostDetailsData,
   setOtherCostsData,
@@ -26,13 +29,17 @@ interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
 
+interface IRowItem extends IProcessedInvoiceTableRowData {
+  isChecked: boolean;
+}
+
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
   const auth = useConditionalAuth();
   //Object for the page data
-  const [pageData, setPageData] = useState<IProcessedInvoiceTableRowData[]>([]);
+  const [pageData, setPageData] = useState<IRowItem[]>([]);
 
   //Data set
-  const [data, setData] = useState<IProcessedInvoiceTableRowData[]>([]);
+  const [data, setData] = useState<IRowItem[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
@@ -56,8 +63,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
-        setData(results.invoices);
-        setPageData(results.invoices.slice(0, perPage));
+        const rows = results.invoices.map((x) => {
+          return { isChecked: false, ...x };
+        });
+        setData(rows);
+        setPageData(rows.slice(0, perPage));
         setIsLoading(false);
       },
       error: (error) => {
@@ -79,6 +89,12 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       subscription.unsubscribe();
     };
   }, [contractID, auth, retry]);
+
+  useEffect(() => {
+    const offset = (page - 1) * perPage;
+    const _invoices = data.slice(offset, offset + perPage);
+    setPageData(_invoices);
+  }, [data]);
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IProcessedInvoiceTableRowData, b: IProcessedInvoiceTableRowData) => {
@@ -158,14 +174,41 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     }
   }
 
+  const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    if (name === 'selectAll') {
+      const allInvoices = data?.map((record: IRowItem) => {
+        return { ...record, isChecked: checked };
+      });
+      setData(allInvoices);
+    } else {
+      const selectedInvoices = data?.map((record: IRowItem) =>
+        record.invoiceId?.toString() === name ? { ...record, isChecked: checked } : record,
+      );
+      setData(selectedInvoices);
+    }
+  };
+
   return (
     <>
       <PageLoader visible={loading} />
+
       <div>
+        <GoAButton type='primary' size='compact'>CSV Extract</GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
+                <th className={checboxHeader}>
+                  <input
+                    className={checboxControl}
+                    type='checkbox'
+                    name='selectAll'
+                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
+                    disabled={pageData.length === 0}
+                    onChange={handleCheckBoxChange}
+                  ></input>
+                </th>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='invoiceDate'>Invoice Date</GoATableSortHeader>
                 </th>
@@ -178,7 +221,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 <th className={headerRow} style={{ maxWidth: '25%' }}>
                   Service Sheet No.
                 </th>
-                <th className={headerRow} style={{ maxWidth: '35%' }}>
+                <th className={headerRow} style={{ maxWidth: '18%' }}>
+                  Transfer Date
+                </th>
+                <th className={headerRow} style={{ maxWidth: '17%' }}>
                   Payment
                 </th>
                 <th className={headerRow} style={{ maxWidth: '10%', textAlign: 'right' }}></th>
@@ -187,8 +233,19 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
               {pageData && pageData.length > 0 ? (
-                pageData.map((record: IProcessedInvoiceTableRowData) => (
+                pageData.map((record: IRowItem) => (
                   <tr key={record.invoiceNumber}>
+                    <td style={{ padding: '12px 0 12px 32px' }}>
+                      <input
+                        className={checboxControl}
+                        type='checkbox'
+                        id={record.invoiceId.toString()}
+                        name={record.invoiceId.toString()}
+                        onChange={handleCheckBoxChange}
+                        checked={record?.isChecked || false}
+                      ></input>
+                    </td>
+
                     <td>{yearMonthDay(record.invoiceDate)}</td>
                     <td>
                       <GoAButton
@@ -202,6 +259,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
+                    <td>{'2024-18-20'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
