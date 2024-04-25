@@ -109,7 +109,6 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        {/* <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}> */}
         <GoAButton type='primary' onClick={processInvoice} disabled={!isReconciled()}>
           <div className={icon}>
             <GoAIcon type='download'></GoAIcon>
