@@ -28,8 +28,12 @@ export default function InvoiceDetails() {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
-  const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
+  function isReconciled() {
+    const delta = 0.01;
+    const diff = Math.abs(invoiceData.InvoiceAmount - reconciledAmount);
+    return diff < delta;
+  }
   useEffect(() => {
     dispatch(getRateTypes({ token: auth?.user?.access_token }));
   }, [auth]);
@@ -105,7 +109,8 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}>
+        {/* <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}> */}
+        <GoAButton type='primary' onClick={processInvoice} disabled={!isReconciled()}>
           <div className={icon}>
             <GoAIcon type='download'></GoAIcon>
           </div>
