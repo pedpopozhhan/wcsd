@@ -191,7 +191,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   return (
     <>
       <PageLoader visible={loading} />
-
       <div>
         <GoAButton type='primary' size='compact'>CSV Extract</GoAButton>
         <div className='divTable'>
@@ -242,6 +241,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         name={record.invoiceId.toString()}
                         onChange={handleCheckBoxChange}
                         checked={record?.isChecked || false}
+                        disabled={record?.chargeExtractId?.length > 0 ? true : false}
                       ></input>
                     </td>
 
@@ -258,7 +258,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
-                    <td>{'2024-18-20'}</td>
+                    <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
