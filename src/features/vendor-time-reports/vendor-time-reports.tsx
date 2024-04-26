@@ -11,13 +11,13 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
 import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
 
-const VendorTimeReports = () => {
+const InvoiceProcessing = () => {
   const { contractNumber } = useParams();
   const vendorForReconciliation = useAppSelector((state) => state.app.contractForReconciliation);
 
   const navigate = useNavigate();
 
-  const header = vendorForReconciliation.vendorName;
+  const header = 'Invoice Processing';
   const isRedirectedFromProcessInvoice = useAppSelector((state) => state.processInvoice.isRedirectedFromProcessInvoice);
   const [tabIndex, setTabIndex] = useState<number>(isRedirectedFromProcessInvoice ? 3 : 2);
   const { vendorTimeReportRoot, vendorTimeReportMain, main, tabGroupContainer, tabList, tabContainer } = styles;
@@ -72,4 +72,4 @@ const VendorTimeReports = () => {
   );
 };
 
-export default VendorTimeReports;
+export default InvoiceProcessing;

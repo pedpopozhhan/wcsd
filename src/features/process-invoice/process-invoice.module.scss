@@ -51,11 +51,19 @@
   width: 100%;
 }
 .content {
+  position: relative;
   flex-grow: 1;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   gap: $goa-space-xs;
+
+  .banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
   .sideBar {
     @include thin-scrollbar;
     overflow-y: auto;
@@ -122,9 +130,11 @@
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
 
-  [name='archive-outline'] {
-    vertical-align: top;
-    margin-right: 7px;
+  .icon {
+    display: inline-block;
+    transform: rotate(270deg);
+    vertical-align: text-bottom;
+    margin-right: $goa-space-2xs;
   }
 }
 

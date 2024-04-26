@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from './app/App';
 import InvoiceDetails from './features/invoice-details/invoice-details';
 import Contracts from './features/contracts/contracts';
-import VendorTimeReports from './features/vendor-time-reports/vendor-time-reports';
+import InvoiceProcessing from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
 import { AuthProvider } from 'react-oidc-context';
 import { oidcConfig } from './common/kc-config';
@@ -36,7 +36,7 @@ root.render(
                       <Route key='2' path='contracts' element={<Contracts />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
+                      <Route key='3' path='invoice-processing/:contractNumber' element={<InvoiceProcessing />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
                       <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
@@ -68,7 +68,7 @@ root.render(
                 <Route path='/' element={<App />}>
                   <Route key='1' index element={<Contracts />} />
                   <Route key='2' path='contracts' element={<Contracts />} />
-                  <Route key='3' path='VendorTimeReports/:contractNumber' element={<VendorTimeReports />} />
+                  <Route key='3' path='invoice-processing/:contractNumber' element={<InvoiceProcessing />} />
                   <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
                   <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />

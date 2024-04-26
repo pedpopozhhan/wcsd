@@ -12,6 +12,10 @@ export interface ITimeReportDetailsTableRowData {
   profitCenter: string;
   costCenter: string;
   fireNumber: string;
+  fireYear: string;
   internalOrder: string;
   fund: string;
+}
+export function getFireNumberRow(x: ITimeReportDetailsTableRowData) {
+  return `${x.fireNumber}${x.fireYear ? '-' + x.fireYear : ''}`;
 }
