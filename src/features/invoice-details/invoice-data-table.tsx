@@ -81,7 +81,12 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   function getFilter() {
     return props.filter ? props.filter : (x: IDetailsTableRow) => x;
   }
-
+  function calculatePageSize() {
+    //table.querySelectorAll('tbody tr')[0].offsetHeight
+    //container.offsetHeight
+    //table.offsetheight
+    //pagination.offsetheight
+  }
   return (
     <div className={container}>
       <div className={tableContainer}>
