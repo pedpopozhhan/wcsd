@@ -176,9 +176,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
-      const allInvoices = data?.map((record: IRowItem) => {
-        return { ...record, isChecked: checked };
-      });
+      const allInvoices = data?.map((record: IRowItem) =>
+        record.chargeExtractId === null ? { ...record, isChecked: checked } : record,
+      );
       setData(allInvoices);
     } else {
       const selectedInvoices = data?.map((record: IRowItem) =>
@@ -202,7 +202,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
+                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true && item?.chargeExtractId === null).length < 1}
                     disabled={pageData.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>
