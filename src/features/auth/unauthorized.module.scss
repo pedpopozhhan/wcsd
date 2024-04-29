@@ -1,0 +1,11 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+.container {
+  width: 959px;
+  margin: 100px auto;
+  h1 {
+    font: $goa-typography-heading-xl;
+  }
+  span {
+    font: $goa-typography-body-m;
+  }
+}
