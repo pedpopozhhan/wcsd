@@ -211,11 +211,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       <PageLoader visible={loading} />
       <div>
         <GoAButton
-          type='primary'
+          type='secondary'
           size='compact'
           disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
           onClick={generateExtract}
-        >CSV Extract</GoAButton>
+        >Transfer</GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
