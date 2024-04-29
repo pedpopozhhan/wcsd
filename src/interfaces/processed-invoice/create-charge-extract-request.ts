@@ -1,5 +1,6 @@
 export interface ICreateChargeExtractRequest {
-  vendorId: string,
+  requestedBy: string,
   chargeExtractDateTime: Date,
-  invoices: string[]
+  invoices: string[],
+  contractNumber: string
 }

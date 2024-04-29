@@ -188,11 +188,34 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     }
   };
 
+
+  const generateExtract = () => {
+    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+    const trItems: string[] = [];
+    items?.map((record: IRowItem) => {
+      trItems.push(record.invoiceId);
+    });
+
+    alert('Selected invoices to generate extract are:' + trItems.length);
+
+    // if (trItems.length > 0) {
+    //   dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
+    // }
+    // if (trItems.length == 0) {
+    //   dispatch(resetInvoiceDetails());
+    // }
+  };
+
   return (
     <>
       <PageLoader visible={loading} />
       <div>
-        <GoAButton type='primary' size='compact'>CSV Extract</GoAButton>
+        <GoAButton
+          type='primary'
+          size='compact'
+          disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
+          onClick={generateExtract}
+        >CSV Extract</GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
