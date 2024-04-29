@@ -197,13 +197,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     });
 
     alert('Selected invoices to generate extract are:' + trItems.length);
-
-    // if (trItems.length > 0) {
-    //   dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
-    // }
-    // if (trItems.length == 0) {
-    //   dispatch(resetInvoiceDetails());
-    // }
   };
 
   return (
