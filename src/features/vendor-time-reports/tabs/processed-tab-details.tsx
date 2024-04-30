@@ -2,9 +2,12 @@ import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHe
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
+import ICreateChargeExtractRequest from '@/interfaces/processed-invoice/create-charge-extract-request';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
+import chargeExtractService from '@/services/processed-invoice-charge-extract.service';
+
 
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +27,7 @@ import {
 import { navigateTo } from '@/common/navigate';
 import { setInvoiceData } from '@/app/app-slice';
 
+
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
 }
@@ -39,6 +43,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //Data set
   const [data, setData] = useState<IRowItem[]>([]);
+
+  const [chargeExtractRequestData, setChargeExtractRequestData] = useState<ICreateChargeExtractRequest | undefined>();
+  const [refreshInvoices, setRefreshInvoices] = useState<boolean | undefined>();
 
   //Loader
   const [loading, setIsLoading] = useState(true);
@@ -67,6 +74,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         });
         setData(rows);
         setPageData(rows.slice(0, perPage));
+        setRefreshInvoices(false);
         setIsLoading(false);
       },
       error: (error) => {
@@ -87,7 +95,47 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     return () => {
       subscription.unsubscribe();
     };
-  }, [contractID, auth, retry]);
+  }, [contractID, auth, retry, refreshInvoices]);
+
+  useEffect(() => {
+    if (chargeExtractRequestData === undefined || chargeExtractRequestData?.invoices.length < 1)
+      return;
+
+    const subscription = chargeExtractService.createChargeExtract(auth?.user?.access_token, chargeExtractRequestData).subscribe({
+      next: (results) => {
+        const base64String = JSON.parse(results.chargeExtract.extractFile);
+        const byteArray = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+        const blob = new Blob([byteArray], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', results.chargeExtract.chargeExtractFileName);
+        document.body.appendChild(link);
+        link.click();
+        setChargeExtractRequestData(undefined);
+        setRefreshInvoices(true);
+
+        setIsLoading(false);
+      },
+      error: (error) => {
+        setIsLoading(false);
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('CSV Eport:', error.response.data),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
+      },
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [chargeExtractRequestData]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -196,7 +244,13 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       trItems.push(record.invoiceId);
     });
 
-    alert('Selected invoices to generate extract are:' + trItems.length);
+    const requestForChargeExtract: ICreateChargeExtractRequest = {
+      requestedBy: '',
+      chargeExtractDateTime: new Date(),
+      invoices: trItems,
+      contractNumber: contractID
+    };
+    setChargeExtractRequestData(requestForChargeExtract);
   };
 
   return (
@@ -208,7 +262,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           size='compact'
           disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
           onClick={generateExtract}
-        >Transfer</GoAButton>
+        >Download</GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -235,11 +289,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 <th className={headerRow} style={{ maxWidth: '25%' }}>
                   Service Sheet No.
                 </th>
-                <th className={headerRow} style={{ maxWidth: '18%' }}>
-                  Transfer Date
-                </th>
                 <th className={headerRow} style={{ maxWidth: '17%' }}>
                   Payment
+                </th>
+                <th className={headerRow} style={{ maxWidth: '18%' }}>
+                  Document Date
                 </th>
                 <th className={headerRow} style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
@@ -274,7 +328,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
-                    <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
@@ -284,6 +337,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         <goa-badge type='success' content={record.paymentStatus}></goa-badge>
                       )}
                     </td>
+                    <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
                     </td>
