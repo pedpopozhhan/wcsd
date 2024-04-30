@@ -10,7 +10,7 @@ interface IDetailsTabProps {}
 const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
-  const rateTypes = useAppSelector((state) => state.invoiceDetails.lists.rateTypes);
+  const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
 
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
   const [selectedRateType, setSelectedRateType] = useState<string>('');
