@@ -1,3 +1,3 @@
-export interface IGetChargeExtractRequest {
+export default interface IGetChargeExtractRequest {
   chargeExtractId: string
 }

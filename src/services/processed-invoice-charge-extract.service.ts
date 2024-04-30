@@ -1,9 +1,12 @@
-import { ICreateChargeExtractRequest } from '@/interfaces/processed-invoice/create-charge-extract-request';
-import { IGetChargeExtractRequest } from '@/interfaces/processed-invoice/get-charge-extract-request';
+import IChargeExtractResponse from '@/interfaces/processed-invoice/charge-extract-response-data';
+import ICreateChargeExtractRequest from '@/interfaces/processed-invoice/create-charge-extract-request';
+import IGetChargeExtractRequest from '@/interfaces/processed-invoice/get-charge-extract-request';
+
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import getHeaders from './headers';
+
 class ProcessedInvoiceChargeExtractService {
   private baseUrl: string;
   constructor() {
@@ -11,9 +14,9 @@ class ProcessedInvoiceChargeExtractService {
   }
 
 
-  createChargeExtract(token: string, createChargeExtractRequest: ICreateChargeExtractRequest): Observable<string> {
+  createChargeExtract(token: string, createChargeExtractRequest: ICreateChargeExtractRequest): Observable<IChargeExtractResponse> {
     return axios
-      .request<string>({
+      .request<IChargeExtractResponse>({
         method: 'put',
         url: this.baseUrl + '/CreateChargeExtract',
         headers: getHeaders(token),
@@ -26,9 +29,9 @@ class ProcessedInvoiceChargeExtractService {
       );
   }
 
-  getChargeExtract(token: string, getChargeExtractReq: IGetChargeExtractRequest): Observable<string> {
+  getChargeExtract(token: string, getChargeExtractReq: IGetChargeExtractRequest): Observable<IChargeExtractResponse> {
     return axios
-      .request<string>({
+      .request<IChargeExtractResponse>({
         method: 'post',
         url: this.baseUrl + '/GetChargeExtract',
         headers: getHeaders(token),
