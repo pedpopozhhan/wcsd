@@ -21,5 +21,5 @@ export interface IProcessedInvoiceTableRowData {
   unitOfMeasure: string,
   price: number
   chargeExtractId: string
-  transferDate: Date
+  documentDate: Date
 }
