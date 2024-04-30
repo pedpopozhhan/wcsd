@@ -2,20 +2,17 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-import IOtherCostDropDownLists from '@/interfaces/invoice-details/other-cost-drop-down-lists';
 
 export interface IInvoiceDetailsSliceState {
   rowData: IDetailsTableRow[];
   otherCostData: IOtherCostTableRowData[];
   rateTypes: string[];
-  lists: IOtherCostDropDownLists;
 }
 
 const initialState: IInvoiceDetailsSliceState = {
   rowData: [],
   otherCostData: [],
   rateTypes: [],
-  lists: null,
 };
 
 export const invoiceDetailsSlice = createSlice({
@@ -46,12 +43,9 @@ export const invoiceDetailsSlice = createSlice({
       state.rowData = [];
       state.otherCostData = [];
     },
-    setLists: (state: IInvoiceDetailsSliceState, action: PayloadAction<IOtherCostDropDownLists>) => {
-      state.lists = action.payload;
-    },
   },
 });
 
-export const { setRowData, setOtherCostData, setRateTypes, initializeRowData, resetInvoiceDetails, setLists } = invoiceDetailsSlice.actions;
+export const { setRowData, setOtherCostData, setRateTypes, initializeRowData, resetInvoiceDetails } = invoiceDetailsSlice.actions;
 const invoiceDetailsReducer = invoiceDetailsSlice.reducer;
 export default invoiceDetailsReducer;

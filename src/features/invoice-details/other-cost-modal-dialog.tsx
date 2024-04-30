@@ -13,13 +13,16 @@ import {
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
-import { useAppSelector } from '@/app/hooks';
+import invoiceOtherCostDDLService from '@/services/drop-down-lists.service';
+import { useAppSelector, useConditionalAuth } from '@/app/hooks';
+import { publishToast } from '@/common/toast';
 import FlyOut from '@/common/fly-out';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-response';
 import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
+import { navigateTo } from '@/common/navigate';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -30,6 +33,7 @@ interface IOtherCostModalDialog {
   rowToUpdate: IOtherCostTableRow | undefined;
 }
 const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
+  const auth = useConditionalAuth();
   const [cancelButtonlabel, setCancelButtonLabel] = useState<string>('Cancel');
   const [cancelButtonType, setCancelButtonType] = useState<GoAButtonType>('tertiary');
   const [addButtonlabel, setAddButtonLabel] = useState<string>('Update');
@@ -73,7 +77,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const [remarksError, setRemarksError] = useState<boolean>(true);
   const [invoiceNumber] = useState<string>('');
 
-  const lists = useAppSelector((state) => state.invoiceDetails.lists);
+  const rateTypes = useAppSelector((state) => state.invoiceDetails.rateTypes);
+  const [rateUnits, setRateUnits] = useState<string[]>([]);
+  const [glAccounts, setGLAccounts] = useState<IDropDownListResponse[]>([]);
+  const [costCenters, setCostCenters] = useState<IDropDownListResponse[]>([]);
+  const [internalOrders, setInternalOrders] = useState<IDropDownListResponse[]>([]);
+  const [funds, setFunds] = useState<IDropDownListResponse[]>([]);
+  const [retry, setRetry] = useState<boolean>(true);
   const { tableFormatter } = Styles;
   const [visible, setVisible] = useState<boolean>(false);
   const currentOtherCost = {
@@ -128,6 +138,38 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setRemarks(String(props.rowToUpdate?.data.remarks));
     }
   }, [isOtherCostAddition, props.rowToUpdate?.data, props.visible]);
+
+  useEffect(() => {
+    setRetry(false);
+  });
+  useEffect(() => {
+    const subscription = invoiceOtherCostDDLService.getOtherCostDropDownLists(auth?.user?.access_token).subscribe({
+      next: (results) => {
+        setRateUnits(results.rateUnits);
+        setCostCenters(results.costCenterList);
+        setGLAccounts(results.glAccountList);
+        setInternalOrders(results.internalOrderList);
+        setFunds(results.fundList);
+      },
+      error: (error) => {
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: error.response.data,
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [retry]);
 
   function setControlsForAddition() {
     setDialogTitle('Add other cost');
@@ -224,10 +266,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     if (Number.isNaN(rate) || rate <= 0) {
       setRateError(true);
       setRateErrorLabel(rateErrorLabelText);
-    } else if (rate > maxRateAndNumberOfUnit) {
+    }
+    else if (rate > maxRateAndNumberOfUnit) {
       setRateError(true);
       setRateErrorLabel(maxRateErrorLabelText);
-    } else {
+    }
+    else {
       setRateError(false);
       setRateErrorLabel('');
     }
@@ -235,10 +279,12 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0) {
       setNumberOfUnitsError(true);
       setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
-    } else if (numberOfUnits > maxRateAndNumberOfUnit) {
+    }
+    else if (numberOfUnits > maxRateAndNumberOfUnit) {
       setNumberOfUnitsError(true);
       setNumberOfUnitsErrorLabel(maxNumberOfUnitsLabelText);
-    } else {
+    }
+    else {
       setNumberOfUnitsError(false);
       setNumberOfUnitsErrorLabel('');
     }
@@ -375,7 +421,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td>
                 <GoAFormItem label='Rate type'>
                   <GoADropdown filterable placeholder={placeHolderForDDL} name='rateTypes' value={rateType} onChange={onRateTypeChange} width={lg}>
-                    {lists.rateTypes.map((x, i) => {
+                    {rateTypes.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
                   </GoADropdown>
@@ -385,7 +431,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td colSpan={3}>
                 <GoAFormItem label='Rate unit'>
                   <GoADropdown filterable placeholder={placeHolderForDDL} name='units' value={unit} onChange={onUnitChange} width={lg}>
-                    {lists.rateUnits.map((x, i) => {
+                    {rateUnits.map((x, i) => {
                       return <GoADropdownItem key={i} value={x} label={x} />;
                     })}
                   </GoADropdown>
@@ -411,11 +457,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setRateError(true);
                         setRate(0);
                         setRateErrorLabel(rateErrorLabelText);
-                      } else if (Number(value) > maxRateAndNumberOfUnit) {
+                      }
+                      else if (Number(value) > maxRateAndNumberOfUnit) {
                         setRateError(true);
                         setRate(0);
                         setRateErrorLabel(maxRateErrorLabelText);
-                      } else {
+                      }
+                      else {
                         setRate(Number(value));
                         setCost((rate * numberOfUnits).toFixed(2).toString());
                         setRateError(false);
@@ -441,11 +489,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                         setNumberOfUnitsError(true);
                         setNumberOfUnits(0);
                         setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
-                      } else if (Number(value) > maxRateAndNumberOfUnit) {
+                      }
+                      else if (Number(value) > maxRateAndNumberOfUnit) {
                         setNumberOfUnitsError(true);
                         setNumberOfUnitsErrorLabel(maxNumberOfUnitsLabelText);
                         setNumberOfUnits(0);
-                      } else {
+                      }
+                      else {
                         setNumberOfUnits(Number(value));
                         setCost((rate * numberOfUnits).toFixed(2).toString());
                         setNumberOfUnitsError(false);
@@ -480,9 +530,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td>
                 <GoAFormItem label='Cost center'>
                   <Select
-                    options={lists.costCenterList}
+                    options={costCenters}
                     placeholder={placeHolderForDDL}
-                    value={costCenter === '' ? null : lists.costCenterList?.find((t: IDropDownListResponse) => t.value === costCenter)}
+                    value={costCenter === '' ? null : costCenters?.find((t: IDropDownListResponse) => t.value === costCenter)}
                     menuPosition='fixed'
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
@@ -498,9 +548,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td>
                 <GoAFormItem label='G/L acct'>
                   <Select
-                    options={lists.glAccountList}
+                    options={glAccounts}
                     placeholder={placeHolderForDDL}
-                    value={glAccount === '' ? null : lists.glAccountList?.find((t: IDropDownListResponse) => t.value === glAccount)}
+                    value={glAccount === '' ? null : glAccounts?.find((t: IDropDownListResponse) => t.value === glAccount)}
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
                         setGlAccount(value.value);
@@ -519,9 +569,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td>
                 <GoAFormItem label='Internal order'>
                   <Select
-                    options={lists.internalOrderList}
+                    options={internalOrders}
                     placeholder={placeHolderForDDL}
-                    value={internalOrder === '' ? null : lists.internalOrderList?.find((t: IDropDownListResponse) => t.value === internalOrder)}
+                    value={internalOrder === '' ? null : internalOrders?.find((t: IDropDownListResponse) => t.value === internalOrder)}
                     onChange={async (value: IDropDownListResponse | null) => {
                       if (value.value) {
                         setInternalOrder(value.value);
@@ -537,9 +587,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
               <td>
                 <GoAFormItem label='Fund'>
                   <Select
-                    options={lists.fundList}
+                    options={funds}
                     placeholder={placeHolderForDDL}
-                    value={fund === '' ? null : lists.fundList?.find((t: IDropDownListResponse) => t.value === fund)}
+                    value={fund === '' ? null : funds?.find((t: IDropDownListResponse) => t.value === fund)}
                     onChange={async (value: IDropDownListResponse) => {
                       if (value.value) {
                         setFund(value.value);
