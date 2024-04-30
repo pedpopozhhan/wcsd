@@ -262,7 +262,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           size='compact'
           disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
           onClick={generateExtract}
-        >Transfer</GoAButton>
+        >Download</GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -289,11 +289,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 <th className={headerRow} style={{ maxWidth: '25%' }}>
                   Service Sheet No.
                 </th>
-                <th className={headerRow} style={{ maxWidth: '18%' }}>
-                  Transfer Date
-                </th>
                 <th className={headerRow} style={{ maxWidth: '17%' }}>
                   Payment
+                </th>
+                <th className={headerRow} style={{ maxWidth: '18%' }}>
+                  Document Date
                 </th>
                 <th className={headerRow} style={{ maxWidth: '10%', textAlign: 'right' }}></th>
               </tr>
@@ -328,7 +328,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     </td>
                     <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
                     <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
-                    <td>{record?.transferDate ? yearMonthDay(record.transferDate) : '--'}</td>
                     <td>
                       {!record?.paymentStatus && <label>--</label>}
                       {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
@@ -338,6 +337,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                         <goa-badge type='success' content={record.paymentStatus}></goa-badge>
                       )}
                     </td>
+                    <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
                     <td>
                       <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
                     </td>

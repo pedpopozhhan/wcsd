@@ -17,7 +17,7 @@ class ProcessedInvoiceChargeExtractService {
   createChargeExtract(token: string, createChargeExtractRequest: ICreateChargeExtractRequest): Observable<IChargeExtractResponse> {
     return axios
       .request<IChargeExtractResponse>({
-        method: 'put',
+        method: 'post',
         url: this.baseUrl + '/CreateChargeExtract',
         headers: getHeaders(token),
         data: createChargeExtractRequest,
