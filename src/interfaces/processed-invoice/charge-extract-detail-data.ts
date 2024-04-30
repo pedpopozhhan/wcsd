@@ -1,3 +1,5 @@
 export interface IChargeExtractDetail {
-  chargeExtractDetailId: string
+  chargeExtractDetailId: string,
+  chargeExtractId: string,
+  invoiceId: string
 }

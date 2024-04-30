@@ -1,4 +1,4 @@
-export interface ICreateChargeExtractRequest {
+export default interface ICreateChargeExtractRequest {
   requestedBy: string,
   chargeExtractDateTime: Date,
   invoices: string[],
