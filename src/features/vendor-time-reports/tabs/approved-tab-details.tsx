@@ -1,4 +1,4 @@
-import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -184,7 +184,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                 <th className={headerRow}>AO-02 No.</th>
                 <th className={headerRow}>Registration No.</th>
                 <th className={headerRow}>Total Cost</th>
-                <th className={headerRow}></th>
               </tr>
             </thead>
 
@@ -215,15 +214,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
                     <td>{formatter.format(record?.totalCost)}</td>
-                    <td>
-                      <a
-                        href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
-                        target='_blank'
-                        rel='noreferrer'
-                      >
-                        <GoAIcon type='chevron-forward' />
-                      </a>
-                    </td>
                   </tr>
                 ))
               ) : (

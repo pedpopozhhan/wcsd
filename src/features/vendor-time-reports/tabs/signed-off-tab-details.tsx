@@ -101,6 +101,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       setPerPage(perPage);
       setPage(newPage);
       setPageData(_flightReports);
+      setIsLoading(false);
     }
   }
 
