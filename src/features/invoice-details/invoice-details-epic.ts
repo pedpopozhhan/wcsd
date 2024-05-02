@@ -25,9 +25,8 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
               navigateTo('unauthorized');
             }
             publishToast({
-              type: 'error',
-              message: failedToPerform('get invoice details', 'Connection Error'),
-              action: action,
+              type: 'info',
+              message: error.response.data,
             });
             return EMPTY;
           }),
