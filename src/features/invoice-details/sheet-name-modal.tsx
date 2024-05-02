@@ -1,5 +1,3 @@
-// import styles from './sheet-name-modal.module.scss';
-
 import { GoAButton, GoAButtonGroup, GoAFormItem, GoAInput, GoAModal } from '@abgov/react-components';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useEffect, useState } from 'react';
@@ -7,6 +5,7 @@ import { setServiceSheetName } from '@/app/app-slice';
 interface ISheetNameModalProps {
   open: boolean;
   onClose: () => void;
+  onUpdate: () => void;
 }
 const Summary: React.FC<ISheetNameModalProps> = (props) => {
   const dispatch = useAppDispatch();
@@ -24,7 +23,7 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   }
   function onUpdate() {
     dispatch(setServiceSheetName(name));
-    props.onClose();
+    props.onUpdate();
   }
 
   function getHeading() {
@@ -33,7 +32,6 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   function onChange(name: string, value: string) {
     setName(value);
   }
-
   return (
     <GoAModal open={openModal} heading={getHeading()}>
       <GoAFormItem label='Service sheet' helpText='Refer to Ariba for service sheet name'>
