@@ -1,7 +1,6 @@
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import IFlightReportDashboardResponse from '@/interfaces/flight-report-dashboard/flight-report-dashboard-response.interface';
-import { ISearch } from '@/interfaces/flight-report-dashboard/search.interface';
 import getHeaders from './headers';
 
 class FlightReportDashboardService {
@@ -10,12 +9,8 @@ class FlightReportDashboardService {
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
-  getSearch(token: string, objISearch: ISearch): Observable<IFlightReportDashboardResponse> {
-    const body = {
-      contractNumber: objISearch.filterBy?.contractNumber,
-      status: objISearch.filterBy?.status,
-    };
 
+  getSearch(token: string, body: { contractNumber: string; status: string }): Observable<IFlightReportDashboardResponse> {
     return axios
       .request<IFlightReportDashboardResponse>({
         method: 'post',

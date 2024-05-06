@@ -23,12 +23,6 @@
     width: 394px; // from figma
     padding: $goa-space-xl $goa-space-l;
 
-    .header {
-      font: $goa-typography-heading-l;
-      line-height: $goa-line-height-6;
-      margin-bottom: $goa-space-l;
-    }
-
     .summaryContainer {
       margin-top: $goa-space-l;
     }
@@ -89,6 +83,13 @@
   flex-direction: row-reverse;
   align-items: flex-end;
   gap: calc($goa-space-xs + $goa-space-3xs);
+
+  .icon {
+    display: inline-block;
+    transform: rotate(270deg);
+    vertical-align: text-bottom;
+    margin-right: $goa-space-2xs;
+  }
 }
 
 .tableInvoiceHeader {

@@ -43,12 +43,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   // page number
   const [page, setPage] = useState(1);
   //count per page
-  const [perPage, setPerPage] = useState(5);
-  const [, setPreviousSelectedPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(10);
+  const [, setPreviousSelectedPerPage] = useState(10);
 
   //Sorting
-  const [, setSortCol] = useState('invoiceDate');
-  const [, setSortDir] = useState(-1);
   const [contractID] = useState<string | undefined>(contractNumber);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -81,7 +79,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       subscription.unsubscribe();
     };
   }, [contractID, auth, retry]);
-  // page, perPage, searchValue, sortCol, sortDir,
 
   function sortData(sortBy: string, sortDir: number) {
     data.sort((a: IProcessedInvoiceTableRowData, b: IProcessedInvoiceTableRowData) => {
@@ -96,8 +93,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setData(data.slice());
     setPageData(data.slice(0, perPage));
     setPage(1);
-    setSortCol(sortBy);
-    setSortDir(sortDir);
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
@@ -172,7 +167,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
             <thead>
               <tr>
                 <th style={{ maxWidth: '15%' }}>
-                  <GoATableSortHeader name='flightReportDate'>Invoice Date</GoATableSortHeader>
+                  <GoATableSortHeader name='invoiceDate'>Invoice Date</GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
                   Invoice No.
@@ -232,18 +227,20 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           </GoATable>
         </div>
 
-        <div className={data && data.length > 0 ? 'visible pagination' : 'not-visible pagination'} style={{ paddingTop: '50px' }}>
-          <GoABlock alignment='center'>
-            <div style={{ display: 'flex', alignSelf: 'center' }}>
-              <span style={{ whiteSpace: 'nowrap' }}>
-                Page {page} of {getTotalPages()}
-              </span>
-            </div>
-            <GoASpacer hSpacing='fill' />
+        {data && data.length > 0 && (
+          <div style={{ paddingTop: '50px' }}>
+            <GoABlock alignment='center'>
+              <div style={{ display: 'flex', alignSelf: 'center' }}>
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  Page {page} of {getTotalPages()}
+                </span>
+              </div>
+              <GoASpacer hSpacing='fill' />
 
-            <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
-          </GoABlock>
-        </div>
+              <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
+            </GoABlock>
+          </div>
+        )}
       </div>
     </>
   );

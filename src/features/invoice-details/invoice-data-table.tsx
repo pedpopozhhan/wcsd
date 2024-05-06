@@ -5,7 +5,7 @@ import { convertToCurrency } from '@/common/currency';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
-import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
+import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
@@ -81,6 +81,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   function getFilter() {
     return props.filter ? props.filter : (x: IDetailsTableRow) => x;
   }
+
   return (
     <div className={container}>
       <div className={tableContainer}>
@@ -157,7 +158,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.costCenter}</td>
                   <td>{x.data.fund}</td>
                   <td>{x.data.account}</td>
-                  <td>{x.data.fireNumber}</td>
+                  <td>{getFireNumberRow(x.data)}</td>
                   <td className={`${stickyColumn} ${end}`}>
                     <div className={buttonWrapper}>
                       <GoAButton size='compact' type='secondary' disabled={rowData.some((x) => x.isSelected)} onClick={() => addRemoveClicked(x)}>

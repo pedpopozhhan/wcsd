@@ -1,7 +1,7 @@
 export const Home = () => {
   return (
     <main>
-      <h1>Wildfire Support</h1>
+      <h1>Wildfire Finance</h1>
     </main>
   );
 };

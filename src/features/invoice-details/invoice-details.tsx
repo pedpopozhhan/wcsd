@@ -5,15 +5,15 @@ import Totalizer from './totalizer';
 import DetailsTab from './details-tab';
 import ReconciledTab from './reconciled-tab';
 import { useEffect, useState } from 'react';
-import { GoAButton } from '@abgov/react-components';
+import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getInvoiceDetails, getRateTypes } from './invoice-details-epic';
+import { getRateTypes } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { resetInvoiceDetails, setOtherCostData } from './invoice-details-slice';
+import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
-const { container, content, sideBar, main, footer, header, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
+const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -23,26 +23,20 @@ export default function InvoiceDetails() {
 
   const navigate = useNavigate();
 
-  const timeReportsToReconcile = useAppSelector((state) => state.app.timeReportsToReconcile);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [tabIndex, setTabIndex] = useState<number>(1);
 
-  // Modal Dialog configuration
-  const [parentShowModal, setParentShowModal] = useState(false);
-  const editInvoice = () => {
-    setParentShowModal(true);
-  };
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
-  const enableProcess = invoiceData.InvoiceAmount - reconciledAmount == 0 ? true : false;
 
+  function isReconciled() {
+    const delta = 0.01;
+    const diff = Math.abs(invoiceData.InvoiceAmount - reconciledAmount);
+    return diff < delta;
+  }
   useEffect(() => {
-    dispatch(resetInvoiceDetails());
     dispatch(getRateTypes({ token: auth?.user?.access_token }));
-    if (timeReportsToReconcile.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: timeReportsToReconcile }));
-    }
-  }, [timeReportsToReconcile, auth]);
+  }, [auth]);
 
   useEffect(() => {
     const total = rowData
@@ -67,7 +61,7 @@ export default function InvoiceDetails() {
     );
     dispatch(setOtherCostData([]));
     // navigate to time reports page
-    navigate(`/VendorTimeReports/${invoiceData.ContractNumber}`);
+    navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
@@ -84,11 +78,9 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div className={header}>
-            Invoice{' '}
-            <GoAButton type='tertiary' onClick={editInvoice}>
-              Edit
-            </GoAButton>
+          <div>
+            Invoice
+            <InvoiceModalDialog />
           </div>
           <Totalizer
             invoiceAmount={invoiceData.InvoiceAmount}
@@ -102,8 +94,8 @@ export default function InvoiceDetails() {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Details' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Details</span>
+              <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+                <span>Payables</span>
               </button>
               <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
                 <span>Reconciled</span>
@@ -117,14 +109,16 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={processInvoice} {...(enableProcess ? { disabled: false } : { disabled: true })}>
-          Process
+        <GoAButton type='primary' onClick={processInvoice} disabled={!isReconciled()}>
+          <div className={icon}>
+            <GoAIcon type='download'></GoAIcon>
+          </div>
+          Next
         </GoAButton>
         <GoAButton type='secondary' onClick={cancel}>
           Cancel
         </GoAButton>
       </div>
-      <InvoiceModalDialog isAddition='false' visible={parentShowModal} showInvoiceDialog={setParentShowModal} />
     </div>
   );
 }

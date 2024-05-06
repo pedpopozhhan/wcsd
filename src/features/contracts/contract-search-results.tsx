@@ -74,7 +74,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   function timeReportsClick(selectedVendor: IContractSearchResult) {
     dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
-      navigate(`/VendorTimeReports/${selectedVendor.contractNumber}`, {
+      navigate(`/invoice-processing/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,
       });
     }
@@ -89,41 +89,15 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     changePage(newPage);
   }
 
-  //   function convertContractType(type: string) {
-  //     return typeItems.find((x) => x.value === type)?.label;
-  //   }
-
   return (
     <div className={tableContainer}>
       <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
-            <th style={{ verticalAlign: 'middle' }}>
-              {/* <GoATableSortHeader name={searchResultColumns[0].value}> */}
-              {contractSearchResultColumns[0].label}
-              {/* </GoATableSortHeader> */}
-            </th>
-            <th style={{ verticalAlign: 'middle' }}>
-              {/* <GoATableSortHeader name={searchResultColumns[1].value}> */}
-              {contractSearchResultColumns[1].label}
-              {/* </GoATableSortHeader> */}
-            </th>
-            <th style={{ verticalAlign: 'middle' }}>
-              {/* <GoATableSortHeader name={searchResultColumns[2].value}> */}
-              {contractSearchResultColumns[2].label}
-              {/* </GoATableSortHeader> */}
-            </th>
-            <th style={{ verticalAlign: 'middle' }}>
-              {/* <GoATableSortHeader name={searchResultColumns[3].value}> */}
-              {contractSearchResultColumns[3].label}
-              {/* </GoATableSortHeader> */}
-            </th>
-            {/* Hide this for now
-             <th className={link}>
-              <GoATableSortHeader name={searchResultColumns[4].value}>
-                {searchResultColumns[4].label}
-              </GoATableSortHeader>
-            </th> */}
+            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[0].label}</th>
+            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
+            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
+            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[3].label}</th>
 
             <th></th>
           </tr>
@@ -137,10 +111,6 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
                 <a onClick={() => timeReportsClick(result)}>{result.contractNumber}</a>
               </td>
               <td>{convertContractType(result.contractType as ContractType)}</td>
-              {/* Hide this for now
-              <td className={link}>
-                <a>{result.numTimeReports}</a>
-              </td> */}
               <td>
                 <div className={chevron}>
                   <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result)} />
@@ -150,25 +120,27 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
           ))}
         </tbody>
       </GoATable>
-      {/* </div> */}
-      <GoABlock alignment='center'>
-        <div style={{ display: 'flex', alignSelf: 'center' }}>
-          <span style={{ whiteSpace: 'nowrap' }}>
-            Page {page} of {getTotalPages()}
-          </span>
-        </div>
-        <GoASpacer hSpacing='fill' />
-        <GoABlock mb='m' alignment='center' gap='m'>
-          <GoABlock>
-            <GoAButton type='tertiary' leadingIcon='arrow-back' onClick={previous} disabled={page === 1}>
-              Previous
-            </GoAButton>
-            <GoAButton type='tertiary' trailingIcon='arrow-forward' onClick={next} disabled={isNextDisabled()}>
-              Next
-            </GoAButton>
+
+      {pageResults && pageResults.length > 0 && (
+        <GoABlock alignment='center'>
+          <div style={{ display: 'flex', alignSelf: 'center' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>
+              Page {page} of {getTotalPages()}
+            </span>
+          </div>
+          <GoASpacer hSpacing='fill' />
+          <GoABlock mb='m' alignment='center' gap='m'>
+            <GoABlock>
+              <GoAButton type='tertiary' leadingIcon='arrow-back' onClick={previous} disabled={page === 1}>
+                Previous
+              </GoAButton>
+              <GoAButton type='tertiary' trailingIcon='arrow-forward' onClick={next} disabled={isNextDisabled()}>
+                Next
+              </GoAButton>
+            </GoABlock>
           </GoABlock>
         </GoABlock>
-      </GoABlock>
+      )}
     </div>
   );
 };

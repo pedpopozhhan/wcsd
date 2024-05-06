@@ -1,17 +1,18 @@
-import { GoAAppHeader, GoACircularProgress } from '@abgov/react-components';
+import { GoAAppHeader, GoACircularProgress, GoAIcon, GoAPopover } from '@abgov/react-components';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import styles from './App.module.scss';
 import Toast from '@/common/toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useConditionalAuth } from './hooks';
 import { NAVIGATE_EVENT } from '@/common/navigate';
 
-const { mainContainer, outletContainer } = styles;
+const { mainContainer, outletContainer, account } = styles;
 export function App() {
-  const headerTitle = 'Wildfire Support';
+  const headerTitle = 'Wildfire Finance';
+  const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();
   const navigate = useNavigate();
-
+  const [email, setEmail] = useState<string>('');
   const processNavigateToEvent: EventListener = (event: Event) => {
     const customEvent = event as CustomEvent;
     if (customEvent) {
@@ -31,6 +32,7 @@ export function App() {
 
   useEffect(() => {
     const isLoggedOutPath = window.location.pathname === 'logged-out';
+
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {
       if (window.location.search) {
         window.location.href = window.location.origin;
@@ -39,14 +41,28 @@ export function App() {
         auth.signinRedirect();
       }
     }
+    if (auth.isAuthenticated && auth.user) {
+      setEmail(auth.user.profile.email);
+    }
   }, [auth]);
 
+  const target = (
+    <div className={account}>
+      <GoAIcon type='person-circle'></GoAIcon>
+      <span>{email}</span>
+      <GoAIcon type='chevron-down'></GoAIcon>
+    </div>
+  );
   return (
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-          <GoAAppHeader url='/' heading={headerTitle} maxContentWidth='100%'>
-            <Link to='logged-out'>Log out</Link>
+          <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
+            {email && (
+              <GoAPopover target={target}>
+                <Link to='logged-out'>Sign out</Link>
+              </GoAPopover>
+            )}
           </GoAAppHeader>
 
           <div className={outletContainer}>
