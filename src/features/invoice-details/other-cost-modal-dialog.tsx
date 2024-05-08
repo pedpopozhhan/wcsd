@@ -141,12 +141,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
 
   function setControlsForUpdate() {
     setDialogTitle('Update other cost');
-    setCancelButtonLabel('Cancel');
-    setCancelButtonType('secondary');
+    setCancelButtonLabel('');
+    setCancelButtonType('tertiary');
     setAddButtonLabel('Update');
     setAddButtonType('primary');
-    setAddAnotherButtonLabel('');
-    setAddAnotherButtonType('tertiary');
+    setAddAnotherButtonLabel('Cancel');
+    setAddAnotherButtonType('secondary');
+
     setRateError(false);
     setNumberOfUnitsError(false);
     setRemarksError(false);
@@ -283,10 +284,16 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   };
 
   const addAnotherOtherCost = () => {
-    setSaveData(true);
-    setAddAnother(true);
-    validateOtherCost();
+    if (props.isAddition) {
+      setSaveData(true);
+      setAddAnother(true);
+      validateOtherCost();
+    }
+    else {
+      hideModalDialog();
+    }
   };
+
 
   return (
     <>
@@ -297,13 +304,13 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
-            <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
+            <GoAButton type={cancelButtonType} onClick={hideModalDialog} disabled={!props.isAddition}>
               {cancelButtonlabel}
             </GoAButton>
             <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
             </GoAButton>
-            <GoAButton type={addButtonType} onClick={addOtherCost}>
+            <GoAButton type={addButtonType} onClick={addOtherCost} >
               {addButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
