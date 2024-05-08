@@ -141,8 +141,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
+      //get all the visible items
       const allTimeReports = data?.map((record: IRowItem) => {
-        return { ...record, isChecked: checked };
+        if (pageData.find((x) => x.flightReportId && x.flightReportId === record.flightReportId)) {
+          return { ...record, isChecked: checked };
+        }
+        return record;
       });
       setData(allTimeReports);
     } else {
@@ -172,7 +176,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
+                    checked={pageData.length > 0 && pageData?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
                     disabled={data.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>
