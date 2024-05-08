@@ -14,6 +14,13 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
+    const re = /^[a-zA-Z0-9\b]+$/;
+    if (!re.test(name)) {
+      setName(name.replace(/[^a-zA-Z0-9]/gi, ''));
+    }
+  });
+
+  useEffect(() => {
     setOpenModal(props.open);
     setName(invoiceData.UniqueServiceSheetName);
   }, [props]);
@@ -35,7 +42,7 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   return (
     <GoAModal open={openModal} heading={getHeading()}>
       <GoAFormItem label='Service sheet' helpText='Refer to Ariba for service sheet name'>
-        <GoAInput name='sheetName' value={name} onChange={onChange}></GoAInput>
+        <GoAInput name='sheetName' value={name} onChange={onChange} maxLength={10} ></GoAInput>
       </GoAFormItem>
       <GoAButtonGroup alignment='end' mt='l'>
         <GoAButton type='secondary' onClick={onCancel}>
