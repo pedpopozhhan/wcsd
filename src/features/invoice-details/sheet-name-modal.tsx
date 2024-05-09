@@ -7,7 +7,7 @@ interface ISheetNameModalProps {
   onClose: () => void;
   onUpdate: () => void;
 }
-const Summary: React.FC<ISheetNameModalProps> = (props) => {
+const SheetNameModal: React.FC<ISheetNameModalProps> = (props) => {
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const [name, setName] = useState<string>(invoiceData.UniqueServiceSheetName);
@@ -42,7 +42,7 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   return (
     <GoAModal open={openModal} heading={getHeading()}>
       <GoAFormItem label='Service sheet' helpText='Refer to Ariba for service sheet name'>
-        <GoAInput name='sheetName' value={name} onChange={onChange} maxLength={10} ></GoAInput>
+        <GoAInput name='sheetName' value={name} onChange={onChange} maxLength={10}></GoAInput>
       </GoAFormItem>
       <GoAButtonGroup alignment='end' mt='l'>
         <GoAButton type='secondary' onClick={onCancel}>
@@ -56,4 +56,4 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   );
 };
 
-export default Summary;
+export default SheetNameModal;
