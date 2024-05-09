@@ -37,15 +37,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
         <div>Vendor</div>
         <div>{contract.vendorName}</div>
       </div>
-      <div>
-        <div className={assignedToHeader}>
-          <label>Assigned to</label>
-          <div className={assignedToIcon}>
-            <GoAIconButton icon='information-circle' />
-          </div>
-        </div>
-        <div className={assignedToLabel}>Sarah Tale</div>
-      </div>
+      <div></div>
       <div>
         <div>Contract no.</div>
         <div>{invoiceData.ContractNumber}</div>
