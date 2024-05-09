@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks'
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
 import { EmptyInvoiceId } from '@/common/types/invoice';
-import { createInvoice, updateInvoice } from '../process-invoice/process-invoice-epic';
+import { updateInvoice } from '../process-invoice/process-invoice-epic';
 const { container } = styles;
 interface ISummaryProps {
   showSheet?: boolean;
@@ -31,9 +31,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
 
   function onSheetNameUpdated() {
     setOpenModal(false);
-    if (invoiceData.InvoiceID == EmptyInvoiceId) {
-      dispatch(createInvoice({ token: auth?.user?.access_token }));
-    } else {
+    if (invoiceData.InvoiceID !== EmptyInvoiceId) {
       dispatch(updateInvoice({ token: auth?.user?.access_token }));
     }
   }
