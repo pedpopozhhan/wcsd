@@ -22,7 +22,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     { value: 'businessId', label: 'Business No.' },
     { value: 'contractNumber', label: 'Contract No.' },
     { value: 'contractType', label: 'Type' },
-    { value: 'numTimeReports', label: 'Time Reports' },
+    { value: 'downloadsAvail', label: 'Downloads available' },
   ];
 
   useEffect(() => {
@@ -98,6 +98,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[3].label}</th>
+            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[4].label}</th>
 
             <th></th>
           </tr>
@@ -111,6 +112,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
                 <a onClick={() => timeReportsClick(result)}>{result.contractNumber}</a>
               </td>
               <td>{convertContractType(result.contractType as ContractType)}</td>
+              <td>{result.downloadsAvailable}</td>
               <td>
                 <div className={chevron}>
                   <GoAIconButton icon='chevron-forward' onClick={() => timeReportsClick(result)} />
