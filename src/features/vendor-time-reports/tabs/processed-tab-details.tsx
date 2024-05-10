@@ -8,7 +8,6 @@ import { convertToCurrency } from '@/common/currency';
 import processedInvoicesService from '@/services/processed-invoices.service';
 import chargeExtractService from '@/services/processed-invoice-charge-extract.service';
 
-
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
@@ -26,7 +25,6 @@ import {
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
 import { setInvoiceData } from '@/app/app-slice';
-
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -98,13 +96,12 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   }, [contractID, auth, retry, refreshInvoices]);
 
   useEffect(() => {
-    if (chargeExtractRequestData === undefined || chargeExtractRequestData?.invoices.length < 1)
-      return;
+    if (chargeExtractRequestData === undefined || chargeExtractRequestData?.invoices.length < 1) return;
 
     const subscription = chargeExtractService.createChargeExtract(auth?.user?.access_token, chargeExtractRequestData).subscribe({
       next: (results) => {
         const base64String = JSON.parse(results.chargeExtract.extractFile);
-        const byteArray = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+        const byteArray = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
         const blob = new Blob([byteArray], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -191,6 +188,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           ContractNumber: contractNumber,
           UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
           ServiceDescription: results.invoice.serviceDescription,
+          CreatedBy: results.invoice.createdBy,
         };
 
         dispatch(setInvoiceData(invoiceForContext));
@@ -224,18 +222,13 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
-      const allInvoices = data?.map((record: IRowItem) =>
-        record.chargeExtractId === null ? { ...record, isChecked: checked } : record,
-      );
+      const allInvoices = data?.map((record: IRowItem) => (record.chargeExtractId === null ? { ...record, isChecked: checked } : record));
       setData(allInvoices);
     } else {
-      const selectedInvoices = data?.map((record: IRowItem) =>
-        record.invoiceId?.toString() === name ? { ...record, isChecked: checked } : record,
-      );
+      const selectedInvoices = data?.map((record: IRowItem) => (record.invoiceId?.toString() === name ? { ...record, isChecked: checked } : record));
       setData(selectedInvoices);
     }
   };
-
 
   const generateExtract = () => {
     const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
@@ -248,7 +241,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       requestedBy: '',
       chargeExtractDateTime: new Date(),
       invoices: trItems,
-      contractNumber: contractID
+      contractNumber: contractID,
     };
     setChargeExtractRequestData(requestForChargeExtract);
   };
@@ -262,7 +255,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           size='compact'
           disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
           onClick={generateExtract}
-        >Download</GoAButton>
+        >
+          Download
+        </GoAButton>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -272,7 +267,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true && item?.chargeExtractId === null).length < 1}
+                    checked={
+                      data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true && item?.chargeExtractId === null).length < 1
+                    }
                     disabled={pageData.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>

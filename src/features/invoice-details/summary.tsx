@@ -48,7 +48,12 @@ const Summary: React.FC<ISummaryProps> = (props) => {
         <div>Vendor</div>
         <div>{contract.vendorName}</div>
       </div>
-      <div></div>
+      <div>
+        <div>
+          <label>Created by</label>
+        </div>
+        <div>{invoiceData.CreatedBy}</div>
+      </div>
       <div>
         <div>Contract no.</div>
         <div>{invoiceData.ContractNumber}</div>
