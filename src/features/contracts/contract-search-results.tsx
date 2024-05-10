@@ -1,5 +1,5 @@
 import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
-import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
+import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable, GoATableSortHeader } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from './contract-search-results.module.scss';
 import { ContractType, convertContractType } from '@/common/types/contract-type';
@@ -22,7 +22,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     { value: 'businessId', label: 'Business No.' },
     { value: 'contractNumber', label: 'Contract No.' },
     { value: 'contractType', label: 'Type' },
-    { value: 'downloadsAvail', label: 'Downloads available' },
+    { value: 'downloadsAvailable', label: 'Downloads available' },
   ];
 
   useEffect(() => {
@@ -98,8 +98,9 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[3].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[4].label}</th>
-
+            <th>
+              <GoATableSortHeader name={'downloadsAvailable'}>{contractSearchResultColumns[4].label}</GoATableSortHeader>
+            </th>
             <th></th>
           </tr>
         </thead>
