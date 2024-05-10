@@ -25,6 +25,7 @@ import {
 } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
 import { setInvoiceData } from '@/app/app-slice';
+import { Subscription } from 'rxjs';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -41,8 +42,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   //Data set
   const [data, setData] = useState<IRowItem[]>([]);
-
-  const [chargeExtractRequestData, setChargeExtractRequestData] = useState<ICreateChargeExtractRequest | undefined>();
   const [refreshInvoices, setRefreshInvoices] = useState<boolean | undefined>();
 
   //Loader
@@ -63,7 +62,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const dispatch = useAppDispatch();
 
   const { invoiceAmountLabel } = styles;
-
+  let chargeExtractSubscription: Subscription;
   useEffect(() => {
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
@@ -96,43 +95,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   }, [contractID, auth, retry, refreshInvoices]);
 
   useEffect(() => {
-    if (chargeExtractRequestData === undefined || chargeExtractRequestData?.invoices.length < 1) return;
-
-    const subscription = chargeExtractService.createChargeExtract(auth?.user?.access_token, chargeExtractRequestData).subscribe({
-      next: (results) => {
-        const base64String = JSON.parse(results.chargeExtract.extractFile);
-        const byteArray = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
-        const blob = new Blob([byteArray], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', results.chargeExtract.chargeExtractFileName);
-        document.body.appendChild(link);
-        link.click();
-        setChargeExtractRequestData(undefined);
-        setRefreshInvoices(true);
-
-        setIsLoading(false);
-      },
-      error: (error) => {
-        setIsLoading(false);
-        console.error(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('CSV Eport:', error.response.data),
-          callback: () => {
-            setRetry(!retry);
-          },
-        });
-      },
-    });
     return () => {
-      subscription.unsubscribe();
+      if (chargeExtractSubscription) chargeExtractSubscription.unsubscribe();
     };
-  }, [chargeExtractRequestData]);
+  });
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -243,7 +209,40 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       invoices: trItems,
       contractNumber: contractID,
     };
-    setChargeExtractRequestData(requestForChargeExtract);
+
+    if (requestForChargeExtract?.invoices.length < 1) return;
+    if (chargeExtractSubscription) {
+      chargeExtractSubscription.unsubscribe();
+    }
+    chargeExtractSubscription = chargeExtractService.createChargeExtract(auth?.user?.access_token, requestForChargeExtract).subscribe({
+      next: (results) => {
+        const base64String = JSON.parse(results.chargeExtract.extractFile);
+        const byteArray = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
+        const blob = new Blob([byteArray], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', results.chargeExtract.chargeExtractFileName);
+        document.body.appendChild(link);
+        link.click();
+        setRefreshInvoices(true);
+        setIsLoading(false);
+      },
+      error: (error) => {
+        setIsLoading(false);
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('CSV Eport:', error.response.data),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
+      },
+    });
   };
 
   return (
