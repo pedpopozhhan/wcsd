@@ -154,6 +154,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           ContractNumber: contractNumber,
           UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
           ServiceDescription: results.invoice.serviceDescription,
+          CreatedBy: results.invoice.createdBy,
         };
 
         dispatch(setInvoiceData(invoiceForContext));
