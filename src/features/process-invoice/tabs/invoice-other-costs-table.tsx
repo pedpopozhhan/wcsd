@@ -80,8 +80,8 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
                 <td>{convertToCurrency(x.data.cost)}</td>
                 <td>{x.data.internalOrder}</td>
                 <td>{x.data.costCentre}</td>
-                <td>{x.data.account}</td>
                 <td>{x.data.fund}</td>
+                <td>{x.data.account}</td>
                 <td>{x.data.remarks}</td>
               </tr>
             ))}
