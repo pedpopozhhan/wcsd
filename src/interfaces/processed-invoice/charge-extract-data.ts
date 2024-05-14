@@ -1,4 +1,5 @@
 import { IChargeExtractDetail } from '@/interfaces/processed-invoice/charge-extract-detail-data';
+import { IChargeExtractFile } from '@/interfaces/processed-invoice/charge-extract-file-data';
 
 export interface IChargeExtractData {
   chargeExtractId: string,
@@ -13,5 +14,5 @@ export interface IChargeExtractData {
   parentChargeExtractId: string,
   extendedExtract: IChargeExtractData,
   extractFile: string,
-  extendedExtractFile: string
+  extractFiles: IChargeExtractFile[]
 }
