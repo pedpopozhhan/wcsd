@@ -11,7 +11,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 
-const { top, search, searchResultsContainer } = styles;
+const { top, search, searchResultsContainer, dropdownContainer } = styles;
 
 export default function Contracts() {
   const auth = useConditionalAuth();
@@ -118,11 +118,13 @@ export default function Contracts() {
           ></SearchSuggestion>
         </div>
 
-        <GoADropdown name='contractType' value={contractType} onChange={onChangeContractType}>
-          {typeItems.map((type, idx) => (
-            <GoADropdownItem key={idx} value={type.value} label={type.label} />
-          ))}
-        </GoADropdown>
+        <div className={dropdownContainer}>
+          <GoADropdown name='contractType' value={contractType} onChange={onChangeContractType}>
+            {typeItems.map((type, idx) => (
+              <GoADropdownItem key={idx} value={type.value} label={type.label} />
+            ))}
+          </GoADropdown>
+        </div>
       </div>
       <div className={searchResultsContainer}>
         <ContractSearchResults searchResults={searchResults}></ContractSearchResults>
