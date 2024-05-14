@@ -247,7 +247,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     }
 
     if (pageHasError) return;
-    invoiceForContext.CreatedBy = auth.user.profile.name;
+    invoiceForContext.CreatedBy = auth?.user?.profile.name;
     // put them in the session object
     if (isInvoiceAddition) {
       dispatch(setInvoiceData(invoiceForContext));
@@ -316,7 +316,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => {}}
+                    onBlur={() => { }}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {
