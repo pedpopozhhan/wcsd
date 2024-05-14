@@ -2,6 +2,7 @@ import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHe
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
+import { IChargeExtractFile } from '@/interfaces/processed-invoice/charge-extract-file-data';
 import ICreateChargeExtractRequest from '@/interfaces/processed-invoice/create-charge-extract-request';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
@@ -216,15 +217,18 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     }
     chargeExtractSubscription = chargeExtractService.createChargeExtract(auth?.user?.access_token, requestForChargeExtract).subscribe({
       next: (results) => {
-        const base64String = JSON.parse(results.chargeExtract.extractFile);
-        const byteArray = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
-        const blob = new Blob([byteArray], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', results.chargeExtract.chargeExtractFileName);
-        document.body.appendChild(link);
-        link.click();
+        const items: IChargeExtractFile[] = results.chargeExtract.extractFiles;
+        items.forEach((item: IChargeExtractFile) => {
+          const base64String = JSON.parse(item.extractFile);
+          const byteArray = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
+          const blob = new Blob([byteArray], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', item.extractFileName);
+          document.body.appendChild(link);
+          link.click();
+        });
         setRefreshInvoices(true);
         setIsLoading(false);
       },
