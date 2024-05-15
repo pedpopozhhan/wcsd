@@ -28,6 +28,7 @@ export interface IInvoiceData {
   Quantity?: string;
   UnitOfMeasure?: string;
   Price?: string;
+  CreatedBy: string;
 }
 interface InvoiceModalProps {
   isNew?: boolean;
@@ -60,6 +61,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(currentDate());
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
+  const [invoiceReceivedMaxDate] = useState<Date>(getDateWithMonthOffset(0));
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 2));
@@ -78,6 +80,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     ContractNumber: contractNumber,
     UniqueServiceSheetName: '',
     ServiceDescription: 'Professional Services',
+    CreatedBy: '',
   };
 
   const invoiceAmountErrorLabelText = 'Cannot invoice for $0.00';
@@ -244,7 +247,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     }
 
     if (pageHasError) return;
-
+    invoiceForContext.CreatedBy = auth?.user?.profile.name;
     // put them in the session object
     if (isInvoiceAddition) {
       dispatch(setInvoiceData(invoiceForContext));
@@ -313,7 +316,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => {}}
+                    onBlur={() => { }}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {
@@ -467,7 +470,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     value={invoiceReceivedDate}
                     error={invoiceReceivedDateError}
                     min={minDate}
-                    max={maxDate}
+                    max={invoiceReceivedMaxDate}
                     width={leftColumnControlWidth}
                     onChange={(name, value) => {
                       if (value === '') {

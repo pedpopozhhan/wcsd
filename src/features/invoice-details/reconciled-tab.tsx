@@ -9,10 +9,12 @@ import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setOtherCostData, setRowData } from './invoice-details-slice';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
+import { publishToast } from '@/common/toast';
+
 
 const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps {}
+interface IReconciledTabProps { }
 const ReconciledTab: FC<IReconciledTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
@@ -20,7 +22,7 @@ const ReconciledTab: FC<IReconciledTabProps> = () => {
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [otherCostDataToUpdate] = useState<IOtherCostTableRow>();
 
-  useEffect(() => {}, [otherCostData]);
+  useEffect(() => { }, [otherCostData]);
 
   const showOtherCostsModal = () => {
     console.log('setParentShowModal(true);');
@@ -28,19 +30,37 @@ const ReconciledTab: FC<IReconciledTabProps> = () => {
   };
 
   function onOtherCostAdded(item: IOtherCostTableRowData) {
-    dispatch(setOtherCostData([...otherCostData, item]));
+    try {
+      dispatch(setOtherCostData([...otherCostData, item]));
+      publishToast({ type: 'success', message: 'Other cost was added.' });
+    }
+    catch (error) {
+      publishToast({ type: 'error', message: `Other Cost addition failed with error: # ${error}` });
+    }
   }
 
   function onOtherCostRemoved(item: IOtherCostTableRow) {
-    const items = [...otherCostData];
-    items.splice(item.index, 1);
-    dispatch(setOtherCostData(items));
+    try {
+      const items = [...otherCostData];
+      items.splice(item.index, 1);
+      dispatch(setOtherCostData(items));
+      publishToast({ type: 'success', message: 'Other cost was removed.' });
+    }
+    catch (error) {
+      publishToast({ type: 'error', message: `Other Cost removal failed with error: # ${error}` });
+    }
   }
 
   function onOtherCostUpdated(item: IOtherCostTableRow) {
-    const items = [...otherCostData];
-    items.splice(item.index, 1);
-    dispatch(setOtherCostData([...items, item.data]));
+    try {
+      const items = [...otherCostData];
+      items.splice(item.index, 1);
+      dispatch(setOtherCostData([...items, item.data]));
+      publishToast({ type: 'success', message: 'Other cost was updated.' });
+    }
+    catch (error) {
+      publishToast({ type: 'error', message: `Other Cost update failed with error: # ${error}` });
+    }
   }
 
   function removeAll() {

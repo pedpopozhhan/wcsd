@@ -1,20 +1,20 @@
 import { Action, createAction } from '@reduxjs/toolkit';
 import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
-import { initializeRowData, setRateTypes } from './invoice-details-slice';
+import { initializeRowData, setLists } from './invoice-details-slice';
 import timeReportDetailsService from '@/services/time-report-details.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { navigateTo } from '@/common/navigate';
 import dropDownListService from '@/services/drop-down-lists.service';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
-const GET_RATE_TYPES = 'getRateTypes';
+const GET_CUSTOM_LISTS = 'getCustomLists';
 export const getInvoiceDetails = createAction<{ token: string; ids: number[] }>(GET_INVOICE_DETAILS);
-export const getRateTypes = createAction<{ token: string }>(GET_RATE_TYPES);
+export const getCustomLists = createAction<{ token: string }>(GET_CUSTOM_LISTS);
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
 export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter((action) => getInvoiceDetails.match(action) || getRateTypes.match(action)),
+    filter((action) => getInvoiceDetails.match(action) || getCustomLists.match(action)),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
         return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids).pipe(
@@ -25,17 +25,16 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
               navigateTo('unauthorized');
             }
             publishToast({
-              type: 'error',
-              message: failedToPerform('get invoice details', 'Connection Error'),
-              action: action,
+              type: 'info',
+              message: error.response.data,
             });
             return EMPTY;
           }),
         );
-      } else if (getRateTypes.match(action)) {
+      } else if (getCustomLists.match(action)) {
         return dropDownListService.getOtherCostDropDownLists(action.payload.token).pipe(
           mergeMap((dropDownLists) => {
-            return of(setRateTypes(dropDownLists.rateTypes));
+            return of(setLists(dropDownLists));
           }),
           catchError((error) => {
             console.error(error);
@@ -44,7 +43,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
             }
             publishToast({
               type: 'error',
-              message: failedToPerform('getRateTypes', 'Connection Error'),
+              message: failedToPerform('getCustomLists', 'Connection Error'),
               action: action,
             });
             return EMPTY;

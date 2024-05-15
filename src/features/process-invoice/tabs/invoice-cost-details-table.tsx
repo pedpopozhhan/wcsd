@@ -6,33 +6,22 @@ import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/i
 import { useState, useEffect } from 'react';
 
 const { container, tableContainer } = styles;
-class Row {
-  index: number;
-  data: ITimeReportDetailsTableRowData;
-}
+
 interface InvoiceCostDataTableProps {
   data: ITimeReportDetailsTableRowData[];
 }
 const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
-  const [rowData, setRowData] = useState<Row[]>([]);
+  const [rowData, setRowData] = useState<ITimeReportDetailsTableRowData[]>([]);
   useEffect(() => {
-    if (props.data)
-      setRowData(
-        props.data.slice().map((x, i) => {
-          return {
-            index: i,
-            data: x,
-          };
-        }),
-      );
+    if (props.data) setRowData(props.data.slice());
   }, [props.data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
 
-    data.sort((a: Row, b: Row) => {
-      const varA = a.data[sortBy as keyof ITimeReportDetailsTableRowData];
-      const varB = b.data[sortBy as keyof ITimeReportDetailsTableRowData];
+    data.sort((a: ITimeReportDetailsTableRowData, b: ITimeReportDetailsTableRowData) => {
+      const varA = a[sortBy as keyof ITimeReportDetailsTableRowData];
+      const varB = b[sortBy as keyof ITimeReportDetailsTableRowData];
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
@@ -73,7 +62,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.data.map((x, index) => (
+            {rowData.map((x, index) => (
               <tr key={index}>
                 <td>{yearMonthDay(x.flightReportDate)}</td>
                 <td>{x.contractRegistrationName}</td>

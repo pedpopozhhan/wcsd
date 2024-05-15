@@ -1,14 +1,18 @@
 import styles from './summary.module.scss';
 import { yearMonthDay } from '@/common/dates';
-import { GoAIcon, GoAIconButton } from '@abgov/react-components';
-import { useAppSelector } from '@/app/hooks';
+import { GoAIcon } from '@abgov/react-components';
+import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
-const { container, assignedToLabel, assignedToIcon, assignedToHeader } = styles;
+import { EmptyInvoiceId } from '@/common/types/invoice';
+import { updateInvoice } from '../process-invoice/process-invoice-epic';
+const { container } = styles;
 interface ISummaryProps {
   showSheet?: boolean;
 }
 const Summary: React.FC<ISummaryProps> = (props) => {
+  const dispatch = useAppDispatch();
+  const auth = useConditionalAuth();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
   const [showSheet, setShowSheet] = useState<boolean>(false);
@@ -25,6 +29,13 @@ const Summary: React.FC<ISummaryProps> = (props) => {
     setOpenModal(false);
   }
 
+  function onSheetNameUpdated() {
+    setOpenModal(false);
+    if (invoiceData.InvoiceID !== EmptyInvoiceId) {
+      dispatch(updateInvoice({ token: auth?.user?.access_token }));
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (e.key === 'Enter' || e.code === 'Space') {
       setOpenModal(true);
@@ -37,7 +48,12 @@ const Summary: React.FC<ISummaryProps> = (props) => {
         <div>Vendor</div>
         <div>{contract.vendorName}</div>
       </div>
-      <div></div>
+      <div>
+        <div>
+          <label>Created by</label>
+        </div>
+        <div>{invoiceData.CreatedBy}</div>
+      </div>
       <div>
         <div>Contract no.</div>
         <div>{invoiceData.ContractNumber}</div>
@@ -72,7 +88,6 @@ const Summary: React.FC<ISummaryProps> = (props) => {
                   <GoAIcon type='pencil' theme='outline'></GoAIcon>
                 </a>
               )}
-              {/* //   <GoAIconButton onClick={serviceSheetClick} icon='pencil' theme='filled'></GoAIconButton>} */}
             </div>
             <div>
               {!invoiceData.UniqueServiceSheetName && (
@@ -87,7 +102,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
             <div>Service description</div>
             <div>{invoiceData.ServiceDescription}</div>
           </div>
-          <SheetNameModal open={openModal} onClose={onCloseModal}></SheetNameModal>
+          <SheetNameModal open={openModal} onClose={onCloseModal} onUpdate={onSheetNameUpdated}></SheetNameModal>
         </>
       )}
     </div>
