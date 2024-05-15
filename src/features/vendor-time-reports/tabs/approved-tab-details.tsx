@@ -8,7 +8,6 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
-import { failedToPerform, publishToast } from '@/common/toast';
 import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
 const { checboxHeader, checboxControl, headerRow } = styles;
@@ -32,8 +31,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
 
   //Loader
   const [loading, setIsLoading] = useState(true);
-
-  const [retry, setRetry] = useState<boolean>(false);
 
   //Pagination
 
@@ -70,13 +67,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('load flight reports', error.response.data),
-          callback: () => {
-            setRetry(!retry);
-          },
-        });
+
         setIsLoading(false);
       },
     });
@@ -84,7 +75,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [searchValue, contractNumber, retry]);
+  }, [searchValue, contractNumber]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
