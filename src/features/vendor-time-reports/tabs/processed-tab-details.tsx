@@ -251,29 +251,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
     });
   };
-  /*Search Field displayed in “Processed” invoices  
-
-Queries only invoice numbers in data of processed tab
-
-Search by invoice number only, not any other column data
-
-Invoice search queries in realtime (no suggestion selection required)
-
-threshold for a query to return a result is 3 characters long
-
-table listing is updated per key press after 3
-
-returned queries honour pagination
-
-query results ‘contains’ 
-
-Upon query input in Search Field, an “X” icon replaces the “Search Icon”
-
-upon click of “X”, clears search and reverts table listing to default
-
-Reloading page resets search to default
-
-Location of search field to be under processed tab, to the right of the screen (match Figma)*/
 
   const onChange = (name: string, value: string) => {
     setSearchVal(value);
