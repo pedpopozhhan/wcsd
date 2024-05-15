@@ -70,13 +70,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('load flight reports', error.response.data),
-          callback: () => {
-            setRetry(!retry);
-          },
-        });
+
         setIsLoading(false);
       },
     });
