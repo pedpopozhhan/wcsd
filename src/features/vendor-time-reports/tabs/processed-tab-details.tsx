@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IProcessedInvoiceTableRowData } from '@/interfaces/processed-invoice/processed-invoice-table-row-data';
@@ -15,7 +15,7 @@ import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
-const { checboxHeader, checboxControl, headerRow } = styles;
+const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 
 import {
@@ -42,7 +42,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const [pageData, setPageData] = useState<IRowItem[]>([]);
 
   //Data set
+  const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
+  const [searchVal, setSearchVal] = useState<string>();
   const [refreshInvoices, setRefreshInvoices] = useState<boolean | undefined>();
 
   //Loader
@@ -70,6 +72,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         const rows = results.invoices.map((x) => {
           return { isChecked: false, ...x };
         });
+        setRawData(rows);
         setData(rows);
         setPageData(rows.slice(0, perPage));
         setRefreshInvoices(false);
@@ -248,19 +251,62 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       },
     });
   };
+  /*Search Field displayed in “Processed” invoices  
 
+Queries only invoice numbers in data of processed tab
+
+Search by invoice number only, not any other column data
+
+Invoice search queries in realtime (no suggestion selection required)
+
+threshold for a query to return a result is 3 characters long
+
+table listing is updated per key press after 3
+
+returned queries honour pagination
+
+query results ‘contains’ 
+
+Upon query input in Search Field, an “X” icon replaces the “Search Icon”
+
+upon click of “X”, clears search and reverts table listing to default
+
+Reloading page resets search to default
+
+Location of search field to be under processed tab, to the right of the screen (match Figma)*/
+
+  const onChange = (name: string, value: string) => {
+    setSearchVal(value);
+    if (value.length < 3) {
+      setData(rawData);
+      return;
+    }
+    const results = rawData.filter((x) => x.invoiceNumber.includes(value));
+    setData(results);
+  };
   return (
     <>
       <PageLoader visible={loading} />
       <div>
-        <GoAButton
-          type='secondary'
-          size='compact'
-          disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
-          onClick={generateExtract}
-        >
-          Download
-        </GoAButton>
+        <div className={toolbar}>
+          <GoAButton
+            type='secondary'
+            size='normal'
+            disabled={data?.length <= 0 || data?.filter((item: IRowItem) => item?.isChecked === true).length <= 0}
+            onClick={generateExtract}
+          >
+            Download
+          </GoAButton>
+          <div className={spacer}></div>
+          <GoAInput
+            type='search'
+            name='search'
+            value={searchVal}
+            onChange={onChange}
+            leadingIcon='search'
+            placeholder='Search Invoice no.'
+          ></GoAInput>
+        </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
