@@ -1,4 +1,4 @@
-import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -10,7 +10,7 @@ import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.mod
 import { navigateTo } from '@/common/navigate';
 import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
-const { checboxHeader, checboxControl, headerRow } = styles;
+const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -27,12 +27,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [pageData, setPageData] = useState<IRowItem[]>([]);
 
   //Data set
+  const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
 
-  //Pagination
+  const [searchVal, setSearchVal] = useState<string>();
 
   // page number
   const [page, setPage] = useState(1);
@@ -56,10 +57,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const rows = response.rows.map((x) => {
           return { isChecked: false, ...x };
         });
+        // setData(rows);
+        // // sort by what default
+        // setPageData(rows.slice(0, perPage));
+        setRawData(rows);
         setData(rows);
-        // sort by what default
         setPageData(rows.slice(0, perPage));
-
         setIsLoading(false);
       },
       error: (error) => {
@@ -153,11 +156,34 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     currency: 'USD',
   });
 
+  const onChange = (name: string, value: string) => {
+    setSearchVal(value);
+    if (value.length < 3) {
+      setData(rawData);
+      changePage(1);
+      return;
+    }
+    const upper = value.toUpperCase();
+    const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
+    setData(results);
+  };
+
   return (
     <>
       <PageLoader visible={loading} />
       <div>
-        <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
+        <div className={toolbar}>
+          <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
+          <div className={spacer}></div>
+          <GoAInput
+            type='search'
+            name='search'
+            value={searchVal}
+            onChange={onChange}
+            leadingIcon='search'
+            placeholder='Search Invoice no.'
+          ></GoAInput>
+        </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
