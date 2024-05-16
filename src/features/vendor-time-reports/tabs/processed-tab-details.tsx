@@ -256,9 +256,12 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
+      changePage(1);
       return;
     }
-    const results = rawData.filter((x) => x.invoiceNumber.includes(value));
+
+    const upper = value.toUpperCase();
+    const results = rawData.filter((x) => x.invoiceNumber.toUpperCase().includes(upper));
     setData(results);
   };
   return (
