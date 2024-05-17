@@ -16,7 +16,7 @@ export default function Contracts() {
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
-  const [searchTerm, setSearchTerm] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
   useEffect(() => {
@@ -55,19 +55,16 @@ export default function Contracts() {
     setContractType(_contractType as ContractType);
     // rerun the search, sometimes it is the term, sometimes it is an item with a separator
     const filtered = allData.filter((x) => _contractType === 'all' || x.contractType === _contractType);
-    setSearchResults(filtered.filter(filterPredicate));
-  }
-
-  //Vendor, Business ID and Contract
-  function filterPredicate(candidate: IContractSearchResult) {
     const upper = searchTerm.toUpperCase();
-    return (
-      candidate.businessId?.toString().toUpperCase().includes(upper) ||
-      candidate.vendorName.toUpperCase().includes(upper) ||
-      candidate.contractNumber.toUpperCase().includes(upper)
-    );
+    const searched = filtered.filter((x) => {
+      return (
+        x.businessId?.toString().toUpperCase().includes(upper) ||
+        x.vendorName.toUpperCase().includes(upper) ||
+        x.contractNumber.toUpperCase().includes(upper)
+      );
+    });
+    setSearchResults(searched);
   }
-
   const onChange = (name: string, value: string) => {
     setSearchTerm(value);
 
@@ -76,8 +73,16 @@ export default function Contracts() {
       return;
     }
     const filtered = allData.filter((x) => contractType === 'all' || x.contractType === contractType);
-
-    setSearchResults(filtered.filter(filterPredicate));
+    const upper = value.toUpperCase();
+    const searched = filtered.filter((x) => {
+      return (
+        x.businessId?.toString().toUpperCase().includes(upper) ||
+        x.vendorName.toUpperCase().includes(upper) ||
+        x.contractNumber.toUpperCase().includes(upper)
+      );
+    });
+    console.dir(searched);
+    setSearchResults(searched);
   };
 
   return (
