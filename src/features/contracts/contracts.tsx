@@ -94,7 +94,7 @@ export default function Contracts() {
             </GoADropdown>
           </div>
           <GoAInput
-            type='text'
+            type='search'
             name='search'
             value={searchTerm}
             onChange={onChange}
