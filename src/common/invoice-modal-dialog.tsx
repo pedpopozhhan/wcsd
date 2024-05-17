@@ -62,6 +62,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
   const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
   const [invoiceReceivedMaxDate] = useState<Date>(getDateWithMonthOffset(0));
+  const [invoiceReceivedMaxDateErrorLabel, setInvoiceReceivedMaxDateErrorLabel] = useState<string>('');
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 2));
@@ -88,6 +89,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const maxInvoiceAmount = 999999999;
   const dateOfInvoiceErrorLabelText = 'Date cannot be 1950/02/01 or earlier'; //
   const dateOfInvoiceEarlierThanPEDErrorLabelText = 'Cannot be earlier than period ending date';
+  const invoiceReceivedDateErrorLabelText = 'Date cannot be in future';
   const modalDialogWidth = '620px';
   const leftColumnControlWidth = '270px';
   const righColumnControlWidth = '280px';
@@ -146,6 +148,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     setInvoiceNumberErrorLabel('');
     setInvoiceAmountErrorLabel('');
     setDateOfInvoiceErrorLabel('');
+    setInvoiceReceivedMaxDateErrorLabel('');
   };
 
   const clearDataPoints = () => {
@@ -242,8 +245,13 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
       setInvoiceReceivedDateError(true);
       return;
-    } else {
+    }
+    else if (new Date(invoiceReceivedDate) > invoiceReceivedMaxDate) {
+      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateErrorLabelText);
+    }
+    else {
       setInvoiceReceivedDateError(false);
+      setInvoiceReceivedMaxDateErrorLabel('');
     }
 
     if (pageHasError) return;
@@ -463,7 +471,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
             </tr>
             <tr>
               <td>
-                <GoAFormItem label='Invoice received'>
+                <GoAFormItem label='Invoice received' error={invoiceReceivedMaxDateErrorLabel}>
                   <GoAInputDate
                     name='invoiceReceivedDate'
                     placeholder='YYYY-MM-DD'
@@ -485,8 +493,15 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         if (propertyValue < minDate) {
                           setInvoiceReceivedDateError(true);
                           setPageHasError(true);
-                        } else {
+                        }
+                        else if (propertyValue > invoiceReceivedMaxDate) {
+                          setInvoiceReceivedDateError(true);
+                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateErrorLabelText);
+                          setPageHasError(true);
+                        }
+                        else {
                           setInvoiceReceivedDateError(false);
+                          setInvoiceReceivedMaxDateErrorLabel('');
                           setPageHasError(false);
                         }
                       }
