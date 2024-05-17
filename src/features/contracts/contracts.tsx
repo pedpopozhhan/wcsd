@@ -99,7 +99,7 @@ export default function Contracts() {
             value={searchTerm}
             onChange={onChange}
             leadingIcon='search'
-            placeholder='Search Invoice no.'
+            placeholder='Search Vendor or Contract'
           ></GoAInput>
         </div>
       </div>
