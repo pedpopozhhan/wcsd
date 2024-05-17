@@ -94,12 +94,12 @@ export default function Contracts() {
             </GoADropdown>
           </div>
           <GoAInput
-            type='search'
+            type='text'
             name='search'
             value={searchTerm}
             onChange={onChange}
             leadingIcon='search'
-            placeholder='Search Invoice no.'
+            placeholder='Search Vendor or Contract'
           ></GoAInput>
         </div>
       </div>

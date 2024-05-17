@@ -181,7 +181,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             value={searchVal}
             onChange={onChange}
             leadingIcon='search'
-            placeholder='Search Invoice no.'
+            placeholder='Search Registration no.'
           ></GoAInput>
         </div>
         <div className='divTable'>
