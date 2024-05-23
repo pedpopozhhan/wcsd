@@ -6,4 +6,5 @@ export interface IContractSearchResult {
   contractNumber: string;
   contractType: string;
   downloadsAvailable: number;
+  pendingApprovals: number;
 }

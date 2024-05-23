@@ -89,7 +89,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const maxInvoiceAmount = 999999999;
   const dateOfInvoiceErrorLabelText = 'Date cannot be 1950/02/01 or earlier'; //
   const dateOfInvoiceEarlierThanPEDErrorLabelText = 'Cannot be earlier than period ending date';
-  const invoiceReceivedDateErrorLabelText = 'Date cannot be in future';
+  const invoiceReceivedDateEarlierDateErrorText = 'Cannot be earlier than Invoice date.';
+  const invoiceReceivedDateFutureDateErrorText = 'Cannot be later than present date';
   const modalDialogWidth = '620px';
   const leftColumnControlWidth = '270px';
   const righColumnControlWidth = '280px';
@@ -247,7 +248,14 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       return;
     }
     else if (new Date(invoiceReceivedDate) > invoiceReceivedMaxDate) {
-      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateErrorLabelText);
+      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
+      setInvoiceReceivedDateError(true);
+      return;
+    }
+    else if (new Date(invoiceReceivedDate) < new Date(dateOfInvoice)) {
+      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
+      setInvoiceReceivedDateError(true);
+      return;
     }
     else {
       setInvoiceReceivedDateError(false);
@@ -494,11 +502,17 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setInvoiceReceivedDateError(true);
                           setPageHasError(true);
                         }
-                        else if (propertyValue > invoiceReceivedMaxDate) {
+                        else if (propertyValue < new Date(dateOfInvoice)) {
                           setInvoiceReceivedDateError(true);
-                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateErrorLabelText);
+                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
                           setPageHasError(true);
                         }
+                        else if (propertyValue > invoiceReceivedMaxDate) {
+                          setInvoiceReceivedDateError(true);
+                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
+                          setPageHasError(true);
+                        }
+
                         else {
                           setInvoiceReceivedDateError(false);
                           setInvoiceReceivedMaxDateErrorLabel('');
