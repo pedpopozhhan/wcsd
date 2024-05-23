@@ -284,6 +284,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
             value={searchVal}
             onChange={onChange}
             leadingIcon='search'
+            width='309px'
             placeholder='Search Invoice no.'
           ></GoAInput>
         </div>
