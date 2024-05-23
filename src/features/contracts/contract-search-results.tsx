@@ -22,7 +22,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     { value: 'businessId', label: 'Business No.' },
     { value: 'contractNumber', label: 'Contract No.' },
     { value: 'contractType', label: 'Type' },
-    { value: 'pendingApprovals', label: 'Pending Approval' },
+    { value: 'pendingApprovals', label: 'Pending approval' },
     { value: 'downloadsAvailable', label: 'Downloads available' },
   ];
 
