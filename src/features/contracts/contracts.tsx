@@ -69,7 +69,7 @@ export default function Contracts() {
     setSearchTerm(value);
 
     if (value.length < 3) {
-      setSearchResults(allData);
+      setSearchResults(allData.filter((x) => contractType === 'all' || x.contractType === contractType));
       return;
     }
     const filtered = allData.filter((x) => contractType === 'all' || x.contractType === contractType);
