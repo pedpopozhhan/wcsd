@@ -84,13 +84,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('load invoices.', error.response.data),
-          callback: () => {
-            setRetry(!retry);
-          },
-        });
       },
     });
     return () => {
