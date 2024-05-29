@@ -67,14 +67,16 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   const { invoiceAmountLabel } = styles;
   let chargeExtractSubscription: Subscription;
   useEffect(() => {
+    setIsLoading(true);
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
         const rows = results.invoices.map((x) => {
           return { isChecked: false, ...x };
         });
-        setRawData(rows);
-        setData(rows);
-        setPageData(rows.slice(0, perPage));
+        const sortedData = sort('invoiceDate', 1, rows);
+        setRawData(sortedData);
+        setData(sortedData);
+        setPageData(sortedData.slice(0, perPage));
         setRefreshInvoices(false);
         setIsLoading(false);
       },
@@ -104,7 +106,15 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   }, [data]);
 
   function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: IProcessedInvoiceTableRowData, b: IProcessedInvoiceTableRowData) => {
+    const sortedData = sort(sortBy, sortDir, data);
+    setData(sortedData.slice());
+    setPageData(sortedData.slice(0, perPage));
+    setPage(1);
+    setPreviousSelectedPerPage(perPage);
+  }
+
+  function sort(sortBy: string, sortDir: number, rows: IRowItem[]): IRowItem[] {
+    rows.sort((a: IProcessedInvoiceTableRowData, b: IProcessedInvoiceTableRowData) => {
       const varA = a[sortBy as keyof IProcessedInvoiceTableRowData];
       const varB = b[sortBy as keyof IProcessedInvoiceTableRowData];
       if (typeof varA === 'string' && typeof varB === 'string') {
@@ -113,11 +123,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setData(data.slice());
-    setPageData(data.slice(0, perPage));
-    setPage(1);
-    setPreviousSelectedPerPage(perPage);
+    return rows.slice();
   }
+
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
     return num;
@@ -298,7 +306,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                   ></input>
                 </th>
                 <th style={{ maxWidth: '15%' }}>
-                  <GoATableSortHeader name='invoiceDate'>Invoice Date</GoATableSortHeader>
+                  <GoATableSortHeader name='invoiceDate' direction='asc'>
+                    Invoice Date
+                  </GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
                   Invoice No.
@@ -319,58 +329,60 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
               </tr>
             </thead>
 
-            <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
-              {pageData && pageData.length > 0 ? (
-                pageData.map((record: IRowItem) => (
-                  <tr key={record.invoiceNumber}>
-                    <td style={{ padding: '12px 0 12px 32px' }}>
-                      <input
-                        className={checboxControl}
-                        type='checkbox'
-                        id={record.invoiceId.toString()}
-                        name={record.invoiceId.toString()}
-                        onChange={handleCheckBoxChange}
-                        checked={record?.isChecked || false}
-                        disabled={record?.chargeExtractId?.length > 0 ? true : false}
-                      ></input>
-                    </td>
+            {!loading && (
+              <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
+                {pageData && pageData.length > 0 ? (
+                  pageData.map((record: IRowItem) => (
+                    <tr key={record.invoiceNumber}>
+                      <td style={{ padding: '12px 0 12px 32px' }}>
+                        <input
+                          className={checboxControl}
+                          type='checkbox'
+                          id={record.invoiceId.toString()}
+                          name={record.invoiceId.toString()}
+                          onChange={handleCheckBoxChange}
+                          checked={record?.isChecked || false}
+                          disabled={record?.chargeExtractId?.length > 0 ? true : false}
+                        ></input>
+                      </td>
 
-                    <td>{yearMonthDay(record.invoiceDate)}</td>
-                    <td>
-                      <GoAButton
-                        {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
-                        size='compact'
-                        type='tertiary'
-                        onClick={() => invoiceNumberClick(record?.invoiceId)}
-                      >
-                        {record.invoiceNumber}
-                      </GoAButton>
-                    </td>
-                    <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
-                    <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
-                    <td>
-                      {!record?.paymentStatus && <label>--</label>}
-                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
-                        <goa-badge type='information' content={record.paymentStatus}></goa-badge>
-                      )}
-                      {record?.paymentStatus && record?.paymentStatus.toLowerCase() === 'cleared' && (
-                        <goa-badge type='success' content={record.paymentStatus}></goa-badge>
-                      )}
-                    </td>
-                    <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
-                    <td>
-                      <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
+                      <td>{yearMonthDay(record.invoiceDate)}</td>
+                      <td>
+                        <GoAButton
+                          {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+                          size='compact'
+                          type='tertiary'
+                          onClick={() => invoiceNumberClick(record?.invoiceId)}
+                        >
+                          {record.invoiceNumber}
+                        </GoAButton>
+                      </td>
+                      <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
+                      <td>{record?.uniqueServiceSheetName ? record.uniqueServiceSheetName : '--'}</td>
+                      <td>
+                        {!record?.paymentStatus && <label>--</label>}
+                        {record?.paymentStatus && record?.paymentStatus.toLowerCase() !== PaymentStatusCleared && (
+                          <goa-badge type='information' content={record.paymentStatus}></goa-badge>
+                        )}
+                        {record?.paymentStatus && record?.paymentStatus.toLowerCase() === 'cleared' && (
+                          <goa-badge type='success' content={record.paymentStatus}></goa-badge>
+                        )}
+                      </td>
+                      <td>{record?.documentDate ? yearMonthDay(record.documentDate) : '--'}</td>
+                      <td>
+                        <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className='centertext'>
+                      No data avaliable
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={9} className='centertext'>
-                    No data avaliable
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
+            )}
           </GoATable>
         </div>
 

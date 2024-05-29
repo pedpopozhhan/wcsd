@@ -41,9 +41,10 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     setIsLoading(true);
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        setData(response.rows);
+        const sortedData = sort('flightReportDate', 1, response.rows);
+        setData(sortedData);
         // sort by what default
-        setPageData(response.rows.slice(0, perPage));
+        setPageData(sortedData.slice(0, perPage));
 
         setIsLoading(false);
       },
@@ -62,7 +63,23 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   }, [searchValue, contractNumber, auth]);
 
   function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+    // data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+    //   const varA = a[sortBy as keyof IFlightReportDashboard];
+    //   const varB = b[sortBy as keyof IFlightReportDashboard];
+    //   if (typeof varA === 'string' && typeof varB === 'string') {
+    //     const res = varB.localeCompare(varA);
+    //     return res * sortDir;
+    //   }
+    //   return (varA > varB ? 1 : -1) * sortDir;
+    // });
+    const sortedData = sort(sortBy, sortDir, data);
+    setData(sortedData.slice());
+    setPageData(sortedData.slice(0, perPage));
+    setPage(1);
+    setPreviousSelectedPerPage(perPage);
+  }
+  function sort(sortBy: string, sortDir: number, rows: IFlightReportDashboard[]): IFlightReportDashboard[] {
+    rows.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
       const varA = a[sortBy as keyof IFlightReportDashboard];
       const varB = b[sortBy as keyof IFlightReportDashboard];
       if (typeof varA === 'string' && typeof varB === 'string') {
@@ -71,11 +88,9 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setData(data.slice());
-    setPageData(data.slice(0, perPage));
-    setPage(1);
-    setPreviousSelectedPerPage(perPage);
+    return rows.slice();
   }
+
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
 
@@ -114,59 +129,57 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
             <thead>
               <tr>
                 <th style={{ maxWidth: '40%' }}>
-                  <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
+                  <GoATableSortHeader name='flightReportDate' direction='asc'>
+                    Report Date
+                  </GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  {/* <GoATableSortHeader name="flightReportId"> */}
                   Report No.
-                  {/* </GoATableSortHeader> */}
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  {/* <GoATableSortHeader name="ao02Number"> */}
                   AO-02 No.
-                  {/* </GoATableSortHeader> */}
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  {/* <GoATableSortHeader name="contractRegistrationName"> */}
                   Registration No.
-                  {/* </GoATableSortHeader> */}
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%', textAlign: 'right' }}></th>
               </tr>
             </thead>
 
-            <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
-              {pageData && pageData.length > 0 ? (
-                pageData.map((record: IFlightReportDashboard) => (
-                  // {filteredData && filteredData.length > 0 ? (
-                  // filteredData.map((record: any, index: any) => (
-                  <tr key={record.flightReportId}>
-                    <td>{yearMonthDay(record.flightReportDate as string)}</td>
-                    <td>
-                      <GoAButton
-                        {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
-                        size='compact'
-                        type='tertiary'
-                        onClick={() => flightReportClick(record?.flightReportId)}
-                      >
-                        {record.flightReportId}
-                      </GoAButton>
-                    </td>
-                    <td>{record.ao02Number}</td>
-                    <td>{record?.contractRegistrationName}</td>
-                    <td style={{ textAlign: 'right' }}>
-                      <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
+            {!loading && (
+              <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
+                {pageData && pageData.length > 0 ? (
+                  pageData.map((record: IFlightReportDashboard) => (
+                    // {filteredData && filteredData.length > 0 ? (
+                    // filteredData.map((record: any, index: any) => (
+                    <tr key={record.flightReportId}>
+                      <td>{yearMonthDay(record.flightReportDate as string)}</td>
+                      <td>
+                        <GoAButton
+                          {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+                          size='compact'
+                          type='tertiary'
+                          onClick={() => flightReportClick(record?.flightReportId)}
+                        >
+                          {record.flightReportId}
+                        </GoAButton>
+                      </td>
+                      <td>{record.ao02Number}</td>
+                      <td>{record?.contractRegistrationName}</td>
+                      <td style={{ textAlign: 'right' }}>
+                        <GoAIconButton icon='chevron-forward' onClick={() => flightReportClick(record?.flightReportId)} />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className='centertext'>
+                      No data avaliable
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={9} className='centertext'>
-                    No data avaliable
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
+            )}
           </GoATable>
         </div>
 

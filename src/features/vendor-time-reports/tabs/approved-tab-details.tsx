@@ -57,10 +57,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const rows = response.rows.map((x) => {
           return { isChecked: false, ...x };
         });
-
-        setRawData(rows);
-        setData(rows);
-        setPageData(rows.slice(0, perPage));
+        const sortedData = sort('flightReportDate', 1, rows);
+        setRawData(sortedData);
+        setData(sortedData);
+        setPageData(sortedData.slice(0, perPage));
         setIsLoading(false);
       },
       error: (error) => {
@@ -84,8 +84,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setPageData(_flightReports);
   }, [data]);
 
-  function sortData(sortBy: string, sortDir: number) {
-    data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
+  function sort(sortBy: string, sortDir: number, rows: IRowItem[]): IRowItem[] {
+    rows.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
       const varA = a[sortBy as keyof IFlightReportDashboard];
       const varB = b[sortBy as keyof IFlightReportDashboard];
       if (typeof varA === 'string' && typeof varB === 'string') {
@@ -94,8 +94,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setData(data.slice());
-    setPageData(data.slice(0, perPage));
+    return rows.slice();
+  }
+
+  function sortData(sortBy: string, sortDir: number) {
+    const sortedData = sort(sortBy, sortDir, data);
+    setData(sortedData.slice());
+    setPageData(sortedData.slice(0, perPage));
     setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
@@ -197,7 +202,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                   ></input>
                 </th>
                 <th className={headerRow}>
-                  <GoATableSortHeader name='flightReportDate'>Report Date</GoATableSortHeader>
+                  <GoATableSortHeader name='flightReportDate' direction='asc'>
+                    Report Date
+                  </GoATableSortHeader>
                 </th>
                 <th className={headerRow}>Report No.</th>
                 <th className={headerRow}>AO-02 No.</th>
@@ -206,43 +213,45 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
               </tr>
             </thead>
 
-            <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
-              {pageData && pageData.length > 0 ? (
-                pageData.map((record: IRowItem) => (
-                  <tr key={record.flightReportId}>
-                    <td style={{ padding: '12px 0 12px 32px' }}>
-                      <input
-                        className={checboxControl}
-                        type='checkbox'
-                        id={record.flightReportId.toString()}
-                        name={record.flightReportId.toString()}
-                        onChange={handleCheckBoxChange}
-                        checked={record?.isChecked || false}
-                      ></input>
+            {!loading && (
+              <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
+                {pageData && pageData.length > 0 ? (
+                  pageData.map((record: IRowItem) => (
+                    <tr key={record.flightReportId}>
+                      <td style={{ padding: '12px 0 12px 32px' }}>
+                        <input
+                          className={checboxControl}
+                          type='checkbox'
+                          id={record.flightReportId.toString()}
+                          name={record.flightReportId.toString()}
+                          onChange={handleCheckBoxChange}
+                          checked={record?.isChecked || false}
+                        ></input>
+                      </td>
+                      <td>{yearMonthDay(record.flightReportDate as string)}</td>
+                      <td>
+                        <a
+                          href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          {record.flightReportId}
+                        </a>
+                      </td>
+                      <td>{record.ao02Number}</td>
+                      <td>{record?.contractRegistrationName}</td>
+                      <td>{formatter.format(record?.totalCost)}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className='centertext'>
+                      No data avaliable
                     </td>
-                    <td>{yearMonthDay(record.flightReportDate as string)}</td>
-                    <td>
-                      <a
-                        href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
-                        target='_blank'
-                        rel='noreferrer'
-                      >
-                        {record.flightReportId}
-                      </a>
-                    </td>
-                    <td>{record.ao02Number}</td>
-                    <td>{record?.contractRegistrationName}</td>
-                    <td>{formatter.format(record?.totalCost)}</td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={9} className='centertext'>
-                    No data avaliable
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
+            )}
           </GoATable>
         </div>
 
