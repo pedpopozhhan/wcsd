@@ -24,7 +24,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  const [, setPageData] = React.useState<IFlightReportDashboard[]>([]);
+  const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
   //count per page
@@ -136,8 +136,8 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
             </thead>
 
             <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
-              {data && data.length > 0 ? (
-                data.map((record: IFlightReportDashboard) => (
+              {pageData && pageData.length > 0 ? (
+                pageData.map((record: IFlightReportDashboard) => (
                   // {filteredData && filteredData.length > 0 ? (
                   // filteredData.map((record: any, index: any) => (
                   <tr key={record.flightReportId}>
