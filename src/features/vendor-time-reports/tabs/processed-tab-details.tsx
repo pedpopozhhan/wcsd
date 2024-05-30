@@ -11,21 +11,12 @@ import chargeExtractService from '@/services/processed-invoice-charge-extract.se
 
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
+import { useConditionalAuth } from '@/app/hooks';
 import { PaymentStatusCleared } from '@/common/types/payment-status';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
-import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
-
-import {
-  setCostDetailsData,
-  setOtherCostsData,
-  setInvoiceAmount,
-  setInvoiceNumber,
-} from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { navigateTo } from '@/common/navigate';
-import { setInvoiceData } from '@/app/app-slice';
 import { Subscription } from 'rxjs';
 
 interface IProcessedTabDetailsAllProps {
@@ -62,7 +53,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   //Sorting
   const [contractID] = useState<string | undefined>(contractNumber);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const { invoiceAmountLabel } = styles;
   let chargeExtractSubscription: Subscription;
@@ -144,49 +134,9 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     }
   }
 
-  //#endregion
-  function pullDetailsForInvoice(invoiceId: string) {
-    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
-      next: (results) => {
-        setIsLoading(true);
-        const invoiceForContext = {
-          InvoiceID: results.invoice.invoiceId,
-          InvoiceNumber: results.invoice.invoiceNumber,
-          DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
-          InvoiceAmount: results.invoice.invoiceAmount,
-          PeriodEnding: new Date(results.invoice.periodEndDate).toISOString(),
-          InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
-          ContractNumber: contractNumber,
-          UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
-          ServiceDescription: results.invoice.serviceDescription,
-          CreatedBy: results.invoice.createdBy,
-        };
-
-        dispatch(setInvoiceData(invoiceForContext));
-        dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
-        dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
-        dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
-        setIsLoading(false);
-      },
-      error: (error) => {
-        setIsLoading(false);
-        console.error(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', error.response.data) });
-      },
-    });
-    return () => {
-      subscription.unsubscribe();
-    };
-  }
-
   function invoiceNumberClick(invoiceId: string) {
     if (invoiceId) {
-      pullDetailsForInvoice(invoiceId);
-      navigate(`/ProcessedInvoice/${invoiceId}`);
+      navigate(`/ProcessedInvoice/${invoiceId}/${contractNumber}`);
     }
   }
 

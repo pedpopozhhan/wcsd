@@ -45,7 +45,7 @@ root.render(
                       <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
+                      <Route key='6' path='ProcessedInvoice/:invoiceId/:contractNumber' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route key='7' path='logged-out' element={<LoggedOut />} />
 
