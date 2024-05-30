@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
-const { headerRow } = styles;
+const { headerRow, roboto } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -63,15 +63,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   }, [searchValue, contractNumber, auth]);
 
   function sortData(sortBy: string, sortDir: number) {
-    // data.sort((a: IFlightReportDashboard, b: IFlightReportDashboard) => {
-    //   const varA = a[sortBy as keyof IFlightReportDashboard];
-    //   const varB = b[sortBy as keyof IFlightReportDashboard];
-    //   if (typeof varA === 'string' && typeof varB === 'string') {
-    //     const res = varB.localeCompare(varA);
-    //     return res * sortDir;
-    //   }
-    //   return (varA > varB ? 1 : -1) * sortDir;
-    // });
     const sortedData = sort(sortBy, sortDir, data);
     setData(sortedData.slice());
     setPageData(sortedData.slice(0, perPage));
@@ -161,7 +152,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                           type='tertiary'
                           onClick={() => flightReportClick(record?.flightReportId)}
                         >
-                          {record.flightReportId}
+                          <span className={roboto}>{record.flightReportId}</span>
                         </GoAButton>
                       </td>
                       <td>{record.ao02Number}</td>

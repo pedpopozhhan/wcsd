@@ -10,7 +10,7 @@ import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.mod
 import { navigateTo } from '@/common/navigate';
 import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
-const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
+const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -229,7 +229,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                         ></input>
                       </td>
                       <td>{yearMonthDay(record.flightReportDate as string)}</td>
-                      <td>
+                      <td className={roboto}>
                         <a
                           href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
                           target='_blank'
@@ -240,7 +240,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td>{formatter.format(record?.totalCost)}</td>
+                      <td className={roboto}>{formatter.format(record?.totalCost)}</td>
                     </tr>
                   ))
                 ) : (
