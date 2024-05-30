@@ -57,13 +57,14 @@ export function App() {
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-          <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-            {email && (
+          {email && (
+            <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>
-            )}
-          </GoAAppHeader>
+            </GoAAppHeader>
+          )}
+          {!email && <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'></GoAAppHeader>}
 
           <div className={outletContainer}>
             <Outlet />
