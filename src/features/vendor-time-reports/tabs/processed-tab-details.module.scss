@@ -25,3 +25,9 @@
 .headerRow {
   vertical-align: middle;
 }
+.toolbar {
+  display: flex;
+  .spacer {
+    flex: 1;
+  }
+}

@@ -17,3 +17,9 @@
   vertical-align: middle;
   max-width: 14%;
 }
+.toolbar {
+  display: flex;
+  .spacer {
+    flex: 1;
+  }
+}
