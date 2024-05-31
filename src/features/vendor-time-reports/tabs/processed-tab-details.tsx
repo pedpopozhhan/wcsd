@@ -292,7 +292,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           name={record.invoiceId.toString()}
                           onChange={handleCheckBoxChange}
                           checked={record?.isChecked || false}
-                          disabled={record?.chargeExtractId?.length > 0 ? true : false}
+                          disabled={record?.chargeExtractId?.length > 0 || record?.uniqueServiceSheetName?.trim().length === 0 ? true : false}
                         ></input>
                       </td>
 
