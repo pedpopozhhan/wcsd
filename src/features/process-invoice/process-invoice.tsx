@@ -35,41 +35,48 @@ export default function ProcessInvoice() {
     styles;
 
   useEffect(() => {
-    setIsLoading(true);
-    const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
-      next: (results) => {
-        const invoiceForContext = {
-          InvoiceID: results.invoice.invoiceId,
-          InvoiceNumber: results.invoice.invoiceNumber,
-          DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
-          InvoiceAmount: results.invoice.invoiceAmount,
-          PeriodEnding: new Date(results.invoice.periodEndDate).toISOString(),
-          InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
-          ContractNumber: contractNumber,
-          UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
-          ServiceDescription: results.invoice.serviceDescription,
-          CreatedBy: results.invoice.createdBy,
-        };
+    if (invoiceId) {
+      setIsLoading(true);
+      const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
+        next: (results) => {
+          const invoiceForContext = {
+            InvoiceID: results.invoice.invoiceId,
+            InvoiceNumber: results.invoice.invoiceNumber,
+            DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
+            InvoiceAmount: results.invoice.invoiceAmount,
+            PeriodEnding: new Date(results.invoice.periodEndDate).toISOString(),
+            InvoiceReceived: new Date(results.invoice.invoiceReceivedDate).toISOString(),
+            ContractNumber: contractNumber,
+            UniqueServiceSheetName: results.invoice.uniqueServiceSheetName,
+            ServiceDescription: results.invoice.serviceDescription,
+            CreatedBy: results.invoice.createdBy,
+          };
 
-        dispatch(setInvoiceData(invoiceForContext));
-        dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
-        dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
-        dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
-        dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
-        setIsLoading(false);
-      },
-      error: (error) => {
-        setIsLoading(false);
-        console.error(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
-        publishToast({ type: 'error', message: failedToPerform('Get details of selected invoice or dispatch values to slice', error.response.data) });
-      },
-    });
-    return () => {
-      subscription.unsubscribe();
-    };
+          dispatch(setInvoiceData(invoiceForContext));
+          dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
+          dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
+          dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
+          dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
+          setIsLoading(false);
+        },
+        error: (error) => {
+          setIsLoading(false);
+          console.error(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('Get details of selected invoice or dispatch values to slice', error.response.data),
+          });
+        },
+      });
+      return () => {
+        subscription.unsubscribe();
+      };
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   function navigateToReconcile() {

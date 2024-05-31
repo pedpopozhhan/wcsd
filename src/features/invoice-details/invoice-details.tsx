@@ -71,7 +71,7 @@ export default function InvoiceDetails() {
     dispatch(setCostDetailsData(data));
     dispatch(setOtherCostsData(otherCostData));
     dispatch(setTimeReportData(timeReportData));
-    navigate(`/Invoice/${invoiceData.InvoiceNumber}/processInvoice`);
+    navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
   return (
