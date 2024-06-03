@@ -1,0 +1,183 @@
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader } from '@abgov/react-components';
+import * as React from 'react';
+import PageLoader from '@/common/page-loader';
+import { yearMonthDay } from '@/common/dates';
+import processInvoiceService from '@/services/process-invoice.service';
+import { useEffect } from 'react';
+import { useConditionalAuth } from '@/app/hooks';
+import { navigateTo } from '@/common/navigate';
+import styles from './signed-off-tab-details.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { IInvoiceDraft } from '@/interfaces/drafts/invoice-draft.interface';
+const { headerRow, roboto } = styles;
+
+interface IDraftsTabDetailsProps {
+  contractNumber: string | undefined;
+}
+
+const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ contractNumber }) => {
+  const auth = useConditionalAuth();
+  const navigate = useNavigate();
+  //Data set
+  const [data, setData] = React.useState<IInvoiceDraft[]>([]);
+  //Loader
+  const [loading, setIsLoading] = React.useState(true);
+
+  //Pagination
+  const [pageData, setPageData] = React.useState<IInvoiceDraft[]>([]);
+  // page number
+  const [page, setPage] = React.useState(1);
+  //count per page
+  const [perPage, setPerPage] = React.useState(10);
+  const [, setPreviousSelectedPerPage] = React.useState(10);
+
+  //Sorting
+
+  useEffect(() => {
+    setIsLoading(true);
+    const subscription = processInvoiceService.getDrafts(auth?.user?.access_token, contractNumber).subscribe({
+      next: (response) => {
+        const sortedData = sort('invoiceDate', 1, response.invoiceDrafts);
+        setData(sortedData);
+        // sort by what default
+        setPageData(sortedData.slice(0, perPage));
+
+        setIsLoading(false);
+      },
+      error: (error) => {
+        setIsLoading(false);
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [auth]);
+
+  function sortData(sortBy: string, sortDir: number) {
+    const sortedData = sort(sortBy, sortDir, data);
+    setData(sortedData.slice());
+    setPageData(sortedData.slice(0, perPage));
+    setPage(1);
+    setPreviousSelectedPerPage(perPage);
+  }
+  function sort(sortBy: string, sortDir: number, rows: IInvoiceDraft[]): IInvoiceDraft[] {
+    rows.sort((a: IInvoiceDraft, b: IInvoiceDraft) => {
+      const varA = a[sortBy as keyof IInvoiceDraft];
+      const varB = b[sortBy as keyof IInvoiceDraft];
+      if (typeof varA === 'string' && typeof varB === 'string') {
+        const res = varB.localeCompare(varA);
+        return res * sortDir;
+      }
+      return (varA > varB ? 1 : -1) * sortDir;
+    });
+    return rows.slice();
+  }
+
+  function getTotalPages() {
+    const num = data ? Math.ceil(data.length / perPage) : 0;
+
+    return num;
+  }
+
+  //Pagination change page
+  function changePage(newPage: number) {
+    if (newPage) {
+      setIsLoading(true);
+      const offset = (newPage - 1) * perPage;
+      const _flightReports = data.slice(offset, offset + perPage);
+
+      setPerPage(perPage);
+      setPage(newPage);
+      setPageData(_flightReports);
+      setIsLoading(false);
+    }
+  }
+
+  //#endregion
+
+  function invoiceNumberClick(invoiceId: string) {
+    // if (invoiceId) {
+    //   navigate(`/processed-invoice/${invoiceId}/${contractNumber}`);
+    // }
+  }
+
+  return (
+    <>
+      <PageLoader visible={loading} />
+
+      <div>
+        <div className='divTable'>
+          <GoATable onSort={sortData} width='100%'>
+            <thead>
+              <tr>
+                <th>
+                  <GoATableSortHeader name='invoiceDate' direction='asc'>
+                    Invoice Date
+                  </GoATableSortHeader>
+                </th>
+                <th className={headerRow}>Invoice No.</th>
+                <th className={headerRow}>Invoice Amount</th>
+              </tr>
+            </thead>
+
+            {!loading && (
+              <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
+                {pageData && pageData.length > 0 ? (
+                  pageData.map((record: IInvoiceDraft) => (
+                    <tr key={record.invoiceId}>
+                      <td>{yearMonthDay(record.invoiceDate)}</td>
+                      <td>
+                        <GoAButton
+                          {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
+                          size='compact'
+                          type='tertiary'
+                          onClick={() => invoiceNumberClick(record.invoiceId)}
+                        >
+                          {record.invoiceNumber}
+                        </GoAButton>
+                      </td>
+                      <td>{record.invoiceAmount}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className='centertext'>
+                      No data avaliable
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
+          </GoATable>
+        </div>
+
+        {data && data.length > 0 && (
+          <GoABlock alignment='center'>
+            <div style={{ display: 'flex', alignSelf: 'center' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>
+                Page {page} of {getTotalPages()}
+              </span>
+            </div>
+            <GoASpacer hSpacing='fill' />
+
+            <GoAPagination
+              variant='links-only'
+              itemCount={data.length || 10}
+              // itemCount={filteredData?.length || 10}
+              perPageCount={perPage}
+              pageNumber={page}
+              onChange={changePage}
+            />
+          </GoABlock>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default DraftsTabDetails;
