@@ -10,6 +10,7 @@ import VendorTimeReportsSidePanel from '@/features/vendor-time-reports/vendor-ti
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
 import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
+import DraftsTabDetails from './tabs/drafts-tab-details';
 
 const InvoiceProcessing = () => {
   const { contractNumber } = useParams();
@@ -58,11 +59,15 @@ const InvoiceProcessing = () => {
               <button id='Processed' role='tab' aria-selected={tabIndex === 3} onClick={() => setTabIndex(3)}>
                 <span>Processed</span>
               </button>
+              <button id='Drafts' role='tab' aria-selected={tabIndex === 4} onClick={() => setTabIndex(4)}>
+                <span>Drafts</span>
+              </button>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <SignedOffTabDetails contractNumber={contractNumber} />}
               {tabIndex === 2 && <ApprovedTabDetails contractNumber={contractNumber} />}
               {tabIndex === 3 && <ProcessedTabDetails contractNumber={contractNumber} />}
+              {tabIndex === 4 && <DraftsTabDetails contractNumber={contractNumber} />}
             </div>
           </div>
         </div>
