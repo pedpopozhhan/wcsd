@@ -301,7 +301,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         </GoAButton>
       )}
       {!editMode && (
-        <GoAButton size='compact' type='primary' onClick={onOpen}>
+        <GoAButton size='normal' type='secondary' onClick={onOpen}>
           Reconcile
         </GoAButton>
       )}

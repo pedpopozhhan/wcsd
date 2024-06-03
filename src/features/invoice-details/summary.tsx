@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
 import { EmptyInvoiceId } from '@/common/types/invoice';
 import { updateInvoice } from '../process-invoice/process-invoice-epic';
+import { convertToPascalCase } from '@/common/string-functions';
 const { container } = styles;
-interface ISummaryProps {
-  showSheet?: boolean;
-}
+interface ISummaryProps { showSheet?: boolean; }
+
 const Summary: React.FC<ISummaryProps> = (props) => {
   const dispatch = useAppDispatch();
   const auth = useConditionalAuth();
@@ -60,7 +60,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
       </div>
       <div>
         <div>Type</div>
-        <div>{contract.contractType}</div>
+        <div>{convertToPascalCase(contract.contractType, '-')}</div>
       </div>
       <div>
         <div>Invoice no.</div>
