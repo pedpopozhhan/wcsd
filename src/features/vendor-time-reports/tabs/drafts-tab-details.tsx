@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader } from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
 import * as React from 'react';
 import PageLoader from '@/common/page-loader';
 import { yearMonthDay } from '@/common/dates';
@@ -9,6 +9,7 @@ import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { IInvoiceDraft } from '@/interfaces/drafts/invoice-draft.interface';
+import { convertToCurrency } from '@/common/currency';
 const { headerRow, roboto } = styles;
 
 interface IDraftsTabDetailsProps {
@@ -122,6 +123,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
                 </th>
                 <th className={headerRow}>Invoice No.</th>
                 <th className={headerRow}>Invoice Amount</th>
+                <th className={headerRow}></th>
               </tr>
             </thead>
 
@@ -141,7 +143,10 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
                           {record.invoiceNumber}
                         </GoAButton>
                       </td>
-                      <td>{record.invoiceAmount}</td>
+                      <td className={roboto}>{convertToCurrency(record.invoiceAmount)}</td>
+                      <td>
+                        <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
+                      </td>
                     </tr>
                   ))
                 ) : (
