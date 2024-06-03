@@ -31,7 +31,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const isLoggedOutPath = window.location.pathname === 'logged-out';
+    const isLoggedOutPath = window.location.pathname === '/logged-out';
 
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {
       if (window.location.search) {
