@@ -78,12 +78,15 @@ export default function InvoiceDetails() {
     <div className={container}>
       <div className={content}>
         <div className={sideBar}>
-          <div>
-            <h2>
-              Invoice
+          <div className={headerContent}>
+            <div>
+              <h2>Invoice</h2>
+            </div>
+            <div>
               <InvoiceModalDialog />
-            </h2>
+            </div>
           </div>
+
           <Totalizer
             invoiceAmount={invoiceData.InvoiceAmount}
             reconciledAmount={reconciledAmount}
