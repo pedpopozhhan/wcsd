@@ -5,13 +5,7 @@ import Totalizer from './invoice-amount-totalizer';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTab from './tabs/details-tab';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import {
-  resetState,
-  setCostDetailsData,
-  setInvoiceAmount,
-  setInvoiceNumber,
-  setOtherCostsData,
-} from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+import { resetState, setCostDetailsData, setOtherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
 import Summary from '@/features/invoice-details/summary';
 import { EmptyInvoiceId } from '@/common/types/invoice';
@@ -20,6 +14,7 @@ import { setInvoiceChanged, setInvoiceData } from '@/app/app-slice';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { navigateTo } from '@/common/navigate';
+import { IInvoiceData } from '@/common/invoice-modal-dialog';
 
 export default function ProcessInvoice() {
   const auth = useConditionalAuth();
@@ -39,7 +34,7 @@ export default function ProcessInvoice() {
       setIsLoading(true);
       const subscription = processedInvoiceDetailService.getInvoiceDetail(auth?.user?.access_token, invoiceId).subscribe({
         next: (results) => {
-          const invoiceForContext = {
+          const invoiceForContext: IInvoiceData = {
             InvoiceID: results.invoice.invoiceId,
             InvoiceNumber: results.invoice.invoiceNumber,
             DateOnInvoice: new Date(results.invoice.invoiceDate).toISOString(),
@@ -53,8 +48,6 @@ export default function ProcessInvoice() {
           };
 
           dispatch(setInvoiceData(invoiceForContext));
-          dispatch(setInvoiceNumber(results.invoice.invoiceNumber));
-          dispatch(setInvoiceAmount(results.invoice.invoiceAmount));
           dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
           dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
           setIsLoading(false);

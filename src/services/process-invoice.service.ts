@@ -3,7 +3,7 @@ import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoic
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import getHeaders from './headers';
-import { IInvoiceDraftRequest, IInvoiceDraftResponse } from '@/interfaces/drafts/invoice-draft.interface';
+import { IInvoiceRequest, IInvoiceResponse } from '@/interfaces/invoices/invoice.interface';
 
 class ProcessInvoiceService {
   private baseUrl: string;
@@ -58,11 +58,11 @@ class ProcessInvoiceService {
   }
 
   getDrafts(token: string, contractNumber: string) {
-    const body: IInvoiceDraftRequest = {
+    const body: IInvoiceRequest = {
       contractNumber: contractNumber,
     };
     return axios
-      .request<IInvoiceDraftResponse>({
+      .request<IInvoiceResponse>({
         method: 'post',
         url: this.baseUrl + '/GetDrafts',
         headers: getHeaders(token),
