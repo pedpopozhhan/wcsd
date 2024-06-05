@@ -4,12 +4,15 @@ import PageLoader from '@/common/page-loader';
 import { yearMonthDay } from '@/common/dates';
 import processInvoiceService from '@/services/process-invoice.service';
 import { useEffect } from 'react';
-import { useConditionalAuth } from '@/app/hooks';
+import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { IInvoiceDraft } from '@/interfaces/drafts/invoice-draft.interface';
 import { convertToCurrency } from '@/common/currency';
+import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
+import { setInvoiceData } from '@/app/app-slice';
+import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { IInvoice } from '@/interfaces/invoices/invoice.interface';
 const { headerRow, roboto } = styles;
 
 interface IDraftsTabDetailsProps {
@@ -19,13 +22,14 @@ interface IDraftsTabDetailsProps {
 const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ contractNumber }) => {
   const auth = useConditionalAuth();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   //Data set
-  const [data, setData] = React.useState<IInvoiceDraft[]>([]);
+  const [data, setData] = React.useState<IInvoice[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  const [pageData, setPageData] = React.useState<IInvoiceDraft[]>([]);
+  const [pageData, setPageData] = React.useState<IInvoice[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
   //count per page
@@ -38,7 +42,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
     setIsLoading(true);
     const subscription = processInvoiceService.getDrafts(auth?.user?.access_token, contractNumber).subscribe({
       next: (response) => {
-        const sortedData = sort('invoiceDate', 1, response.invoiceDrafts);
+        const sortedData = sort('invoiceDate', 1, response.invoices);
         setData(sortedData);
         // sort by what default
         setPageData(sortedData.slice(0, perPage));
@@ -66,10 +70,10 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
     setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
-  function sort(sortBy: string, sortDir: number, rows: IInvoiceDraft[]): IInvoiceDraft[] {
-    rows.sort((a: IInvoiceDraft, b: IInvoiceDraft) => {
-      const varA = a[sortBy as keyof IInvoiceDraft];
-      const varB = b[sortBy as keyof IInvoiceDraft];
+  function sort(sortBy: string, sortDir: number, rows: IInvoice[]): IInvoice[] {
+    rows.sort((a: IInvoice, b: IInvoice) => {
+      const varA = a[sortBy as keyof IInvoice];
+      const varB = b[sortBy as keyof IInvoice];
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
@@ -101,10 +105,29 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
 
   //#endregion
 
-  function invoiceNumberClick(invoiceId: string) {
-    // if (invoiceId) {
-    //   navigate(`/processed-invoice/${invoiceId}/${contractNumber}`);
-    // }
+  function invoiceNumberClick(invoice: IInvoice) {
+    const invoiceForContext: IInvoiceData = {
+      InvoiceID: invoice.invoiceId,
+      InvoiceNumber: invoice.invoiceNumber,
+      DateOnInvoice: new Date(invoice.invoiceDate).toISOString(),
+      InvoiceAmount: invoice.invoiceAmount,
+      PeriodEnding: new Date(invoice.periodEndDate).toISOString(),
+      InvoiceReceived: new Date(invoice.invoiceReceivedDate).toISOString(),
+      ContractNumber: contractNumber,
+      UniqueServiceSheetName: invoice.uniqueServiceSheetName,
+      ServiceDescription: invoice.serviceDescription,
+      CreatedBy: invoice.createdBy,
+    };
+    dispatch(
+      setRowData(
+        invoice.invoiceTimeReportCostDetails.map((x, index) => {
+          return { data: x, index: index, isAdded: true, isSelected: false };
+        }),
+      ),
+    );
+    dispatch(setOtherCostData(invoice.invoiceOtherCostDetails));
+    dispatch(setInvoiceData(invoiceForContext));
+    navigate(`/invoice/${invoice.invoiceNumber}`);
   }
 
   return (
@@ -130,7 +153,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
             {!loading && (
               <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
                 {pageData && pageData.length > 0 ? (
-                  pageData.map((record: IInvoiceDraft) => (
+                  pageData.map((record: IInvoice) => (
                     <tr key={record.invoiceId}>
                       <td>{yearMonthDay(record.invoiceDate)}</td>
                       <td>
@@ -138,14 +161,14 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
                           {...{ style: '"padding: 0 10px 0 10px;height: 90px;"' }}
                           size='compact'
                           type='tertiary'
-                          onClick={() => invoiceNumberClick(record.invoiceId)}
+                          onClick={() => invoiceNumberClick(record)}
                         >
                           {record.invoiceNumber}
                         </GoAButton>
                       </td>
                       <td className={roboto}>{convertToCurrency(record.invoiceAmount)}</td>
                       <td>
-                        <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record?.invoiceId)} />
+                        <GoAIconButton icon='chevron-forward' onClick={() => invoiceNumberClick(record)} />
                       </td>
                     </tr>
                   ))
@@ -170,14 +193,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
             </div>
             <GoASpacer hSpacing='fill' />
 
-            <GoAPagination
-              variant='links-only'
-              itemCount={data.length || 10}
-              // itemCount={filteredData?.length || 10}
-              perPageCount={perPage}
-              pageNumber={page}
-              onChange={changePage}
-            />
+            <GoAPagination variant='links-only' itemCount={data.length || 10} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
         )}
       </div>

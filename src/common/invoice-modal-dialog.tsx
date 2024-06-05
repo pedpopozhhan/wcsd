@@ -20,16 +20,10 @@ export interface IInvoiceData {
   InvoiceReceived: string;
   ContractNumber: string;
   UniqueServiceSheetName: string;
-  PurchaseGroup?: string;
   ServiceDescription?: string;
-  CommunityCode?: string;
-  MaterialGroup?: string;
-  AccountType?: string;
-  Quantity?: string;
-  UnitOfMeasure?: string;
-  Price?: string;
   CreatedBy: string;
 }
+
 interface InvoiceModalProps {
   isNew?: boolean;
   contract?: string;
@@ -71,7 +65,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   let subscription: Subscription;
-  const invoiceForContext = {
+  const invoiceForContext: IInvoiceData = {
     InvoiceID: EmptyInvoiceId,
     InvoiceNumber: invoiceNumber,
     DateOnInvoice: dateOfInvoice,
@@ -246,18 +240,15 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
       setInvoiceReceivedDateError(true);
       return;
-    }
-    else if (new Date(invoiceReceivedDate) > invoiceReceivedMaxDate) {
+    } else if (new Date(invoiceReceivedDate) > invoiceReceivedMaxDate) {
       setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
       setInvoiceReceivedDateError(true);
       return;
-    }
-    else if (new Date(invoiceReceivedDate) < new Date(dateOfInvoice)) {
+    } else if (new Date(invoiceReceivedDate) < new Date(dateOfInvoice)) {
       setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
       setInvoiceReceivedDateError(true);
       return;
-    }
-    else {
+    } else {
       setInvoiceReceivedDateError(false);
       setInvoiceReceivedMaxDateErrorLabel('');
     }
@@ -332,7 +323,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => { }}
+                    onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {
@@ -501,19 +492,15 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         if (propertyValue < minDate) {
                           setInvoiceReceivedDateError(true);
                           setPageHasError(true);
-                        }
-                        else if (propertyValue < new Date(dateOfInvoice)) {
+                        } else if (propertyValue < new Date(dateOfInvoice)) {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
                           setPageHasError(true);
-                        }
-                        else if (propertyValue > invoiceReceivedMaxDate) {
+                        } else if (propertyValue > invoiceReceivedMaxDate) {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
                           setPageHasError(true);
-                        }
-
-                        else {
+                        } else {
                           setInvoiceReceivedDateError(false);
                           setInvoiceReceivedMaxDateErrorLabel('');
                           setPageHasError(false);

@@ -8,8 +8,6 @@ interface IProcessInvoiceTabsDataSliceState {
   otherCostsData: IOtherCostTableRowData[];
   timeReportData: IDetailsTableRow[];
   nameChanged: boolean;
-  invoiceNumber: string;
-  invoiceAmount: number;
 }
 
 const initialState: IProcessInvoiceTabsDataSliceState = {
@@ -17,8 +15,6 @@ const initialState: IProcessInvoiceTabsDataSliceState = {
   otherCostsData: [],
   timeReportData: [],
   nameChanged: false,
-  invoiceNumber: '',
-  invoiceAmount: 0,
 };
 
 export const processInvoiceTabsSlice = createSlice({
@@ -35,24 +31,14 @@ export const processInvoiceTabsSlice = createSlice({
       state.timeReportData = action.payload;
     },
 
-    setInvoiceNumber: (state, action: PayloadAction<string>) => {
-      state.invoiceNumber = action.payload;
-    },
-    setInvoiceAmount: (state, action: PayloadAction<number>) => {
-      state.invoiceAmount = action.payload;
-    },
-
     resetState: (state) => {
       state.costDetailsData = [];
       state.timeReportData = [];
       state.otherCostsData = [];
-      state.invoiceNumber = '';
-      state.invoiceAmount = 0;
     },
   },
 });
 
-export const { setCostDetailsData, setOtherCostsData, setTimeReportData, setInvoiceNumber, setInvoiceAmount, resetState } =
-  processInvoiceTabsSlice.actions;
+export const { setCostDetailsData, setOtherCostsData, setTimeReportData, resetState } = processInvoiceTabsSlice.actions;
 const processInvoiceTabsSliceReducer = processInvoiceTabsSlice.reducer;
 export default processInvoiceTabsSliceReducer;
