@@ -6,11 +6,11 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
 
 const { container, buttons } = styles;
-interface IDetailsTabProps {}
+interface IDetailsTabProps { }
 const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
-  const rateTypes = useAppSelector((state) => state.invoiceDetails.lists?.rateTypes);
+  const rateTypes = useAppSelector((state) => state.invoiceDetails.lists?.payableRateTypes);
 
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
   const [selectedRateType, setSelectedRateType] = useState<string>('');

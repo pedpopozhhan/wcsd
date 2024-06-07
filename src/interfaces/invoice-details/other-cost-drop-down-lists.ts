@@ -3,6 +3,7 @@ import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-respon
 export default interface IOtherCostDropDownLists {
   rateTypes: string[];
   rateUnits: string[];
+  payableRateTypes: string[];
   glAccountList: IDropDownListResponse[];
   costCenterList: IDropDownListResponse[];
   internalOrderList: IDropDownListResponse[];
