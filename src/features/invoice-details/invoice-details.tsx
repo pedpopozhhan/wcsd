@@ -13,7 +13,7 @@ import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/feat
 import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
 
-const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent } = styles;
+const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, payableHeaderContent } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -97,20 +97,27 @@ export default function InvoiceDetails() {
           </div>
         </div>
         <div className={main}>
-          <div className={tabGroupContainer}>
-            <div className={tabList}>
-              <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
-                <span>Payables</span>
-              </button>
-              <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
-                <span>Reconciled</span>
-              </button>
+          <div className={payableHeaderContent}>
+            <div className={tabGroupContainer}>
+              <div className={tabList}>
+                <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+                  <span>Payables</span>
+                </button>
+                <button id='Reconciled' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
+                  <span>Reconciled</span>
+                </button>
+              </div>
             </div>
-            <div className={tabContainer}>
-              {tabIndex === 1 && <DetailsTab />}
-              {tabIndex === 2 && <ReconciledTab />}
+            <div><GoAButton type='tertiary' >
+              Edit Payables
+            </GoAButton>
             </div>
           </div>
+          <div className={tabContainer}>
+            {tabIndex === 1 && <DetailsTab />}
+            {tabIndex === 2 && <ReconciledTab />}
+          </div>
+
         </div>
       </div>
       <div className={footer}>
