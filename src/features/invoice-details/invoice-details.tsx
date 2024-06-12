@@ -12,8 +12,9 @@ import { getCustomLists } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
+import EditPayableModalDialog from './edit-payables-modal-dialog';
 
-const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, payableHeaderContent } = styles;
+const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader, } = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -28,6 +29,7 @@ export default function InvoiceDetails() {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   const [reconciledAmount, setReconciledAmount] = useState<number>(0);
+  const [parentShowModal, setParentShowModal] = useState<boolean>(false);
 
   function isReconciled() {
     const delta = 0.01;
@@ -74,6 +76,12 @@ export default function InvoiceDetails() {
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
+  const showOtherCostsModal = () => {
+    console.log('setParentShowModal(true);');
+    setParentShowModal(true);
+  };
+
+
   return (
     <div className={container}>
       <div className={content}>
@@ -97,8 +105,8 @@ export default function InvoiceDetails() {
           </div>
         </div>
         <div className={main}>
-          <div className={payableHeaderContent}>
-            <div className={tabGroupContainer}>
+          <div className={tabGroupContainer}>
+            <div className={tabHeader}>
               <div className={tabList}>
                 <button id='Payables' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
                   <span>Payables</span>
@@ -107,17 +115,13 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
+              <GoAButton type='tertiary' onClick={showOtherCostsModal}> Edit Payables </GoAButton>
             </div>
-            <div><GoAButton type='tertiary' >
-              Edit Payables
-            </GoAButton>
+            <div className={tabContainer}>
+              {tabIndex === 1 && <DetailsTab />}
+              {tabIndex === 2 && <ReconciledTab />}
             </div>
           </div>
-          <div className={tabContainer}>
-            {tabIndex === 1 && <DetailsTab />}
-            {tabIndex === 2 && <ReconciledTab />}
-          </div>
-
         </div>
       </div>
       <div className={footer}>
@@ -131,6 +135,15 @@ export default function InvoiceDetails() {
           Cancel
         </GoAButton>
       </div>
+      <EditPayableModalDialog
+        contractNumber={invoiceData.ContractNumber}
+        show={parentShowModal}
+        // onAdd={onOtherCostAdded}
+        // onUpdate={onOtherCostUpdated}
+        showEditPayableDialog={setParentShowModal}
+        // rowToUpdate={otherCostDataToUpdate}
+        searchValue=''
+      />
     </div>
   );
 }

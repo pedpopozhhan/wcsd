@@ -34,16 +34,16 @@
     }
   }
 
+  .tabHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .main {
     flex: 1;
     overflow-y: auto;
     overflow: hidden;
-
-    .payableHeaderContent {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
     // this is all to make the tabs have a hidden scroll. the goa component wont work that way
     .tabGroupContainer {
