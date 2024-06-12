@@ -5,5 +5,6 @@ export interface IContractSearchResult {
   contractId: number;
   contractNumber: string;
   contractType: string;
-  numTimeReports: number;
+  downloadsAvailable: number;
+  pendingApprovals: number;
 }

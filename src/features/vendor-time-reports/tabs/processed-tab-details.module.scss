@@ -9,6 +9,25 @@
   margin-top: $goa-space-s;
 }
 
+.checboxHeader {
+  max-width: 2%;
+  padding-top: $goa-space-m;
+  padding-bottom: $goa-space-m;
+  padding-left: $goa-space-xl;
+}
+
+.checboxControl {
+  width: 20px;
+  height: 20px;
+  vertical-align: bottom;
+}
+
 .headerRow {
   vertical-align: middle;
+}
+.toolbar {
+  display: flex;
+  .spacer {
+    flex: 1;
+  }
 }

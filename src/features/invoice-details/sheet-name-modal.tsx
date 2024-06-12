@@ -1,5 +1,3 @@
-// import styles from './sheet-name-modal.module.scss';
-
 import { GoAButton, GoAButtonGroup, GoAFormItem, GoAInput, GoAModal } from '@abgov/react-components';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useEffect, useState } from 'react';
@@ -7,12 +5,20 @@ import { setServiceSheetName } from '@/app/app-slice';
 interface ISheetNameModalProps {
   open: boolean;
   onClose: () => void;
+  onUpdate: () => void;
 }
-const Summary: React.FC<ISheetNameModalProps> = (props) => {
+const SheetNameModal: React.FC<ISheetNameModalProps> = (props) => {
   const dispatch = useAppDispatch();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const [name, setName] = useState<string>(invoiceData.UniqueServiceSheetName);
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    const re = /^[a-zA-Z0-9\b]+$/;
+    if (!re.test(name)) {
+      setName(name.replace(/[^a-zA-Z0-9]/gi, ''));
+    }
+  });
 
   useEffect(() => {
     setOpenModal(props.open);
@@ -24,7 +30,7 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   }
   function onUpdate() {
     dispatch(setServiceSheetName(name));
-    props.onClose();
+    props.onUpdate();
   }
 
   function getHeading() {
@@ -33,11 +39,10 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   function onChange(name: string, value: string) {
     setName(value);
   }
-
   return (
     <GoAModal open={openModal} heading={getHeading()}>
       <GoAFormItem label='Service sheet' helpText='Refer to Ariba for service sheet name'>
-        <GoAInput name='sheetName' value={name} onChange={onChange}></GoAInput>
+        <GoAInput name='sheetName' value={name} onChange={onChange} maxLength={10}></GoAInput>
       </GoAFormItem>
       <GoAButtonGroup alignment='end' mt='l'>
         <GoAButton type='secondary' onClick={onCancel}>
@@ -51,4 +56,4 @@ const Summary: React.FC<ISheetNameModalProps> = (props) => {
   );
 };
 
-export default Summary;
+export default SheetNameModal;

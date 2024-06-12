@@ -1,4 +1,4 @@
-import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIcon } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -8,10 +8,9 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
-import { failedToPerform, publishToast } from '@/common/toast';
 import { resetInvoiceDetails } from '@/features/invoice-details/invoice-details-slice';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
-const { checboxHeader, checboxControl, headerRow } = styles;
+const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -28,14 +27,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const [pageData, setPageData] = useState<IRowItem[]>([]);
 
   //Data set
+  const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
 
   //Loader
   const [loading, setIsLoading] = useState(true);
 
-  const [retry, setRetry] = useState<boolean>(false);
-
-  //Pagination
+  const [searchVal, setSearchVal] = useState<string>();
 
   // page number
   const [page, setPage] = useState(1);
@@ -59,10 +57,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const rows = response.rows.map((x) => {
           return { isChecked: false, ...x };
         });
-        setData(rows);
-        // sort by what default
-        setPageData(rows.slice(0, perPage));
 
+        setRawData(rows);
+        setData(rows);
+        setPageData(rows.slice(0, perPage));
         setIsLoading(false);
       },
       error: (error) => {
@@ -70,13 +68,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('load flight reports', error.response.data),
-          callback: () => {
-            setRetry(!retry);
-          },
-        });
+
         setIsLoading(false);
       },
     });
@@ -84,7 +76,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [searchValue, contractNumber, retry]);
+  }, [searchValue, contractNumber]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -141,8 +133,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
+      //get all the visible items
       const allTimeReports = data?.map((record: IRowItem) => {
-        return { ...record, isChecked: checked };
+        if (pageData.find((x) => x.flightReportId && x.flightReportId === record.flightReportId)) {
+          return { ...record, isChecked: checked };
+        }
+        return record;
       });
       setData(allTimeReports);
     } else {
@@ -158,11 +154,34 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     currency: 'USD',
   });
 
+  const onChange = (name: string, value: string) => {
+    setSearchVal(value);
+    if (value.length < 3) {
+      setData(rawData);
+      changePage(1);
+      return;
+    }
+    const upper = value.toUpperCase();
+    const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
+    setData(results);
+  };
+
   return (
     <>
       <PageLoader visible={loading} />
       <div>
-        <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
+        <div className={toolbar}>
+          <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
+          <div className={spacer}></div>
+          <GoAInput
+            type='search'
+            name='search'
+            value={searchVal}
+            onChange={onChange}
+            leadingIcon='search'
+            placeholder='Search Registration no.'
+          ></GoAInput>
+        </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>
@@ -172,7 +191,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     className={checboxControl}
                     type='checkbox'
                     name='selectAll'
-                    checked={data.length > 0 && data?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
+                    checked={pageData.length > 0 && pageData?.filter((item: IRowItem) => item?.isChecked !== true).length < 1}
                     disabled={data.length === 0}
                     onChange={handleCheckBoxChange}
                   ></input>
@@ -184,7 +203,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                 <th className={headerRow}>AO-02 No.</th>
                 <th className={headerRow}>Registration No.</th>
                 <th className={headerRow}>Total Cost</th>
-                <th className={headerRow}></th>
               </tr>
             </thead>
 
@@ -215,15 +233,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     <td>{record.ao02Number}</td>
                     <td>{record?.contractRegistrationName}</td>
                     <td>{formatter.format(record?.totalCost)}</td>
-                    <td>
-                      <a
-                        href={import.meta.env.VITE_AVIATION_APPLICATION_BASE_URL + '/flightReportDetail/' + record?.flightReportId}
-                        target='_blank'
-                        rel='noreferrer'
-                      >
-                        <GoAIcon type='chevron-forward' />
-                      </a>
-                    </td>
                   </tr>
                 ))
               ) : (

@@ -10,10 +10,18 @@ main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  padding-right: $goa-space-m;
+  padding-left: $goa-space-m;
 }
-.top {
-  margin-left: 155px;
+
+.dropdownContainer {
+  display: inline-block;
+  margin-right: $goa-space-m;
 }
-.searchResultsContainer {
-  margin-left: 155px;
+
+.toolbar {
+  display: flex;
+  .spacer {
+    flex: 1;
+  }
 }

@@ -20,4 +20,6 @@ export interface IProcessedInvoiceTableRowData {
   quantity: number,
   unitOfMeasure: string,
   price: number
+  chargeExtractId: string
+  documentDate: Date
 }
