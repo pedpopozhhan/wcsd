@@ -1,50 +1,92 @@
-import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAInput } from '@abgov/react-components';
-import { useEffect, useState } from 'react';
+import { GoAButton, GoAButtonGroup, GoAButtonType, GoABadge, GoABadgeType, GoATable, GoATableSortHeader, GoAInput, GoAChip, GoAPagination, GoABlock, GoASpacer }
+  from '@abgov/react-components';
+import { useState, useEffect } from 'react';
+import FlyOut from '@/common/fly-out';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { yearMonthDay } from '@/common/dates';
-import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
-import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
-import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
+import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import { resetInvoiceDetails, setFlightReportIds } from '@/features/invoice-details/invoice-details-slice';
-import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
-const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
+import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
+import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
+const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv, } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
 }
-interface IFlightReportAllProps {
-  contractNumber: string | undefined;
-  searchValue?: string;
-  onClickFlightReport?: (flightReportId: number) => void;
+
+interface IEditPayableModalDialog {
+  contractNumber: string;
+  showEditPayableDialog: (value: boolean) => void;
+  show: boolean;
+  searchValue: string
 }
 
-const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = useConditionalAuth();
-  //Object for the page data
-  const [pageData, setPageData] = useState<IRowItem[]>([]);
+const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, searchValue, show, showEditPayableDialog }) => {
+  const [cancelButtonlabel,] = useState<string>('Cancel');
+  const [cancelButtonType,] = useState<GoAButtonType>('tertiary');
+  const [updateButtonlabel,] = useState<string>('Update');
+  const [updateButtonType,] = useState<GoAButtonType>('primary');
+  const [respMessageType] = useState<GoABadgeType>('light');
+  const [respMessageContent] = useState('');
+  const [respMessageIcon] = useState<boolean>(false);
+  const [iscancelled, setIsCancelled] = useState<boolean>(false);
+  const [dialogTitle,] = useState<string>('Edit Payables');
+  const [visible, setVisible] = useState<boolean>(false);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const contract = useAppSelector((state) => state.app.contractForReconciliation);
 
-  //Data set
+  const auth = useConditionalAuth();
+  const [pageData, setPageData] = useState<IRowItem[]>([]);
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
 
-  //Loader
   const [loading, setIsLoading] = useState(true);
-
   const [searchVal, setSearchVal] = useState<string>();
 
-  // page number
   const [page, setPage] = useState(1);
-  //count per page
-  const [perPage, setPerPage] = useState(10);
-  const [, setPreviousSelectedPerPage] = useState(10);
-
-  // Modal Dialog configuration
-  const [contractID] = useState(contractNumber);
+  const [perPage, setPerPage] = useState(7);
+  const [, setPreviousSelectedPerPage] = useState(7);
 
   const dispatch = useAppDispatch();
+  const flighReportIds = useAppSelector((state) => state.invoiceDetails.flightReportIds);
+  const [leadingIconName, setLeadingIconName] = useState<string>('');
+
+  useEffect(() => {
+    setVisible(show);
+  }, [show]);
+
+  useEffect(() => {
+    if (iscancelled) {
+      setIsCancelled(false);
+    }
+  }, [iscancelled]);
+
+
+  const hideModalDialog = () => {
+    setIsCancelled(true);
+    showEditPayableDialog(false);
+  };
+
+  const UpdatePayables = () => {
+    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+    const trItems: number[] = [];
+    items?.map((record: IFlightReportDashboard) => {
+      trItems.push(record.flightReportId);
+    });
+
+    if (trItems.length > 0) {
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
+      dispatch(setFlightReportIds(trItems));
+      showEditPayableDialog(false);
+    }
+    if (trItems.length == 0) {
+      dispatch(resetInvoiceDetails());
+      showEditPayableDialog(false);
+    }
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,7 +97,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows.map((x) => {
-          return { isChecked: false, ...x };
+          if (flighReportIds.find(element => element === x.flightReportId) !== undefined) {
+            return { isChecked: true, ...x };
+          } else {
+            return { isChecked: false, ...x };
+          }
         });
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
@@ -68,7 +114,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-
         setIsLoading(false);
       },
     });
@@ -104,12 +149,12 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
+
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
 
     return num;
   }
-
   function changePage(newPage: number) {
     if (newPage) {
       const offset = (newPage - 1) * perPage;
@@ -120,21 +165,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     }
   }
 
-  const reconcileTimeReports = () => {
-    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
-    const trItems: number[] = [];
-    items?.map((record: IFlightReportDashboard) => {
-      trItems.push(record.flightReportId);
-    });
-
-    if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
-      dispatch(setFlightReportIds(trItems));
+  function showHideSelectedData() {
+    if (leadingIconName === '') {
+      setLeadingIconName('checkmark');
     }
-    if (trItems.length == 0) {
-      dispatch(resetInvoiceDetails());
+    else {
+      setLeadingIconName('');
     }
-  };
+  }
 
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -172,21 +210,53 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setData(results);
   };
 
+
   return (
     <>
       <PageLoader visible={loading} />
-      <div>
+      <FlyOut
+        heading={dialogTitle}
+        open={visible}
+        onClose={hideModalDialog}
+        actions={
+          <GoAButtonGroup alignment='end'>
+            <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
+            <GoAButton type={cancelButtonType} onClick={hideModalDialog} >
+              {cancelButtonlabel}
+            </GoAButton>
+            <GoAButton type={updateButtonType} onClick={UpdatePayables}>
+              {updateButtonlabel}
+            </GoAButton>
+          </GoAButtonGroup>
+        }
+      >
+        <div className={topContainer}>
+          <div>
+            <div>Vendor</div>
+            <div>{contract.vendorName}</div>
+          </div>
+          <div>
+            <div>Invoie no.</div>
+            <div>{invoiceData.InvoiceNumber}</div>
+          </div>
+        </div>
         <div className={toolbar}>
-          <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
-          <div className={spacer}></div>
-          <GoAInput
-            type='search'
-            name='search'
-            value={searchVal}
-            onChange={onChange}
-            leadingIcon='search'
-            placeholder='Search Registration no.'
-          ></GoAInput>
+          <div className={searchBar}>
+            <div>Approved time reports</div>
+            <div>
+              <GoAInput
+                type='search'
+                name='search'
+                value={searchVal}
+                onChange={onChange}
+                leadingIcon='search'
+                placeholder='Search Registration no.'
+              ></GoAInput>
+            </div>
+          </div>
+          <div className={selectedDiv}>
+            <GoAChip content='Selected' leadingIcon={leadingIconName} onClick={showHideSelectedData} ></GoAChip>
+          </div>
         </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
@@ -255,7 +325,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             )}
           </GoATable>
         </div>
-
         {data && data.length > 0 && (
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
@@ -268,9 +337,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
         )}
-      </div>
+
+      </FlyOut >
     </>
   );
 };
 
-export default ApprovedTabDetails;
+export default EditPayableModalDialog;
