@@ -6,20 +6,19 @@ export interface IProcessedInvoiceTableRowData {
   periodEndDate: Date;
   invoiceReceivedDate: Date;
   vendor: string;
-  assignedTo: string;
   contractNumber: string;
   type: string;
   createdBy: string;
   paymentStatus: string;
-  uniqueServiceSheetName: string,
-  purchaseGroup: string,
-  serviceDescription: string,
-  communityCode: string,
-  materialGroup: string,
-  accountType: string,
-  quantity: number,
-  unitOfMeasure: string,
-  price: number
-  chargeExtractId: string
-  documentDate: Date
+  uniqueServiceSheetName: string;
+  purchaseGroup: string;
+  serviceDescription: string;
+  communityCode: string;
+  materialGroup: string;
+  accountType: string;
+  quantity: number;
+  unitOfMeasure: string;
+  price: number;
+  chargeExtractId: string;
+  documentDate: Date;
 }

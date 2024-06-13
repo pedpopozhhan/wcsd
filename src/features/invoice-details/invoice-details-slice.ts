@@ -7,6 +7,7 @@ import IOtherCostDropDownLists from '@/interfaces/invoice-details/other-cost-dro
 export interface IInvoiceDetailsSliceState {
   rowData: IDetailsTableRow[];
   otherCostData: IOtherCostTableRowData[];
+  flightReportIds: number[];
   rateTypes: string[];
   lists: IOtherCostDropDownLists;
 }
@@ -14,27 +15,24 @@ export interface IInvoiceDetailsSliceState {
 const initialState: IInvoiceDetailsSliceState = {
   rowData: [],
   otherCostData: [],
+  flightReportIds: [],
   rateTypes: [],
   lists: null,
 };
 
+export interface IInitializeRowDataPayload {
+  data: ITimeReportDetailsTableRowData[];
+  selectedIds: number[];
+}
 export const invoiceDetailsSlice = createSlice({
   name: 'invoiceDetailsSlice',
   initialState,
   reducers: {
-    initializeRowData: (state, action: PayloadAction<ITimeReportDetailsTableRowData[]>) => {
-      const data = action.payload.slice().map((x, i) => {
-        return {
-          index: i,
-          data: x,
-          isAdded: false,
-          isSelected: false,
-        };
-      });
-      state.rowData = data;
-    },
     setRowData: (state, action: PayloadAction<IDetailsTableRow[]>) => {
       state.rowData = action.payload;
+    },
+    setFlightReportIds: (state, action: PayloadAction<number[]>) => {
+      state.flightReportIds = action.payload;
     },
     setOtherCostData: (state, action: PayloadAction<IOtherCostTableRowData[]>) => {
       state.otherCostData = action.payload;
@@ -52,6 +50,6 @@ export const invoiceDetailsSlice = createSlice({
   },
 });
 
-export const { setRowData, setOtherCostData, setRateTypes, initializeRowData, resetInvoiceDetails, setLists } = invoiceDetailsSlice.actions;
+export const { setRowData, setOtherCostData, setRateTypes, setFlightReportIds, resetInvoiceDetails, setLists } = invoiceDetailsSlice.actions;
 const invoiceDetailsReducer = invoiceDetailsSlice.reducer;
 export default invoiceDetailsReducer;

@@ -32,6 +32,7 @@ export const appSlice = createSlice({
       state.invoiceData = { ...state.invoiceData, UniqueServiceSheetName: action.payload };
     },
     setInvoiceChanged: (state, action: PayloadAction<boolean>) => {
+      // currently used to enable the Update button on process-invoice (via formChanged variable)
       state.invoiceChanged = action.payload;
     },
     setInvoiceId: (state, action: PayloadAction<string>) => {

@@ -9,7 +9,6 @@ export interface IProcessedInvoiceData {
   periodEndDate: Date;
   invoiceReceivedDate: Date;
   vendor: string;
-  assignedTo: string;
   contractNumber: string;
   type: string;
   invoiceTimeReportCostDetails: ITimeReportDetailsTableRowData[];
