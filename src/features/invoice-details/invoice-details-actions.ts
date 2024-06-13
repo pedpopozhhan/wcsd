@@ -62,6 +62,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
         });
       return of(setRowData(data), setOtherCostData(invoice.invoiceOtherCostDetails), setInvoiceData(invoiceForContext));
     }),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     tap((action) => {
       navigateTo(`/invoice/${invoice.invoiceNumber}`);
     }),
