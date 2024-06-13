@@ -10,7 +10,6 @@ export interface IInvoiceDetailsSliceState {
   flightReportIds: number[];
   rateTypes: string[];
   lists: IOtherCostDropDownLists;
-  flightReportIds: number[];
 }
 
 const initialState: IInvoiceDetailsSliceState = {
@@ -19,7 +18,6 @@ const initialState: IInvoiceDetailsSliceState = {
   flightReportIds: [],
   rateTypes: [],
   lists: null,
-  flightReportIds: [],
 };
 
 export interface IInitializeRowDataPayload {
@@ -33,9 +31,7 @@ export const invoiceDetailsSlice = createSlice({
     setRowData: (state, action: PayloadAction<IDetailsTableRow[]>) => {
       state.rowData = action.payload;
     },
-    setFlightReportIds: (state, action: PayloadAction<number[]>) => {
-      state.flightReportIds = action.payload;
-    },
+
     setOtherCostData: (state, action: PayloadAction<IOtherCostTableRowData[]>) => {
       state.otherCostData = action.payload;
     },
