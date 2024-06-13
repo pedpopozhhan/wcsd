@@ -8,7 +8,9 @@ import { EmptyInvoiceId } from '@/common/types/invoice';
 import { updateInvoice } from '../process-invoice/process-invoice-epic';
 import { convertToPascalCase } from '@/common/string-functions';
 const { container } = styles;
-interface ISummaryProps { showSheet?: boolean; }
+interface ISummaryProps {
+  showSheet?: boolean;
+}
 
 const Summary: React.FC<ISummaryProps> = (props) => {
   const dispatch = useAppDispatch();
@@ -32,6 +34,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
   function onSheetNameUpdated() {
     setOpenModal(false);
     if (invoiceData.InvoiceID !== EmptyInvoiceId) {
+      // TODO: what about draft?
       dispatch(updateInvoice({ token: auth?.user?.access_token }));
     }
   }
