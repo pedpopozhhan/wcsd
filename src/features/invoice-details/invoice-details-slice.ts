@@ -7,9 +7,9 @@ import IOtherCostDropDownLists from '@/interfaces/invoice-details/other-cost-dro
 export interface IInvoiceDetailsSliceState {
   rowData: IDetailsTableRow[];
   otherCostData: IOtherCostTableRowData[];
-  flightReportIds: number[];
   rateTypes: string[];
   lists: IOtherCostDropDownLists;
+  flightReportIds: number[];
 }
 
 const initialState: IInvoiceDetailsSliceState = {
