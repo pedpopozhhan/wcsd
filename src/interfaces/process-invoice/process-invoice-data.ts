@@ -1,13 +1,6 @@
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
-
-export enum InvoiceStatus {
-  Draft = 'Draft',
-  Processed = 'Processed',
-  DraftDeleted = 'DraftDeleted',
-  ProcessedDeleted = 'ProcessedDeleted',
-}
-
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 export interface IInvoiceRequest {
   contractNumber: string;
 }

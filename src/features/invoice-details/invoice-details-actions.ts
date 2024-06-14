@@ -9,8 +9,9 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import dropDownListService from '@/services/drop-down-lists.service';
 import { IInvoice, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import processInvoiceService from '@/services/process-invoice.service';
-import { setInvoiceChanged, setInvoiceData, setInvoiceId, setServiceSheetName } from '@/app/app-slice';
+import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setServiceSheetName } from '@/app/app-slice';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
@@ -153,7 +154,7 @@ export function handleSaveDraftInvoice(action: PayloadAction<{ token: string }>,
     mergeMap((data) => {
       // eslint-disable-next-line quotes
       publishToast({ type: 'success', message: "Invoice saved. Accessible in 'Drafts' Tab." });
-      return of(setInvoiceId(data), setServiceSheetName(data), setInvoiceChanged(false));
+      return of(setInvoiceStatus(InvoiceStatus.Draft), setInvoiceId(data), setServiceSheetName(data), setInvoiceChanged(false));
     }),
     catchError((error) => {
       console.error(error);

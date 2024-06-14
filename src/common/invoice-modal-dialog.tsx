@@ -10,10 +10,14 @@ import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
 import styles from './invoice-modal-dialog.module.scss';
 import moment from 'moment';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import { saveDraftInvoice } from '@/features/invoice-details/invoice-details-actions';
+
 const { container } = styles;
 export interface IInvoiceData {
   InvoiceID: string;
   InvoiceNumber: string;
+  InvoiceStatus?: InvoiceStatus;
   DateOnInvoice: string;
   InvoiceAmount: number;
   PeriodEnding: string;
@@ -266,7 +270,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       // TODO: what about draft?
       dispatch(setInvoiceData(invoiceForContext));
-      publishToast({ type: 'info', message: 'Invoice updated.' });
+      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+      } else {
+        publishToast({ type: 'info', message: 'Invoice updated.' });
+      }
       clearErrors();
       setIsVisible(false);
       if (props.onClose) {
