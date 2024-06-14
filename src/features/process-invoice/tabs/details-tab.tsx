@@ -22,7 +22,7 @@ const InvoiceDetailsTab: FC<IReconciledTabProps> = () => {
         <div className={otherCostHeader}>Other Costs</div>
         <div className={otherCostsDiv}>
           <InvoiceOtherCostTable data={otherCostData} />
-        </div>{' '}
+        </div>
       </div>
     </div>
   );

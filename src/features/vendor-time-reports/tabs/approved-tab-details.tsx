@@ -9,7 +9,7 @@ import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
 import { resetInvoiceDetails, setFlightReportIds } from '@/features/invoice-details/invoice-details-slice';
-import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
+import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
 
 interface IRowItem extends IFlightReportDashboard {

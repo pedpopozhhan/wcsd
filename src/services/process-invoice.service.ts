@@ -1,9 +1,8 @@
-import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
+import { IInvoiceRequest, IInvoiceResponse, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
 import getHeaders from './headers';
-import { IInvoiceRequest, IInvoiceResponse } from '@/interfaces/invoices/invoice.interface';
 
 class ProcessInvoiceService {
   private baseUrl: string;
@@ -67,6 +66,21 @@ class ProcessInvoiceService {
         url: this.baseUrl + '/GetDrafts',
         headers: getHeaders(token),
         data: body,
+      })
+      .pipe(
+        map((x) => {
+          return x.data;
+        }),
+      );
+  }
+
+  saveDraft(token: string, invoice: IProcessInvoiceData) {
+    return axios
+      .request<string>({
+        method: 'post',
+        url: this.baseUrl + '/SaveDraft',
+        headers: getHeaders(token),
+        data: invoice,
       })
       .pipe(
         map((x) => {

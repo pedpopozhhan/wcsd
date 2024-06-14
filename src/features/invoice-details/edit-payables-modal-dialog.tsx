@@ -1,5 +1,17 @@
-import { GoAButton, GoAButtonGroup, GoAButtonType, GoABadge, GoABadgeType, GoATable, GoATableSortHeader, GoAInput, GoAChip, GoAPagination, GoABlock, GoASpacer }
-  from '@abgov/react-components';
+import {
+  GoAButton,
+  GoAButtonGroup,
+  GoAButtonType,
+  GoABadge,
+  GoABadgeType,
+  GoATable,
+  GoATableSortHeader,
+  GoAInput,
+  GoAChip,
+  GoAPagination,
+  GoABlock,
+  GoASpacer,
+} from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import FlyOut from '@/common/fly-out';
 import PageLoader from '@/common/page-loader';
@@ -9,9 +21,9 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import { resetInvoiceDetails, setFlightReportIds } from '@/features/invoice-details/invoice-details-slice';
-import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-epic';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
-const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv, } = Styles;
+import { getInvoiceDetails } from './invoice-details-actions';
+const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -21,19 +33,19 @@ interface IEditPayableModalDialog {
   contractNumber: string;
   showEditPayableDialog: (value: boolean) => void;
   show: boolean;
-  searchValue: string
+  searchValue: string;
 }
 
 const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, searchValue, show, showEditPayableDialog }) => {
-  const [cancelButtonlabel,] = useState<string>('Cancel');
-  const [cancelButtonType,] = useState<GoAButtonType>('tertiary');
-  const [updateButtonlabel,] = useState<string>('Update');
-  const [updateButtonType,] = useState<GoAButtonType>('primary');
+  const [cancelButtonlabel] = useState<string>('Cancel');
+  const [cancelButtonType] = useState<GoAButtonType>('tertiary');
+  const [updateButtonlabel] = useState<string>('Update');
+  const [updateButtonType] = useState<GoAButtonType>('primary');
   const [respMessageType] = useState<GoABadgeType>('light');
   const [respMessageContent] = useState('');
   const [respMessageIcon] = useState<boolean>(false);
   const [iscancelled, setIsCancelled] = useState<boolean>(false);
-  const [dialogTitle,] = useState<string>('Edit Payables');
+  const [dialogTitle] = useState<string>('Edit Payables');
   const [visible, setVisible] = useState<boolean>(false);
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
@@ -63,7 +75,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       setIsCancelled(false);
     }
   }, [iscancelled]);
-
 
   const hideModalDialog = () => {
     setIsCancelled(true);
@@ -97,7 +108,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows.map((x) => {
-          if (flighReportIds.find(element => element === x.flightReportId) !== undefined) {
+          if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
             return { isChecked: true, ...x };
           } else {
             return { isChecked: false, ...x };
@@ -168,8 +179,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   function showHideSelectedData() {
     if (leadingIconName === '') {
       setLeadingIconName('checkmark');
-    }
-    else {
+    } else {
       setLeadingIconName('');
     }
   }
@@ -210,7 +220,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     setData(results);
   };
 
-
   return (
     <>
       <PageLoader visible={loading} />
@@ -221,7 +230,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
-            <GoAButton type={cancelButtonType} onClick={hideModalDialog} >
+            <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
               {cancelButtonlabel}
             </GoAButton>
             <GoAButton type={updateButtonType} onClick={UpdatePayables}>
@@ -255,7 +264,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             </div>
           </div>
           <div className={selectedDiv}>
-            <GoAChip content='Selected' leadingIcon={leadingIconName} onClick={showHideSelectedData} ></GoAChip>
+            <GoAChip content='Selected' leadingIcon={leadingIconName} onClick={showHideSelectedData}></GoAChip>
           </div>
         </div>
         <div className='divTable'>
@@ -337,8 +346,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
         )}
-
-      </FlyOut >
+      </FlyOut>
     </>
   );
 };

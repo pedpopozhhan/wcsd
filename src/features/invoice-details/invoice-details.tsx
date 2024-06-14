@@ -8,13 +8,15 @@ import { useEffect, useState } from 'react';
 import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getCustomLists } from './invoice-details-epic';
 import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { setOtherCostData } from './invoice-details-slice';
+import { setFlightReportIds, setOtherCostData } from './invoice-details-slice';
 import { setRowData } from './invoice-details-slice';
+import { getCustomLists, saveDraftInvoice } from './invoice-details-actions';
+import { setInvoiceData } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
 
-const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader, } = styles;
+const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader } =
+  styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -53,6 +55,15 @@ export default function InvoiceDetails() {
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
 
+  function save() {
+    const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
+
+    dispatch(setInvoiceData(invoiceData));
+    dispatch(setOtherCostsData(otherCostData));
+    dispatch(setTimeReportData(rowData.filter((x) => x.isAdded)));
+    dispatch(setFlightReportIds(flightReportIds));
+    dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+  }
   function cancel() {
     dispatch(
       setRowData(
@@ -73,6 +84,7 @@ export default function InvoiceDetails() {
     dispatch(setCostDetailsData(data));
     dispatch(setOtherCostsData(otherCostData));
     dispatch(setTimeReportData(timeReportData));
+
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
@@ -80,7 +92,6 @@ export default function InvoiceDetails() {
     console.log('setParentShowModal(true);');
     setParentShowModal(true);
   };
-
 
   return (
     <div className={container}>
@@ -115,7 +126,10 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showOtherCostsModal}> Edit Payables </GoAButton>
+              <GoAButton type='tertiary' onClick={showOtherCostsModal}>
+                {' '}
+                Edit Payables{' '}
+              </GoAButton>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <DetailsTab />}
@@ -131,7 +145,10 @@ export default function InvoiceDetails() {
           </div>
           Next
         </GoAButton>
-        <GoAButton type='secondary' onClick={cancel}>
+        <GoAButton type='secondary' onClick={save}>
+          save
+        </GoAButton>
+        <GoAButton type='tertiary' onClick={cancel}>
           Cancel
         </GoAButton>
       </div>

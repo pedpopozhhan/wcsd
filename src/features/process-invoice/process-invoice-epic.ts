@@ -6,7 +6,6 @@ import processInvoiceService from '@/services/process-invoice.service';
 import { IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import { setInvoiceChanged, setInvoiceId, setServiceSheetName } from '@/app/app-slice';
 import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
-import { setNotificationStatus } from './process-invoice-slice';
 import { StateObservable } from 'redux-observable';
 import { RootState } from '@/app/store';
 
@@ -36,18 +35,18 @@ export const processInvoiceEpic = (actions$: Observable<Action>, state$: StateOb
           invoiceReceivedDate: invoiceData.InvoiceReceived,
           vendorBusinessId: contractDetails.businessId.toString(),
           vendorName: contractDetails.vendorName,
-          assignedTo: '',
           contractNumber: invoiceData.ContractNumber,
           type: contractDetails.contractType,
           uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
           serviceDescription: invoiceData.ServiceDescription,
           invoiceTimeReportCostDetails: invoiceTimeReportData,
           invoiceOtherCostDetails: otherCostData,
+          flightReportIds: state$.value.invoiceDetails.flightReportIds,
         };
         return processInvoiceService.createInvoice(action.payload.token, payload).pipe(
           mergeMap((data) => {
             publishToast({ type: 'success', message: `Invoice # ${invoiceData.InvoiceNumber} processed.` });
-            return of(setInvoiceId(data), setRowData([]), setOtherCostData([]), setNotificationStatus(true), setInvoiceChanged(false));
+            return of(setInvoiceId(data), setRowData([]), setOtherCostData([]), setInvoiceChanged(false));
           }),
           catchError((error) => {
             console.error(error);
@@ -78,18 +77,18 @@ export const processInvoiceEpic = (actions$: Observable<Action>, state$: StateOb
           invoiceReceivedDate: invoiceData.InvoiceReceived,
           vendorBusinessId: contractDetails.businessId.toString(),
           vendorName: contractDetails.vendorName,
-          assignedTo: '',
           contractNumber: invoiceData.ContractNumber,
           type: contractDetails.contractType,
           uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
           serviceDescription: invoiceData.ServiceDescription,
           invoiceTimeReportCostDetails: invoiceTimeReportData,
           invoiceOtherCostDetails: otherCostData,
+          flightReportIds: state$.value.invoiceDetails.flightReportIds,
         };
         return processInvoiceService.updateInvoice(action.payload.token, payload).pipe(
           mergeMap((data) => {
             publishToast({ type: 'success', message: 'Invoice updated successfully.' });
-            return of(setServiceSheetName(data), setNotificationStatus(true), setInvoiceChanged(false));
+            return of(setServiceSheetName(data), setInvoiceChanged(false));
           }),
           catchError((error) => {
             console.error(error);

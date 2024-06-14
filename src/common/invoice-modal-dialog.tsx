@@ -264,6 +264,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       // Navigate to invoice detail page
       navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
+      // TODO: what about draft?
       dispatch(setInvoiceData(invoiceForContext));
       publishToast({ type: 'info', message: 'Invoice updated.' });
       clearErrors();

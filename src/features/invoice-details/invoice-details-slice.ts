@@ -15,29 +15,23 @@ export interface IInvoiceDetailsSliceState {
 const initialState: IInvoiceDetailsSliceState = {
   rowData: [],
   otherCostData: [],
+  flightReportIds: [],
   rateTypes: [],
   lists: null,
-  flightReportIds: [],
 };
 
+export interface IInitializeRowDataPayload {
+  data: ITimeReportDetailsTableRowData[];
+  selectedIds: number[];
+}
 export const invoiceDetailsSlice = createSlice({
   name: 'invoiceDetailsSlice',
   initialState,
   reducers: {
-    initializeRowData: (state, action: PayloadAction<ITimeReportDetailsTableRowData[]>) => {
-      const data = action.payload.slice().map((x, i) => {
-        return {
-          index: i,
-          data: x,
-          isAdded: false,
-          isSelected: false,
-        };
-      });
-      state.rowData = data;
-    },
     setRowData: (state, action: PayloadAction<IDetailsTableRow[]>) => {
       state.rowData = action.payload;
     },
+
     setOtherCostData: (state, action: PayloadAction<IOtherCostTableRowData[]>) => {
       state.otherCostData = action.payload;
     },
@@ -58,6 +52,6 @@ export const invoiceDetailsSlice = createSlice({
   },
 });
 
-export const { setRowData, setOtherCostData, setRateTypes, initializeRowData, resetInvoiceDetails, setLists, setFlightReportIds } = invoiceDetailsSlice.actions;
+export const { setRowData, setOtherCostData, setRateTypes, resetInvoiceDetails, setLists, setFlightReportIds } = invoiceDetailsSlice.actions;
 const invoiceDetailsReducer = invoiceDetailsSlice.reducer;
 export default invoiceDetailsReducer;

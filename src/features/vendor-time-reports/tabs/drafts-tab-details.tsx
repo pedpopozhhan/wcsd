@@ -7,12 +7,9 @@ import { useEffect } from 'react';
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
-import { useNavigate } from 'react-router-dom';
 import { convertToCurrency } from '@/common/currency';
-import { setOtherCostData, setRowData } from '@/features/invoice-details/invoice-details-slice';
-import { setInvoiceData } from '@/app/app-slice';
-import { IInvoiceData } from '@/common/invoice-modal-dialog';
-import { IInvoice } from '@/interfaces/invoices/invoice.interface';
+import { IInvoice } from '@/interfaces/process-invoice/process-invoice-data';
+import { clickOnDraftInvoice } from '@/features/invoice-details/invoice-details-actions';
 const { headerRow, roboto } = styles;
 
 interface IDraftsTabDetailsProps {
@@ -21,7 +18,6 @@ interface IDraftsTabDetailsProps {
 
 const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ contractNumber }) => {
   const auth = useConditionalAuth();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   //Data set
   const [data, setData] = React.useState<IInvoice[]>([]);
@@ -40,6 +36,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
 
   useEffect(() => {
     setIsLoading(true);
+    // move this to epic, so can
     const subscription = processInvoiceService.getDrafts(auth?.user?.access_token, contractNumber).subscribe({
       next: (response) => {
         const sortedData = sort('invoiceDate', 1, response.invoices);
@@ -106,28 +103,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
   //#endregion
 
   function invoiceNumberClick(invoice: IInvoice) {
-    const invoiceForContext: IInvoiceData = {
-      InvoiceID: invoice.invoiceId,
-      InvoiceNumber: invoice.invoiceNumber,
-      DateOnInvoice: new Date(invoice.invoiceDate).toISOString(),
-      InvoiceAmount: invoice.invoiceAmount,
-      PeriodEnding: new Date(invoice.periodEndDate).toISOString(),
-      InvoiceReceived: new Date(invoice.invoiceReceivedDate).toISOString(),
-      ContractNumber: contractNumber,
-      UniqueServiceSheetName: invoice.uniqueServiceSheetName,
-      ServiceDescription: invoice.serviceDescription,
-      CreatedBy: invoice.createdBy,
-    };
-    dispatch(
-      setRowData(
-        invoice.invoiceTimeReportCostDetails.map((x, index) => {
-          return { data: x, index: index, isAdded: true, isSelected: false };
-        }),
-      ),
-    );
-    dispatch(setOtherCostData(invoice.invoiceOtherCostDetails));
-    dispatch(setInvoiceData(invoiceForContext));
-    navigate(`/invoice/${invoice.invoiceNumber}`);
+    dispatch(clickOnDraftInvoice({ token: auth?.user?.access_token, invoice: invoice, contractNumber: contractNumber }));
   }
 
   return (
