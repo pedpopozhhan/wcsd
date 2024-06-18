@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from './app/App';
 import InvoiceDetails from './features/invoice-details/invoice-details';
 import Contracts from './features/contracts/contracts';
+import OneGxContract from '@/features/contracts/onegx-contract';
 import InvoiceProcessing from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
 import { AuthProvider } from 'react-oidc-context';
@@ -50,6 +51,9 @@ root.render(
                     <Route key='7' path='logged-out' element={<LoggedOut />} />
 
                     <Route key='8' path='unauthorized' element={<UnAuthorized />} />
+                    <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
+                      <Route key='9' path='contractmanagement' element={<OneGxContract />} />
+                    </Route>
                   </Route>
                 </Routes>
               </Router>
@@ -73,6 +77,8 @@ root.render(
                   <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='7' path='logged-out' element={<LoggedOut />} />
+                  <Route key='8' path='contractmanagement' element={<OneGxContract />} />
+
                 </Route>
               </Routes>
             </Router>

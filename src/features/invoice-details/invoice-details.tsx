@@ -64,6 +64,7 @@ export default function InvoiceDetails() {
     dispatch(setFlightReportIds(flightReportIds));
     dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
   }
+  
   function cancel() {
     dispatch(
       setRowData(
@@ -76,6 +77,7 @@ export default function InvoiceDetails() {
     // navigate to time reports page
     navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
+
   function processInvoice() {
     const timeReportData = rowData.filter((i) => i.isAdded);
     const data = timeReportData.map((x) => {
