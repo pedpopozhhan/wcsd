@@ -1,9 +1,11 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
+
 .search {
   display: inline-block;
   margin-right: $goa-space-m;
   vertical-align: top;
 }
+
 main {
   height: 100%;
   width: 100%;
@@ -21,7 +23,14 @@ main {
 
 .toolbar {
   display: flex;
+
   .spacer {
     flex: 1;
   }
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

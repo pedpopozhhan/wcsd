@@ -1,4 +1,4 @@
-import { GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
+import { GoAButton, GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './contracts.module.scss';
 import { ContractType, typeItems } from '@/common/types/contract-type';
@@ -8,17 +8,20 @@ import ContractSearchResults from './contract-search-results';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
+import { useNavigate } from 'react-router-dom';
 
-const { dropdownContainer, toolbar, spacer } = styles;
+const { dropdownContainer, toolbar, spacer, headerContent } = styles;
 
 export default function Contracts() {
   const auth = useConditionalAuth();
   const header = 'Contracts';
+  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
+
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {
@@ -85,10 +88,23 @@ export default function Contracts() {
     setSearchResults(searched);
   };
 
+  function directToContractManagement() {
+    navigate('/contractmanagement');
+  }
+
+
   return (
     <main>
       <div>
-        <h2>{header}</h2>
+        {/* <h2>{header}</h2> */}
+        <div className={headerContent}>
+          <div>
+            <h2>{header}</h2>
+          </div>
+          <div>
+            <GoAButton type='secondary' onClick={directToContractManagement}> Contracts Management</GoAButton>
+          </div>
+        </div>
         <div className={toolbar}>
           <div className={spacer}></div>
           <div className={dropdownContainer}>

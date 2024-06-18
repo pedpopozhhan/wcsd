@@ -1,0 +1,36 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+
+.search {
+  display: inline-block;
+  margin-right: $goa-space-m;
+  vertical-align: top;
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-right: $goa-space-m;
+  padding-left: $goa-space-m;
+}
+
+.dropdownContainer {
+  display: inline-block;
+  margin-right: $goa-space-m;
+}
+
+.toolbar {
+  display: flex;
+
+  .spacer {
+    flex: 1;
+  }
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
