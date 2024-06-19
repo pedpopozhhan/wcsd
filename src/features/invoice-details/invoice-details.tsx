@@ -77,10 +77,6 @@ export default function InvoiceDetails() {
     navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
   function onNextClicked() {
-    const addedTimeReportData = rowData.filter((i) => i.isAdded);
-    dispatch(setOtherCostData(otherCostData));
-    dispatch(setAddedTimeReportData(addedTimeReportData));
-
     const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
 
     dispatch(setInvoiceData(invoiceData));
@@ -88,7 +84,6 @@ export default function InvoiceDetails() {
     dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
     dispatch(setFlightReportIds(flightReportIds));
 
-    // this cant work...needs to send invoiceid, but might not be there until saved...so change the param to be invoicenumber
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
