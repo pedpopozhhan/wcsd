@@ -1,4 +1,4 @@
-import { GoAButton, GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
+import { GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract.module.scss';
 import { ContractType, typeItems } from '@/common/types/contract-type';
@@ -8,14 +8,11 @@ import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import OneGxContractSearchResults from './onegx-contract-search-result';
 import { IOneGxContractRowData } from '@/interfaces/contract-management/onegx-contract-search-row-data';
-import { useNavigate } from 'react-router-dom';
-
-const { dropdownContainer, toolbar, spacer, headerContent } = styles;
+const { dropdownContainer, toolbar, spacer } = styles;
 
 export default function OneGxContract() {
   const auth = useConditionalAuth();
   const header = 'Contracts Management';
-  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState([] as IOneGxContractRowData[]);
   const [allData, setAllData] = useState([] as IOneGxContractRowData[]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -87,23 +84,10 @@ export default function OneGxContract() {
     setSearchResults(searched);
   };
 
-  function directToHomePage() {
-    navigate('/contracts');
-  }
-
-
   return (
     <main>
       <div>
-        <div className={headerContent}>
-          <div>
-            <h2>{header}</h2>
-          </div>
-          <div>
-            <GoAButton type='secondary' onClick={directToHomePage}> Home</GoAButton>
-          </div>
-        </div>
-        {/* <h2>{header}</h2> */}
+        <h2>{header}</h2>
         <div className={toolbar}>
           <div className={spacer}></div>
           <div className={dropdownContainer}>
