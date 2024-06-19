@@ -63,6 +63,7 @@ export default function InvoiceDetails() {
     dispatch(setFlightReportIds(flightReportIds));
     dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
   }
+
   function cancel() {
     dispatch(
       setRowData(
