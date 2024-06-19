@@ -20,9 +20,9 @@ import { yearMonthDay } from '@/common/dates';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
 import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
-import { resetInvoiceDetails, setFlightReportIds } from '@/features/invoice-details/invoice-details-slice';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
+import { resetState, setFlightReportIds } from '@/app/app-slice';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -63,7 +63,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const [, setPreviousSelectedPerPage] = useState(7);
 
   const dispatch = useAppDispatch();
-  const flighReportIds = useAppSelector((state) => state.invoiceDetails.flightReportIds);
+  const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
   const [leadingIconName, setLeadingIconName] = useState<string>('');
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       showEditPayableDialog(false);
     }
     if (trItems.length == 0) {
-      dispatch(resetInvoiceDetails());
+      dispatch(resetState());
       showEditPayableDialog(false);
     }
   };

@@ -4,8 +4,8 @@ import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import { IDetailsTableRow } from './details-table-row.interface';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setRowData } from './invoice-details-slice';
 import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
+import { setRowData } from '@/app/app-slice';
 
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
@@ -15,7 +15,7 @@ interface IDetailsTabProps {
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const dispatch = useAppDispatch();
-  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
+  const rowData = useAppSelector((state) => state.app.rowData);
 
   const filterByRateType = (x: IDetailsTableRow) => {
     return props.rateTypeFilter ? x.data.rateType === props.rateTypeFilter : x;

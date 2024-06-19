@@ -8,11 +8,8 @@ import { useEffect, useState } from 'react';
 import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { setCostDetailsData, setOtherCostsData, setTimeReportData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { setFlightReportIds, setOtherCostData } from './invoice-details-slice';
-import { setRowData } from './invoice-details-slice';
 import { getCustomLists, saveDraftInvoice } from './invoice-details-actions';
-import { setInvoiceData } from '@/app/app-slice';
+import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
 
 const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader } =
@@ -21,9 +18,9 @@ const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabL
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
   const dispatch = useAppDispatch();
-  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
-  const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
-
+  const rowData = useAppSelector((state) => state.app.rowData);
+  const otherCostData = useAppSelector((state) => state.app.otherCostData);
+  const formChanged = useAppSelector((state) => state.app.invoiceChanged);
   const navigate = useNavigate();
 
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -49,9 +46,11 @@ export default function InvoiceDetails() {
         return acc + cur.data.cost;
       }, 0);
 
-    const otherTotal = otherCostData.reduce((acc, cur) => {
-      return acc + cur.cost;
-    }, 0);
+    const otherTotal = otherCostData
+      ? otherCostData.reduce((acc, cur) => {
+          return acc + cur.cost;
+        }, 0)
+      : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
 
@@ -59,8 +58,8 @@ export default function InvoiceDetails() {
     const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
 
     dispatch(setInvoiceData(invoiceData));
-    dispatch(setOtherCostsData(otherCostData));
-    dispatch(setTimeReportData(rowData.filter((x) => x.isAdded)));
+    dispatch(setOtherCostData(otherCostData));
+    dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
     dispatch(setFlightReportIds(flightReportIds));
     dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
   }
@@ -76,15 +75,19 @@ export default function InvoiceDetails() {
     // navigate to time reports page
     navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }
-  function processInvoice() {
-    const timeReportData = rowData.filter((i) => i.isAdded);
-    const data = timeReportData.map((x) => {
-      return x.data;
-    });
-    dispatch(setCostDetailsData(data));
-    dispatch(setOtherCostsData(otherCostData));
-    dispatch(setTimeReportData(timeReportData));
+  function onNextClicked() {
+    const addedTimeReportData = rowData.filter((i) => i.isAdded);
+    dispatch(setOtherCostData(otherCostData));
+    dispatch(setAddedTimeReportData(addedTimeReportData));
 
+    const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
+
+    dispatch(setInvoiceData(invoiceData));
+    dispatch(setOtherCostData(otherCostData));
+    dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
+    dispatch(setFlightReportIds(flightReportIds));
+
+    // this cant work...needs to send invoiceid, but might not be there until saved...so change the param to be invoicenumber
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
@@ -139,14 +142,14 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={processInvoice} disabled={!isReconciled()}>
+        <GoAButton type='primary' onClick={onNextClicked} disabled={!isReconciled()}>
           <div className={icon}>
             <GoAIcon type='download'></GoAIcon>
           </div>
           Next
         </GoAButton>
         <GoAButton type='secondary' onClick={save}>
-          save
+          Save
         </GoAButton>
         <GoAButton type='tertiary' onClick={cancel}>
           Cancel
@@ -155,10 +158,7 @@ export default function InvoiceDetails() {
       <EditPayableModalDialog
         contractNumber={invoiceData.ContractNumber}
         show={parentShowModal}
-        // onAdd={onOtherCostAdded}
-        // onUpdate={onOtherCostUpdated}
         showEditPayableDialog={setParentShowModal}
-        // rowToUpdate={otherCostDataToUpdate}
         searchValue=''
       />
     </div>
