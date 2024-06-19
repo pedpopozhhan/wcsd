@@ -10,10 +10,14 @@ import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
 import styles from './invoice-modal-dialog.module.scss';
 import moment from 'moment';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import { saveDraftInvoice } from '@/features/invoice-details/invoice-details-actions';
+
 const { container } = styles;
 export interface IInvoiceData {
   InvoiceID: string;
   InvoiceNumber: string;
+  InvoiceStatus?: InvoiceStatus;
   DateOnInvoice: string;
   InvoiceAmount: number;
   PeriodEnding: string;
@@ -95,6 +99,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     d.setMonth(d.getMonth() + offset);
     return d;
   }
+
   useEffect(() => {
     const re = /^[a-zA-Z0-9\b]+$/;
     if (!re.test(invoiceNumber)) {
@@ -169,7 +174,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   };
 
   function setInvoice() {
-    if (invoiceNumber.trim().length <= 0 /* || invoiceNumberErrorLabel*/) {
+    if (invoiceNumber.trim().length <= 0) {
       setInvoiceNumberError(true);
       return;
     }
@@ -264,9 +269,13 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       // Navigate to invoice detail page
       navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
-      // TODO: what about draft?
+      invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
-      publishToast({ type: 'info', message: 'Invoice updated.' });
+      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+      } else {
+        publishToast({ type: 'info', message: 'Invoice updated.' });
+      }
       clearErrors();
       setIsVisible(false);
       if (props.onClose) {

@@ -5,16 +5,20 @@ import Totalizer from './invoice-amount-totalizer';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTab from './tabs/details-tab';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { resetState, setCostDetailsData, setOtherCostsData } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
+// import { resetState, setCostDetailsDataPIT, setOtherCostsDataPIT } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
 import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
 import Summary from '@/features/invoice-details/summary';
 import { EmptyInvoiceId } from '@/common/types/invoice';
-import { createInvoice, updateInvoice } from './process-invoice-epic';
-import { setInvoiceChanged, setInvoiceData } from '@/app/app-slice';
+// import { createInvoice, updateInvoice } from './process-invoice-epic';
+// import { resetInvoiceDetails, resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
+import { resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { navigateTo } from '@/common/navigate';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import { saveDraftInvoice } from '../invoice-details/invoice-details-actions';
+import { createInvoice, updateInvoice } from './process-invoice-actions';
 
 export default function ProcessInvoice() {
   const auth = useConditionalAuth();
@@ -29,6 +33,7 @@ export default function ProcessInvoice() {
   const { container, content, banner, sideBar, main, footer, header, tabGroupContainer, detailsHeader, tabContainer, summaryContainer, icon } =
     styles;
 
+  // invoiceid can come from one path,
   useEffect(() => {
     if (invoiceId) {
       setIsLoading(true);
@@ -48,8 +53,19 @@ export default function ProcessInvoice() {
           };
 
           dispatch(setInvoiceData(invoiceForContext));
-          dispatch(setCostDetailsData(results.invoice.invoiceTimeReportCostDetails));
-          dispatch(setOtherCostsData(results.invoice.invoiceOtherCostDetails));
+
+          // need to map this to detailstablerow
+          const data = results.invoice.invoiceTimeReportCostDetails.slice().map((x, i) => {
+            return {
+              index: i,
+              data: x,
+              isAdded: false,
+              isSelected: false,
+            };
+          });
+          dispatch(setRowData(data));
+
+          dispatch(setOtherCostData(results.invoice.invoiceOtherCostDetails));
           setIsLoading(false);
         },
         error: (error) => {
@@ -69,6 +85,9 @@ export default function ProcessInvoice() {
       };
     } else {
       setIsLoading(false);
+      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+      }
     }
   }, []);
 
@@ -86,6 +105,14 @@ export default function ProcessInvoice() {
     navigate(`/invoice-processing/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
+  }
+
+  function handleButtonClick() {
+    // if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+    //   dispatch(createInvoice({ token: auth?.user?.access_token }));
+    // } else {
+    dispatch(updateInvoice({ token: auth?.user?.access_token }));
+    // }
   }
   if (loading) {
     return null;
@@ -115,7 +142,8 @@ export default function ProcessInvoice() {
         )}
       </div>
       <div className={footer}>
-        {invoiceData.InvoiceID == EmptyInvoiceId && (
+        {invoiceData.InvoiceID === EmptyInvoiceId && (
+          // if it is a draft, processs should convert the draft to an invoice and
           <Fragment>
             <GoAButton type='primary' onClick={() => dispatch(createInvoice({ token: auth?.user?.access_token }))}>
               <div className={icon}>
@@ -128,10 +156,10 @@ export default function ProcessInvoice() {
             </GoAButton>
           </Fragment>
         )}
-        {invoiceData.InvoiceID != EmptyInvoiceId && (
+        {invoiceData.InvoiceID !== EmptyInvoiceId && (
           <Fragment>
-            <GoAButton type='primary' onClick={() => dispatch(updateInvoice({ token: auth?.user?.access_token }))} disabled={!formChanged}>
-              <label>Update</label>
+            <GoAButton type='primary' onClick={handleButtonClick} disabled={!formChanged && invoiceData.InvoiceStatus !== InvoiceStatus.Draft}>
+              <label>{invoiceData.InvoiceStatus === InvoiceStatus.Draft ? 'Process' : 'Update'}</label>
             </GoAButton>
             <GoAButton type='secondary' onClick={navigateToTimeReports}>
               Close

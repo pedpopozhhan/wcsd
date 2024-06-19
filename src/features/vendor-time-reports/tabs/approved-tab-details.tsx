@@ -8,8 +8,8 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
 import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
 import { navigateTo } from '@/common/navigate';
-import { resetInvoiceDetails, setFlightReportIds } from '@/features/invoice-details/invoice-details-slice';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
+import { resetState, setFlightReportIds } from '@/app/app-slice';
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -132,7 +132,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       dispatch(setFlightReportIds(trItems));
     }
     if (trItems.length == 0) {
-      dispatch(resetInvoiceDetails());
+      dispatch(resetState());
     }
   };
 

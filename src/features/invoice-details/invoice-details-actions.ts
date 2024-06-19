@@ -3,14 +3,15 @@ import timeReportDetailsService from '@/services/time-report-details.service';
 import { PayloadAction, createAction } from '@reduxjs/toolkit';
 import { StateObservable } from 'redux-observable';
 import { EMPTY, catchError, mergeMap, of, tap } from 'rxjs';
-import { setLists, setOtherCostData, setRowData } from './invoice-details-slice';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
 import dropDownListService from '@/services/drop-down-lists.service';
 import { IInvoice, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import processInvoiceService from '@/services/process-invoice.service';
-import { setInvoiceChanged, setInvoiceData, setInvoiceId, setServiceSheetName } from '@/app/app-slice';
+import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setOtherCostData, setRowData } from '@/app/app-slice';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import { setLists } from './invoice-details-slice';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
@@ -31,6 +32,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
       const invoiceForContext: IInvoiceData = {
         InvoiceID: invoice.invoiceId,
         InvoiceNumber: invoice.invoiceNumber,
+        InvoiceStatus: invoice.invoiceStatus,
         DateOnInvoice: new Date(invoice.invoiceDate).toISOString(),
         InvoiceAmount: invoice.invoiceAmount,
         PeriodEnding: new Date(invoice.periodEndDate).toISOString(),
@@ -128,9 +130,9 @@ export function handleGetCustomLists(action: PayloadAction<{ token: string }>) {
 export function handleSaveDraftInvoice(action: PayloadAction<{ token: string }>, state$: StateObservable<RootState>) {
   const invoiceData = state$.value.app.invoiceData;
   const contractDetails = state$.value.app.contractForReconciliation;
-  const otherCostData = state$.value.processInvoiceTabs.otherCostsData;
-  const timeReportData = state$.value.processInvoiceTabs.timeReportData;
-  const flightReportIds = state$.value.invoiceDetails.flightReportIds;
+  const otherCostData = state$.value.app.otherCostData;
+  const addedTimeReportData = state$.value.app.addedTimeReportData;
+  const flightReportIds = state$.value.app.flightReportIds;
   const payload: IProcessInvoiceData = {
     invoiceId: invoiceData.InvoiceID,
     invoiceNumber: invoiceData.InvoiceNumber,
@@ -144,16 +146,16 @@ export function handleSaveDraftInvoice(action: PayloadAction<{ token: string }>,
     type: contractDetails.contractType,
     uniqueServiceSheetName: invoiceData.UniqueServiceSheetName,
     serviceDescription: invoiceData.ServiceDescription,
-    invoiceTimeReportCostDetails: timeReportData.map((i) => i.data),
+    invoiceTimeReportCostDetails: addedTimeReportData.map((i) => i.data),
     invoiceOtherCostDetails: otherCostData,
     flightReportIds: flightReportIds,
   };
-
+  //   setIsLoading(true);
   return processInvoiceService.saveDraft(action.payload.token, payload).pipe(
     mergeMap((data) => {
       // eslint-disable-next-line quotes
       publishToast({ type: 'success', message: "Invoice saved. Accessible in 'Drafts' Tab." });
-      return of(setInvoiceId(data), setServiceSheetName(data), setInvoiceChanged(false));
+      return of(setInvoiceStatus(InvoiceStatus.Draft), setInvoiceId(data), setInvoiceChanged(false));
     }),
     catchError((error) => {
       console.error(error);
