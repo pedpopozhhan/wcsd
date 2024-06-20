@@ -11,9 +11,23 @@ import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks'
 import { getCustomLists, saveDraftInvoice } from './invoice-details-actions';
 import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 
-const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader } =
-  styles;
+const {
+  container,
+  content,
+  sideBar,
+  main,
+  footer,
+  icon,
+  tabGroupContainer,
+  tabList,
+  tabContainer,
+  summaryContainer,
+  headerContent,
+  tabHeader,
+  spacer,
+} = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
@@ -150,6 +164,8 @@ export default function InvoiceDetails() {
         <GoAButton type='tertiary' onClick={cancel}>
           Cancel
         </GoAButton>
+        <div className={spacer}></div>
+        {invoiceData.InvoiceStatus === InvoiceStatus.Draft && <GoAButton type='secondary'>Delete</GoAButton>}
       </div>
       <EditPayableModalDialog
         contractNumber={invoiceData.ContractNumber}
