@@ -10,10 +10,8 @@ const { container, tabContainer, costDetailsDiv, otherCostsDiv, otherCostHeader 
 interface IReconciledTabProps {}
 
 const InvoiceDetailsTab: FC<IReconciledTabProps> = () => {
-  //   const otherCostData = useAppSelector((state) => state.processInvoiceTabs.otherCostsDataPIT);
-  //   const costDetailsData = useAppSelector((state) => state.processInvoiceTabs.costDetailsDataPIT);
   const otherCostData = useAppSelector((state) => state.app.otherCostData);
-  const addedTimeReportData = useAppSelector((state) => state.app.addedTimeReportData);
+  const addedTimeReportData = useAppSelector((state) => state.app.rowData);
   return (
     <div className={container}>
       <div className={tabContainer}>
