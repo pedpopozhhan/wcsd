@@ -20,7 +20,7 @@ export default function InvoiceDetails() {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.app.rowData);
   const otherCostData = useAppSelector((state) => state.app.otherCostData);
-  const formChanged = useAppSelector((state) => state.app.invoiceChanged);
+  // const formChanged = useAppSelector((state) => state.app.invoiceChanged);
   const navigate = useNavigate();
 
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -48,8 +48,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-          return acc + cur.cost;
-        }, 0)
+        return acc + cur.cost;
+      }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);

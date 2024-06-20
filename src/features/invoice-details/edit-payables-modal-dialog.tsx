@@ -7,10 +7,11 @@ import {
   GoATable,
   GoATableSortHeader,
   GoAInput,
-  GoAChip,
   GoAPagination,
   GoABlock,
   GoASpacer,
+  GoADropdown,
+  GoADropdownItem,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import FlyOut from '@/common/fly-out';
@@ -23,7 +24,7 @@ import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
 import { resetState, setFlightReportIds } from '@/app/app-slice';
-const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv } = Styles;
+const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -64,7 +65,14 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   const dispatch = useAppDispatch();
   const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
-  const [leadingIconName, setLeadingIconName] = useState<string>('');
+
+  type SelectionType = 'Available' | 'Selected';
+  const [selectionType, setSelectionType] = useState('Available' as SelectionType);
+
+  const selectionTypeItems: { value: SelectionType; label: string }[] = [
+    { value: 'Available', label: 'Available' },
+    { value: 'Selected', label: 'Selected' },
+  ];
 
   useEffect(() => {
     setVisible(show);
@@ -176,14 +184,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     }
   }
 
-  function showHideSelectedData() {
-    if (leadingIconName === '') {
-      setLeadingIconName('checkmark');
-    } else {
-      setLeadingIconName('');
-    }
-  }
-
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if (name === 'selectAll') {
@@ -219,7 +219,19 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
     setData(results);
   };
+  function onChangeSelectionType(name: string, type: string | string[]) {
+    const _contractType = type as SelectionType;
+    setSelectionType(_contractType as SelectionType);
+    // rerun the search, sometimes it is the term, sometimes it is an item with a separator
 
+    // if (_contractType === 'Available') {
+    //   setSearchResults(data);
+    // }
+    // else if (_contractType === 'Selected') {
+    //   const selectedData = searchResults.filter((x) => x.isChecked === true);
+    //   setSearchResults(selectedData);
+    // }
+  }
   return (
     <>
       <PageLoader visible={loading} />
@@ -253,6 +265,13 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
           <div className={searchBar}>
             <div>Approved time reports</div>
             <div>
+              <div className={dropdownContainer}>
+                <GoADropdown name='contractType' value={selectionType} onChange={onChangeSelectionType}>
+                  {selectionTypeItems.map((type, idx) => (
+                    <GoADropdownItem key={idx} value={type.value} label={type.label} />
+                  ))}
+                </GoADropdown>
+              </div>
               <GoAInput
                 type='search'
                 name='search'
@@ -263,9 +282,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
               ></GoAInput>
             </div>
           </div>
-          <div className={selectedDiv}>
-            <GoAChip content='Selected' leadingIcon={leadingIconName} onClick={showHideSelectedData}></GoAChip>
-          </div>
+
         </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>

@@ -59,8 +59,8 @@
 }
 
 .toolbar {
-  // display: flex;
-  padding-top: 15px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   flex: 1;
   overflow-y: auto;
   overflow: hidden;
@@ -84,6 +84,7 @@
   line-height: $goa-line-height-5;
 }
 
-.selectedDiv {
-  padding-top: 15px;
+.dropdownContainer {
+  display: inline-block;
+  margin-right: $goa-space-m;
 }
