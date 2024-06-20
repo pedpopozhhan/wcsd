@@ -140,7 +140,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     return () => {
       subscription.unsubscribe();
     };
-  }, [searchValue, contractNumber]);
+  }, [searchValue, contractNumber, visible]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -171,7 +171,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
-
     return num;
   }
   function changePage(newPage: number) {
