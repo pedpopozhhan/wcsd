@@ -52,6 +52,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
 
   const auth = useConditionalAuth();
+  const [allData, setAllData] = useState<IRowItem[]>([]);
   const [pageData, setPageData] = useState<IRowItem[]>([]);
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
@@ -86,6 +87,8 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   const hideModalDialog = () => {
     setIsCancelled(true);
+    //const _contractType = 'Available' as SelectionType;
+    setSelectionType('Available' as SelectionType);
     showEditPayableDialog(false);
   };
 
@@ -122,7 +125,9 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             return { isChecked: false, ...x };
           }
         });
+
         const sortedData = sort('flightReportDate', 1, rows);
+        setAllData(sortedData);
         setRawData(sortedData);
         setData(sortedData);
         setPageData(sortedData.slice(0, perPage));
@@ -221,15 +226,20 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   function onChangeSelectionType(name: string, type: string | string[]) {
     const _contractType = type as SelectionType;
     setSelectionType(_contractType as SelectionType);
-    // rerun the search, sometimes it is the term, sometimes it is an item with a separator
 
-    // if (_contractType === 'Available') {
-    //   setSearchResults(data);
-    // }
-    // else if (_contractType === 'Selected') {
-    //   const selectedData = searchResults.filter((x) => x.isChecked === true);
-    //   setSearchResults(selectedData);
-    // }
+    if (_contractType === 'Selected') {
+      const selectedData = data.filter((x) => x.isChecked === true);
+      setData(selectedData);
+    }
+    else if (_contractType === 'Available') {
+
+      const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+      const trItems: number[] = [];
+      items?.map((record: IFlightReportDashboard) => {
+        trItems.push(record.flightReportId);
+      });
+      setData(allData);
+    }
   }
   return (
     <>
