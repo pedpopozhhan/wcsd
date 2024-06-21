@@ -66,7 +66,7 @@ function hasDetailsTableRowArrayChanged(array1: IDetailsTableRow[], array2: IDet
   const set1 = new Set(array1.map((item) => JSON.stringify(item.data)));
   const set2 = new Set(array2.map((item) => JSON.stringify(item.data)));
 
-  for (let item of set1) {
+  for (const item of set1) {
     if (!set2.has(item)) {
       return true;
     }
