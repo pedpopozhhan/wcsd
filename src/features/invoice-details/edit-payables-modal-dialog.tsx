@@ -52,7 +52,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const contract = useAppSelector((state) => state.app.contractForReconciliation);
 
   const auth = useConditionalAuth();
-  const [allData, setAllData] = useState<IRowItem[]>([]);
   const [pageData, setPageData] = useState<IRowItem[]>([]);
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
@@ -87,7 +86,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   const hideModalDialog = () => {
     setIsCancelled(true);
-    //const _contractType = 'Available' as SelectionType;
     setSelectionType('Available' as SelectionType);
     showEditPayableDialog(false);
   };
@@ -104,10 +102,11 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(setFlightReportIds(trItems));
       showEditPayableDialog(false);
     }
-    if (trItems.length == 0) {
+    else if (trItems.length == 0) {
       dispatch(resetState());
       showEditPayableDialog(false);
     }
+    setSelectionType('Available' as SelectionType);
   };
 
   useEffect(() => {
@@ -127,7 +126,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
         });
 
         const sortedData = sort('flightReportDate', 1, rows);
-        setAllData(sortedData);
         setRawData(sortedData);
         setData(sortedData);
         setPageData(sortedData.slice(0, perPage));
@@ -229,16 +227,24 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
     if (_contractType === 'Selected') {
       const selectedData = data.filter((x) => x.isChecked === true);
+      setPage(1);
       setData(selectedData);
     }
     else if (_contractType === 'Available') {
-
       const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
       const trItems: number[] = [];
       items?.map((record: IFlightReportDashboard) => {
         trItems.push(record.flightReportId);
       });
-      setData(allData);
+
+      const rows = rawData.map((x) => {
+        if (trItems.find((element) => element === x.flightReportId) !== undefined) {
+          return { ...x, isChecked: true };
+        } else {
+          return { ...x, isChecked: false };
+        }
+      });
+      setData(rows);
     }
   }
   return (
