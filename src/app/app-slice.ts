@@ -1,4 +1,5 @@
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
+import { SourceTab } from '@/common/navigate';
 import { EmptyInvoiceId } from '@/common/types/invoice';
 import { IDetailsTableRow } from '@/features/invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
@@ -14,6 +15,7 @@ export interface IAppSliceState {
   otherCostData: IOtherCostTableRowData[];
   flightReportIds: number[];
   addedTimeReportData: IDetailsTableRow[];
+  tab: SourceTab;
 }
 
 const initialState: IAppSliceState = {
@@ -35,6 +37,7 @@ const initialState: IAppSliceState = {
   otherCostData: [],
   flightReportIds: [],
   addedTimeReportData: [],
+  tab: SourceTab.Approved,
 };
 function hasOtherCostsArrayChanged(array1: IOtherCostTableRowData[], array2: IOtherCostTableRowData[]): boolean {
   if (array1.length !== array2.length) {
@@ -66,7 +69,7 @@ function hasDetailsTableRowArrayChanged(array1: IDetailsTableRow[], array2: IDet
   const set1 = new Set(array1.map((item) => JSON.stringify(item.data)));
   const set2 = new Set(array2.map((item) => JSON.stringify(item.data)));
 
-  for (let item of set1) {
+  for (const item of set1) {
     if (!set2.has(item)) {
       return true;
     }
@@ -127,6 +130,9 @@ export const appSlice = createSlice({
     setAddedTimeReportData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       state.addedTimeReportData = action.payload;
     },
+    setTab: (state: IAppSliceState, action: PayloadAction<SourceTab>) => {
+      state.tab = action.payload;
+    },
   },
 });
 
@@ -143,6 +149,7 @@ export const {
   resetState,
   setFlightReportIds,
   setAddedTimeReportData,
+  setTab,
 } = appSlice.actions;
 
 export default appSlice.reducer;

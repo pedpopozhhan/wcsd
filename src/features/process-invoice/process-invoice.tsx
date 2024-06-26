@@ -5,16 +5,12 @@ import Totalizer from './invoice-amount-totalizer';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTab from './tabs/details-tab';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-// import { resetState, setCostDetailsDataPIT, setOtherCostsDataPIT } from '@/features/process-invoice/tabs/process-invoice-tabs-slice';
-import { setRedirectionFromProcessInvoice } from './process-invoice-slice';
 import Summary from '@/features/invoice-details/summary';
 import { EmptyInvoiceId } from '@/common/types/invoice';
-// import { createInvoice, updateInvoice } from './process-invoice-epic';
-// import { resetInvoiceDetails, resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
-import { resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
+import { resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData, setTab } from '@/app/app-slice';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import { failedToPerform, publishToast } from '@/common/toast';
-import { navigateTo } from '@/common/navigate';
+import { SourceTab, navigateTo } from '@/common/navigate';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import { saveDraftInvoice } from '../invoice-details/invoice-details-actions';
@@ -101,18 +97,14 @@ export default function ProcessInvoice() {
   function navigateToTimeReports() {
     dispatch(setInvoiceChanged(false));
     dispatch(resetState());
-    dispatch(setRedirectionFromProcessInvoice(true));
+    dispatch(setTab(SourceTab.Processed));
     navigate(`/invoice-processing/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
   }
 
   function handleButtonClick() {
-    // if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
-    //   dispatch(createInvoice({ token: auth?.user?.access_token }));
-    // } else {
     dispatch(updateInvoice({ token: auth?.user?.access_token }));
-    // }
   }
   if (loading) {
     return null;
