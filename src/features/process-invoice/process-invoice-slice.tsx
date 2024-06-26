@@ -14,12 +14,12 @@ export const processInvoiceSlice = createSlice({
   name: 'sliceProcessInvoice',
   initialState,
   reducers: {
-    setRedirectionFromProcessInvoice: (state, action: PayloadAction<boolean>) => {
+    setIsRedirectedFromProcessInvoice: (state, action: PayloadAction<boolean>) => {
       state.isRedirectedFromProcessInvoice = action.payload;
     },
   },
 });
 
-export const { setRedirectionFromProcessInvoice } = processInvoiceSlice.actions;
+export const { setIsRedirectedFromProcessInvoice } = processInvoiceSlice.actions;
 const processInvoiceReducer = processInvoiceSlice.reducer;
 export default processInvoiceReducer;

@@ -6,7 +6,8 @@ import { ContractType, convertContractType } from '@/common/types/contract-type'
 const { chevron, number, tableContainer } = styles;
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
-import { setContractForReconciliation } from '@/app/app-slice';
+import { setContractForReconciliation, setTab } from '@/app/app-slice';
+import { SourceTab } from '@/common/navigate';
 
 interface IContractSearchResultsProps {
   searchResults: IContractSearchResult[];
@@ -73,6 +74,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   }
 
   function timeReportsClick(selectedVendor: IContractSearchResult) {
+    dispatch(setTab(SourceTab.Approved));
     dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
       navigate(`/invoice-processing/${selectedVendor.contractNumber}`, {

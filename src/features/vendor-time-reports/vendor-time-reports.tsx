@@ -9,18 +9,18 @@ import ApprovedTabDetails from './tabs/approved-tab-details';
 import VendorTimeReportsSidePanel from '@/features/vendor-time-reports/vendor-time-reports-side-panel';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ProcessedTabDetails from './tabs/processed-tab-details';
-import { setRedirectionFromProcessInvoice } from '@/features/process-invoice/process-invoice-slice';
 import DraftsTabDetails from './tabs/drafts-tab-details';
+import { SourceTab } from '@/common/navigate';
+import { setTab } from '@/app/app-slice';
 
 const InvoiceProcessing = () => {
   const { contractNumber } = useParams();
   const vendorForReconciliation = useAppSelector((state) => state.app.contractForReconciliation);
-
+  const tab = useAppSelector((state) => state.app.tab);
   const navigate = useNavigate();
 
   const header = 'Invoice Processing';
-  const isRedirectedFromProcessInvoice = useAppSelector((state) => state.processInvoice.isRedirectedFromProcessInvoice);
-  const [tabIndex, setTabIndex] = useState<number>(isRedirectedFromProcessInvoice ? 3 : 2);
+  const [tabIndex, setTabIndex] = useState<number>(SourceTab.Approved);
   const { vendorTimeReportRoot, vendorTimeReportMain, main, tabGroupContainer, tabList, tabContainer } = styles;
   const dispatch = useAppDispatch();
 
@@ -29,10 +29,8 @@ const InvoiceProcessing = () => {
   }
 
   useEffect(() => {
-    if (isRedirectedFromProcessInvoice) {
-      dispatch(setRedirectionFromProcessInvoice(false));
-    }
-  });
+    setTabIndex(tab);
+  }, [tab]);
 
   return (
     <div className={vendorTimeReportRoot}>
@@ -50,24 +48,24 @@ const InvoiceProcessing = () => {
         <div className={main}>
           <div className={tabGroupContainer}>
             <div className={tabList}>
-              <button id='Signed-off' role='tab' aria-selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+              <button id='Signed-off' role='tab' aria-selected={tab === SourceTab.SignedOff} onClick={() => dispatch(setTab(SourceTab.SignedOff))}>
                 <span>Signed-off</span>
               </button>
-              <button id='Approved' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
+              <button id='Approved' role='tab' aria-selected={tab === SourceTab.Approved} onClick={() => dispatch(setTab(SourceTab.Approved))}>
                 <span>Approved</span>
               </button>
-              <button id='Processed' role='tab' aria-selected={tabIndex === 3} onClick={() => setTabIndex(3)}>
+              <button id='Processed' role='tab' aria-selected={tab === SourceTab.Processed} onClick={() => dispatch(setTab(SourceTab.Processed))}>
                 <span>Processed</span>
               </button>
-              <button id='Drafts' role='tab' aria-selected={tabIndex === 4} onClick={() => setTabIndex(4)}>
+              <button id='Drafts' role='tab' aria-selected={tab === SourceTab.Draft} onClick={() => dispatch(setTab(SourceTab.Draft))}>
                 <span>Drafts</span>
               </button>
             </div>
             <div className={tabContainer}>
-              {tabIndex === 1 && <SignedOffTabDetails contractNumber={contractNumber} />}
-              {tabIndex === 2 && <ApprovedTabDetails contractNumber={contractNumber} />}
-              {tabIndex === 3 && <ProcessedTabDetails contractNumber={contractNumber} />}
-              {tabIndex === 4 && <DraftsTabDetails contractNumber={contractNumber} />}
+              {tabIndex === SourceTab.SignedOff && <SignedOffTabDetails contractNumber={contractNumber} />}
+              {tabIndex === SourceTab.Approved && <ApprovedTabDetails contractNumber={contractNumber} />}
+              {tabIndex === SourceTab.Processed && <ProcessedTabDetails contractNumber={contractNumber} />}
+              {tabIndex === SourceTab.Draft && <DraftsTabDetails contractNumber={contractNumber} />}
             </div>
           </div>
         </div>
