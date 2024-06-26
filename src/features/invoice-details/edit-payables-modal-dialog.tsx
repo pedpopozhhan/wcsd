@@ -7,10 +7,11 @@ import {
   GoATable,
   GoATableSortHeader,
   GoAInput,
-  GoAChip,
   GoAPagination,
   GoABlock,
   GoASpacer,
+  GoADropdown,
+  GoADropdownItem,
 } from '@abgov/react-components';
 import { useState, useEffect } from 'react';
 import FlyOut from '@/common/fly-out';
@@ -23,7 +24,7 @@ import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
 import { resetState, setFlightReportIds } from '@/app/app-slice';
-const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, selectedDiv } = Styles;
+const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
@@ -64,7 +65,14 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   const dispatch = useAppDispatch();
   const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
-  const [leadingIconName, setLeadingIconName] = useState<string>('');
+
+  type SelectionType = 'Available' | 'Selected';
+  const [selectionType, setSelectionType] = useState('Available' as SelectionType);
+
+  const selectionTypeItems: { value: SelectionType; label: string }[] = [
+    { value: 'Available', label: 'Available' },
+    { value: 'Selected', label: 'Selected' },
+  ];
 
   useEffect(() => {
     setVisible(show);
@@ -78,6 +86,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   const hideModalDialog = () => {
     setIsCancelled(true);
+    setSelectionType('Available' as SelectionType);
     showEditPayableDialog(false);
   };
 
@@ -93,10 +102,11 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(setFlightReportIds(trItems));
       showEditPayableDialog(false);
     }
-    if (trItems.length == 0) {
+    else if (trItems.length == 0) {
       dispatch(resetState());
       showEditPayableDialog(false);
     }
+    setSelectionType('Available' as SelectionType);
   };
 
   useEffect(() => {
@@ -114,6 +124,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             return { isChecked: false, ...x };
           }
         });
+
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
         setData(sortedData);
@@ -132,7 +143,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     return () => {
       subscription.unsubscribe();
     };
-  }, [searchValue, contractNumber]);
+  }, [searchValue, contractNumber, visible]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -163,7 +174,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
-
     return num;
   }
   function changePage(newPage: number) {
@@ -173,14 +183,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       setPerPage(perPage);
       setPage(newPage);
       setPageData(_flightReports);
-    }
-  }
-
-  function showHideSelectedData() {
-    if (leadingIconName === '') {
-      setLeadingIconName('checkmark');
-    } else {
-      setLeadingIconName('');
     }
   }
 
@@ -219,7 +221,32 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
     setData(results);
   };
+  function onChangeSelectionType(name: string, type: string | string[]) {
+    const _contractType = type as SelectionType;
+    setSelectionType(_contractType as SelectionType);
 
+    if (_contractType === 'Selected') {
+      const selectedData = data.filter((x) => x.isChecked === true);
+      setPage(1);
+      setData(selectedData);
+    }
+    else if (_contractType === 'Available') {
+      const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+      const trItems: number[] = [];
+      items?.map((record: IFlightReportDashboard) => {
+        trItems.push(record.flightReportId);
+      });
+
+      const rows = rawData.map((x) => {
+        if (trItems.find((element) => element === x.flightReportId) !== undefined) {
+          return { ...x, isChecked: true };
+        } else {
+          return { ...x, isChecked: false };
+        }
+      });
+      setData(rows);
+    }
+  }
   return (
     <>
       <PageLoader visible={loading} />
@@ -253,6 +280,13 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
           <div className={searchBar}>
             <div>Approved time reports</div>
             <div>
+              <div className={dropdownContainer}>
+                <GoADropdown name='contractType' value={selectionType} onChange={onChangeSelectionType}>
+                  {selectionTypeItems.map((type, idx) => (
+                    <GoADropdownItem key={idx} value={type.value} label={type.label} />
+                  ))}
+                </GoADropdown>
+              </div>
               <GoAInput
                 type='search'
                 name='search'
@@ -263,9 +297,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
               ></GoAInput>
             </div>
           </div>
-          <div className={selectedDiv}>
-            <GoAChip content='Selected' leadingIcon={leadingIconName} onClick={showHideSelectedData}></GoAChip>
-          </div>
+
         </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>

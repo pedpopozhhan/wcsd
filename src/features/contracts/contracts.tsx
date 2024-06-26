@@ -11,10 +11,10 @@ import { navigateTo } from '@/common/navigate';
 
 const { dropdownContainer, toolbar, spacer } = styles;
 
+
 export default function Contracts() {
   const auth = useConditionalAuth();
   const header = 'Contracts';
-
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
   const [allData, setAllData] = useState([] as IContractSearchResult[]);
   const [searchTerm, setSearchTerm] = useState<string>('');
