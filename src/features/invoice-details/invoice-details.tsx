@@ -9,7 +9,7 @@ import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { getCustomLists, saveDraftInvoice } from './invoice-details-actions';
-import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
+import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData, setTimeReportDataBeforeEditingPayables } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
 
 const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader } =
@@ -87,9 +87,10 @@ export default function InvoiceDetails() {
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
-  const showOtherCostsModal = () => {
+  const showEditPayableModal = () => {
     console.log('setParentShowModal(true);');
     setParentShowModal(true);
+    dispatch(setTimeReportDataBeforeEditingPayables(rowData.filter((x) => x.isAdded)));
   };
 
   return (
@@ -125,7 +126,7 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showOtherCostsModal}>
+              <GoAButton type='tertiary' onClick={showEditPayableModal}>
                 {' '}
                 Edit Payables{' '}
               </GoAButton>
