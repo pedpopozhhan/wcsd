@@ -16,6 +16,7 @@ export interface IAppSliceState {
   flightReportIds: number[];
   addedTimeReportData: IDetailsTableRow[];
   tab: SourceTab;
+  timeReportDataBeforeEditingPayables: IDetailsTableRow[];
 }
 
 const initialState: IAppSliceState = {
@@ -38,6 +39,7 @@ const initialState: IAppSliceState = {
   flightReportIds: [],
   addedTimeReportData: [],
   tab: SourceTab.Approved,
+  timeReportDataBeforeEditingPayables: []
 };
 function hasOtherCostsArrayChanged(array1: IOtherCostTableRowData[], array2: IOtherCostTableRowData[]): boolean {
   if (array1.length !== array2.length) {
@@ -59,6 +61,7 @@ function hasOtherCostsArrayChanged(array1: IOtherCostTableRowData[], array2: IOt
 
   return false;
 }
+
 function hasDetailsTableRowArrayChanged(array1: IDetailsTableRow[], array2: IDetailsTableRow[]): boolean {
   const filtered1 = array1.filter((x) => x.isAdded);
   const filtered2 = array2.filter((x) => x.isAdded);
@@ -77,6 +80,15 @@ function hasDetailsTableRowArrayChanged(array1: IDetailsTableRow[], array2: IDet
 
   return false;
 }
+
+function markIsAddedStatusIfpreviouslyAdded(payLoad: IDetailsTableRow[], previouslySelected: IDetailsTableRow[]): IDetailsTableRow[] {
+  const updatedParentTableData = payLoad.map((r) => {
+    if (previouslySelected.some(obj => obj.data.flightReportCostDetailsId === r.data.flightReportCostDetailsId)) {      return { ...r, isAdded: true }; }
+    else {      return { ...r, isAdded: false }; }
+  });
+  return updatedParentTableData;
+}
+
 export const appSlice = createSlice({
   name: 'app',
   initialState,
@@ -108,7 +120,12 @@ export const appSlice = createSlice({
     setRowData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       const hasChanged = hasDetailsTableRowArrayChanged(action.payload, state.rowData);
       state.invoiceChanged = state.invoiceChanged || hasChanged;
-      state.rowData = action.payload;
+      if (state.timeReportDataBeforeEditingPayables.length === undefined || state.timeReportDataBeforeEditingPayables.length === 0) {
+        state.rowData = action.payload;
+      } else {
+        state.rowData = markIsAddedStatusIfpreviouslyAdded(action.payload, state.timeReportDataBeforeEditingPayables);
+        state.timeReportDataBeforeEditingPayables = [];
+      }
     },
 
     setOtherCostData: (state: IAppSliceState, action: PayloadAction<IOtherCostTableRowData[]>) => {
@@ -125,6 +142,7 @@ export const appSlice = createSlice({
       state.flightReportIds = [];
       state.addedTimeReportData = [];
       state.invoiceChanged = false;
+      state.timeReportDataBeforeEditingPayables = [];
     },
 
     setAddedTimeReportData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
@@ -132,6 +150,10 @@ export const appSlice = createSlice({
     },
     setTab: (state: IAppSliceState, action: PayloadAction<SourceTab>) => {
       state.tab = action.payload;
+    },
+
+    setTimeReportDataBeforeEditingPayables: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
+      state.timeReportDataBeforeEditingPayables = action.payload;
     },
   },
 });
@@ -150,6 +172,7 @@ export const {
   setFlightReportIds,
   setAddedTimeReportData,
   setTab,
+  setTimeReportDataBeforeEditingPayables,
 } = appSlice.actions;
 
 export default appSlice.reducer;

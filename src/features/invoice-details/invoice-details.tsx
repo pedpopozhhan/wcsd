@@ -9,7 +9,7 @@ import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { deleteDraftInvoice, getCustomLists, saveDraftInvoice } from './invoice-details-actions';
-import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData } from '@/app/app-slice';
+import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData, setTimeReportDataBeforeEditingPayables } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import DeleteInvoiceModal from './delete-invoice-modal';
@@ -63,8 +63,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-          return acc + cur.cost;
-        }, 0)
+        return acc + cur.cost;
+      }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
@@ -105,9 +105,10 @@ export default function InvoiceDetails() {
   function onDelete() {
     dispatch(deleteDraftInvoice({ token: auth?.user?.access_token, invoiceId: invoiceData.InvoiceID, contractNumber: invoiceData.ContractNumber }));
   }
-  const showOtherCostsModal = () => {
+  const showEditPayableModal = () => {
     console.log('setParentShowModal(true);');
     setParentShowModal(true);
+    dispatch(setTimeReportDataBeforeEditingPayables(rowData.filter((x) => x.isAdded)));
   };
 
   return (
@@ -143,10 +144,7 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showOtherCostsModal}>
-                {' '}
-                Edit Payables{' '}
-              </GoAButton>
+              <GoAButton type='tertiary' onClick={showEditPayableModal}>Edit Payables</GoAButton>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <DetailsTab />}
