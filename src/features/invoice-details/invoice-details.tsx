@@ -63,8 +63,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-          return acc + cur.cost;
-        }, 0)
+        return acc + cur.cost;
+      }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
