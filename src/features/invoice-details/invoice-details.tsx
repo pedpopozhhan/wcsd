@@ -144,10 +144,7 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showEditPayableModal}>
-                {' '}
-                Edit Payables{' '}
-              </GoAButton>
+              <GoAButton type='tertiary' onClick={showEditPayableModal}>Edit Payables</GoAButton>
             </div>
             <div className={tabContainer}>
               {tabIndex === 1 && <DetailsTab />}
