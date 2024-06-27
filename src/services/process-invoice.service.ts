@@ -88,6 +88,20 @@ class ProcessInvoiceService {
         }),
       );
   }
+  deleteDraft(token: string, invoiceId: string) {
+    return axios
+      .request<string>({
+        method: 'post',
+        url: this.baseUrl + '/DeleteDraft',
+        headers: getHeaders(token),
+        data: invoiceId,
+      })
+      .pipe(
+        map((x) => {
+          return x.data;
+        }),
+      );
+  }
 }
 
 export default new ProcessInvoiceService();

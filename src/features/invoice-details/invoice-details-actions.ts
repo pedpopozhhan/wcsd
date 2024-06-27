@@ -17,10 +17,12 @@ const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
 const GET_CUSTOM_LISTS = 'getCustomLists';
 const SAVE_DRAFT_INVOICE = 'saveDraftInvoice';
+const DELETE_DRAFT_INVOICE = 'deleteDraftInvoice';
 export const getInvoiceDetails = createAction<{ token: string; ids: number[]; selectedIds?: number[] }>(GET_INVOICE_DETAILS);
 export const getCustomLists = createAction<{ token: string }>(GET_CUSTOM_LISTS);
 export const clickOnDraftInvoice = createAction<{ token: string; invoice: IInvoice; contractNumber: string }>(CLICK_ON_DRAFT_INVOICE);
 export const saveDraftInvoice = createAction<{ token: string }>(SAVE_DRAFT_INVOICE);
+export const deleteDraftInvoice = createAction<{ token: string; invoiceId: string; contractNumber: string }>(DELETE_DRAFT_INVOICE);
 
 export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string; invoice: IInvoice; contractNumber: string }>) {
   const invoice = action.payload.invoice;
@@ -165,6 +167,30 @@ export function handleSaveDraftInvoice(action: PayloadAction<{ token: string }>,
       publishToast({
         type: 'error',
         message: 'Invoice failed to save.',
+      });
+      return EMPTY;
+    }),
+  );
+}
+
+export function handleDeleteDraftInvoice(action: PayloadAction<{ token: string; invoiceId: string; contractNumber: string }>) {
+  const contractNumber = action.payload.contractNumber;
+  return processInvoiceService.deleteDraft(action.payload.token, action.payload.invoiceId).pipe(
+    mergeMap((invoiceId: string) => {
+      return of(invoiceId);
+    }),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    tap((action) => {
+      navigateTo(`/invoice-processing/${contractNumber}`);
+    }),
+    catchError((error) => {
+      console.error(error);
+      if (error.response && error.response.status === 403) {
+        navigateTo('unauthorized');
+      }
+      publishToast({
+        type: 'info',
+        message: error.response.data,
       });
       return EMPTY;
     }),

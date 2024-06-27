@@ -8,19 +8,34 @@ import { useEffect, useState } from 'react';
 import { GoAButton, GoAIcon } from '@abgov/react-components';
 import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { getCustomLists, saveDraftInvoice } from './invoice-details-actions';
+import { deleteDraftInvoice, getCustomLists, saveDraftInvoice } from './invoice-details-actions';
 import { setAddedTimeReportData, setFlightReportIds, setInvoiceData, setOtherCostData, setRowData, setTimeReportDataBeforeEditingPayables } from '@/app/app-slice';
 import EditPayableModalDialog from './edit-payables-modal-dialog';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import DeleteInvoiceModal from './delete-invoice-modal';
 
-const { container, content, sideBar, main, footer, icon, tabGroupContainer, tabList, tabContainer, summaryContainer, headerContent, tabHeader } =
-  styles;
+const {
+  container,
+  content,
+  sideBar,
+  main,
+  footer,
+  icon,
+  tabGroupContainer,
+  tabList,
+  tabContainer,
+  summaryContainer,
+  headerContent,
+  tabHeader,
+  spacer,
+} = styles;
 
 export default function InvoiceDetails() {
   const auth = useConditionalAuth();
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.app.rowData);
   const otherCostData = useAppSelector((state) => state.app.otherCostData);
-  // const formChanged = useAppSelector((state) => state.app.invoiceChanged);
+
   const navigate = useNavigate();
 
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -48,8 +63,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-        return acc + cur.cost;
-      }, 0)
+          return acc + cur.cost;
+        }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
@@ -87,6 +102,9 @@ export default function InvoiceDetails() {
     navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
+  function onDelete() {
+    dispatch(deleteDraftInvoice({ token: auth?.user?.access_token, invoiceId: invoiceData.InvoiceID, contractNumber: invoiceData.ContractNumber }));
+  }
   const showEditPayableModal = () => {
     console.log('setParentShowModal(true);');
     setParentShowModal(true);
@@ -151,6 +169,8 @@ export default function InvoiceDetails() {
         <GoAButton type='tertiary' onClick={cancel}>
           Cancel
         </GoAButton>
+        <div className={spacer}></div>
+        {invoiceData.InvoiceStatus === InvoiceStatus.Draft && <DeleteInvoiceModal onDelete={onDelete}></DeleteInvoiceModal>}
       </div>
       <EditPayableModalDialog
         contractNumber={invoiceData.ContractNumber}

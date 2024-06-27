@@ -2,8 +2,10 @@ import { Action } from '@reduxjs/toolkit';
 import { EMPTY, Observable, filter, switchMap } from 'rxjs';
 import {
   clickOnDraftInvoice,
+  deleteDraftInvoice,
   getCustomLists,
   getInvoiceDetails,
+  handleDeleteDraftInvoice,
   handleDraftInvoiceClicked,
   handleGetCustomLists,
   handleGetInvoiceDetails,
@@ -18,7 +20,11 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>, state$: StateOb
   actions$.pipe(
     filter(
       (action) =>
-        getInvoiceDetails.match(action) || getCustomLists.match(action) || saveDraftInvoice.match(action) || clickOnDraftInvoice.match(action),
+        getInvoiceDetails.match(action) ||
+        getCustomLists.match(action) ||
+        saveDraftInvoice.match(action) ||
+        clickOnDraftInvoice.match(action) ||
+        deleteDraftInvoice.match(action),
     ),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
@@ -29,6 +35,8 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>, state$: StateOb
         return handleSaveDraftInvoice(action, state$);
       } else if (clickOnDraftInvoice.match(action)) {
         return handleDraftInvoiceClicked(action);
+      } else if (deleteDraftInvoice.match(action)) {
+        return handleDeleteDraftInvoice(action);
       } else {
         console.error(`${action.type} is not handled`);
         return EMPTY;
