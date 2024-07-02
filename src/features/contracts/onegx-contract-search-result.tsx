@@ -1,15 +1,18 @@
-import { IOneGxContractRowData } from '@/interfaces/contract-management/onegx-contract-search-row-data';
+import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { GoABlock, GoAButton, GoASpacer, GoATable, } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
+import { useNavigate } from 'react-router-dom';
 const { number, tableContainer } = styles;
 
 interface IOneGxContractSearchResultsProps {
-  searchResults: IOneGxContractRowData[];
+  searchResults: IOneGxContract[];
 }
 const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (props) => {
   const [results, setResults] = useState(props.searchResults);
-  const [pageResults, setPageResults] = useState<IOneGxContractRowData[]>([]);
+  const [pageResults, setPageResults] = useState<IOneGxContract[]>([]);
+
+  const navigate = useNavigate();
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
@@ -25,9 +28,9 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
-    results.sort((a: IOneGxContractRowData, b: IOneGxContractRowData) => {
-      const varA = a[sortBy as keyof IOneGxContractRowData];
-      const varB = b[sortBy as keyof IOneGxContractRowData];
+    results.sort((a: IOneGxContract, b: IOneGxContract) => {
+      const varA = a[sortBy as keyof IOneGxContract];
+      const varB = b[sortBy as keyof IOneGxContract];
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
@@ -72,6 +75,15 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
     changePage(newPage);
   }
 
+  function oneGxContractClick(selectedVendor: IOneGxContract) {
+    if (selectedVendor.contractNumber) {
+      navigate(`/contract-processing/${selectedVendor.id}`, {
+        state: selectedVendor.id,
+      });
+    }
+  }
+
+
   return (
     <div className={tableContainer}>
       <GoATable onSort={sortData} mb='xl' width='100%'>
@@ -86,9 +98,9 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
-              <td>{result.supplierName}</td>
+              <td><a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a></td>
               <td className={number}>{result.supplierid}</td>
-              <td className={number}>{result.contractNumber}</td>
+              <td className={number}><a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a></td>
               <td></td>
             </tr>
           ))}

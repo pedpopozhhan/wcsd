@@ -7,14 +7,14 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import OneGxContractSearchResults from './onegx-contract-search-result';
-import { IOneGxContractRowData } from '@/interfaces/contract-management/onegx-contract-search-row-data';
+import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
 const { dropdownContainer, toolbar, spacer } = styles;
 
 export default function OneGxContract() {
   const auth = useConditionalAuth();
   const header = 'Contracts Management';
-  const [searchResults, setSearchResults] = useState([] as IOneGxContractRowData[]);
-  const [allData, setAllData] = useState([] as IOneGxContractRowData[]);
+  const [searchResults, setSearchResults] = useState([] as IOneGxContract[]);
+  const [allData, setAllData] = useState([] as IOneGxContract[]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
@@ -52,8 +52,6 @@ export default function OneGxContract() {
   function onChangeContractType(name: string, type: string | string[]) {
     const _contractType = type as ContractType;
     setContractType(_contractType as ContractType);
-    // rerun the search, sometimes it is the term, sometimes it is an item with a separator
-    //const filtered = allData.filter((x) => _contractType === 'all' || x.contractType === _contractType);
     const upper = searchTerm.toUpperCase();
     const searched = allData.filter((x) => {
       return (
@@ -66,12 +64,6 @@ export default function OneGxContract() {
   }
   const onChange = (name: string, value: string) => {
     setSearchTerm(value);
-
-    // if (value.length < 3) {
-    //   setSearchResults(allData.filter((x) => contractType === 'all' || x.contractType === contractType));
-    //   return;
-    // }
-    // const filtered = allData.filter((x) => contractType === 'all' || x.contractType === contractType);
     const upper = value.toUpperCase();
     const searched = allData.filter((x) => {
       return (
