@@ -17,8 +17,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
     { value: 'businessId', label: 'Business ID.' },
-    { value: 'contractNumber', label: 'Contract No.' },
-    { value: 'contractType', label: 'Type' },
+    { value: 'contractNumber', label: 'Contract No.' }
   ];
 
   useEffect(() => {
@@ -92,7 +91,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
             <th style={{ verticalAlign: 'middle', width: '40%' }}>{contractSearchResultColumns[0].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[3].label}</th>
           </tr>
         </thead>
         <tbody>
@@ -101,7 +99,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
               <td><a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a></td>
               <td className={number}>{result.supplierid}</td>
               <td className={number}><a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a></td>
-              <td></td>
             </tr>
           ))}
         </tbody>
