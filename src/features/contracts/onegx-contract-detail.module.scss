@@ -22,9 +22,9 @@ main {
 
 .container {
   display: grid;
-  padding: 0 $goa-space-s;
+  padding: 0 $goa-space-m;
   grid-template-columns: 1fr;
-  row-gap: $goa-space-m;
+  row-gap: $goa-space-s;
   padding-left: $goa-line-height-7;
   margin-top: $goa-line-height-5;
 
@@ -33,14 +33,14 @@ main {
 
     div:first-child {
       color: $goa-color-text-default;
-      font: $goa-typography-body-s;
+      font: $goa-typography-body-m;
       line-height: $goa-line-height-5;
       font-weight: $goa-font-weight-bold;
     }
 
     div:nth-child(2) {
       color: $goa-color-text-secondary;
-      font: $goa-typography-body-xs;
+      font: $goa-typography-body-s;
       line-height: $goa-line-height-1;
     }
   }
@@ -64,14 +64,14 @@ main {
 
     div:first-child {
       color: $goa-color-text-default;
-      font: $goa-typography-body-s;
+      font: $goa-typography-body-m;
       line-height: $goa-line-height-5;
       font-weight: $goa-font-weight-bold;
     }
 
     div:nth-child(2) {
       color: $goa-color-text-secondary;
-      font: $goa-typography-body-xs;
+      font: $goa-typography-body-s;
       line-height: $goa-line-height-1;
     }
   }
