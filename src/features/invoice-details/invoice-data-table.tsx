@@ -170,12 +170,12 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               ))}
             <tr key={rowData?.length + 1}>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><div className={totalRowLabel}>Number of rows</div></td>
+              <td><div className={totalRowLabel}>Number of rows </div></td>
               <td><div className={totalRowValue}>{rowData?.filter(filterByRateType).filter(getFilter()).length}</div></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td></td>
               <td><div className={totalRowLabel}>Total cost</div></td>
               <td><div className={totalRowValue}>{convertToCurrency(rowData?.filter(filterByRateType).filter(getFilter()).reduce((cost, obj) => cost + obj.data.cost, 0))}</div></td>
