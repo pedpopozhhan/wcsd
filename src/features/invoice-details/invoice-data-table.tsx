@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { setRowData } from '@/app/app-slice';
 
-const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
+const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop, totalRowLabel, totalRowValue } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
   rateTypeFilter?: string;
@@ -168,6 +168,24 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   </td>
                 </tr>
               ))}
+            <tr key={rowData?.length + 1}>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><div className={totalRowLabel}>Number of rows</div></td>
+              <td><div className={totalRowValue}>{rowData?.filter(filterByRateType).filter(getFilter()).length}</div></td>
+              <td></td>
+              <td><div className={totalRowLabel}>Total cost</div></td>
+              <td><div className={totalRowValue}>{convertToCurrency(rowData?.filter(filterByRateType).filter(getFilter()).reduce((cost, obj) => cost + obj.data.cost, 0))}</div></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </tbody>
         </GoATable>
       </div>
