@@ -10,7 +10,7 @@ import { setRowData } from '@/app/app-slice';
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop, totalRowLabel, totalRowValue } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
-  rateTypeFilter?: string;
+  rateTypeFilter?: string[];
   showCheckBoxes?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
@@ -18,7 +18,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const rowData = useAppSelector((state) => state.app.rowData);
 
   const filterByRateType = (x: IDetailsTableRow) => {
-    return props.rateTypeFilter ? x.data.rateType === props.rateTypeFilter : x;
+    return props.rateTypeFilter && props.rateTypeFilter.length !== 0 ? props.rateTypeFilter.includes(x.data.rateType) : x; // === props.rateTypeFilter : x;
   };
 
   function sortData(sortBy: string, sortDir: number) {
@@ -170,15 +170,30 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               ))}
             <tr key={rowData?.length + 1}>
               <td></td>
-              <td><div className={totalRowLabel}>Number of rows </div></td>
-              <td><div className={totalRowValue}>{rowData?.filter(filterByRateType).filter(getFilter()).length}</div></td>
+              <td>
+                <div className={totalRowLabel}>Number of rows </div>
+              </td>
+              <td>
+                <div className={totalRowValue}>{rowData?.filter(filterByRateType).filter(getFilter()).length}</div>
+              </td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
-              <td><div className={totalRowLabel}>Total cost</div></td>
-              <td><div className={totalRowValue}>{convertToCurrency(rowData?.filter(filterByRateType).filter(getFilter()).reduce((cost, obj) => cost + obj.data.cost, 0))}</div></td>
+              <td>
+                <div className={totalRowLabel}>Total cost</div>
+              </td>
+              <td>
+                <div className={totalRowValue}>
+                  {convertToCurrency(
+                    rowData
+                      ?.filter(filterByRateType)
+                      .filter(getFilter())
+                      .reduce((cost, obj) => cost + obj.data.cost, 0),
+                  )}
+                </div>
+              </td>
               <td></td>
               <td></td>
               <td></td>
