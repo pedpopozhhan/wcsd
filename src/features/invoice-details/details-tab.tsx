@@ -1,19 +1,23 @@
-import { GoAButton, GoADropdown, GoADropdownItem } from '@abgov/react-components';
+import { GoAButton } from '@abgov/react-components';
 import styles from './details-tab.module.scss';
 import { useEffect, useState } from 'react';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from './invoice-details-slice';
-
-const { container, buttons } = styles;
-interface IDetailsTabProps { }
+import Select, { MultiValue } from 'react-select';
+const { container, buttons, multiSelect } = styles;
+interface IDetailsTabProps {}
+interface IOptionType {
+  value: string;
+  label: string;
+}
 const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
   const rateTypes = useAppSelector((state) => state.invoiceDetails.lists?.payableRateTypes);
 
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
-  const [selectedRateType, setSelectedRateType] = useState<string>('');
+  const [selectedRateTypes, setSelectedRateTypes] = useState<MultiValue<IOptionType>>([]);
 
   useEffect(() => {
     setSelectAllEnabled(rowData.some((x) => x.isSelected));
@@ -29,9 +33,6 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
     );
   }
 
-  function onChangeRateType(name: string, type: string | string[]) {
-    setSelectedRateType(type as string);
-  }
   if (!rateTypes) {
     return null;
   }
@@ -41,13 +42,23 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
         <GoAButton type='secondary' onClick={onAddSelected} disabled={!selectAllEnabled}>
           Add Selected
         </GoAButton>
-        <GoADropdown filterable placeholder='All rate types' onChange={onChangeRateType} value={selectedRateType}>
-          {rateTypes.map((x, i) => {
-            return <GoADropdownItem key={i} value={x} label={x} />;
+
+        <Select
+          isMulti
+          name='colors'
+          options={rateTypes.map((x) => {
+            return { value: x, label: x };
           })}
-        </GoADropdown>
+          placeholder='All rate types'
+          value={selectedRateTypes}
+          menuPosition='fixed'
+          onChange={setSelectedRateTypes}
+          isSearchable={true}
+          className={multiSelect}
+          classNamePrefix='multiSelect'
+        />
       </div>
-      <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateType} />
+      <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
     </div>
   );
 };

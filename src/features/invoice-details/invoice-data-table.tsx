@@ -10,7 +10,7 @@ import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/i
 const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
-  rateTypeFilter?: string;
+  rateTypeFilter?: string[];
   showCheckBoxes?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
@@ -18,7 +18,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
 
   const filterByRateType = (x: IDetailsTableRow) => {
-    return props.rateTypeFilter ? x.data.rateType === props.rateTypeFilter : x;
+    return props.rateTypeFilter && props.rateTypeFilter.length !== 0 ? props.rateTypeFilter.includes(x.data.rateType) : x; // === props.rateTypeFilter : x;
   };
 
   function sortData(sortBy: string, sortDir: number) {
@@ -77,12 +77,11 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
           }),
         ),
       );
-    }
-    else if (filteredRecords.length < rowData?.length) {
+    } else if (filteredRecords.length < rowData?.length) {
       dispatch(
         setRowData(
           rowData.map((r) => {
-            const exists = filteredRecords.some(obj => obj === r);
+            const exists = filteredRecords.some((obj) => obj === r);
             return r.isAdded ? r : { ...r, isSelected: exists && !r.isSelected ? true : false };
           }),
         ),
