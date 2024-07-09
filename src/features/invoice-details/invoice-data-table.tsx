@@ -16,10 +16,10 @@ interface IDetailsTabProps {
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const dispatch = useAppDispatch();
   const rowData = useAppSelector((state) => state.app.rowData);
-
   const filterByRateType = (x: IDetailsTableRow) => {
     return props.rateTypeFilter && props.rateTypeFilter.length !== 0 ? props.rateTypeFilter.includes(x.data.rateType) : x; // === props.rateTypeFilter : x;
   };
+
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
@@ -67,15 +67,27 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   }
 
   function checkAll() {
-    // if any selected, uncheck them all
-    const anySelected = rowData.filter((x) => !x.isAdded).some((x) => x.isSelected);
-    dispatch(
-      setRowData(
-        rowData.map((r) => {
-          return r.isAdded ? r : { ...r, isSelected: !anySelected };
-        }),
-      ),
-    );
+    const filteredRecords = rowData?.filter(filterByRateType).filter(getFilter());
+    if (filteredRecords.length === rowData.length) {
+      const allSelected = rowData.filter((x) => !x.isAdded).every((x) => x.isSelected);
+      dispatch(
+        setRowData(
+          rowData.map((r) => {
+            return r.isAdded ? r : { ...r, isSelected: allSelected ? false : true };
+          }),
+        ),
+      );
+    }
+    else if (filteredRecords.length < rowData?.length) {
+      dispatch(
+        setRowData(
+          rowData.map((r) => {
+            const exists = filteredRecords.some(obj => obj === r);
+            return r.isAdded ? r : { ...r, isSelected: exists && !r.isSelected ? true : false };
+          }),
+        ),
+      );
+    }
   }
 
   function getFilter() {
@@ -93,8 +105,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <div className={checkboxWrapper}>
                     <GoACheckbox
                       name={''}
-                      checked={rowData.some((x) => x.isSelected)}
-                      disabled={!rowData.some((x) => !x.isAdded)}
+                      checked={rowData.filter((x) => !x.isAdded).every((x) => x.isSelected)}
+                      disabled={rowData.every((x) => x.isAdded)}
                       onChange={() => checkAll()}
                     ></GoACheckbox>
                   </div>
