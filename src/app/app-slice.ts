@@ -39,7 +39,7 @@ const initialState: IAppSliceState = {
   flightReportIds: [],
   addedTimeReportData: [],
   tab: SourceTab.Approved,
-  timeReportDataBeforeEditingPayables: []
+  timeReportDataBeforeEditingPayables: [],
 };
 function hasOtherCostsArrayChanged(array1: IOtherCostTableRowData[], array2: IOtherCostTableRowData[]): boolean {
   if (array1.length !== array2.length) {
@@ -83,8 +83,11 @@ function hasDetailsTableRowArrayChanged(array1: IDetailsTableRow[], array2: IDet
 
 function markIsAddedStatusIfpreviouslyAdded(payLoad: IDetailsTableRow[], previouslySelected: IDetailsTableRow[]): IDetailsTableRow[] {
   const updatedParentTableData = payLoad.map((r) => {
-    if (previouslySelected.some(obj => obj.data.flightReportCostDetailsId === r.data.flightReportCostDetailsId)) {      return { ...r, isAdded: true }; }
-    else {      return { ...r, isAdded: false }; }
+    if (previouslySelected.some((obj) => obj.data.flightReportCostDetailsId === r.data.flightReportCostDetailsId)) {
+      return { ...r, isAdded: true };
+    } else {
+      return { ...r, isAdded: false };
+    }
   });
   return updatedParentTableData;
 }
@@ -120,7 +123,11 @@ export const appSlice = createSlice({
     setRowData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       const hasChanged = hasDetailsTableRowArrayChanged(action.payload, state.rowData);
       state.invoiceChanged = state.invoiceChanged || hasChanged;
-      if (state.timeReportDataBeforeEditingPayables.length === undefined || state.timeReportDataBeforeEditingPayables.length === 0) {
+      if (
+        !state.timeReportDataBeforeEditingPayables ||
+        state.timeReportDataBeforeEditingPayables.length === undefined ||
+        state.timeReportDataBeforeEditingPayables.length === 0
+      ) {
         state.rowData = action.payload;
       } else {
         state.rowData = markIsAddedStatusIfpreviouslyAdded(action.payload, state.timeReportDataBeforeEditingPayables);
