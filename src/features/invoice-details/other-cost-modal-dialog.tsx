@@ -222,7 +222,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setToDateError(false);
     }
 
-    if (Number.isNaN(rate) || rate <= 0) {
+    if (Number.isNaN(rate) || rate === 0) {
       setRateError(true);
       setRateErrorLabel(rateErrorLabelText);
     } else if (rate > maxRateAndNumberOfUnit) {
@@ -410,11 +410,11 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     value={rate.toString()}
                     error={rateError}
                     max={maxRateAndNumberOfUnit}
-                    min='0'
+                    min='-99999'
                     leadingContent='$'
                     trailingContent='Per&nbsp;unit'
                     onChange={(key, value) => {
-                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) <= 0) {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value)) || Number(value) === 0) {
                         setRateError(true);
                         setRate(0);
                         setRateErrorLabel(rateErrorLabelText);
