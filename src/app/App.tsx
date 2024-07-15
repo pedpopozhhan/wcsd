@@ -58,7 +58,7 @@ export function App() {
       {!auth.isLoading && (
         <div className={mainContainer}>
           <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-            {email && (
+            {auth!.isAuthenticated && email && (
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>
