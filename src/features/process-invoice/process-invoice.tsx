@@ -81,7 +81,7 @@ export default function ProcessInvoice() {
       };
     } else {
       setIsLoading(false);
-      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+      if (!invoiceData.InvoiceStatus || invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
         dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
       }
     }
