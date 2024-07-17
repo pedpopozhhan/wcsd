@@ -10,30 +10,7 @@
     gap: $goa-space-l;
   }
   .multiSelect {
-    max-width: 235px;
-    width: 235px;
-
-    &__control {
-      min-height: 42px;
-      box-shadow: 0 0 0 2px var(--goa-color-interactive-focus);
-      border-color: var(--goa-color-interactive-focus);
-      &:hover {
-        box-shadow: 0 0 0 2px var(--goa-color-interactive-hover);
-      }
-      &:active {
-        box-shadow: 0 0 0 2px var(--goa-color-interactive-focus);
-        border-color: var(--goa-color-interactive-focus);
-      }
-    }
-    &__placeholder {
-      color: var(--goa-color-text-default);
-    }
-    &__indicatorsContainer {
-      color: var(--goa-color-text-default);
-    }
-    &__menu {
-      z-index: 1;
-      scroll-snap-type: proximity;
-    }
+    max-width: 300px;
+    width: 300px;
   }
 }
