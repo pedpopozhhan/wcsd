@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setRowData } from '@/app/app-slice';
-import Select, { MultiValue } from 'react-select';
+import { MultiSelect } from 'react-multi-select-component';
 const { container, buttons, multiSelect } = styles;
 interface IDetailsTabProps {}
 interface IOptionType {
@@ -17,8 +17,20 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const rateTypes = useAppSelector((state) => state.invoiceDetails.lists?.payableRateTypes);
 
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
-  const [selectedRateTypes, setSelectedRateTypes] = useState<MultiValue<IOptionType>>([]);
+  const [selectedRateTypes, setSelectedRateTypes] = useState<IOptionType[]>([]);
 
+  // re: https://react-multi-select-component.pages.dev/?path=/story/recipes-localization--page
+  const options = {
+    allItemsAreSelected: 'All rate types are selected.',
+    clearSearch: 'Clear Search',
+    clearSelected: 'Clear Selected',
+    noOptions: 'No options',
+    search: 'Search',
+    selectAll: 'Select All',
+    selectAllFiltered: 'Select All (Filtered)',
+    selectSomeItems: 'All rate types',
+    create: 'Create',
+  };
   useEffect(() => {
     setSelectAllEnabled(rowData.some((x) => x.isSelected));
   }, [rowData]);
@@ -42,20 +54,15 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
         <GoAButton type='secondary' onClick={onAddSelected} disabled={!selectAllEnabled}>
           Add Selected
         </GoAButton>
-
-        <Select
-          isMulti
-          name='colors'
+        <MultiSelect
           options={rateTypes.map((x) => {
             return { value: x, label: x };
           })}
-          placeholder='All rate types'
           value={selectedRateTypes}
-          menuPosition='fixed'
           onChange={setSelectedRateTypes}
-          isSearchable={true}
+          labelledBy='All rate types'
+          overrideStrings={options}
           className={multiSelect}
-          classNamePrefix='multiSelect'
         />
       </div>
       <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
