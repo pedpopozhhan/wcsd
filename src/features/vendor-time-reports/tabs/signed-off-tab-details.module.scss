@@ -3,12 +3,15 @@
 .headerRow {
   vertical-align: middle;
 }
+
 .toolbar {
   display: flex;
+
   .spacer {
     flex: 1;
   }
 }
+
 .roboto {
   font-family: 'Roboto Mono';
   font-size: 18px;
@@ -16,4 +19,12 @@
   font-weight: 400;
   line-height: 28px;
   margin-top: $goa-space-s;
+}
+
+.toolbar {
+  display: flex;
+
+  .spacer {
+    flex: 1;
+  }
 }
