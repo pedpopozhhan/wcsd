@@ -11,7 +11,7 @@ interface IReconciledTabProps {}
 
 const InvoiceDetailsTab: FC<IReconciledTabProps> = () => {
   const otherCostData = useAppSelector((state) => state.app.otherCostData);
-  const addedTimeReportData = useAppSelector((state) => state.app.rowData);
+  const addedTimeReportData = useAppSelector((state) => state.app.addedTimeReportData);
   return (
     <div className={container}>
       <div className={tabContainer}>
