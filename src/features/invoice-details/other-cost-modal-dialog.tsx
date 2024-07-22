@@ -76,7 +76,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lists = useAppSelector((state) => state.invoiceDetails.lists);
   const { tableFormatter } = Styles;
   const [visible, setVisible] = useState<boolean>(false);
-  const currentOtherCost = {
+  const currentOtherCost: IOtherCostTableRowData = {
     index: index,
     from: fromDate,
     to: toDate,
@@ -92,6 +92,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     fund: fund,
     remarks: remarks,
     invoiceNumber: invoiceNumber,
+    invoiceOtherCostDetailId: '',
   };
 
   const xl = '500px';
@@ -166,6 +167,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
           } else setIsOtherCostAddition(true);
         } else {
           if (props.rowToUpdate) {
+            currentOtherCost.invoiceOtherCostDetailId = props.rowToUpdate?.data.invoiceOtherCostDetailId;
             props.rowToUpdate.data = currentOtherCost;
             props.onUpdate(props.rowToUpdate);
             setIsCancelled(true);
@@ -288,12 +290,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setSaveData(true);
       setAddAnother(true);
       validateOtherCost();
-    }
-    else {
+    } else {
       hideModalDialog();
     }
   };
-
 
   return (
     <>
@@ -310,7 +310,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
             </GoAButton>
-            <GoAButton type={addButtonType} onClick={addOtherCost} >
+            <GoAButton type={addButtonType} onClick={addOtherCost}>
               {addButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
