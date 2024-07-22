@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
+import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton, GoAInput } from '@abgov/react-components';
 import * as React from 'react';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import styles from './signed-off-tab-details.module.scss';
-const { headerRow, roboto } = styles;
+const { headerRow, roboto, toolbar, spacer } = styles;
 
 interface IFlightReportAllProps {
   contractNumber: string | undefined;
@@ -20,8 +20,12 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const auth = useConditionalAuth();
   //Data set
   const [data, setData] = React.useState<IFlightReportDashboard[]>([]);
+  const [rawData, setRawData] = React.useState<IFlightReportDashboard[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
+
+  // Searching 
+  const [searchVal, setSearchVal] = React.useState<string>();
 
   //Pagination
   const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
@@ -42,6 +46,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const sortedData = sort('flightReportDate', 1, response.rows);
+        setRawData(sortedData);
         setData(sortedData);
         // sort by what default
         setPageData(sortedData.slice(0, perPage));
@@ -61,6 +66,12 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       subscription.unsubscribe();
     };
   }, [searchValue, contractNumber, auth]);
+
+  useEffect(() => {
+    const offset = (page - 1) * perPage;
+    const _flightReports = data.slice(offset, offset + perPage);
+    setPageData(_flightReports);
+  }, [data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const sortedData = sort(sortBy, sortDir, data);
@@ -110,11 +121,34 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     }
   }
 
+  const onChange = (name: string, value: string) => {
+    setSearchVal(value);
+    if (value.length < 3) {
+      setData(rawData);
+      changePage(1);
+      return;
+    }
+    const upper = value.toUpperCase();
+    const results = rawData.filter((x) => x.contractRegistrationName?.toUpperCase().includes(upper));
+    setData(results);
+  };
+
   return (
     <>
       <PageLoader visible={loading} />
 
       <div>
+        <div className={toolbar}>
+          <div className={spacer}></div>
+          <GoAInput
+            type='search'
+            name='search'
+            value={searchVal}
+            onChange={onChange}
+            leadingIcon='search'
+            placeholder='Search Registration no.'
+          ></GoAInput>
+        </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
             <thead>

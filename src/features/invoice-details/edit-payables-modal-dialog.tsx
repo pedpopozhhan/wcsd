@@ -24,6 +24,7 @@ import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
 import { resetState, setFlightReportIds } from '@/app/app-slice';
+import { publishToast } from '@/common/toast';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -106,6 +107,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(resetState());
       showEditPayableDialog(false);
     }
+    publishToast({ type: 'success', message: 'Updated Payables' });
     setSelectionType('Available' as SelectionType);
   };
 
