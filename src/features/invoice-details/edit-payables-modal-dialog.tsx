@@ -65,7 +65,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const [, setPreviousSelectedPerPage] = useState(7);
 
   const dispatch = useAppDispatch();
-  const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
+  //   const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
 
   type SelectionType = 'Available' | 'Selected';
   const [selectionType, setSelectionType] = useState('Available' as SelectionType);
@@ -102,8 +102,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
       dispatch(setFlightReportIds(trItems));
       showEditPayableDialog(false);
-    }
-    else if (trItems.length == 0) {
+    } else if (trItems.length == 0) {
       dispatch(resetState());
       showEditPayableDialog(false);
     }
@@ -120,11 +119,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows.map((x) => {
-          if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
-            return { isChecked: true, ...x };
-          } else {
-            return { isChecked: false, ...x };
-          }
+          return { isChecked: x.isInUse, ...x };
         });
 
         const sortedData = sort('flightReportDate', 1, rows);
@@ -231,8 +226,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       const selectedData = data.filter((x) => x.isChecked === true);
       setPage(1);
       setData(selectedData);
-    }
-    else if (_contractType === 'Available') {
+    } else if (_contractType === 'Available') {
       const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
       const trItems: number[] = [];
       items?.map((record: IFlightReportDashboard) => {
@@ -299,7 +293,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
               ></GoAInput>
             </div>
           </div>
-
         </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
