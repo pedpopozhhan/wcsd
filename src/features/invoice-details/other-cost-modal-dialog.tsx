@@ -20,6 +20,7 @@ import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-respon
 import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
+import { EmptyGuid } from '@/common/types/invoice';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -92,7 +93,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     fund: fund,
     remarks: remarks,
     invoiceNumber: invoiceNumber,
-    invoiceOtherCostDetailId: '',
+    invoiceOtherCostDetailId: EmptyGuid,
   };
 
   const xl = '500px';
@@ -167,7 +168,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
           } else setIsOtherCostAddition(true);
         } else {
           if (props.rowToUpdate) {
-            currentOtherCost.invoiceOtherCostDetailId = props.rowToUpdate?.data.invoiceOtherCostDetailId;
+            const id = props.rowToUpdate?.data.invoiceOtherCostDetailId ? props.rowToUpdate?.data.invoiceOtherCostDetailId : EmptyGuid;
+            currentOtherCost.invoiceOtherCostDetailId = id;
             props.rowToUpdate.data = currentOtherCost;
             props.onUpdate(props.rowToUpdate);
             setIsCancelled(true);

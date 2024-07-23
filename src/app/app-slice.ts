@@ -1,6 +1,6 @@
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { SourceTab } from '@/common/navigate';
-import { EmptyInvoiceId } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/invoice';
 import { IDetailsTableRow } from '@/features/invoice-details/details-table-row.interface';
 import { IOtherCostTableRowData } from '@/interfaces/common/other-cost-table-row-data';
 import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
@@ -22,7 +22,7 @@ export interface IAppSliceState {
 const initialState: IAppSliceState = {
   invoiceChanged: false,
   invoiceData: {
-    InvoiceID: EmptyInvoiceId,
+    InvoiceID: EmptyGuid,
     InvoiceNumber: '',
     DateOnInvoice: '',
     InvoiceAmount: 0,
