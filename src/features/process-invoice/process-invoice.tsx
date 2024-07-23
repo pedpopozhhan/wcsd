@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTab from './tabs/details-tab';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import Summary from '@/features/invoice-details/summary';
-import { EmptyInvoiceId } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/invoice';
 import { resetState, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData, setTab } from '@/app/app-slice';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import { failedToPerform, publishToast } from '@/common/toast';
@@ -134,7 +134,7 @@ export default function ProcessInvoice() {
         )}
       </div>
       <div className={footer}>
-        {invoiceData.InvoiceID === EmptyInvoiceId && (
+        {invoiceData.InvoiceID === EmptyGuid && (
           // if it is a draft, processs should convert the draft to an invoice and
           <Fragment>
             <GoAButton type='primary' onClick={() => dispatch(createInvoice({ token: auth?.user?.access_token }))}>
@@ -148,7 +148,7 @@ export default function ProcessInvoice() {
             </GoAButton>
           </Fragment>
         )}
-        {invoiceData.InvoiceID !== EmptyInvoiceId && (
+        {invoiceData.InvoiceID !== EmptyGuid && (
           <Fragment>
             <GoAButton type='primary' onClick={handleButtonClick} disabled={!formChanged && invoiceData.InvoiceStatus !== InvoiceStatus.Draft}>
               <label>{invoiceData.InvoiceStatus === InvoiceStatus.Draft ? 'Process' : 'Update'}</label>

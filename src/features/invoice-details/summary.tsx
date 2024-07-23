@@ -4,7 +4,7 @@ import { GoAIcon } from '@abgov/react-components';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
-import { EmptyInvoiceId } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/invoice';
 import { convertToPascalCase } from '@/common/string-functions';
 import { saveDraftInvoice } from './invoice-details-actions';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
@@ -35,7 +35,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
 
   function onSheetNameUpdated() {
     setOpenModal(false);
-    if (invoiceData.InvoiceID !== EmptyInvoiceId) {
+    if (invoiceData.InvoiceID !== EmptyGuid) {
       if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
         dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
       } else {

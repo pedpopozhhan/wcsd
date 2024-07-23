@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { setInvoiceData } from '@/app/app-slice';
 import { failedToPerform, publishToast } from './toast';
-import { EmptyInvoiceId } from './types/invoice';
+import { EmptyGuid } from './types/invoice';
 import processInvoiceService from '@/services/process-invoice.service';
 import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
@@ -70,7 +70,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
 
   let subscription: Subscription;
   const invoiceForContext: IInvoiceData = {
-    InvoiceID: EmptyInvoiceId,
+    InvoiceID: EmptyGuid,
     InvoiceNumber: invoiceNumber,
     DateOnInvoice: dateOfInvoice,
     InvoiceAmount: invoiceAmount,
