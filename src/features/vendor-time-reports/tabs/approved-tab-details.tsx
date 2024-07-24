@@ -243,7 +243,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td className={roboto}>{formatter.format(record?.totalCost)}</td>
+                      <td className={roboto}>{formatter.format(record?.remainingCost)}</td>
                     </tr>
                   ))
                 ) : (

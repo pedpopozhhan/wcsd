@@ -15,4 +15,5 @@ export interface IFlightReportDashboard {
   status?: string;
   isInUse: boolean;
   totalCost: number;
+  remainingCost: number;
 }
