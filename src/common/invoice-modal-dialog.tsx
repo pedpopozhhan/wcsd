@@ -508,7 +508,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
                           setPageHasError(true);
-                        } else if (propertyValue > invoiceReceivedMaxDate) {
+                        } else if (propertyValue > new Date(invoiceReceivedMaxDate)) {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
                           setPageHasError(true);
