@@ -39,6 +39,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   function currentDate() {
     return moment().startOf('day').toISOString();
   }
+  function currentDateWithMonthOffset(offset: number) {
+    const dt = moment().add(offset, 'M').startOf('day').toISOString();
+    return dt;
+  }
+
   const dispatch = useAppDispatch();
   const auth = useConditionalAuth();
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
@@ -58,8 +63,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
   const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(currentDate());
   const [invoiceReceivedDateError, setInvoiceReceivedDateError] = useState<boolean>(false);
-  const [maxDate] = useState<Date>(getDateWithMonthOffset(1));
-  const [invoiceReceivedMaxDate] = useState<Date>(getDateWithMonthOffset(0));
+  const maxDate = currentDateWithMonthOffset(1);
+  const invoiceReceivedMaxDate = currentDateWithMonthOffset(0);
   const [invoiceReceivedMaxDateErrorLabel, setInvoiceReceivedMaxDateErrorLabel] = useState<string>('');
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
@@ -94,11 +99,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const righColumnControlWidth = '280px';
 
   const navigate = useNavigate();
-  function getDateWithMonthOffset(offset: number) {
-    const d = new Date();
-    d.setMonth(d.getMonth() + offset);
-    return d;
-  }
 
   useEffect(() => {
     const re = /^[a-zA-Z0-9\b]+$/;
@@ -183,27 +183,29 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       subscription.unsubscribe();
     }
 
-    subscription = processInvoiceService.doesInvoiceNumberExistForContract(auth?.user?.access_token, invoiceNumber, contractNumber).subscribe({
-      next: (data) => {
-        if (data) {
-          setInvoiceNumberErrorLabel('Invoice already exists. Must be unique.');
-          setInvoiceNumberError(true);
-        } else {
-          setInvoiceNumberErrorLabel('');
-          processFields();
-        }
-      },
-      error: (error) => {
-        console.log(error);
-        if (error.response && error.response.status === 403) {
-          navigateTo('unauthorized');
-        }
-        publishToast({
-          type: 'error',
-          message: failedToPerform('check invoice number exists', error.response.data),
-        });
-      },
-    });
+    subscription = processInvoiceService
+      .doesInvoiceNumberExistForContract(auth?.user?.access_token, invoiceData.InvoiceID, invoiceNumber, contractNumber)
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            setInvoiceNumberErrorLabel('Invoice already exists. Must be unique.');
+            setInvoiceNumberError(true);
+          } else {
+            setInvoiceNumberErrorLabel('');
+            processFields();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('check invoice number exists', error.response.message),
+          });
+        },
+      });
   }
 
   function processFields() {
@@ -245,7 +247,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     if (new Date(invoiceReceivedDate) < minDate || invoiceReceivedDateError) {
       setInvoiceReceivedDateError(true);
       return;
-    } else if (new Date(invoiceReceivedDate) > invoiceReceivedMaxDate) {
+    } else if (new Date(invoiceReceivedDate) > new Date(invoiceReceivedMaxDate)) {
       setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
       setInvoiceReceivedDateError(true);
       return;
@@ -506,7 +508,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
                           setPageHasError(true);
-                        } else if (propertyValue > invoiceReceivedMaxDate) {
+                        } else if (propertyValue > new Date(invoiceReceivedMaxDate)) {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
                           setPageHasError(true);
