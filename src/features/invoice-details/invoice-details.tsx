@@ -95,6 +95,7 @@ export default function InvoiceDetails() {
       ),
     );
     dispatch(setOtherCostData([]));
+    dispatch(setRowData([]));
     // navigate to time reports page
     navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
   }

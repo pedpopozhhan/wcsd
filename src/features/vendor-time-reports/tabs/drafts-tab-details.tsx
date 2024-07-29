@@ -10,6 +10,7 @@ import styles from './signed-off-tab-details.module.scss';
 import { convertToCurrency } from '@/common/currency';
 import { IInvoice } from '@/interfaces/process-invoice/process-invoice-data';
 import { clickOnDraftInvoice } from '@/features/invoice-details/invoice-details-actions';
+import { setFlightReportIds } from '@/app/app-slice';
 const { headerRow, roboto } = styles;
 
 interface IDraftsTabDetailsProps {
@@ -104,6 +105,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
 
   function invoiceNumberClick(invoice: IInvoice) {
     dispatch(clickOnDraftInvoice({ token: auth?.user?.access_token, invoice: invoice, contractNumber: contractNumber }));
+    dispatch(setFlightReportIds(invoice.invoiceTimeReports.map((x) => x.flightReportId)));
   }
 
   return (
