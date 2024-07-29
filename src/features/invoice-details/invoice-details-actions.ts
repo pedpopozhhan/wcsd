@@ -2,7 +2,7 @@ import { RootState } from '@/app/store';
 import timeReportDetailsService from '@/services/time-report-details.service';
 import { PayloadAction, createAction } from '@reduxjs/toolkit';
 import { StateObservable } from 'redux-observable';
-import { EMPTY, catchError, mergeMap, of, tap } from 'rxjs';
+import { EMPTY, catchError, map, mergeMap, of, tap } from 'rxjs';
 import { navigateTo } from '@/common/navigate';
 import { failedToPerform, publishToast } from '@/common/toast';
 import dropDownListService from '@/services/drop-down-lists.service';
@@ -11,7 +11,7 @@ import processInvoiceService from '@/services/process-invoice.service';
 import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setOtherCostData, setRowData } from '@/app/app-slice';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
-import { setLists } from './invoice-details-slice';
+import { deleteDraftInvoiceSuccess, setLists } from './invoice-details-slice';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
@@ -177,11 +177,7 @@ export function handleDeleteDraftInvoice(action: PayloadAction<{ token: string; 
   const contractNumber = action.payload.contractNumber;
   return processInvoiceService.deleteDraft(action.payload.token, action.payload.invoiceId).pipe(
     mergeMap((invoiceId: string) => {
-      return of(invoiceId);
-    }),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    tap((action) => {
-      navigateTo(`/invoice-processing/${contractNumber}`);
+      return of(invoiceId).pipe(map(() => deleteDraftInvoiceSuccess({ contractNumber: contractNumber })));
     }),
     catchError((error) => {
       console.error(error);

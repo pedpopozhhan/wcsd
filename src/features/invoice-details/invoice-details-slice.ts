@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ITimeReportDetailsTableRowData } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import IOtherCostDropDownLists from '@/interfaces/invoice-details/other-cost-drop-down-lists';
+import { navigateTo } from '@/common/navigate';
 
 export interface IInvoiceDetailsSliceState {
   rateTypes: string[];
@@ -26,9 +27,12 @@ export const invoiceDetailsSlice = createSlice({
     setLists: (state: IInvoiceDetailsSliceState, action: PayloadAction<IOtherCostDropDownLists>) => {
       state.lists = action.payload;
     },
+    deleteDraftInvoiceSuccess: (state, action: PayloadAction<{ contractNumber: string }>) => {
+      navigateTo(`/invoice-processing/${action.payload.contractNumber}`);
+    },
   },
 });
 
-export const { setRateTypes, setLists } = invoiceDetailsSlice.actions;
+export const { setRateTypes, setLists, deleteDraftInvoiceSuccess } = invoiceDetailsSlice.actions;
 const invoiceDetailsReducer = invoiceDetailsSlice.reducer;
 export default invoiceDetailsReducer;
