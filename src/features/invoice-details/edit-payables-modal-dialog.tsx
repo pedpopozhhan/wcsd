@@ -65,7 +65,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const [, setPreviousSelectedPerPage] = useState(7);
 
   const dispatch = useAppDispatch();
-  //   const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
+  const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
 
   type SelectionType = 'Available' | 'Selected';
   const [selectionType, setSelectionType] = useState('Available' as SelectionType);
@@ -116,10 +116,15 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       contractNumber: contractNumber,
       status: 'approved',
     };
+    
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows.map((x) => {
-          return { isChecked: x.isInUse, ...x };
+          if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
+            return { isChecked: true, ...x };
+          } else {
+            return { isChecked: false, ...x };
+          }
         });
 
         const sortedData = sort('flightReportDate', 1, rows);
