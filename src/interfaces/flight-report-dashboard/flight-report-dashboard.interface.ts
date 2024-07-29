@@ -13,7 +13,6 @@ export interface IFlightReportDashboard {
   flightReportDate?: string;
   ao02Number?: string;
   status?: string;
-  isInUse: boolean;
   totalCost: number;
   remainingCost: number;
 }
