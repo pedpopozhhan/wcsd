@@ -37,10 +37,10 @@ interface InvoiceModalProps {
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
   function currentDate() {
-    return moment().startOf('day').toISOString();
+    return moment().startOf('day').utc().format('YYYY-MM-DDTHH:mm:ss');
   }
   function currentDateWithMonthOffset(offset: number) {
-    const dt = moment().add(offset, 'M').startOf('day').toISOString();
+    const dt = moment().add(offset, 'M').startOf('day').utc().format('YYYY-MM-DDTHH:mm:ss');
     return dt;
   }
 
