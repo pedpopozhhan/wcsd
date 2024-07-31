@@ -20,7 +20,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
     return props.rateTypeFilter && props.rateTypeFilter.length !== 0 ? props.rateTypeFilter.includes(x.data.rateType) : x; // === props.rateTypeFilter : x;
   };
 
-
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
     const sorted = data.filter(filterByRateType).sort((a: IDetailsTableRow, b: IDetailsTableRow) => {
@@ -77,12 +76,11 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
           }),
         ),
       );
-    }
-    else if (filteredRecords.length < rowData?.length) {
+    } else if (filteredRecords.length < rowData?.length) {
       dispatch(
         setRowData(
           rowData.map((r) => {
-            const exists = filteredRecords.some(obj => obj === r);
+            const exists = filteredRecords.some((obj) => obj === r);
             return r.isAdded ? r : { ...r, isSelected: exists && !r.isSelected ? true : false };
           }),
         ),
@@ -182,19 +180,24 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               ))}
             <tr key={rowData?.length + 1}>
               <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td>
-                <div className={totalRowLabel}>Number of rows </div>
+                <div className={totalRowLabel}>Total units: </div>
               </td>
               <td>
-                <div className={totalRowValue}>{rowData?.filter(filterByRateType).filter(getFilter()).length}</div>
+                <div className={totalRowValue}>
+                  {rowData
+                    ?.filter(filterByRateType)
+                    .filter(getFilter())
+                    .reduce((unit, obj) => unit + obj.data.noOfUnits, 0)}
+                </div>
               </td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
               <td>
-                <div className={totalRowLabel}>Total cost</div>
+                <div className={totalRowLabel}>Total cost:</div>
               </td>
               <td>
                 <div className={totalRowValue}>
