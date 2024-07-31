@@ -19,7 +19,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   const dispatch = useAppDispatch();
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
-    { value: 'vendor', label: 'Vendor' },
+    { value: 'vendorName', label: 'Vendor' },
     { value: 'businessId', label: 'Business No.' },
     { value: 'contractNumber', label: 'Contract No.' },
     { value: 'contractType', label: 'Type' },
@@ -40,6 +40,9 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
+      }
+      if (varA === varB) {
+        return 0;
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
@@ -97,13 +100,23 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
       <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[0].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[3].label}</th>
-            <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[4].label}</th>
+            <th style={{ verticalAlign: 'middle' }}>
+              <GoATableSortHeader name={contractSearchResultColumns[0].value}>{contractSearchResultColumns[0].label}</GoATableSortHeader>
+            </th>
+            <th style={{ verticalAlign: 'middle' }}>
+              <GoATableSortHeader name={contractSearchResultColumns[1].value}>{contractSearchResultColumns[1].label}</GoATableSortHeader>
+            </th>
+            <th style={{ verticalAlign: 'middle' }}>
+              <GoATableSortHeader name={contractSearchResultColumns[2].value}>{contractSearchResultColumns[2].label}</GoATableSortHeader>
+            </th>
+            <th style={{ verticalAlign: 'middle' }}>
+              <GoATableSortHeader name={contractSearchResultColumns[3].value}>{contractSearchResultColumns[3].label}</GoATableSortHeader>
+            </th>
+            <th style={{ verticalAlign: 'middle' }}>
+              <GoATableSortHeader name={contractSearchResultColumns[4].value}>{contractSearchResultColumns[4].label}</GoATableSortHeader>
+            </th>
             <th>
-              <GoATableSortHeader name={'downloadsAvailable'}>{contractSearchResultColumns[5].label}</GoATableSortHeader>
+              <GoATableSortHeader name={contractSearchResultColumns[5].value}>{contractSearchResultColumns[5].label}</GoATableSortHeader>
             </th>
             <th></th>
           </tr>

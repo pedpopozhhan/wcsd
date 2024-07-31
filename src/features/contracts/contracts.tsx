@@ -11,7 +11,6 @@ import { navigateTo } from '@/common/navigate';
 
 const { dropdownContainer, toolbar, spacer } = styles;
 
-
 export default function Contracts() {
   const auth = useConditionalAuth();
   const header = 'Contracts';

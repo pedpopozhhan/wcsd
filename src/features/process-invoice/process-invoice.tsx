@@ -7,7 +7,7 @@ import DetailsTab from './tabs/details-tab';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import Summary from '@/features/invoice-details/summary';
 import { EmptyGuid } from '@/common/types/invoice';
-import { resetState, setAddedTimeReportData, setInvoiceChanged, setInvoiceData, setOtherCostData, setRowData, setTab } from '@/app/app-slice';
+import { resetState, setAddedTimeReportData, setInvoiceChanged, setInvoiceData, setOtherCostData, setTab } from '@/app/app-slice';
 import processedInvoiceDetailService from '@/services/processed-invoice-detail.service';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { SourceTab, navigateTo } from '@/common/navigate';
