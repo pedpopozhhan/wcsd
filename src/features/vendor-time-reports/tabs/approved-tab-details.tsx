@@ -94,6 +94,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
+      if (varA === varB) {
+        return 0;
+      }
       return (varA > varB ? 1 : -1) * sortDir;
     });
     return rows.slice();
