@@ -107,7 +107,9 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
         <thead>
           <tr>
             <th style={{ verticalAlign: 'middle' }}>
-              <GoATableSortHeader name={contractSearchResultColumns[0].value}>{contractSearchResultColumns[0].label}</GoATableSortHeader>
+              <GoATableSortHeader name={contractSearchResultColumns[0].value} direction='asc'>
+                {contractSearchResultColumns[0].label}
+              </GoATableSortHeader>
             </th>
             <th style={{ verticalAlign: 'middle' }}>
               <GoATableSortHeader name={contractSearchResultColumns[1].value}>{contractSearchResultColumns[1].label}</GoATableSortHeader>
