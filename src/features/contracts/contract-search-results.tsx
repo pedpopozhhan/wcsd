@@ -28,13 +28,14 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
   ];
 
   useEffect(() => {
-    setResults(props.searchResults);
-    setPageResults(props.searchResults?.slice(0, perPage));
+    const sortedData = sort(contractSearchResultColumns[0].value, 0, props.searchResults);
+    setResults(sortedData);
+    setPageResults(sortedData?.slice(0, perPage));
     setPage(1);
   }, [props.searchResults]);
 
-  function sortData(sortBy: string, sortDir: number) {
-    results.sort((a: IContractSearchResult, b: IContractSearchResult) => {
+  function sort(sortBy: string, sortDir: number, rows: IContractSearchResult[]): IContractSearchResult[] {
+    rows.sort((a: IContractSearchResult, b: IContractSearchResult) => {
       const varA = a[sortBy as keyof IContractSearchResult];
       const varB = b[sortBy as keyof IContractSearchResult];
       if (typeof varA === 'string' && typeof varB === 'string') {
@@ -46,8 +47,13 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setResults(results.slice());
-    setPageResults(results.slice(0, perPage));
+    return rows.slice();
+  }
+
+  function sortData(sortBy: string, sortDir: number) {
+    const sortedData = sort(sortBy, sortDir, results);
+    setResults(sortedData.slice());
+    setPageResults(sortedData.slice(0, perPage));
     setPage(1);
   }
 
