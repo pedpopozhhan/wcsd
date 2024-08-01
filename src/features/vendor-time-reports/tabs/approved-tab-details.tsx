@@ -94,6 +94,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
+      if (varA === varB) {
+        return 0;
+      }
       return (varA > varB ? 1 : -1) * sortDir;
     });
     return rows.slice();
@@ -209,10 +212,18 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     Report Date
                   </GoATableSortHeader>
                 </th>
-                <th className={headerRow}>Report No.</th>
-                <th className={headerRow}>AO-02 No.</th>
-                <th className={headerRow}>Registration No.</th>
-                <th className={headerRow}>Total Cost</th>
+                <th className={headerRow}>
+                  <GoATableSortHeader name='flightReportId'>Report No.</GoATableSortHeader>
+                </th>
+                <th className={headerRow}>
+                  <GoATableSortHeader name='ao02Number'>AO-02 No.</GoATableSortHeader>
+                </th>
+                <th className={headerRow}>
+                  <GoATableSortHeader name='contractRegistrationName'>Registration No.</GoATableSortHeader>
+                </th>
+                <th className={headerRow}>
+                  <GoATableSortHeader name='remainingCost'>Total Cost</GoATableSortHeader>
+                </th>
               </tr>
             </thead>
 

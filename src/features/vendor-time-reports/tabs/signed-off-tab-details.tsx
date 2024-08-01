@@ -24,7 +24,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   //Loader
   const [loading, setIsLoading] = React.useState(true);
 
-  // Searching 
+  // Searching
   const [searchVal, setSearchVal] = React.useState<string>();
 
   //Pagination
@@ -87,6 +87,9 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
+      }
+      if (varA === varB) {
+        return 0;
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
@@ -159,13 +162,13 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                   </GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  Report No.
+                  <GoATableSortHeader name='flightReportId'>Report No.</GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  AO-02 No.
+                  <GoATableSortHeader name='ao02Number'>AO-02 No.</GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%' }}>
-                  Registration No.
+                  <GoATableSortHeader name='contractRegistrationName'>Registration No.</GoATableSortHeader>
                 </th>
                 <th className={headerRow} style={{ maxWidth: '15%', textAlign: 'right' }}></th>
               </tr>
