@@ -8,6 +8,7 @@ import { convertToCurrency } from '@/common/currency';
 const { container, tableContainer } = styles;
 class Row {
   index: number;
+  row: number;
   data: IOtherCostTableRowData;
 }
 interface IOtherCostTableProps {
@@ -20,6 +21,7 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
     setRowData(
       props.data.slice().map((x, i) => {
         return {
+          row: i + 1,
           index: i,
           data: x,
         };
@@ -39,7 +41,12 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(data);
+    setRowData(
+      data.map((x, i) => {
+        x.row = i + 1;
+        return x;
+      }),
+    );
   }
 
   return (
@@ -48,6 +55,7 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
         <GoATable onSort={sortData} width='100%'>
           <thead>
             <tr>
+              <th></th>
               <th>
                 {' '}
                 <GoATableSortHeader name={'from'}>From</GoATableSortHeader>{' '}
@@ -71,6 +79,7 @@ const InvoiceOtherCostTable: React.FC<IOtherCostTableProps> = (props) => {
           <tbody>
             {rowData.map((x, index) => (
               <tr key={index}>
+                <th>{x.row}</th>
                 <td>{yearMonthDay(x.data.from)}</td>
                 <td>{yearMonthDay(x.data.to)}</td>
                 <td>{x.data.rateType}</td>
