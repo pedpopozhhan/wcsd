@@ -98,6 +98,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
         <GoATable onSort={sortData} width='100%'>
           <thead>
             <tr>
+              <th></th>
               {props.showCheckBoxes && (
                 <th className={`${stickyColumn} ${start} ${onTop}`}>
                   <div className={checkboxWrapper}>
@@ -141,6 +142,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               .filter(getFilter())
               .map((x, index) => (
                 <tr key={index}>
+                  <td>{x.row}</td>
                   {props.showCheckBoxes && (
                     <td className={`${stickyColumn} ${start}`}>
                       <div className={checkboxWrapper}>
