@@ -123,10 +123,7 @@ export const appSlice = createSlice({
     setRowData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       const hasChanged = hasDetailsTableRowArrayChanged(action.payload, state.rowData);
 
-      const rows = action.payload.slice().map((x, i) => {
-        x.row = i + 1;
-        return x;
-      });
+      const rows = action.payload.slice();
       state.invoiceChanged = state.invoiceChanged || hasChanged;
       if (
         !state.timeReportDataBeforeEditingPayables ||

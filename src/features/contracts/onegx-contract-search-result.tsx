@@ -21,30 +21,21 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   ];
 
   useEffect(() => {
-    const rows = props.searchResults.map((x, i) => {
-      x.row = i + 1;
-      return x;
-    });
-    setResults(rows);
-    setPageResults(rows?.slice(0, perPage));
+    setResults(props.searchResults);
+    setPageResults(props.searchResults?.slice(0, perPage));
     setPage(1);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
-    results
-      .sort((a: IOneGxContract, b: IOneGxContract) => {
-        const varA = a[sortBy as keyof IOneGxContract];
-        const varB = b[sortBy as keyof IOneGxContract];
-        if (typeof varA === 'string' && typeof varB === 'string') {
-          const res = varB.localeCompare(varA);
-          return res * sortDir;
-        }
-        return (varA > varB ? 1 : -1) * sortDir;
-      })
-      .map((x, i) => {
-        x.row = i + 1;
-        return x;
-      });
+    results.sort((a: IOneGxContract, b: IOneGxContract) => {
+      const varA = a[sortBy as keyof IOneGxContract];
+      const varB = b[sortBy as keyof IOneGxContract];
+      if (typeof varA === 'string' && typeof varB === 'string') {
+        const res = varB.localeCompare(varA);
+        return res * sortDir;
+      }
+      return (varA > varB ? 1 : -1) * sortDir;
+    });
     setResults(results.slice());
     setPageResults(results.slice(0, perPage));
     setPage(1);
@@ -96,7 +87,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
       <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
-            <th></th>
             <th style={{ verticalAlign: 'middle', width: '40%' }}>{contractSearchResultColumns[0].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
@@ -105,7 +95,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
-              <td>{result.row}</td>
               <td>
                 <a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a>
               </td>

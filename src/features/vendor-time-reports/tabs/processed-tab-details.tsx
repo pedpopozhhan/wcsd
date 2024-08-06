@@ -247,7 +247,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
-                <th></th>
                 <th className={checboxHeader}>
                   <input
                     className={checboxControl}
@@ -260,6 +259,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
+                <th></th>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='invoiceDate' direction='asc'>
                     Invoice Date
@@ -289,7 +289,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 {pageData && pageData.length > 0 ? (
                   pageData.map((record: IRowItem) => (
                     <tr key={record.invoiceNumber}>
-                      <td>{record.row}</td>
                       <td style={{ padding: '12px 0 12px 32px' }}>
                         <input
                           className={checboxControl}
@@ -301,6 +300,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           disabled={record?.chargeExtractId?.length > 0 || record?.uniqueServiceSheetName?.trim().length === 0 ? true : false}
                         ></input>
                       </td>
+                      <td>{record.row}</td>
 
                       <td>{yearMonthDay(record.invoiceDate)}</td>
                       <td>

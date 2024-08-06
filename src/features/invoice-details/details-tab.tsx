@@ -65,7 +65,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
           className={multiSelect}
         />
       </div>
-      <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
+      <InvoiceDataTable showCheckBoxes showRowIndicator rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
     </div>
   );
 };

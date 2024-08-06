@@ -99,10 +99,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice().map((x, i) => {
-      x.row = i + 1;
-      return x;
-    });
+    return rows.slice();
   }
 
   function sortData(sortBy: string, sortDir: number) {
@@ -200,7 +197,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
-                <th></th>
                 <th className={checboxHeader}>
                   <input
                     className={checboxControl}
@@ -236,7 +232,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                 {pageData && pageData.length > 0 ? (
                   pageData.map((record: IRowItem) => (
                     <tr key={record.flightReportId}>
-                      <td>{record.row}</td>
                       <td style={{ padding: '12px 0 12px 32px' }}>
                         <input
                           className={checboxControl}

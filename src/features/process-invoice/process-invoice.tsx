@@ -53,6 +53,7 @@ export default function ProcessInvoice() {
           // need to map this to detailstablerow
           const data = results.invoice.invoiceTimeReportCostDetails.slice().map((x, i) => {
             return {
+              // row:i+1,
               index: i,
               data: x,
               isAdded: false,
