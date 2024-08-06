@@ -116,7 +116,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       contractNumber: contractNumber,
       status: 'approved',
     };
-    
+
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows.map((x) => {
@@ -163,7 +163,10 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function sortData(sortBy: string, sortDir: number) {
@@ -303,6 +306,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
+                <th></th>
                 <th className={checboxHeader}>
                   <input
                     className={checboxControl}
@@ -330,6 +334,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
                 {pageData && pageData.length > 0 ? (
                   pageData.map((record: IRowItem) => (
                     <tr key={record.flightReportId}>
+                      <td>{record.row}</td>
                       <td style={{ padding: '12px 0 12px 32px' }}>
                         <input
                           className={checboxControl}
@@ -357,7 +362,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={9} className='centertext'>
+                    <td colSpan={10} className='centertext'>
                       No data avaliable
                     </td>
                   </tr>
