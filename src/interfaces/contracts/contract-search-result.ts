@@ -1,4 +1,5 @@
-export interface IContractSearchResult {
+import { IRowIndicator } from '@/interfaces/common/row-indicator.interface';
+export interface IContractSearchResult extends IRowIndicator {
   index: number;
   vendorName: string;
   businessId: number;
