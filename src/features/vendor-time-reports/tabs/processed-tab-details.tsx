@@ -25,6 +25,7 @@ interface IProcessedTabDetailsAllProps {
 
 interface IRowItem extends IProcessedInvoiceTableRowData {
   isChecked: boolean;
+  row: number;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
@@ -60,8 +61,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setIsLoading(true);
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
-        const rows = results.invoices.map((x) => {
-          return { isChecked: false, ...x };
+        const rows = results.invoices.map((x, i) => {
+          return { isChecked: false, row: i + 1, ...x };
         });
         const sortedData = sort('invoiceDate', 1, rows);
         setRawData(sortedData);
@@ -113,7 +114,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function getTotalPages() {
@@ -243,6 +247,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
+                <th></th>
                 <th className={checboxHeader}>
                   <input
                     className={checboxControl}
@@ -284,6 +289,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                 {pageData && pageData.length > 0 ? (
                   pageData.map((record: IRowItem) => (
                     <tr key={record.invoiceNumber}>
+                      <td>{record.row}</td>
                       <td style={{ padding: '12px 0 12px 32px' }}>
                         <input
                           className={checboxControl}
