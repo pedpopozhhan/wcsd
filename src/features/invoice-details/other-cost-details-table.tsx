@@ -24,6 +24,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
     setRowData(
       props.data.slice().map((x, i) => {
         return {
+          row: i + 1,
           index: i,
           data: x,
         };
@@ -44,7 +45,12 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(data);
+    setRowData(
+      data.map((x, i) => {
+        x.row = i + 1;
+        return x;
+      }),
+    );
   }
 
   function editSelectedOtherCost(item: IOtherCostTableRow) {
@@ -70,6 +76,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
         <GoATable onSort={sortData} width='100%'>
           <thead>
             <tr>
+              <th></th>
               <th>
                 {' '}
                 <GoATableSortHeader name={'from'}>From</GoATableSortHeader>{' '}
@@ -94,6 +101,7 @@ const OtherCostDetailsTable: React.FC<IOtherCostTableProps> = (props) => {
           <tbody>
             {rowData.map((x, index) => (
               <tr key={index}>
+                <td>{x.row}</td>
                 <td>{yearMonthDay(x.data.from)}</td>
                 <td>{yearMonthDay(x.data.to)}</td>
                 <td>{x.data.rateType}</td>
