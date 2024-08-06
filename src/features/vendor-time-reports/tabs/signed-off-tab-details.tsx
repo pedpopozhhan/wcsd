@@ -93,7 +93,10 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function getTotalPages() {
@@ -156,6 +159,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
+                <th></th>
                 <th style={{ maxWidth: '40%' }}>
                   <GoATableSortHeader name='flightReportDate' direction='asc'>
                     Report Date
@@ -181,6 +185,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
                     // {filteredData && filteredData.length > 0 ? (
                     // filteredData.map((record: any, index: any) => (
                     <tr key={record.flightReportId}>
+                      <td>{record.row}</td>
                       <td>{yearMonthDay(record.flightReportDate as string)}</td>
                       <td>
                         <GoAButton
