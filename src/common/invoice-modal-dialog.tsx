@@ -36,6 +36,9 @@ interface InvoiceModalProps {
 }
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
+  function convertDate(dt) {
+    return moment(dt).startOf('day').utc().format('YYYY-MM-DDTHH:mm:ss');
+  }
   function currentDate() {
     return moment().startOf('day').utc().format('YYYY-MM-DDTHH:mm:ss');
   }
@@ -252,6 +255,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       setInvoiceReceivedDateError(true);
       return;
     } else if (new Date(invoiceReceivedDate) < new Date(dateOfInvoice)) {
+      console.log('ird: ' + invoiceReceivedDate);
+      console.log('doi: ' + dateOfInvoice);
       setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
       setInvoiceReceivedDateError(true);
       return;
@@ -372,7 +377,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setDateOfInvoice(propertyValue.toISOString());
+                        const str = convertDate(propertyValue);
+                        setDateOfInvoice(str);
                         if (propertyValue < minDate) {
                           setDateOfInvoiceError(true);
                           setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
@@ -461,12 +467,13 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setPeriodEndingDate(propertyValue.toISOString());
+                        const str = convertDate(propertyValue);
+                        setPeriodEndingDate(str);
                         if (propertyValue < minDate) {
                           setPeriodEndingDateError(true);
                           setPageHasError(true);
                         } else {
-                          if (new Date(dateOfInvoice) < propertyValue) {
+                          if (new Date(dateOfInvoice) < new Date(str)) {
                             setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
                           } else {
                             setDateOfInvoiceErrorLabel('');
@@ -500,15 +507,20 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         setPageHasError(true);
                       } else {
                         const propertyValue: Date = new Date(value);
-                        setInvoiceReceivedDate(propertyValue.toISOString());
+                        const str = convertDate(propertyValue);
+                        setInvoiceReceivedDate(str);
+
                         if (propertyValue < minDate) {
                           setInvoiceReceivedDateError(true);
                           setPageHasError(true);
-                        } else if (propertyValue < new Date(dateOfInvoice)) {
+                        } else if (new Date(str) < new Date(dateOfInvoice)) {
+                          console.log('2svr: ' + invoiceReceivedDate);
+                          console.log('2ird: ' + str);
+                          console.log('2doi: ' + dateOfInvoice);
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
                           setPageHasError(true);
-                        } else if (propertyValue > new Date(invoiceReceivedMaxDate)) {
+                        } else if (new Date(str) > new Date(invoiceReceivedMaxDate)) {
                           setInvoiceReceivedDateError(true);
                           setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
                           setPageHasError(true);
