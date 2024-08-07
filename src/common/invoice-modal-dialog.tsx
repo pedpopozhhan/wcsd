@@ -36,7 +36,7 @@ interface InvoiceModalProps {
 }
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
-  function convertDate(dt) {
+  function convertDate(dt: Date) {
     return moment(dt).startOf('day').utc().format('YYYY-MM-DDTHH:mm:ss');
   }
   function currentDate() {
