@@ -2,7 +2,7 @@ import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGrou
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { setInvoiceData } from '@/app/app-slice';
+import { resetState, setInvoiceData } from '@/app/app-slice';
 import { failedToPerform, publishToast } from './toast';
 import { EmptyGuid } from './types/invoice';
 import processInvoiceService from '@/services/process-invoice.service';
@@ -129,6 +129,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       }
     } else {
       setEditMode(false);
+      // clear the invoiceData etc
+      dispatch(resetState());
       setDialogTitle('Create invoice');
     }
   }, [isInvoiceAddition]);
