@@ -50,8 +50,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setIsLoading(true);
     const request = {
       contractNumber: contractNumber,
-      status: 'approved',
-      invoiceID: ''
+      status: 'approved'
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {

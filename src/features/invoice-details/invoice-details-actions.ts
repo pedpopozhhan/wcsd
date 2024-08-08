@@ -29,7 +29,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
   const invoice = action.payload.invoice;
   const token = action.payload.token;
   const flightReportIds = invoice.invoiceTimeReports.map((x) => x.flightReportId);
-  return timeReportDetailsService.getTimeReportDetails(token, flightReportIds, '').pipe(
+  return timeReportDetailsService.getTimeReportDetails(token, flightReportIds).pipe(
     mergeMap((timeReportResults) => {
       const contractNumber = action.payload.contractNumber;
       const invoiceForContext: IInvoiceData = {
