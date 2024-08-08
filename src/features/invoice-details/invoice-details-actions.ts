@@ -19,7 +19,14 @@ const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
 const GET_CUSTOM_LISTS = 'getCustomLists';
 const SAVE_DRAFT_INVOICE = 'saveDraftInvoice';
 const DELETE_DRAFT_INVOICE = 'deleteDraftInvoice';
-export const getInvoiceDetails = createAction<{ token: string; ids: number[]; selectedIds?: number[], invoiceID?: string }>(GET_INVOICE_DETAILS);
+
+
+interface IGetInvoiceDetailsPayLoad {
+  token: string;
+  ids: number[];
+  invoiceID: string;
+}
+export const getInvoiceDetails = createAction<IGetInvoiceDetailsPayLoad>(GET_INVOICE_DETAILS);
 export const getCustomLists = createAction<{ token: string }>(GET_CUSTOM_LISTS);
 export const clickOnDraftInvoice = createAction<{ token: string; invoice: IInvoice; contractNumber: string }>(CLICK_ON_DRAFT_INVOICE);
 export const saveDraftInvoice = createAction<{ token: string }>(SAVE_DRAFT_INVOICE);
@@ -29,7 +36,12 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
   const invoice = action.payload.invoice;
   const token = action.payload.token;
   const flightReportIds = invoice.invoiceTimeReports.map((x) => x.flightReportId);
-  return timeReportDetailsService.getTimeReportDetails(token, flightReportIds).pipe(
+  const getTimeReportDetailsPayLoad = {
+    token: token,
+    timeReportIds: flightReportIds,
+    invoiceID: ''
+  };
+  return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
       const contractNumber = action.payload.contractNumber;
       const invoiceForContext: IInvoiceData = {
@@ -84,8 +96,14 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
     }),
   );
 }
-export function handleGetInvoiceDetails(action: PayloadAction<{ token: string; ids: number[]; selectedIds?: number[], invoiceID?: string }>) {
-  return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids, action.payload.invoiceID).pipe(
+
+export function handleGetInvoiceDetails(action: PayloadAction<IGetInvoiceDetailsPayLoad>) {
+  const getTimeReportDetailsPayLoad = {
+    token: action.payload.token,
+    timeReportIds: action.payload.ids,
+    invoiceID: action.payload.invoiceID
+  };
+  return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
       const data = timeReportResults.rows.slice().map((x, i) => {
         return {

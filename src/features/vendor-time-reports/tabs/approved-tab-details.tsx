@@ -50,7 +50,8 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setIsLoading(true);
     const request = {
       contractNumber: contractNumber,
-      status: 'approved'
+      status: 'approved',
+      invoiceID: ''
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
@@ -132,7 +133,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     });
 
     if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
+      dispatch(getInvoiceDetails({
+        token: auth?.user?.access_token,
+        ids: trItems,
+        invoiceID: ''
+      }));
       dispatch(setFlightReportIds(trItems));
     }
     if (trItems.length == 0) {

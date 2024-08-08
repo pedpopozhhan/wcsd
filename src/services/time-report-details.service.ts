@@ -6,21 +6,27 @@ interface IDetailsServiceGetBody {
   timeReportIds: number[];
   invoiceID?: string;
 }
+
+interface IGetTimeReportDetailsPayLoad {
+  token: string;
+  timeReportIds: number[];
+  invoiceID: string;
+}
 class TimeReportDetailsService {
   private baseUrl: string;
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
-  getTimeReportDetails(token: string, timeReportIds: number[], invoiceID?: string): Observable<ITimeReportDetails> {
+  getTimeReportDetails(payLoad: IGetTimeReportDetailsPayLoad): Observable<ITimeReportDetails> {
     const body: IDetailsServiceGetBody = {
-      timeReportIds: timeReportIds,
-      invoiceID: invoiceID
+      timeReportIds: payLoad.timeReportIds,
+      invoiceID: payLoad.invoiceID
     };
     return axios
       .request<ITimeReportDetails>({
         method: 'post',
         url: this.baseUrl + '/GetTimeReportDetails',
-        headers: getHeaders(token),
+        headers: getHeaders(payLoad.token),
         data: body,
       })
       .pipe(
