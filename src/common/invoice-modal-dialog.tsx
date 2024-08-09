@@ -56,12 +56,10 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isNew);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
+
   const [dateOfInvoice, setDateOfInvoice] = useState<string>(currentDate());
   const [dateOfInvoiceError, setDateOfInvoiceError] = useState<boolean>(false);
   const [dateOfInvoiceErrorLabel, setDateOfInvoiceErrorLabel] = useState<string>('');
-  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
-  const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
-  const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
   const [periodEndingDate, setPeriodEndingDate] = useState<string>(currentDate());
   const [periodEndingDateError, setPeriodEndingDateError] = useState<boolean>(false);
   const [invoiceReceivedDate, setInvoiceReceivedDate] = useState<string>(currentDate());
@@ -69,6 +67,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const maxDate = currentDateWithMonthOffset(1);
   const invoiceReceivedMaxDate = currentDateWithMonthOffset(0);
   const [invoiceReceivedMaxDateErrorLabel, setInvoiceReceivedMaxDateErrorLabel] = useState<string>('');
+
+  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
+  const [invoiceAmountError, setInvoiceAmountError] = useState<boolean>(false);
+  const [invoiceAmountErrorLabel, setInvoiceAmountErrorLabel] = useState<string>('');
+
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 2));
@@ -102,6 +105,59 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const righColumnControlWidth = '280px';
 
   const navigate = useNavigate();
+  useEffect(() => {
+    const pageHasError = checkDateOfInvoice() || checkInvoiceReceivedDate() || checkPeriodEndDate();
+    setPageHasError(pageHasError);
+  }, [dateOfInvoice, periodEndingDate, invoiceReceivedDate]);
+
+  function checkDateOfInvoice(): boolean {
+    if (new Date(dateOfInvoice) < minDate) {
+      setDateOfInvoiceError(true);
+      setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
+      return true;
+    } else {
+      setDateOfInvoiceError(false);
+      setDateOfInvoiceErrorLabel('');
+      return false;
+    }
+  }
+
+  function checkPeriodEndDate(): boolean {
+    const dateObj = new Date(periodEndingDate);
+    if (dateObj.getTime() < minDate.getTime()) {
+      setPeriodEndingDateError(true);
+      return true;
+    } else {
+      if (new Date(dateOfInvoice).getTime() < dateObj.getTime()) {
+        setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
+        return true;
+      } else {
+        setDateOfInvoiceErrorLabel('');
+        setPeriodEndingDateError(false);
+        return false;
+      }
+    }
+  }
+
+  function checkInvoiceReceivedDate(): boolean {
+    const dateObj = new Date(invoiceReceivedDate);
+    if (dateObj.getTime() < minDate.getTime()) {
+      setInvoiceReceivedDateError(true);
+      return true;
+    } else if (dateObj.getTime() < new Date(dateOfInvoice).getTime()) {
+      setInvoiceReceivedDateError(true);
+      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
+      return true;
+    } else if (dateObj.getTime() > new Date(invoiceReceivedMaxDate).getTime()) {
+      setInvoiceReceivedDateError(true);
+      setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
+      return true;
+    } else {
+      setInvoiceReceivedDateError(false);
+      setInvoiceReceivedMaxDateErrorLabel('');
+      return false;
+    }
+  }
 
   useEffect(() => {
     const re = /^[a-zA-Z0-9\b]+$/;
@@ -257,8 +313,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       setInvoiceReceivedDateError(true);
       return;
     } else if (new Date(invoiceReceivedDate) < new Date(dateOfInvoice)) {
-      console.log('ird: ' + invoiceReceivedDate);
-      console.log('doi: ' + dateOfInvoice);
       setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
       setInvoiceReceivedDateError(true);
       return;
@@ -381,15 +435,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setDateOfInvoice(str);
-                        if (propertyValue < minDate) {
-                          setDateOfInvoiceError(true);
-                          setDateOfInvoiceErrorLabel(dateOfInvoiceErrorLabelText);
-                          setPageHasError(true);
-                        } else {
-                          setDateOfInvoiceError(false);
-                          setDateOfInvoiceErrorLabel('');
-                          setPageHasError(false);
-                        }
                       }
                     }}
                   />
@@ -471,18 +516,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setPeriodEndingDate(str);
-                        if (propertyValue < minDate) {
-                          setPeriodEndingDateError(true);
-                          setPageHasError(true);
-                        } else {
-                          if (new Date(dateOfInvoice) < new Date(str)) {
-                            setDateOfInvoiceErrorLabel(dateOfInvoiceEarlierThanPEDErrorLabelText);
-                          } else {
-                            setDateOfInvoiceErrorLabel('');
-                            setPeriodEndingDateError(false);
-                            setPageHasError(false);
-                          }
-                        }
                       }
                     }}
                   />
@@ -511,26 +544,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setInvoiceReceivedDate(str);
-
-                        if (propertyValue < minDate) {
-                          setInvoiceReceivedDateError(true);
-                          setPageHasError(true);
-                        } else if (new Date(str) < new Date(dateOfInvoice)) {
-                          console.log('2svr: ' + invoiceReceivedDate);
-                          console.log('2ird: ' + str);
-                          console.log('2doi: ' + dateOfInvoice);
-                          setInvoiceReceivedDateError(true);
-                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateEarlierDateErrorText);
-                          setPageHasError(true);
-                        } else if (new Date(str) > new Date(invoiceReceivedMaxDate)) {
-                          setInvoiceReceivedDateError(true);
-                          setInvoiceReceivedMaxDateErrorLabel(invoiceReceivedDateFutureDateErrorText);
-                          setPageHasError(true);
-                        } else {
-                          setInvoiceReceivedDateError(false);
-                          setInvoiceReceivedMaxDateErrorLabel('');
-                          setPageHasError(false);
-                        }
                       }
                     }}
                   />
