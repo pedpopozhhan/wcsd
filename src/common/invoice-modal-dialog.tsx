@@ -2,7 +2,7 @@ import { GoAInput, GoAButton, GoAFormItem, GoAInputDate, GoAModal, GoAButtonGrou
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
-import { resetState, setInvoiceData } from '@/app/app-slice';
+import { clearInvoice, setInvoiceData } from '@/app/app-slice';
 import { failedToPerform, publishToast } from './toast';
 import { EmptyGuid } from './types/invoice';
 import processInvoiceService from '@/services/process-invoice.service';
@@ -52,7 +52,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [invoiceNumber, setInvoiceNumber] = useState<string>('');
-  const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isNew);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
@@ -75,7 +74,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 2));
-  const [dialogTitle, setDialogTitle] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -176,18 +174,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   useEffect(() => {
     if (!props.isNew) {
       setEditMode(true);
-      setDialogTitle('Update invoice');
-      setIsInvoiceAddition(false);
-      setlabelforInvoiceOperation('Update');
 
       if (invoiceData != null) {
         setToSessionData();
       }
     } else {
       setEditMode(false);
-      // clear the invoiceData etc
-      dispatch(resetState());
-      setDialogTitle('Create invoice');
     }
   }, [isInvoiceAddition]);
 
@@ -324,7 +316,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     if (pageHasError) return;
     invoiceForContext.CreatedBy = auth?.user?.profile.name;
     // put them in the session object
-    if (isInvoiceAddition) {
+    if (props.isNew) {
       dispatch(setInvoiceData(invoiceForContext));
       clearDataPoints();
       clearErrors();
@@ -353,9 +345,16 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
 
   function onOpen() {
     if (props.onOpen) {
+      dispatch(clearInvoice());
       props.onOpen();
       setIsVisible(true);
     }
+  }
+  function getDialogTitle() {
+    return props.isNew ? 'Create invoice' : 'Update invoice';
+  }
+  function getButtonLabel() {
+    return props.isNew ? 'Continue' : 'Update';
   }
   return (
     <>
@@ -370,7 +369,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         </GoAButton>
       )}
       <GoAModal
-        heading={dialogTitle}
+        heading={getDialogTitle()}
         open={isVisible}
         maxWidth={modalDialogWidth}
         actions={
@@ -380,7 +379,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
             </GoAButton>
 
             <GoAButton type='primary' onClick={() => setInvoice()}>
-              {labelforInvoiceOperation}
+              {getButtonLabel()}
             </GoAButton>
           </GoAButtonGroup>
         }
