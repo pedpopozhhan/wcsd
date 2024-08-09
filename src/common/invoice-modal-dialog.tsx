@@ -52,7 +52,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [invoiceNumber, setInvoiceNumber] = useState<string>('');
-  //   const [labelforInvoiceOperation, setlabelforInvoiceOperation] = useState<string>('Continue');
   const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isNew);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
@@ -75,7 +74,6 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const [contractNumber, setContractNumber] = useState(props.contract);
   const [pageHasError, setPageHasError] = useState<boolean>(false);
   const [minDate] = useState<Date>(new Date(1950, 1, 2));
-  //   const [dialogTitle, setDialogTitle] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -176,16 +174,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   useEffect(() => {
     if (!props.isNew) {
       setEditMode(true);
-      //   setDialogTitle('Update invoice');
-      //   setIsInvoiceAddition(false);
-      //   setlabelforInvoiceOperation('Update');
 
       if (invoiceData != null) {
         setToSessionData();
       }
     } else {
       setEditMode(false);
-      //   setDialogTitle('Create invoice');
     }
   }, [isInvoiceAddition]);
 
