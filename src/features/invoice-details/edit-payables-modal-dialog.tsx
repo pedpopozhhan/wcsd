@@ -33,12 +33,13 @@ interface IRowItem extends IFlightReportDashboard {
 
 interface IEditPayableModalDialog {
   contractNumber: string;
+  invoiceID: string;
   showEditPayableDialog: (value: boolean) => void;
   show: boolean;
   searchValue: string;
 }
 
-const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, searchValue, show, showEditPayableDialog }) => {
+const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, invoiceID, searchValue, show, showEditPayableDialog }) => {
   const [cancelButtonlabel] = useState<string>('Cancel');
   const [cancelButtonType] = useState<GoAButtonType>('tertiary');
   const [updateButtonlabel] = useState<string>('Update');
@@ -99,8 +100,8 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     });
 
     if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems }));
       dispatch(setFlightReportIds(trItems));
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
       showEditPayableDialog(false);
     } else if (trItems.length == 0) {
       dispatch(resetState());
@@ -115,17 +116,19 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const request = {
       contractNumber: contractNumber,
       status: 'approved',
+      invoiceID: invoiceID
     };
-    
+
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        const rows = response.rows.map((x) => {
-          if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
-            return { isChecked: true, ...x };
-          } else {
-            return { isChecked: false, ...x };
-          }
-        });
+        const rows = response.rows
+          .map((x) => {
+            if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
+              return { isChecked: true, ...x };
+            } else {
+              return { isChecked: false, ...x };
+            }
+          });
 
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);

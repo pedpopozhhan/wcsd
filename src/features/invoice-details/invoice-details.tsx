@@ -78,7 +78,6 @@ export default function InvoiceDetails() {
 
   function save() {
     const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
-
     dispatch(setInvoiceData(invoiceData));
     dispatch(setOtherCostData(otherCostData));
     dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
@@ -180,6 +179,7 @@ export default function InvoiceDetails() {
       </div>
       <EditPayableModalDialog
         contractNumber={invoiceData.ContractNumber}
+        invoiceID={invoiceData.InvoiceID}
         show={parentShowModal}
         showEditPayableDialog={setParentShowModal}
         searchValue=''

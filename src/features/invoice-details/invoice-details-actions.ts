@@ -12,13 +12,21 @@ import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setO
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import { deleteDraftInvoiceSuccess, setLists } from './invoice-details-slice';
+import { EmptyGuid } from '@/common/types/invoice';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
 const GET_CUSTOM_LISTS = 'getCustomLists';
 const SAVE_DRAFT_INVOICE = 'saveDraftInvoice';
 const DELETE_DRAFT_INVOICE = 'deleteDraftInvoice';
-export const getInvoiceDetails = createAction<{ token: string; ids: number[]; selectedIds?: number[] }>(GET_INVOICE_DETAILS);
+
+
+interface IGetInvoiceDetailsPayLoad {
+  token: string;
+  ids: number[];
+  invoiceID: string;
+}
+export const getInvoiceDetails = createAction<IGetInvoiceDetailsPayLoad>(GET_INVOICE_DETAILS);
 export const getCustomLists = createAction<{ token: string }>(GET_CUSTOM_LISTS);
 export const clickOnDraftInvoice = createAction<{ token: string; invoice: IInvoice; contractNumber: string }>(CLICK_ON_DRAFT_INVOICE);
 export const saveDraftInvoice = createAction<{ token: string }>(SAVE_DRAFT_INVOICE);
@@ -28,7 +36,12 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
   const invoice = action.payload.invoice;
   const token = action.payload.token;
   const flightReportIds = invoice.invoiceTimeReports.map((x) => x.flightReportId);
-  return timeReportDetailsService.getTimeReportDetails(token, flightReportIds).pipe(
+  const getTimeReportDetailsPayLoad = {
+    token: token,
+    timeReportIds: flightReportIds,
+    invoiceID: ''
+  };
+  return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
       const contractNumber = action.payload.contractNumber;
       const invoiceForContext: IInvoiceData = {
@@ -83,14 +96,20 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
     }),
   );
 }
-export function handleGetInvoiceDetails(action: PayloadAction<{ token: string; ids: number[]; selectedIds?: number[] }>) {
-  return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids).pipe(
+
+export function handleGetInvoiceDetails(action: PayloadAction<IGetInvoiceDetailsPayLoad>) {
+  const getTimeReportDetailsPayLoad = {
+    token: action.payload.token,
+    timeReportIds: action.payload.ids,
+    invoiceID: action.payload.invoiceID
+  };
+  return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
       const data = timeReportResults.rows.slice().map((x, i) => {
         return {
           index: i,
           data: x,
-          isAdded: false,
+          isAdded: x.invoiceID !== EmptyGuid ? true : false,
           isSelected: false,
         };
       });

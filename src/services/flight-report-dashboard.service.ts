@@ -10,7 +10,7 @@ class FlightReportDashboardService {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL;
   }
 
-  getSearch(token: string, body: { contractNumber: string; status: string }): Observable<IFlightReportDashboardResponse> {
+  getSearch(token: string, body: { contractNumber: string; status: string; invoiceID: string }): Observable<IFlightReportDashboardResponse> {
     return axios
       .request<IFlightReportDashboardResponse>({
         method: 'post',
