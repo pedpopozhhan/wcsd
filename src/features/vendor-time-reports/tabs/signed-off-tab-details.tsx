@@ -41,6 +41,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
     const request = {
       contractNumber: contractNumber,
       status: 'signed off',
+      invoiceID: ''
     };
     setIsLoading(true);
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
