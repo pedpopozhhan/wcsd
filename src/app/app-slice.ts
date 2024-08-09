@@ -151,6 +151,15 @@ export const appSlice = createSlice({
       state.invoiceChanged = false;
       state.timeReportDataBeforeEditingPayables = [];
     },
+    clearInvoice: (state: IAppSliceState) => {
+      state.rowData = [];
+      state.otherCostData = [];
+      state.flightReportIds = [];
+      state.addedTimeReportData = [];
+      state.invoiceChanged = false;
+      state.timeReportDataBeforeEditingPayables = [];
+      state.invoiceData = initialState.invoiceData;
+    },
 
     setAddedTimeReportData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       state.addedTimeReportData = action.payload;
@@ -176,6 +185,7 @@ export const {
   setRowData,
   setOtherCostData,
   resetState,
+  clearInvoice,
   setFlightReportIds,
   setAddedTimeReportData,
   setTab,
