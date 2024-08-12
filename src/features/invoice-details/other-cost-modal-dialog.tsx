@@ -237,7 +237,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setRateErrorLabel('');
     }
 
-    if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0) {
+    if (Number.isNaN(numberOfUnits) || numberOfUnits === 0) {
       setNumberOfUnitsError(true);
       setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
     } else if (numberOfUnits > maxRateAndNumberOfUnit) {
@@ -444,9 +444,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     value={numberOfUnits.toString()}
                     error={numberOfUnitsError}
                     max={maxRateAndNumberOfUnit}
-                    min='0'
+                    min='-99999'
                     onChange={(key, value) => {
-                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) === 0)) {
                         setNumberOfUnitsError(true);
                         setNumberOfUnits(0);
                         setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
