@@ -70,8 +70,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-        return acc + cur.cost;
-      }, 0)
+          return acc + cur.cost;
+        }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
@@ -172,7 +172,7 @@ export default function InvoiceDetails() {
           Save
         </GoAButton>
         <GoAButton type='tertiary' onClick={cancel}>
-          Cancel
+          Close
         </GoAButton>
         <div className={spacer}></div>
         {invoiceData.InvoiceStatus === InvoiceStatus.Draft && <DeleteInvoiceModal onDelete={onDelete}></DeleteInvoiceModal>}
