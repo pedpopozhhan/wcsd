@@ -23,7 +23,7 @@ import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks'
 import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
-import { resetState, setFlightReportIds } from '@/app/app-slice';
+import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
 import { publishToast } from '@/common/toast';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
@@ -104,7 +104,9 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
       showEditPayableDialog(false);
     } else if (trItems.length == 0) {
-      dispatch(resetState());
+      dispatch(setFlightReportIds([]));
+      dispatch(setAddedTimeReportData([]));
+      dispatch(setRowData([]));
       showEditPayableDialog(false);
     }
     publishToast({ type: 'success', message: 'Updated Payables' });
