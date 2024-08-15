@@ -13,6 +13,9 @@ import { clickOnDraftInvoice } from '@/features/invoice-details/invoice-details-
 import { setFlightReportIds } from '@/app/app-slice';
 const { headerRow, roboto } = styles;
 
+interface IRowItem extends IInvoice {
+  row: number;
+}
 interface IDraftsTabDetailsProps {
   contractNumber: string | undefined;
 }
@@ -21,12 +24,12 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
   const auth = useConditionalAuth();
   const dispatch = useAppDispatch();
   //Data set
-  const [data, setData] = React.useState<IInvoice[]>([]);
+  const [data, setData] = React.useState<IRowItem[]>([]);
   //Loader
   const [loading, setIsLoading] = React.useState(true);
 
   //Pagination
-  const [pageData, setPageData] = React.useState<IInvoice[]>([]);
+  const [pageData, setPageData] = React.useState<IRowItem[]>([]);
   // page number
   const [page, setPage] = React.useState(1);
   //count per page
@@ -40,7 +43,13 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
     // move this to epic, so can
     const subscription = processInvoiceService.getDrafts(auth?.user?.access_token, contractNumber).subscribe({
       next: (response) => {
-        const sortedData = sort('invoiceDate', 1, response.invoices);
+        const sortedData = sort(
+          'invoiceDate',
+          1,
+          response.invoices.map((x, i) => {
+            return { row: i + 1, ...x };
+          }),
+        );
         setData(sortedData);
         // sort by what default
         setPageData(sortedData.slice(0, perPage));
@@ -68,7 +77,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
     setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
-  function sort(sortBy: string, sortDir: number, rows: IInvoice[]): IInvoice[] {
+  function sort(sortBy: string, sortDir: number, rows: IRowItem[]): IRowItem[] {
     rows.sort((a: IInvoice, b: IInvoice) => {
       const varA = a[sortBy as keyof IInvoice];
       const varB = b[sortBy as keyof IInvoice];
@@ -78,7 +87,10 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function getTotalPages() {
@@ -117,6 +129,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
           <GoATable onSort={sortData} width='100%'>
             <thead>
               <tr>
+                <th></th>
                 <th>
                   <GoATableSortHeader name='invoiceDate' direction='asc'>
                     Invoice Date
@@ -131,8 +144,9 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
             {!loading && (
               <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
                 {pageData && pageData.length > 0 ? (
-                  pageData.map((record: IInvoice) => (
+                  pageData.map((record: IRowItem) => (
                     <tr key={record.invoiceId}>
+                      <td>{record.row}</td>
                       <td>{yearMonthDay(record.invoiceDate)}</td>
                       <td>
                         <GoAButton

@@ -1,5 +1,5 @@
 import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { GoABlock, GoAButton, GoASpacer, GoATable, } from '@abgov/react-components';
+import { GoABlock, GoAButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
     { value: 'businessId', label: 'Business ID.' },
-    { value: 'contractNumber', label: 'Contract No.' }
+    { value: 'contractNumber', label: 'Contract No.' },
   ];
 
   useEffect(() => {
@@ -82,7 +82,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
     }
   }
 
-
   return (
     <div className={tableContainer}>
       <GoATable onSort={sortData} mb='xl' width='100%'>
@@ -96,9 +95,13 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
-              <td><a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a></td>
+              <td>
+                <a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a>
+              </td>
               <td className={number}>{result.supplierid}</td>
-              <td className={number}><a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a></td>
+              <td className={number}>
+                <a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a>
+              </td>
             </tr>
           ))}
         </tbody>

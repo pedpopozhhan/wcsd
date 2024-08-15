@@ -1,8 +1,10 @@
+import { IRowIndicator } from '@/interfaces/common/row-indicator.interface';
+
 export interface IOneGxGetContractRequest {
   contractID: number;
 }
 
-export interface IOneGxContract {
+export interface IOneGxContract extends IRowIndicator {
   index: number;
   id: number;
   contractWorkspaceID: number;

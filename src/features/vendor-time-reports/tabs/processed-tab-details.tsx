@@ -25,6 +25,7 @@ interface IProcessedTabDetailsAllProps {
 
 interface IRowItem extends IProcessedInvoiceTableRowData {
   isChecked: boolean;
+  row: number;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
@@ -60,8 +61,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setIsLoading(true);
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
-        const rows = results.invoices.map((x) => {
-          return { isChecked: false, ...x };
+        const rows = results.invoices.map((x, i) => {
+          return { isChecked: false, row: i + 1, ...x };
         });
         const sortedData = sort('invoiceDate', 1, rows);
         setRawData(sortedData);
@@ -113,7 +114,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function getTotalPages() {
@@ -255,6 +259,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
+                <th></th>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='invoiceDate' direction='asc'>
                     Invoice Date
@@ -295,6 +300,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           disabled={record?.chargeExtractId?.length > 0 || record?.uniqueServiceSheetName?.trim().length === 0 ? true : false}
                         ></input>
                       </td>
+                      <td>{record.row}</td>
 
                       <td>{yearMonthDay(record.invoiceDate)}</td>
                       <td>

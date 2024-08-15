@@ -6,29 +6,42 @@ import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/i
 import { useState, useEffect } from 'react';
 
 const { container, tableContainer } = styles;
-
+interface IRowItem extends ITimeReportDetailsTableRowData {
+  row: number;
+}
 interface InvoiceCostDataTableProps {
   data: ITimeReportDetailsTableRowData[];
 }
 const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
-  const [rowData, setRowData] = useState<ITimeReportDetailsTableRowData[]>([]);
+  const [rowData, setRowData] = useState<IRowItem[]>([]);
   useEffect(() => {
-    if (props.data) setRowData(props.data.slice());
+    if (props.data)
+      setRowData(
+        props.data.slice().map((x, i) => {
+          const row: IRowItem = { row: i + 1, ...x };
+          return row;
+        }),
+      );
   }, [props.data]);
 
   function sortData(sortBy: string, sortDir: number) {
     const data = [...rowData];
 
-    data.sort((a: ITimeReportDetailsTableRowData, b: ITimeReportDetailsTableRowData) => {
-      const varA = a[sortBy as keyof ITimeReportDetailsTableRowData];
-      const varB = b[sortBy as keyof ITimeReportDetailsTableRowData];
+    data.sort((a: IRowItem, b: IRowItem) => {
+      const varA = a[sortBy as keyof IRowItem];
+      const varB = b[sortBy as keyof IRowItem];
       if (typeof varA === 'string' && typeof varB === 'string') {
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    setRowData(data);
+    setRowData(
+      data.map((x, i) => {
+        const row: IRowItem = { row: i + 1, ...x };
+        return row;
+      }),
+    );
   }
 
   return (
@@ -37,6 +50,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
         <GoATable onSort={sortData} width='100%'>
           <thead>
             <tr>
+              <th></th>
               <th>
                 <GoATableSortHeader name={'flightReportDate'}>Date</GoATableSortHeader>
               </th>
@@ -64,6 +78,7 @@ const InvoiceCostDataTable: React.FC<InvoiceCostDataTableProps> = (props) => {
           <tbody>
             {rowData.map((x, index) => (
               <tr key={index}>
+                <td>{x.row}</td>
                 <td>{yearMonthDay(x.flightReportDate)}</td>
                 <td>{x.contractRegistrationName}</td>
                 <td>{x.flightReportId}</td>

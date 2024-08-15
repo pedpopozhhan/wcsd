@@ -12,6 +12,7 @@ interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
   rateTypeFilter?: string[];
   showCheckBoxes?: boolean;
+  showRowIndicator?: boolean;
 }
 const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const dispatch = useAppDispatch();
@@ -110,6 +111,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   </div>
                 </th>
               )}
+              {props.showRowIndicator && <th></th>}
               <th>
                 <GoATableSortHeader name={'flightReportDate'}>Date</GoATableSortHeader>
               </th>
@@ -155,6 +157,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                       </div>
                     </td>
                   )}
+                  {props.showRowIndicator && <td>{index + 1}</td>}
                   <td>{yearMonthDay(x.data.flightReportDate)}</td>
                   <td>{x.data.contractRegistrationName}</td>
                   <td>{x.data.flightReportId}</td>
@@ -184,6 +187,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <td></td>
               <td></td>
               <td></td>
+
+              {props.showRowIndicator && <td></td>}
 
               <td>
                 <div className={totalRowLabel}>Total units: </div>
