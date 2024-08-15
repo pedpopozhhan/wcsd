@@ -1,4 +1,4 @@
-import { IInvoiceRequest, IInvoiceResponse, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
+import { IInvoice, IInvoiceRequest, IInvoiceResponse, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 
 import { Observable, map } from 'rxjs';
 import axios from 'axios-observable';
@@ -76,7 +76,7 @@ class ProcessInvoiceService {
 
   saveDraft(token: string, invoice: IProcessInvoiceData) {
     return axios
-      .request<string>({
+      .request<IInvoice>({
         method: 'post',
         url: this.baseUrl + '/SaveDraft',
         headers: getHeaders(token),

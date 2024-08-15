@@ -3,8 +3,10 @@ import styles from './details-tab.module.scss';
 import { useEffect, useState } from 'react';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+
 import { setRowData } from '@/app/app-slice';
 import { MultiSelect } from 'react-multi-select-component';
+
 const { container, buttons, multiSelect } = styles;
 interface IDetailsTabProps {}
 interface IOptionType {
@@ -17,7 +19,9 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
   const rateTypes = useAppSelector((state) => state.invoiceDetails.lists?.payableRateTypes);
 
   const [selectAllEnabled, setSelectAllEnabled] = useState<boolean>(false);
+
   const [selectedRateTypes, setSelectedRateTypes] = useState<IOptionType[]>([]);
+
 
   // re: https://react-multi-select-component.pages.dev/?path=/story/recipes-localization--page
   const options = {
@@ -54,6 +58,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
         <GoAButton type='secondary' onClick={onAddSelected} disabled={!selectAllEnabled}>
           Add Selected
         </GoAButton>
+
         <MultiSelect
           options={rateTypes.map((x) => {
             return { value: x, label: x };
@@ -63,6 +68,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
           labelledBy='All rate types'
           overrideStrings={options}
           className={multiSelect}
+
         />
       </div>
       <InvoiceDataTable showCheckBoxes showRowIndicator rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />

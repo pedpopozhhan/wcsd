@@ -8,7 +8,15 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import dropDownListService from '@/services/drop-down-lists.service';
 import { IInvoice, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import processInvoiceService from '@/services/process-invoice.service';
-import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setOtherCostData, setRowData } from '@/app/app-slice';
+import {
+  setAddedTimeReportData,
+  setInvoiceChanged,
+  setInvoiceData,
+  setInvoiceId,
+  setInvoiceStatus,
+  setOtherCostData,
+  setRowData,
+} from '@/app/app-slice';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import { deleteDraftInvoiceSuccess, setLists } from './invoice-details-slice';
@@ -19,7 +27,6 @@ const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';
 const GET_CUSTOM_LISTS = 'getCustomLists';
 const SAVE_DRAFT_INVOICE = 'saveDraftInvoice';
 const DELETE_DRAFT_INVOICE = 'deleteDraftInvoice';
-
 
 interface IGetInvoiceDetailsPayLoad {
   token: string;
@@ -39,7 +46,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
   const getTimeReportDetailsPayLoad = {
     token: token,
     timeReportIds: flightReportIds,
-    invoiceID: ''
+    invoiceID: '',
   };
   return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
@@ -101,7 +108,7 @@ export function handleGetInvoiceDetails(action: PayloadAction<IGetInvoiceDetails
   const getTimeReportDetailsPayLoad = {
     token: action.payload.token,
     timeReportIds: action.payload.ids,
-    invoiceID: action.payload.invoiceID
+    invoiceID: action.payload.invoiceID,
   };
   return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
@@ -173,10 +180,15 @@ export function handleSaveDraftInvoice(action: PayloadAction<{ token: string }>,
   };
   //   setIsLoading(true);
   return processInvoiceService.saveDraft(action.payload.token, payload).pipe(
-    mergeMap((data) => {
+    mergeMap((data: IInvoice) => {
       // eslint-disable-next-line quotes
       publishToast({ type: 'success', message: "Invoice saved. Accessible in 'Drafts' Tab." });
-      return of(setInvoiceStatus(InvoiceStatus.Draft), setInvoiceId(data), setInvoiceChanged(false));
+      return of(
+        setInvoiceStatus(InvoiceStatus.Draft),
+        setInvoiceId(data.invoiceId),
+        setOtherCostData(data.invoiceOtherCostDetails),
+        setInvoiceChanged(false),
+      );
     }),
     catchError((error) => {
       console.error(error);
