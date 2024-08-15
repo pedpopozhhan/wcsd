@@ -5,8 +5,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from './app/App';
 import InvoiceDetails from './features/invoice-details/invoice-details';
 import Contracts from './features/contracts/contracts';
+import OneGxContract from '@/features/contracts/onegx-contract';
 import InvoiceProcessing from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
+import OneGxContractProcessing from './features/contracts/onegx-contract-detail';
 import { AuthProvider } from 'react-oidc-context';
 import { oidcConfig } from './common/kc-config';
 import { LoggedOut } from './features/auth/logged-out';
@@ -16,6 +18,7 @@ import store, { persistor } from './app/store';
 import { UnAuthorized } from './features/auth/unauthorized';
 import ProtectedRoute from './app/protectec-route';
 import { PERMISSION } from './common/permission';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true';
@@ -42,14 +45,19 @@ root.render(
                       <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
+                      <Route key='5' path='invoice-process/:invoiceNumber' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
+                      <Route key='6' path='processed-invoice/:invoiceId/:contractNumber' element={<ProcessInvoice></ProcessInvoice>} />
                     </Route>
                     <Route key='7' path='logged-out' element={<LoggedOut />} />
-
                     <Route key='8' path='unauthorized' element={<UnAuthorized />} />
+                    <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
+                      <Route key='9' path='contractmanagement' element={<OneGxContract />} />
+                    </Route>
+                    <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
+                      <Route key='10' path='/contract-processing/:id' element={<OneGxContractProcessing />} />
+                    </Route>
                   </Route>
                 </Routes>
               </Router>
@@ -73,6 +81,8 @@ root.render(
                   <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='6' path='ProcessedInvoice/:invoiceId' element={<ProcessInvoice></ProcessInvoice>} />
                   <Route key='7' path='logged-out' element={<LoggedOut />} />
+                  <Route key='8' path='contractmanagement' element={<OneGxContract />} />
+                  <Route key='9' path='/contract-processing/:id' element={<OneGxContractProcessing />} />
                 </Route>
               </Routes>
             </Router>

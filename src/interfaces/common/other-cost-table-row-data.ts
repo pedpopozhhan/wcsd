@@ -14,4 +14,5 @@ export interface IOtherCostTableRowData {
   fund: string | string[];
   remarks: string;
   invoiceNumber: string;
+  invoiceOtherCostDetailId: string;
 }

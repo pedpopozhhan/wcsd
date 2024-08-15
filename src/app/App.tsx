@@ -31,7 +31,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const isLoggedOutPath = window.location.pathname === 'logged-out';
+    const isLoggedOutPath = window.location.pathname === '/logged-out';
 
     if (!isLoggedOutPath && !auth.isLoading && !auth.isAuthenticated) {
       if (window.location.search) {
@@ -57,13 +57,15 @@ export function App() {
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-          <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-            {auth!.isAuthenticated && email && (
+
+          {auth!.isAuthenticated && email && (
+            <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>
-            )}
-          </GoAAppHeader>
+            </GoAAppHeader>
+          )}
+          {!email && <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'></GoAAppHeader>}
 
           <div className={outletContainer}>
             <Outlet />

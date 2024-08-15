@@ -19,6 +19,7 @@ export default function Contracts() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
+
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {

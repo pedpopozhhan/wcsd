@@ -1,54 +1,42 @@
-import { Action, createAction } from '@reduxjs/toolkit';
-import { EMPTY, Observable, catchError, filter, mergeMap, of, switchMap } from 'rxjs';
-import { initializeRowData, setLists } from './invoice-details-slice';
-import timeReportDetailsService from '@/services/time-report-details.service';
-import { failedToPerform, publishToast } from '@/common/toast';
-import { navigateTo } from '@/common/navigate';
-import dropDownListService from '@/services/drop-down-lists.service';
-
-const GET_INVOICE_DETAILS = 'getInvoiceDetails';
-const GET_CUSTOM_LISTS = 'getCustomLists';
-export const getInvoiceDetails = createAction<{ token: string; ids: number[] }>(GET_INVOICE_DETAILS);
-export const getCustomLists = createAction<{ token: string }>(GET_CUSTOM_LISTS);
+import { Action } from '@reduxjs/toolkit';
+import { EMPTY, Observable, filter, switchMap } from 'rxjs';
+import {
+  clickOnDraftInvoice,
+  deleteDraftInvoice,
+  getCustomLists,
+  getInvoiceDetails,
+  handleDeleteDraftInvoice,
+  handleDraftInvoiceClicked,
+  handleGetCustomLists,
+  handleGetInvoiceDetails,
+  handleSaveDraftInvoice,
+  saveDraftInvoice,
+} from './invoice-details-actions';
+import { StateObservable } from 'redux-observable';
+import { RootState } from '@/app/store';
 
 // https://redux-toolkit.js.org/api/createAction#with-redux-observable
-export const invoiceDetailsEpic = (actions$: Observable<Action>) =>
+export const invoiceDetailsEpic = (actions$: Observable<Action>, state$: StateObservable<RootState>) =>
   actions$.pipe(
-    filter((action) => getInvoiceDetails.match(action) || getCustomLists.match(action)),
+    filter(
+      (action) =>
+        getInvoiceDetails.match(action) ||
+        getCustomLists.match(action) ||
+        saveDraftInvoice.match(action) ||
+        clickOnDraftInvoice.match(action) ||
+        deleteDraftInvoice.match(action),
+    ),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
-        return timeReportDetailsService.getTimeReportDetails(action.payload.token, action.payload.ids).pipe(
-          mergeMap((timeReportResults) => of(initializeRowData(timeReportResults.rows))),
-          catchError((error) => {
-            console.error(error);
-            if (error.response && error.response.status === 403) {
-              navigateTo('unauthorized');
-            }
-            publishToast({
-              type: 'info',
-              message: error.response.data,
-            });
-            return EMPTY;
-          }),
-        );
+        return handleGetInvoiceDetails(action);
       } else if (getCustomLists.match(action)) {
-        return dropDownListService.getOtherCostDropDownLists(action.payload.token).pipe(
-          mergeMap((dropDownLists) => {
-            return of(setLists(dropDownLists));
-          }),
-          catchError((error) => {
-            console.error(error);
-            if (error.response && error.response.status === 403) {
-              navigateTo('unauthorized');
-            }
-            publishToast({
-              type: 'error',
-              message: failedToPerform('getCustomLists', 'Connection Error'),
-              action: action,
-            });
-            return EMPTY;
-          }),
-        );
+        return handleGetCustomLists(action);
+      } else if (saveDraftInvoice.match(action)) {
+        return handleSaveDraftInvoice(action, state$);
+      } else if (clickOnDraftInvoice.match(action)) {
+        return handleDraftInvoiceClicked(action);
+      } else if (deleteDraftInvoice.match(action)) {
+        return handleDeleteDraftInvoice(action);
       } else {
         console.error(`${action.type} is not handled`);
         return EMPTY;

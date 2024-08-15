@@ -7,7 +7,9 @@
   height: 100%;
   width: 100%;
 }
-
+.spacer {
+  flex: 1;
+}
 .content {
   flex-grow: 1;
   overflow: hidden;
@@ -26,6 +28,18 @@
     .summaryContainer {
       margin-top: $goa-space-l;
     }
+
+    .headerContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .tabHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .main {

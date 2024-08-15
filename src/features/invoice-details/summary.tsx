@@ -4,12 +4,16 @@ import { GoAIcon } from '@abgov/react-components';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
-import { EmptyInvoiceId } from '@/common/types/invoice';
-import { updateInvoice } from '../process-invoice/process-invoice-epic';
+import { EmptyGuid } from '@/common/types/invoice';
+import { convertToPascalCase } from '@/common/string-functions';
+import { saveDraftInvoice } from './invoice-details-actions';
+import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
+import { updateInvoice } from '../process-invoice/process-invoice-actions';
 const { container } = styles;
 interface ISummaryProps {
   showSheet?: boolean;
 }
+
 const Summary: React.FC<ISummaryProps> = (props) => {
   const dispatch = useAppDispatch();
   const auth = useConditionalAuth();
@@ -31,8 +35,12 @@ const Summary: React.FC<ISummaryProps> = (props) => {
 
   function onSheetNameUpdated() {
     setOpenModal(false);
-    if (invoiceData.InvoiceID !== EmptyInvoiceId) {
-      dispatch(updateInvoice({ token: auth?.user?.access_token }));
+    if (invoiceData.InvoiceID !== EmptyGuid) {
+      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
+        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+      } else {
+        dispatch(updateInvoice({ token: auth?.user?.access_token }));
+      }
     }
   }
 
@@ -60,7 +68,7 @@ const Summary: React.FC<ISummaryProps> = (props) => {
       </div>
       <div>
         <div>Type</div>
-        <div>{contract.contractType}</div>
+        <div>{convertToPascalCase(contract.contractType, '-')}</div>
       </div>
       <div>
         <div>Invoice no.</div>

@@ -7,22 +7,21 @@ import OtherCostDetailsTable from './other-cost-details-table';
 import { IDetailsTableRow } from './details-table-row.interface';
 import InvoiceDataTable from './invoice-data-table';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setOtherCostData, setRowData } from './invoice-details-slice';
 import IOtherCostTableRow from '@/interfaces/common/other-cost-table-row';
 import { publishToast } from '@/common/toast';
-
+import { setOtherCostData, setRowData } from '@/app/app-slice';
 
 const { container, headerButtonContainer, tabContainer, reconciledDetailsDiv, otherCostsDiv, otherCostHeader } = styles;
 
-interface IReconciledTabProps { }
+interface IReconciledTabProps {}
 const ReconciledTab: FC<IReconciledTabProps> = () => {
   const dispatch = useAppDispatch();
-  const rowData = useAppSelector((state) => state.invoiceDetails.rowData);
-  const otherCostData = useAppSelector((state) => state.invoiceDetails.otherCostData);
+  const rowData = useAppSelector((state) => state.app.rowData);
+  const otherCostData = useAppSelector((state) => state.app.otherCostData);
   const [parentShowModal, setParentShowModal] = useState<boolean>(false);
   const [otherCostDataToUpdate] = useState<IOtherCostTableRow>();
 
-  useEffect(() => { }, [otherCostData]);
+  useEffect(() => {}, [otherCostData]);
 
   const showOtherCostsModal = () => {
     console.log('setParentShowModal(true);');
@@ -33,8 +32,7 @@ const ReconciledTab: FC<IReconciledTabProps> = () => {
     try {
       dispatch(setOtherCostData([...otherCostData, item]));
       publishToast({ type: 'success', message: 'Other cost was added.' });
-    }
-    catch (error) {
+    } catch (error) {
       publishToast({ type: 'error', message: `Other Cost addition failed with error: # ${error}` });
     }
   }
@@ -45,8 +43,7 @@ const ReconciledTab: FC<IReconciledTabProps> = () => {
       items.splice(item.index, 1);
       dispatch(setOtherCostData(items));
       publishToast({ type: 'success', message: 'Other cost was removed.' });
-    }
-    catch (error) {
+    } catch (error) {
       publishToast({ type: 'error', message: `Other Cost removal failed with error: # ${error}` });
     }
   }
@@ -57,8 +54,7 @@ const ReconciledTab: FC<IReconciledTabProps> = () => {
       items.splice(item.index, 1);
       dispatch(setOtherCostData([...items, item.data]));
       publishToast({ type: 'success', message: 'Other cost was updated.' });
-    }
-    catch (error) {
+    } catch (error) {
       publishToast({ type: 'error', message: `Other Cost update failed with error: # ${error}` });
     }
   }

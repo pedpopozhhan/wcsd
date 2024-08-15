@@ -1,64 +1,137 @@
-import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAInput } from '@abgov/react-components';
-import { useEffect, useState } from 'react';
+import {
+  GoAButton,
+  GoAButtonGroup,
+  GoAButtonType,
+  GoABadge,
+  GoABadgeType,
+  GoATable,
+  GoATableSortHeader,
+  GoAInput,
+  GoAPagination,
+  GoABlock,
+  GoASpacer,
+  GoADropdown,
+  GoADropdownItem,
+} from '@abgov/react-components';
+import { useState, useEffect } from 'react';
+import FlyOut from '@/common/fly-out';
 import PageLoader from '@/common/page-loader';
 import { IFlightReportDashboard } from '@/interfaces/flight-report-dashboard/flight-report-dashboard.interface';
 import { yearMonthDay } from '@/common/dates';
-import InvoiceModalDialog from '@/common/invoice-modal-dialog';
 import flightReportDashboardService from '@/services/flight-report-dashboard.service';
-import { useAppDispatch, useConditionalAuth } from '@/app/hooks';
-import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.module.scss';
+import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
-import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
-import { resetState, setFlightReportIds } from '@/app/app-slice';
-const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
+import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
+import { getInvoiceDetails } from './invoice-details-actions';
+import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
+import { publishToast } from '@/common/toast';
+const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
   isChecked: boolean;
 }
-interface IFlightReportAllProps {
-  contractNumber: string | undefined;
-  searchValue?: string;
-  onClickFlightReport?: (flightReportId: number) => void;
+
+interface IEditPayableModalDialog {
+  contractNumber: string;
+  invoiceID: string;
+  showEditPayableDialog: (value: boolean) => void;
+  show: boolean;
+  searchValue: string;
 }
 
-const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ contractNumber, searchValue }) => {
-  const auth = useConditionalAuth();
-  //Object for the page data
-  const [pageData, setPageData] = useState<IRowItem[]>([]);
+const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, invoiceID, searchValue, show, showEditPayableDialog }) => {
+  const [cancelButtonlabel] = useState<string>('Cancel');
+  const [cancelButtonType] = useState<GoAButtonType>('tertiary');
+  const [updateButtonlabel] = useState<string>('Update');
+  const [updateButtonType] = useState<GoAButtonType>('primary');
+  const [respMessageType] = useState<GoABadgeType>('light');
+  const [respMessageContent] = useState('');
+  const [respMessageIcon] = useState<boolean>(false);
+  const [iscancelled, setIsCancelled] = useState<boolean>(false);
+  const [dialogTitle] = useState<string>('Edit Payables');
+  const [visible, setVisible] = useState<boolean>(false);
+  const invoiceData = useAppSelector((state) => state.app.invoiceData);
+  const contract = useAppSelector((state) => state.app.contractForReconciliation);
 
-  //Data set
+  const auth = useConditionalAuth();
+  const [pageData, setPageData] = useState<IRowItem[]>([]);
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
 
-  //Loader
   const [loading, setIsLoading] = useState(true);
-
   const [searchVal, setSearchVal] = useState<string>();
 
-  // page number
   const [page, setPage] = useState(1);
-  //count per page
-  const [perPage, setPerPage] = useState(10);
-  const [, setPreviousSelectedPerPage] = useState(10);
-
-  // Modal Dialog configuration
-  const [contractID] = useState(contractNumber);
+  const [perPage, setPerPage] = useState(7);
+  const [, setPreviousSelectedPerPage] = useState(7);
 
   const dispatch = useAppDispatch();
+  const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
+
+  type SelectionType = 'Available' | 'Selected';
+  const [selectionType, setSelectionType] = useState('Available' as SelectionType);
+
+  const selectionTypeItems: { value: SelectionType; label: string }[] = [
+    { value: 'Available', label: 'Available' },
+    { value: 'Selected', label: 'Selected' },
+  ];
+
+  useEffect(() => {
+    setVisible(show);
+  }, [show]);
+
+  useEffect(() => {
+    if (iscancelled) {
+      setIsCancelled(false);
+    }
+  }, [iscancelled]);
+
+  const hideModalDialog = () => {
+    setIsCancelled(true);
+    setSelectionType('Available' as SelectionType);
+    showEditPayableDialog(false);
+  };
+
+  const UpdatePayables = () => {
+    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+    const trItems: number[] = [];
+    items?.map((record: IFlightReportDashboard) => {
+      trItems.push(record.flightReportId);
+    });
+
+    if (trItems.length > 0) {
+      dispatch(setFlightReportIds(trItems));
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
+      showEditPayableDialog(false);
+    } else if (trItems.length == 0) {
+      dispatch(setFlightReportIds([]));
+      dispatch(setAddedTimeReportData([]));
+      dispatch(setRowData([]));
+      showEditPayableDialog(false);
+    }
+    publishToast({ type: 'success', message: 'Updated Payables' });
+    setSelectionType('Available' as SelectionType);
+  };
 
   useEffect(() => {
     setIsLoading(true);
     const request = {
       contractNumber: contractNumber,
       status: 'approved',
-      invoiceID: ''
+      invoiceID: invoiceID
     };
+
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
         const rows = response.rows
           .map((x) => {
-            return { isChecked: false, ...x };
+            if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
+              return { isChecked: true, ...x };
+            } else {
+              return { isChecked: false, ...x };
+            }
           });
+
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
         setData(sortedData);
@@ -70,7 +143,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         if (error.response && error.response.status === 403) {
           navigateTo('unauthorized');
         }
-
         setIsLoading(false);
       },
     });
@@ -78,7 +150,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     return () => {
       subscription.unsubscribe();
     };
-  }, [searchValue, contractNumber]);
+  }, [searchValue, contractNumber, visible]);
 
   useEffect(() => {
     const offset = (page - 1) * perPage;
@@ -94,9 +166,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const res = varB.localeCompare(varA);
         return res * sortDir;
       }
-      if (varA === varB) {
-        return 0;
-      }
       return (varA > varB ? 1 : -1) * sortDir;
     });
     return rows.slice();
@@ -109,12 +178,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
+
   function getTotalPages() {
     const num = data ? Math.ceil(data.length / perPage) : 0;
-
     return num;
   }
-
   function changePage(newPage: number) {
     if (newPage) {
       const offset = (newPage - 1) * perPage;
@@ -124,26 +192,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       setPageData(_flightReports);
     }
   }
-
-  const reconcileTimeReports = () => {
-    const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
-    const trItems: number[] = [];
-    items?.map((record: IFlightReportDashboard) => {
-      trItems.push(record.flightReportId);
-    });
-
-    if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({
-        token: auth?.user?.access_token,
-        ids: trItems,
-        invoiceID: ''
-      }));
-      dispatch(setFlightReportIds(trItems));
-    }
-    if (trItems.length == 0) {
-      dispatch(resetState());
-    }
-  };
 
   const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -180,22 +228,81 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
     setData(results);
   };
+  function onChangeSelectionType(name: string, type: string | string[]) {
+    const _contractType = type as SelectionType;
+    setSelectionType(_contractType as SelectionType);
 
+    if (_contractType === 'Selected') {
+      const selectedData = data.filter((x) => x.isChecked === true);
+      setPage(1);
+      setData(selectedData);
+    } else if (_contractType === 'Available') {
+      const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
+      const trItems: number[] = [];
+      items?.map((record: IFlightReportDashboard) => {
+        trItems.push(record.flightReportId);
+      });
+
+      const rows = rawData.map((x) => {
+        if (trItems.find((element) => element === x.flightReportId) !== undefined) {
+          return { ...x, isChecked: true };
+        } else {
+          return { ...x, isChecked: false };
+        }
+      });
+      setData(rows);
+    }
+  }
   return (
     <>
       <PageLoader visible={loading} />
-      <div>
+      <FlyOut
+        heading={dialogTitle}
+        open={visible}
+        onClose={hideModalDialog}
+        actions={
+          <GoAButtonGroup alignment='end'>
+            <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
+            <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
+              {cancelButtonlabel}
+            </GoAButton>
+            <GoAButton type={updateButtonType} onClick={UpdatePayables}>
+              {updateButtonlabel}
+            </GoAButton>
+          </GoAButtonGroup>
+        }
+      >
+        <div className={topContainer}>
+          <div>
+            <div>Vendor</div>
+            <div>{contract.vendorName}</div>
+          </div>
+          <div>
+            <div>Invoie no.</div>
+            <div>{invoiceData.InvoiceNumber}</div>
+          </div>
+        </div>
         <div className={toolbar}>
-          <InvoiceModalDialog isNew onOpen={reconcileTimeReports} contract={contractID} />
-          <div className={spacer}></div>
-          <GoAInput
-            type='search'
-            name='search'
-            value={searchVal}
-            onChange={onChange}
-            leadingIcon='search'
-            placeholder='Search Registration no.'
-          ></GoAInput>
+          <div className={searchBar}>
+            <div>Approved time reports</div>
+            <div>
+              <div className={dropdownContainer}>
+                <GoADropdown name='contractType' value={selectionType} onChange={onChangeSelectionType}>
+                  {selectionTypeItems.map((type, idx) => (
+                    <GoADropdownItem key={idx} value={type.value} label={type.label} />
+                  ))}
+                </GoADropdown>
+              </div>
+              <GoAInput
+                type='search'
+                name='search'
+                value={searchVal}
+                onChange={onChange}
+                leadingIcon='search'
+                placeholder='Search Registration no.'
+              ></GoAInput>
+            </div>
+          </div>
         </div>
         <div className='divTable'>
           <GoATable onSort={sortData} width='100%'>
@@ -216,18 +323,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     Report Date
                   </GoATableSortHeader>
                 </th>
-                <th className={headerRow}>
-                  <GoATableSortHeader name='flightReportId'>Report No.</GoATableSortHeader>
-                </th>
-                <th className={headerRow}>
-                  <GoATableSortHeader name='ao02Number'>AO-02 No.</GoATableSortHeader>
-                </th>
-                <th className={headerRow}>
-                  <GoATableSortHeader name='contractRegistrationName'>Registration No.</GoATableSortHeader>
-                </th>
-                <th className={headerRow}>
-                  <GoATableSortHeader name='remainingCost'>Total Cost</GoATableSortHeader>
-                </th>
+                <th className={headerRow}>Report No.</th>
+                <th className={headerRow}>AO-02 No.</th>
+                <th className={headerRow}>Registration No.</th>
+                <th className={headerRow}>Total Cost</th>
               </tr>
             </thead>
 
@@ -258,7 +357,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td className={roboto}>{formatter.format(record?.remainingCost)}</td>
+                      <td className={roboto}>{formatter.format(record?.totalCost)}</td>
                     </tr>
                   ))
                 ) : (
@@ -272,7 +371,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             )}
           </GoATable>
         </div>
-
         {data && data.length > 0 && (
           <GoABlock alignment='center'>
             <div style={{ display: 'flex', alignSelf: 'center' }}>
@@ -285,9 +383,9 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
             <GoAPagination variant='links-only' itemCount={data.length} perPageCount={perPage} pageNumber={page} onChange={changePage} />
           </GoABlock>
         )}
-      </div>
+      </FlyOut>
     </>
   );
 };
 
-export default ApprovedTabDetails;
+export default EditPayableModalDialog;

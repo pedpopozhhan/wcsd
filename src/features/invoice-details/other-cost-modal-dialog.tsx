@@ -20,6 +20,7 @@ import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-respon
 import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
+import { EmptyGuid } from '@/common/types/invoice';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;
@@ -76,7 +77,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
   const lists = useAppSelector((state) => state.invoiceDetails.lists);
   const { tableFormatter } = Styles;
   const [visible, setVisible] = useState<boolean>(false);
-  const currentOtherCost = {
+  const currentOtherCost: IOtherCostTableRowData = {
     index: index,
     from: fromDate,
     to: toDate,
@@ -92,6 +93,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
     fund: fund,
     remarks: remarks,
     invoiceNumber: invoiceNumber,
+    invoiceOtherCostDetailId: EmptyGuid,
   };
 
   const xl = '500px';
@@ -166,6 +168,8 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
           } else setIsOtherCostAddition(true);
         } else {
           if (props.rowToUpdate) {
+            const id = props.rowToUpdate?.data.invoiceOtherCostDetailId ? props.rowToUpdate?.data.invoiceOtherCostDetailId : EmptyGuid;
+            currentOtherCost.invoiceOtherCostDetailId = id;
             props.rowToUpdate.data = currentOtherCost;
             props.onUpdate(props.rowToUpdate);
             setIsCancelled(true);
@@ -233,7 +237,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setRateErrorLabel('');
     }
 
-    if (Number.isNaN(numberOfUnits) || numberOfUnits <= 0) {
+    if (Number.isNaN(numberOfUnits) || numberOfUnits === 0) {
       setNumberOfUnitsError(true);
       setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
     } else if (numberOfUnits > maxRateAndNumberOfUnit) {
@@ -288,12 +292,10 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
       setSaveData(true);
       setAddAnother(true);
       validateOtherCost();
-    }
-    else {
+    } else {
       hideModalDialog();
     }
   };
-
 
   return (
     <>
@@ -310,7 +312,7 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
             <GoAButton type={addAnotherButtonType} onClick={addAnotherOtherCost}>
               {addAnotherButtonlabel}
             </GoAButton>
-            <GoAButton type={addButtonType} onClick={addOtherCost} >
+            <GoAButton type={addButtonType} onClick={addOtherCost}>
               {addButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
@@ -442,9 +444,9 @@ const OtherCostModalDialog = (props: IOtherCostModalDialog) => {
                     value={numberOfUnits.toString()}
                     error={numberOfUnitsError}
                     max={maxRateAndNumberOfUnit}
-                    min='0'
+                    min='-99999'
                     onChange={(key, value) => {
-                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) <= 0)) {
+                      if (Number.isNaN(value) || Number.isNaN(Number.parseFloat(value) || Number(value) === 0)) {
                         setNumberOfUnitsError(true);
                         setNumberOfUnits(0);
                         setNumberOfUnitsErrorLabel(numberOfUnitsErrorLabelText);
