@@ -184,6 +184,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               <td></td>
               <td></td>
               <td></td>
+
               <td>
                 <div className={totalRowLabel}>Total units: </div>
               </td>
@@ -209,6 +210,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   )}
                 </div>
               </td>
+
               <td></td>
               <td></td>
               <td></td>

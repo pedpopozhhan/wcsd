@@ -57,6 +57,7 @@ export function App() {
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
+
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
               <GoAPopover target={target}>
