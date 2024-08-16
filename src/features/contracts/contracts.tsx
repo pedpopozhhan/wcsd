@@ -49,7 +49,7 @@ export default function Contracts() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [JSON.stringify(allData), retry]);
+  }, [retry]);
 
   function onChangeContractType(name: string, type: string | string[]) {
     const _contractType = type as ContractType;
@@ -82,7 +82,6 @@ export default function Contracts() {
         x.contractNumber.toUpperCase().includes(upper)
       );
     });
-    console.dir(searched);
     setSearchResults(searched);
   };
 
