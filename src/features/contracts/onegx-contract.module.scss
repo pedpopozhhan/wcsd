@@ -1,9 +1,22 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
 
 .search {
   display: inline-block;
   margin-right: $goa-space-m;
   vertical-align: top;
+}
+
+.oneGxContractsRoot {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin-left: 10px;
+}
+
+.oneGxContractsMain {
+  height: 100%;
+  width: 70%;
 }
 
 main {
@@ -23,8 +36,8 @@ main {
 
 .toolbar {
   display: flex;
-
   .spacer {
     flex: 1;
   }
 }
+
