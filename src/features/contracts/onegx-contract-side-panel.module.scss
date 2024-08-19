@@ -1,0 +1,21 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+@import '@mixins/scrollbar.mixin.scss';
+
+.main {
+  @include thin-scrollbar;
+  overflow-y: auto;
+  background-color: $goa-color-greyscale-100;
+  flex-shrink: 0;
+  //width: 394px; // from figma
+  padding: $goa-space-xl $goa-space-l;
+
+  // .summaryContainer {
+  //   margin-top: $goa-space-l;
+  // }
+
+  // .headerContent {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  // }
+}

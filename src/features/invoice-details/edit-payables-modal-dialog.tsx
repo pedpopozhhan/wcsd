@@ -105,7 +105,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
       showEditPayableDialog(false);
     } else if (trItems.length == 0) {
-      //dispatch(setFlightReportIds([]));
       dispatch(setFlightReportIds([]));
       dispatch(setAddedTimeReportData([]));
       dispatch(setRowData([]));
