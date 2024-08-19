@@ -16,6 +16,10 @@ VITE_AVIATION_APPLICATION_BASE_URL = <URL to aviation application>
 VITE_AUTHORIZATION_REALM
 VITE_AUTHORIZATION_AUTHSERVERURL
 VITE_ENABLE_AUTHORIZATION true or false
+VITE_PR_NUMBER: 000
+VITE_TARGET_BRANCH: local
+VITE_WEB_VERSION: 00
+
 [Visit Design System](https://ui-components.alberta.ca)
 
 Should be read to go by just running the debugger in visual studio code.

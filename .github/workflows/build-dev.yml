@@ -30,7 +30,7 @@ jobs:
       VITE_WILDFIRE_PORTAL_URL: "${{ vars.VITE_WILDFIRE_PORTAL_URL }}"
       VITE_PR_NUMBER: "${{ github.event.number }}"
       VITE_TARGET_BRANCH: "${{ github.event.pull_request.base.ref }}"
-      VITE_VERSION_NUMBER: "${{ vars.VITE_WEB_VERSION }}"
+      VITE_WEB_VERSION: "${{ vars.VITE_WEB_VERSION }}"
 
     steps:
       - uses: actions/checkout@v3
