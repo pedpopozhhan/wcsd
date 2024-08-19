@@ -1,4 +1,4 @@
-name: "Web Build/Deloy"
+name: "Buld UAT"
 
 on:
   pull_request:

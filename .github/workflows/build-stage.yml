@@ -1,4 +1,4 @@
-name: "Web Build/Deloy"
+name: "Build Stage"
 
 on:
   pull_request:
