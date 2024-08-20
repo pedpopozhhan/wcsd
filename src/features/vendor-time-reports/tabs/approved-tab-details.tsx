@@ -51,14 +51,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const request = {
       contractNumber: contractNumber,
       status: 'approved',
-      invoiceID: ''
+      invoiceID: '',
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        const rows = response.rows
-          .map((x) => {
-            return { isChecked: false, ...x };
-          });
+        const rows = response.rows.map((x) => {
+          return { isChecked: false, ...x };
+        });
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
         setData(sortedData);
@@ -133,11 +132,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     });
 
     if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({
-        token: auth?.user?.access_token,
-        ids: trItems,
-        invoiceID: ''
-      }));
+      dispatch(
+        getInvoiceDetails({
+          token: auth?.user?.access_token,
+          ids: trItems,
+          invoiceID: '',
+        }),
+      );
       dispatch(setFlightReportIds(trItems));
     }
     if (trItems.length == 0) {
@@ -179,6 +180,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const upper = value.toUpperCase();
     const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
     setData(results);
+    setPage(1);
   };
 
   return (

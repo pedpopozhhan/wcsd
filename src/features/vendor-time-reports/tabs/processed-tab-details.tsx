@@ -217,7 +217,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
     const upper = value.toUpperCase();
     const results = rawData.filter((x) => x.invoiceNumber.toUpperCase().includes(upper));
-    setData(results);
+    const rows = results.map((x, i) => {
+      return { ...x, row: i + 1 };
+    });
+    setData(rows);
+    setPage(1);
   };
   return (
     <>
