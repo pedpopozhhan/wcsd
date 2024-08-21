@@ -279,7 +279,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             <div>{contract.vendorName}</div>
           </div>
           <div>
-            <div>Invoie no.</div>
+            <div>Invoice no.</div>
             <div>{invoiceData.InvoiceNumber}</div>
           </div>
         </div>
