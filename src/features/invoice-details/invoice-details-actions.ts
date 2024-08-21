@@ -9,7 +9,6 @@ import dropDownListService from '@/services/drop-down-lists.service';
 import { IInvoice, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import processInvoiceService from '@/services/process-invoice.service';
 import {
-  setAddedTimeReportData,
   setInvoiceChanged,
   setInvoiceData,
   setInvoiceId,

@@ -52,7 +52,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   const invoiceData = useAppSelector((state) => state.app.invoiceData);
 
   const [invoiceNumber, setInvoiceNumber] = useState<string>('');
-  const [isInvoiceAddition, setIsInvoiceAddition] = useState<boolean>(props.isNew);
+  const [isInvoiceAddition] = useState<boolean>(props.isNew);
   const [invoiceNumberError, setInvoiceNumberError] = useState<boolean>(false);
   const [invoiceNumberErrorLabel, setInvoiceNumberErrorLabel] = useState<string>('');
 
