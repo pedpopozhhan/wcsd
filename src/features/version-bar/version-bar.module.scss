@@ -1,0 +1,38 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+.container {
+  display: flex;
+  background-color: $goa-color-greyscale-200;
+  padding: $goa-space-xs $goa-space-m;
+  .environment {
+    //   dev or stage or uat or prod
+    font: $goa-typography-heading-xs;
+    padding: $goa-space-3xs $goa-space-xs;
+    line-height: 100%;
+    &.dev {
+      color: $goa-color-greyscale-white;
+      background-color: $goa-color-brand-default;
+    }
+    &.test {
+      color: $goa-color-greyscale-white;
+      background-color: $goa-color-success-dark;
+    }
+    &.stage {
+      color: $goa-color-greyscale-black;
+      background-color: $goa-color-emergency-light;
+    }
+    &.uat {
+      color: $goa-color-greyscale-black;
+      background-color: $goa-color-warning-default;
+    }
+  }
+  .spacer {
+    flex: 1;
+  }
+  .version {
+    margin-left: $goa-space-xl;
+    color: $goa-color-greyscale-black;
+  }
+  .build {
+    color: $goa-color-greyscale-black;
+  }
+}

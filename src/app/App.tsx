@@ -5,6 +5,7 @@ import Toast from '@/common/toast';
 import { useEffect, useState } from 'react';
 import { useConditionalAuth } from './hooks';
 import { NAVIGATE_EVENT } from '@/common/navigate';
+import VersionBar from '@/features/version-bar/version-bar';
 
 const { mainContainer, outletContainer, account } = styles;
 export function App() {
@@ -57,7 +58,7 @@ export function App() {
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-
+          <VersionBar></VersionBar>
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
               <GoAPopover target={target}>
