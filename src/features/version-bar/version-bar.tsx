@@ -4,8 +4,7 @@ const { container, environment, spacer, build } = styles;
 
 export default function VersionBar() {
   const env = import.meta.env.VITE_ENV;
-  const prNumber = import.meta.env.VITE_PR_NUMBER;
-  const branch = import.meta.env.VITE_TARGET_BRANCH;
+  const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
   const version = import.meta.env.VITE_WEB_VERSION;
 
   // env from environment variables come from github, can have different display values
@@ -23,7 +22,7 @@ export default function VersionBar() {
         <div className={`${environment} ${styles[env]}`}>{labels[env]}</div>
         <div className={styles.version}>{`Release ${version}`}</div>
         <div className={spacer}></div>
-        <div className={build}>{`pr ${prNumber} ${branch}`}</div>
+        <div className={build}>{`build ${buildNumber}`}</div>
       </div>
     );
   }
