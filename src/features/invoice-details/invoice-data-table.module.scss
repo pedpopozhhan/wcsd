@@ -9,6 +9,10 @@
   display: flex;
   @include thin-scrollbar;
 
+  .number {
+    font-family: $goa-font-family-number;
+    text-align: right;
+  }
   .checkboxWrapper {
     // goa checkbox has a 32 wide by 44 high container, 24 is the size of the checkbox itself.
     height: 24px;
@@ -28,6 +32,9 @@
   .totalRowValue {
     font-weight: bold;
     text-align: left;
+    &.number {
+      text-align: right;
+    }
   }
 
   .tableContainer {

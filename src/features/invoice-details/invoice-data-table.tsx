@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { ITimeReportDetailsTableRowData, getFireNumberRow } from '@/interfaces/invoice-details/time-report-details-table-row-data';
 import { setRowData } from '@/app/app-slice';
 
-const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop, totalRowLabel, totalRowValue } = styles;
+const { container, checkboxWrapper, buttonWrapper, tableContainer, stickyColumn, start, end, onTop, totalRowLabel, totalRowValue, number } = styles;
 interface IDetailsTabProps {
   filter?: (x: IDetailsTableRow) => boolean;
   rateTypeFilter?: string[];
@@ -163,7 +163,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <td>{x.data.flightReportId}</td>
                   <td>{x.data.ao02Number}</td>
                   <td>{x.data.rateType}</td>
-                  <td>{x.data.noOfUnits}</td>
+                  <td className={number}>{x.data.noOfUnits.toFixed(3)}</td>
                   <td>{x.data.rateUnit}</td>
                   <td>{convertToCurrency(x.data.ratePerUnit)}</td>
                   <td>{convertToCurrency(x.data.cost)}</td>
@@ -194,11 +194,12 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                 <div className={totalRowLabel}>Total units: </div>
               </td>
               <td>
-                <div className={totalRowValue}>
+                <div className={`${totalRowValue} ${number}`}>
                   {rowData
                     ?.filter(filterByRateType)
                     .filter(getFilter())
-                    .reduce((unit, obj) => unit + obj.data.noOfUnits, 0)}
+                    .reduce((unit, obj) => unit + obj.data.noOfUnits, 0)
+                    .toFixed(3)}
                 </div>
               </td>
               <td></td>
