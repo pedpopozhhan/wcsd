@@ -3,7 +3,7 @@ import styles from './version-bar.module.scss';
 const { container, environment, spacer, build } = styles;
 
 export default function VersionBar() {
-  const env = import.meta.env.VITE_ENV;
+  const env = import.meta.env.VITE_ENVIRONMENT;
   const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
   const version = import.meta.env.VITE_WEB_VERSION;
 
