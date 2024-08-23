@@ -28,7 +28,7 @@ jobs:
       VITE_AUTHORIZATION_AUTHSERVERURL: "${{ vars.VITE_AUTHORIZATION_AUTHSERVERURL }}"
       VITE_ENABLE_AUTHORIZATION: "${{ vars.VITE_ENABLE_AUTHORIZATION }}"
       VITE_WILDFIRE_PORTAL_URL: "${{ vars.VITE_WILDFIRE_PORTAL_URL }}"
-
+      VITE_ENVIRONMENT: "prod"
     steps:
       - uses: actions/checkout@v3
 
