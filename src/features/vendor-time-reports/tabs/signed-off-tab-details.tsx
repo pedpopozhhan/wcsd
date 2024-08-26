@@ -190,8 +190,6 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
               <tbody style={{ position: 'sticky', top: 0 }} className='table-body'>
                 {pageData && pageData.length > 0 ? (
                   pageData.map((record: IFlightReportDashboard) => (
-                    // {filteredData && filteredData.length > 0 ? (
-                    // filteredData.map((record: any, index: any) => (
                     <tr key={record.flightReportId}>
                       <td>{record.row}</td>
                       <td>{yearMonthDay(record.flightReportDate as string)}</td>

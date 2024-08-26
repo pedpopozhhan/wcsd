@@ -55,9 +55,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        // const rows = response.rows.map((x) => {
-        //   return { isChecked: false, ...x };
-        // });
         const rows = response.rows.map((x, i) => {
           return { isChecked: false, row: i + 1, ...x };
         });
