@@ -55,8 +55,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        const rows = response.rows.map((x) => {
-          return { isChecked: false, ...x };
+        // const rows = response.rows.map((x) => {
+        //   return { isChecked: false, ...x };
+        // });
+        const rows = response.rows.map((x, i) => {
+          return { isChecked: false, row: i + 1, ...x };
         });
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
@@ -98,7 +101,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function sortData(sortBy: string, sortDir: number) {
@@ -213,6 +219,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
+                <th></th>
                 <th className={headerRow}>
                   <GoATableSortHeader name='flightReportDate' direction='asc'>
                     Report Date
@@ -248,6 +255,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                           checked={record?.isChecked || false}
                         ></input>
                       </td>
+                      <td>{record.row}</td>
                       <td>{yearMonthDay(record.flightReportDate as string)}</td>
                       <td className={roboto}>
                         <a
