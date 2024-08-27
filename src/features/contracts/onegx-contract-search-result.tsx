@@ -1,16 +1,26 @@
-import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { GoABlock, GoAButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
 import { useNavigate } from 'react-router-dom';
+import contractManagementService from '@/services/contract-management.services';
+import { useConditionalAuth } from '@/app/hooks';
+import { failedToPerform, publishToast } from '@/common/toast';
+import { navigateTo } from '@/common/navigate';
+
 const { number, tableContainer } = styles;
 
 interface IOneGxContractSearchResultsProps {
   searchResults: IOneGxContract[];
+  onContractChange: (contract: IOneGxContractDetail) => void;
 }
 const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (props) => {
+  const auth = useConditionalAuth();
+  const [loading, setIsLoading] = useState<boolean>();
   const [results, setResults] = useState(props.searchResults);
   const [pageResults, setPageResults] = useState<IOneGxContract[]>([]);
+  const [retry, setRetry] = useState<boolean>(false);
+  const [selectedDetail, setSelectedDetail] = useState<IOneGxContractDetail>();
 
   const navigate = useNavigate();
 
@@ -24,6 +34,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
     setPage(1);
+    setSelectedDetail(null);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
@@ -82,6 +93,45 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
     }
   }
 
+  const onRowClick = (rowData: IOneGxContract) => {
+    if (Number(rowData.id)) {
+      setIsLoading(true);
+      const subscription = contractManagementService.getOneGxContract(auth?.user?.access_token, Number(rowData.id)).subscribe({
+        next: (searchResults) => {
+          const data = searchResults;
+          //setContract(data);
+          setSelectedDetail(data);
+          props.onContractChange(data);
+          setIsLoading(false);
+        },
+        error: (error) => {
+          setIsLoading(false);
+          console.error(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('Load OneGxContract', error.response.data),
+            callback: () => {
+              setRetry(!retry);
+            },
+          });
+        },
+      });
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+    if (selectedDetail) {
+      props.onContractChange(selectedDetail);
+    }
+  };
+
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className={tableContainer}>
       <GoATable onSort={sortData} mb='xl' width='100%'>
@@ -94,7 +144,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         </thead>
         <tbody>
           {pageResults?.map((result, idx) => (
-            <tr key={idx}>
+            <tr key={idx} onClick={() => onRowClick(result)}>
               <td>
                 <a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a>
               </td>
