@@ -395,7 +395,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => {}}
+                    onBlur={() => { }}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {

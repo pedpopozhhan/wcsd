@@ -16,7 +16,8 @@
 
 .oneGxContractsMain {
   height: 100%;
-  width: 70%;
+  width: 90%;
+  padding-right: $goa-space-s;
 }
 
 main {
@@ -36,8 +37,8 @@ main {
 
 .toolbar {
   display: flex;
+
   .spacer {
     flex: 1;
   }
 }
-
