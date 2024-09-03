@@ -7,20 +7,44 @@
   display: flex;
   background-color: $goa-color-greyscale-100;
   flex-shrink: 0;
-  width: 450px; // from figma
-  padding: $goa-space-xl $goa-space-l;
+  width: 100%;
+  width: 350px; // from figma
+  padding-left: $goa-space-xs;
 }
 
-.headerContent {
+.headerContentWithoutPadding {
   display: flex;
   width: 100%;
-  align-items: center;
-  padding-left: $goa-space-xl * 3;
-  padding-bottom: $goa-space-xl;
+  justify-content: center;
+  padding-top: $goa-space-xl;
+}
+
+.headerContentWithPadding {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding-top: $goa-space-xl;
+  padding-left: $goa-space-l * 3;
+
+  .child {
+    padding-bottom: $goa-space-s;
+    padding: $goa-space-xs;
+    border: 1px #b4afaf;
+    border-style: dashed;
+    padding: $goa-space-xl;
+    display: inline-block;
+  }
+}
+
+.contractHeader {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  width: 100%;
 
   .child {
     padding-top: $goa-space-l;
-    padding-bottom: $goa-space-s;
+    font-weight: bold;
   }
 }
 
@@ -54,4 +78,5 @@
   text-align: left;
   font: $goa-typography-body-xs;
   margin-left: $goa-space-l;
+  width: $goa-space-l*5;
 }
