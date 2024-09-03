@@ -1,5 +1,5 @@
 import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { GoABlock, GoAButton, GoASpacer, GoATable } from '@abgov/react-components';
+import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { useConditionalAuth } from '@/app/hooks';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { navigateTo } from '@/common/navigate';
 
-const { number, tableContainer } = styles;
+const { number, tableContainer, chevron } = styles;
 
 interface IOneGxContractSearchResultsProps {
   searchResults: IOneGxContract[];
@@ -140,17 +140,21 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
             <th style={{ verticalAlign: 'middle', width: '40%' }}>{contractSearchResultColumns[0].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx} onClick={() => onRowClick(result)}>
-              <td>
-                <a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a>
-              </td>
+              <td>{result.supplierName}</td>
               <td className={number}>{result.supplierid}</td>
               <td className={number}>
                 <a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a>
+              </td>
+              <td>
+                <div className={chevron}>
+                  <GoAIconButton icon='chevron-forward' onClick={() => oneGxContractClick(result)} />
+                </div>
               </td>
             </tr>
           ))}
