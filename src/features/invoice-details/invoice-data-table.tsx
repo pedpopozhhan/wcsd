@@ -45,7 +45,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
       return (varA > varB ? 1 : -1) * sortDir;
     });
     setTableData(sorted);
-    // dispatch(setRowData(sorted));
   }
   function addRemoveClicked(row: IDetailsTableRow) {
     const isAdd = !row.isAdded;
@@ -148,9 +147,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {/* {rawData
-              .filter(filterByRateType)
-              .filter(getFilter()) */}
             {tableData.map((x, index) => (
               <tr key={index}>
                 {props.showCheckBoxes && (
@@ -204,26 +200,14 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                 <div className={totalRowLabel}>Total units: </div>
               </td>
               <td>
-                <div className={`${totalRowValue} ${number}`}>
-                  {/* {rawData
-                    ?.filter(filterByRateType)
-                    .filter(getFilter()) */}
-                  {tableData.reduce((unit, obj) => unit + obj.data.noOfUnits, 0).toFixed(3)}
-                </div>
+                <div className={`${totalRowValue} ${number}`}>{tableData.reduce((unit, obj) => unit + obj.data.noOfUnits, 0).toFixed(3)}</div>
               </td>
               <td></td>
               <td>
                 <div className={totalRowLabel}>Total cost:</div>
               </td>
               <td>
-                <div className={totalRowValue}>
-                  {convertToCurrency(
-                    // rawData
-                    //   ?.filter(filterByRateType)
-                    //   .filter(getFilter())
-                    tableData.reduce((cost, obj) => cost + obj.data.cost, 0),
-                  )}
-                </div>
+                <div className={totalRowValue}>{convertToCurrency(tableData.reduce((cost, obj) => cost + obj.data.cost, 0))}</div>
               </td>
 
               <td></td>
