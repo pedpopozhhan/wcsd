@@ -1,0 +1,12 @@
+@import '@abgov/design-tokens/dist/tokens.scss';
+.tab {
+  //styleName: Large screen/Heading/Small (H4);
+  &.current {
+    box-shadow: inset 0 5px 0 0 $goa-color-interactive-default;
+  }
+  font: $goa-typography-heading-s;
+  //   font-size: 18px;
+  //   font-weight: 700;
+  //   line-height: 28px;
+  text-align: left;
+}

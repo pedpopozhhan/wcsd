@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useConditionalAuth } from './hooks';
 import { NAVIGATE_EVENT } from '@/common/navigate';
 import VersionBar from '@/features/version-bar/version-bar';
+import NavBar from './navbar';
 
 const { mainContainer, outletContainer, account } = styles;
 export function App() {
@@ -76,6 +77,7 @@ export function App() {
           )}
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
+              <NavBar />
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>
