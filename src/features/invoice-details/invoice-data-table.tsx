@@ -147,7 +147,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((x, index) => (
+            {tableData.filter(getFilter()).map((x, index) => (
               <tr key={index}>
                 {props.showCheckBoxes && (
                   <td className={`${stickyColumn} ${start}`}>
