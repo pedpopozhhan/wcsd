@@ -21,6 +21,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   const [pageResults, setPageResults] = useState<IOneGxContract[]>([]);
   const [retry, setRetry] = useState<boolean>(false);
   const [selectedDetail, setSelectedDetail] = useState<IOneGxContractDetail>();
+  const [clickedRowId, setClickedRowId] = useState<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -93,7 +94,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
     }
   }
 
-  const onRowClick = (rowData: IOneGxContract) => {
+  const onRowClick = (rowData: IOneGxContract, rowNumber: number) => {
     if (Number(rowData.id)) {
       setIsLoading(true);
       const subscription = contractManagementService.getOneGxContract(auth?.user?.access_token, Number(rowData.id)).subscribe({
@@ -102,6 +103,8 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
           //setContract(data);
           setSelectedDetail(data);
           props.onContractChange(data);
+          console.info(rowNumber);
+          setClickedRowId(rowNumber);
           setIsLoading(false);
         },
         error: (error) => {
@@ -145,7 +148,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         </thead>
         <tbody>
           {pageResults?.map((result, idx) => (
-            <tr key={idx} onClick={() => onRowClick(result)}>
+            <tr key={idx} onClick={() => onRowClick(result, idx)} className={`${styles.tableRow} ${clickedRowId === idx ? styles.clicked : ''}`}>
               <td>{result.supplierName}</td>
               <td className={number}>{result.supplierid}</td>
               <td className={number}>

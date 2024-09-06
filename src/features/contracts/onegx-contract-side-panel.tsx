@@ -1,7 +1,6 @@
 import { GoAButton } from '@abgov/react-components';
 import styles from '@/features/contracts/onegx-contract-side-panel.module.scss';
 import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ interface IContractSidePanelProps {
 
 const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
   const { main, container, child, row, label, value, contractHeader, headerContentWithoutPadding, headerContentWithPadding } = styles;
-  const [openContract] = useState<boolean>(false);
   const navigate = useNavigate();
 
   function getDisplayValue(value: string | null): string {
@@ -41,7 +39,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
     <div className={main}>
       <div>
         <div className={!props.contractDetails ? headerContentWithPadding : headerContentWithoutPadding}>
-          <GoAButton type='primary' trailingIcon='open' disabled={!openContract}
+          <GoAButton type='primary' trailingIcon='open' disabled={!props.contractDetails}
             onClick={() => openContractClick(props.contractDetails)}>
             Open contract
           </GoAButton>
