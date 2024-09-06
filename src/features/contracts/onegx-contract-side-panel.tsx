@@ -3,7 +3,6 @@ import styles from '@/features/contracts/onegx-contract-side-panel.module.scss';
 import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
-import { useNavigate } from 'react-router-dom';
 
 interface IContractSidePanelProps {
   contractDetails: IOneGxContractDetail;
@@ -11,7 +10,6 @@ interface IContractSidePanelProps {
 
 const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
   const { main, container, child, row, label, value, contractHeader, headerContentWithoutPadding, headerContentWithPadding } = styles;
-  const navigate = useNavigate();
 
   function getDisplayValue(value: string | null): string {
     if (value === null || value.trim() === '') {
@@ -29,9 +27,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
 
   function openContractClick(selectedVendor: IOneGxContractDetail) {
     if (selectedVendor.contractNumber) {
-      navigate(`/contract-processing/${selectedVendor.id}`, {
-        state: selectedVendor.id,
-      });
+      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
