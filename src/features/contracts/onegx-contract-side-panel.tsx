@@ -1,10 +1,8 @@
 import { GoAButton } from '@abgov/react-components';
 import styles from '@/features/contracts/onegx-contract-side-panel.module.scss';
 import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { useState } from 'react';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
-import { useNavigate } from 'react-router-dom';
 
 interface IContractSidePanelProps {
   contractDetails: IOneGxContractDetail;
@@ -12,8 +10,6 @@ interface IContractSidePanelProps {
 
 const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
   const { main, container, child, row, label, value, contractHeader, headerContentWithoutPadding, headerContentWithPadding } = styles;
-  const [openContract] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   function getDisplayValue(value: string | null): string {
     if (value === null || value.trim() === '') {
@@ -31,9 +27,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
 
   function openContractClick(selectedVendor: IOneGxContractDetail) {
     if (selectedVendor.contractNumber) {
-      navigate(`/contract-processing/${selectedVendor.id}`, {
-        state: selectedVendor.id,
-      });
+      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
@@ -41,7 +35,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
     <div className={main}>
       <div>
         <div className={!props.contractDetails ? headerContentWithPadding : headerContentWithoutPadding}>
-          <GoAButton type='primary' trailingIcon='open' disabled={!openContract}
+          <GoAButton type='primary' trailingIcon='open' disabled={!props.contractDetails}
             onClick={() => openContractClick(props.contractDetails)}>
             Open contract
           </GoAButton>
