@@ -18,6 +18,10 @@ export function App() {
     test: 'TST',
     uat: 'UAT',
   };
+  const links = [
+    { label: 'Contracts', path: 'blah1' },
+    { label: 'Invoices', path: 'blah2' },
+  ];
   const headerTitle = 'Wildfire Finance';
   const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();
@@ -77,7 +81,7 @@ export function App() {
           )}
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-              <NavBar />
+              <NavBar links={links} />
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>
