@@ -1,4 +1,4 @@
-name: "Build And Deploy Prod"
+name: 'Build And Deploy Prod'
 
 on:
   push:
@@ -18,24 +18,25 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     env:
-      TARGET: "prod"
-      VITE_API_BASE_URL: "${{ vars.VITE_API_BASE_URL }}"
-      VITE_AVIATION_APPLICATION_BASE_URL: "${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}"
-      VITE_AVIATION_API_BASE_URL: "${{ vars.VITE_AVIATION_API_BASE_URL }}"
-      VITE_AVIATION_API_KEY_CODE: "${{ secrets.VITE_AVIATION_API_KEY_CODE }}"
-      VITE_API_KEY_CODE: "${{ secrets.VITE_API_KEY_CODE }}"
-      VITE_AUTHORIZATION_REALM: "${{ secrets.VITE_AUTHORIZATION_REALM }}"
-      VITE_AUTHORIZATION_AUTHSERVERURL: "${{ vars.VITE_AUTHORIZATION_AUTHSERVERURL }}"
-      VITE_ENABLE_AUTHORIZATION: "${{ vars.VITE_ENABLE_AUTHORIZATION }}"
-      VITE_WILDFIRE_PORTAL_URL: "${{ vars.VITE_WILDFIRE_PORTAL_URL }}"
-      VITE_ENVIRONMENT: "prod"
+      TARGET: 'prod'
+      VITE_API_BASE_URL: '${{ vars.VITE_API_BASE_URL }}'
+      VITE_AVIATION_APPLICATION_BASE_URL: '${{ vars.VITE_AVIATION_APPLICATION_BASE_URL }}'
+      VITE_AVIATION_API_BASE_URL: '${{ vars.VITE_AVIATION_API_BASE_URL }}'
+      VITE_AVIATION_API_KEY_CODE: '${{ secrets.VITE_AVIATION_API_KEY_CODE }}'
+      VITE_API_KEY_CODE: '${{ secrets.VITE_API_KEY_CODE }}'
+      VITE_AUTHORIZATION_REALM: '${{ secrets.VITE_AUTHORIZATION_REALM }}'
+      VITE_AUTHORIZATION_AUTHSERVERURL: '${{ vars.VITE_AUTHORIZATION_AUTHSERVERURL }}'
+      VITE_ENABLE_AUTHORIZATION: '${{ vars.VITE_ENABLE_AUTHORIZATION }}'
+      VITE_WILDFIRE_PORTAL_URL: '${{ vars.VITE_WILDFIRE_PORTAL_URL }}'
+      VITE_FINANCE_NAV_ENABLED: '${{ vars.VITE_FINANCE_NAV_ENABLED }}'
+      VITE_ENVIRONMENT: 'prod'
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: "18.x"
+          node-version: '18.x'
 
       - name: Install dependencies, build, and test
         run: |
@@ -56,11 +57,11 @@ jobs:
     needs: build
     environment: prod
     env:
-      TARGET: "prod"
-      ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
-      ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
-      ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
-      ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+      TARGET: 'prod'
+      ARM_CLIENT_ID: '${{ secrets.ARM_CLIENT_ID }}'
+      ARM_SUBSCRIPTION_ID: '${{ secrets.ARM_SUBSCRIPTION_ID }}'
+      ARM_TENANT_ID: '${{ secrets.ARM_TENANT_ID }}'
+      ARM_CLIENT_SECRET: '${{ secrets.ARM_CLIENT_SECRET }}'
 
     steps:
       - name: Download artifact from build job
