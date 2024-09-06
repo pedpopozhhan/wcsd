@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import App from './app/App';
 import InvoiceDetails from './features/invoice-details/invoice-details';
-import Contracts from './features/contracts/contracts';
+import Invoices from './features/invoices/invoices';
 import OneGxContract from '@/features/contracts/onegx-contract';
 import InvoiceProcessing from './features/vendor-time-reports/vendor-time-reports';
 import ProcessInvoice from './features/process-invoice/process-invoice';
@@ -19,7 +19,6 @@ import { UnAuthorized } from './features/auth/unauthorized';
 import ProtectedRoute from './app/protectec-route';
 import { PERMISSION } from './common/permission';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true';
 root.render(
@@ -33,10 +32,10 @@ root.render(
                 <Routes>
                   <Route path='/' element={<App />}>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='1' index element={<Contracts />} />
+                      <Route key='1' index element={<Invoices />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
-                      <Route key='2' path='contracts' element={<Contracts />} />
+                      <Route key='2' path='invoices' element={<Invoices />} />
                     </Route>
                     <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
                       <Route key='3' path='invoice-processing/:contractNumber' element={<InvoiceProcessing />} />
@@ -74,8 +73,8 @@ root.render(
             <Router>
               <Routes>
                 <Route path='/' element={<App />}>
-                  <Route key='1' index element={<Contracts />} />
-                  <Route key='2' path='contracts' element={<Contracts />} />
+                  <Route key='1' index element={<Invoices />} />
+                  <Route key='2' path='invoices' element={<Invoices />} />
                   <Route key='3' path='invoice-processing/:contractNumber' element={<InvoiceProcessing />} />
                   <Route key='4' path='invoice/:invoiceNumber' element={<InvoiceDetails />} />
                   <Route key='5' path='invoice/:invoiceNumber/processInvoice' element={<ProcessInvoice></ProcessInvoice>} />

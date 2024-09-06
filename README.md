@@ -19,6 +19,7 @@ VITE_ENABLE_AUTHORIZATION true or false
 VITE_PR_NUMBER: 000
 VITE_TARGET_BRANCH: local
 VITE_WEB_VERSION: 00
+VITE_FINANCE_NAV_ENABLED=true
 
 [Visit Design System](https://ui-components.alberta.ca)
 
