@@ -30,6 +30,7 @@ jobs:
       VITE_WILDFIRE_PORTAL_URL: "${{ vars.VITE_WILDFIRE_PORTAL_URL }}"
       VITE_BUILD_NUMBER: "${{ github.run_number  }}"
       VITE_WEB_VERSION: "${{ vars.VITE_WEB_VERSION }}"
+      VITE_FINANCE_NAV_ENABLED: "${{ vars.VITE_FINANCE_NAV_ENABLED }}"
       VITE_ENVIRONMENT: "uat"
 
     steps:

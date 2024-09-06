@@ -31,6 +31,7 @@ jobs:
       VITE_BUILD_NUMBER: "${{ github.run_number  }}"
       VITE_WEB_VERSION: "${{ vars.VITE_WEB_VERSION }}"
       VITE_ENVIRONMENT: "dev"
+      VITE_FINANCE_NAV_ENABLED: "${{ vars.VITE_FINANCE_NAV_ENABLED }}"
     steps:
       - uses: actions/checkout@v3
 
