@@ -20,8 +20,8 @@ export function App() {
   };
   const links = import.meta.env.VITE_FINANCE_NAV_ENABLED
     ? [
-        { label: 'Contracts', path: '/contractmanagement' },
         { label: 'Invoicing', path: '/invoices' },
+        { label: 'Contracts', path: '/contractmanagement' },
       ]
     : [{ label: 'Invoices', path: '/invoices' }];
   const headerTitle = 'Wildfire Finance';
