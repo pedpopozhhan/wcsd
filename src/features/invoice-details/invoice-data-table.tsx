@@ -26,7 +26,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const [tableData, setTableData] = useState<IDetailsTableRow[]>([]);
   useEffect(() => {
     sortData(sortBy, sortDir);
-  }, [JSON.stringify(props.rateTypeFilter)]);
+  }, [JSON.stringify(props.rateTypeFilter), rawData]);
 
   function sortData(sortBy: string, sortDir: number) {
     setSortDir(sortDir);
@@ -147,7 +147,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((x, index) => (
+            {tableData.filter(getFilter()).map((x, index) => (
               <tr key={index}>
                 {props.showCheckBoxes && (
                   <td className={`${stickyColumn} ${start}`}>

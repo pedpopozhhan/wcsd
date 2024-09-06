@@ -18,7 +18,7 @@ const VersionBar: React.FC<IVersionBarProps> = (props) => {
       <div className={`${environment} ${styles[props.environment]}`}>{props.environmentLabel}</div>
       <div className={styles.version}>{props.versionLabel}</div>
       <div className={spacer}></div>
-      {props.buildLabel && <div className={build}>{`build ${props.buildLabel}`}</div>}
+      {props.buildLabel && <div className={build}>{`${props.buildLabel}`}</div>}
     </div>
   );
 };
