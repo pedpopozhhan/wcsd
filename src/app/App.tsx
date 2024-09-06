@@ -20,7 +20,7 @@ export function App() {
   };
   const links = import.meta.env.VITE_FINANCE_NAV_ENABLED
     ? [
-        { label: 'Invoicing', path: '/invoices' },
+        { label: 'Invoicing', path: '/invoices', isDefault: true },
         { label: 'Contracts', path: '/contractmanagement' },
       ]
     : [{ label: 'Invoices', path: '/invoices' }];
