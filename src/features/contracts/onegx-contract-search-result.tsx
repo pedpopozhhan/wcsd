@@ -2,7 +2,6 @@ import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-mana
 import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
-import { useNavigate } from 'react-router-dom';
 import contractManagementService from '@/services/contract-management.services';
 import { useConditionalAuth } from '@/app/hooks';
 import { failedToPerform, publishToast } from '@/common/toast';
@@ -22,8 +21,6 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   const [retry, setRetry] = useState<boolean>(false);
   const [selectedDetail, setSelectedDetail] = useState<IOneGxContractDetail>();
   const [clickedRowId, setClickedRowId] = useState<number | null>(null);
-
-  const navigate = useNavigate();
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
@@ -88,9 +85,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
 
   function oneGxContractClick(selectedVendor: IOneGxContract) {
     if (selectedVendor.contractNumber) {
-      navigate(`/contract-processing/${selectedVendor.id}`, {
-        state: selectedVendor.id,
-      });
+      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
