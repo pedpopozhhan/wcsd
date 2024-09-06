@@ -2,7 +2,6 @@ import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-mana
 import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
-import { useNavigate } from 'react-router-dom';
 import contractManagementService from '@/services/contract-management.services';
 import { useConditionalAuth } from '@/app/hooks';
 import { failedToPerform, publishToast } from '@/common/toast';
@@ -21,8 +20,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
   const [pageResults, setPageResults] = useState<IOneGxContract[]>([]);
   const [retry, setRetry] = useState<boolean>(false);
   const [selectedDetail, setSelectedDetail] = useState<IOneGxContractDetail>();
-
-  const navigate = useNavigate();
+  const [clickedRowId, setClickedRowId] = useState<number | null>(null);
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
@@ -87,13 +85,11 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
 
   function oneGxContractClick(selectedVendor: IOneGxContract) {
     if (selectedVendor.contractNumber) {
-      navigate(`/contract-processing/${selectedVendor.id}`, {
-        state: selectedVendor.id,
-      });
+      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
-  const onRowClick = (rowData: IOneGxContract) => {
+  const onRowClick = (rowData: IOneGxContract, rowNumber: number) => {
     if (Number(rowData.id)) {
       setIsLoading(true);
       const subscription = contractManagementService.getOneGxContract(auth?.user?.access_token, Number(rowData.id)).subscribe({
@@ -102,6 +98,8 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
           //setContract(data);
           setSelectedDetail(data);
           props.onContractChange(data);
+          console.info(rowNumber);
+          setClickedRowId(rowNumber);
           setIsLoading(false);
         },
         error: (error) => {
@@ -145,7 +143,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
         </thead>
         <tbody>
           {pageResults?.map((result, idx) => (
-            <tr key={idx} onClick={() => onRowClick(result)}>
+            <tr key={idx} onClick={() => onRowClick(result, idx)} className={`${styles.tableRow} ${clickedRowId === idx ? styles.clicked : ''}`}>
               <td>{result.supplierName}</td>
               <td className={number}>{result.supplierid}</td>
               <td className={number}>
