@@ -1,14 +1,9 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 @import '@mixins/scrollbar.mixin.scss';
 
-.tableFormatter {
-  border-spacing: 3px;
-}
-
 .main {
   @include thin-scrollbar;
   overflow-y: auto;
-  display: flex;
   flex-shrink: 0;
   width: 100%;
   padding-left: $goa-space-xs;
@@ -25,10 +20,17 @@
   padding-top: $goa-space-l;
 }
 
-.customTd {
-  padding-bottom: $goa-space-xs;
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: $goa-space-xs;
+}
 
-  .goaInput {
-    color: $goa-color-text-secondary;
-  }
+.leftColumn {
+
+  padding-bottom: $goa-space-s;
+}
+
+.rightColumn {
+  padding-bottom: $goa-space-s;
 }
