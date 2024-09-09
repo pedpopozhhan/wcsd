@@ -4,10 +4,13 @@ import contractManagementService from '@/services/contract-management.services';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { yearMonthDay } from '@/common/dates';
-const { container, header, topHeader, twoColContainer } = styles;
+import { GoAButton } from '@abgov/react-components';
+import OneGxContractDetailDataPanel from './onegx-contractdetail-data-view-panel';
+import OneGxContractDetailDataEditPanel from './onegx-contractdetail-data-edit-panel';
+const { mainContainer, contractDetailRoot, contractDetailMain, main, tabGroupContainer, tabList, tabContainer, linksToEditAndSave } = styles;
+
 
 export default function OneGxContractProcessing() {
   const [loading, setIsLoading] = useState<boolean>();
@@ -15,6 +18,8 @@ export default function OneGxContractProcessing() {
   const { id } = useParams();
   const [contract, setContract] = useState<IOneGxContractDetail>();
   const [retry, setRetry] = useState<boolean>(false);
+  const [tabIndex, setTabIndex] = useState<number>(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (Number(id)) {
@@ -50,33 +55,56 @@ export default function OneGxContractProcessing() {
     return null;
   }
 
+  function BackToContractHomeClick() {
+    navigate('/contractmanagement');
+  }
+
   return (
-    <div>
-      <div className={topHeader}></div>
-      <h2 className={header}>{contract?.contractNumber}</h2>
-      <h3 className={header}>{contract?.contractWorkspaceRef}</h3>
-      <div className={container}>
-        <div>
-          <div>Vendor</div>
-          <div>{contract?.supplierid}</div>
-        </div>
-        <div>
-          <div>
-            <label>Vendor ID</label>
+    <div className={mainContainer}>
+      <div className={contractDetailRoot}>
+        <div className={contractDetailMain}>
+          <GoAButton
+            {...{ style: '"padding: 0 10px 0 10px;height: 60px;"' }}
+            size='compact'
+            type='tertiary'
+            leadingIcon='chevron-back'
+            onClick={() => BackToContractHomeClick()}
+          >
+            {'Back'}
+          </GoAButton>
+          <h2>Contract {contract?.contractNumber}</h2>
+          <div className={main}>
+            <div className={tabGroupContainer}>
+              <div className={tabList}>
+                <button id='details' role='tab' aria-selected={tabIndex === 1 || tabIndex === 3} onClick={() => setTabIndex(1)}>
+                  <span>Details</span>
+                </button>
+                <button id='tab2' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
+                  <span>Tab2</span>
+                </button>
+              </div>
+              {/* onClick={() => openContractClick(props.contractDetails)} */}
+              <div className={tabContainer}>
+
+                {tabIndex === 1 && (
+                  <div className={linksToEditAndSave} >
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(3)}>Edit</GoAButton>
+                  </div>
+                )}
+                {tabIndex === 3 && (
+                  <div className={linksToEditAndSave} >
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>Cancel</GoAButton>
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>Save</GoAButton>
+                  </div>
+                )}
+                {tabIndex === 1 && <OneGxContractDetailDataPanel contractDetails={contract} />}
+                {tabIndex === 2}
+                {tabIndex === 3 && <OneGxContractDetailDataEditPanel contractToUpdate={contract} />}
+              </div>
+            </div>
           </div>
-          <div>{contract?.supplierName}</div>
         </div>
       </div>
-      <div className={twoColContainer}>
-        <div>
-          <div>Effective Date</div>
-          <div>{yearMonthDay(contract?.workspace?.effectivedate)}</div>
-        </div>
-        <div>
-          <div>Expiry Date</div>
-          <div>{yearMonthDay(contract?.workspace?.currExpirationdate)}</div>
-        </div>
-      </div>
-    </div>
+    </div >
   );
 }
