@@ -27,7 +27,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
 
   function openContractClick(selectedVendor: IOneGxContractDetail) {
     if (selectedVendor.contractNumber) {
-      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
+      window.open(`/contracts/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
@@ -35,8 +35,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
     <div className={main}>
       <div>
         <div className={!props.contractDetails ? headerContentWithPadding : headerContentWithoutPadding}>
-          <GoAButton type='primary' trailingIcon='open' disabled={!props.contractDetails}
-            onClick={() => openContractClick(props.contractDetails)}>
+          <GoAButton type='primary' trailingIcon='open' disabled={!props.contractDetails} onClick={() => openContractClick(props.contractDetails)}>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Open contract &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </GoAButton>
         </div>
@@ -52,9 +51,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
           </div>
         )}
         {props.contractDetails && (
-
           <div className={container}>
-
             <div className={row}>
               <div className={label}>Vendor</div>
               <div className={value}>{getDisplayValue(props.contractDetails.supplierName)}</div>
@@ -77,7 +74,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
             </div>
             <div className={row}>
               <div className={label}>Holdback amount</div>
-              <div className={value}>{ }--</div>
+              <div className={value}>{}--</div>
             </div>
             <div className={row}>
               <div className={label}>Purchasing unit</div>
@@ -135,8 +132,8 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
               <div className={label}></div>
               <div className={value}></div>
             </div>
-
-          </div>)}
+          </div>
+        )}
       </div>
     </div>
   );
