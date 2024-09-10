@@ -188,7 +188,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
               </tr>
             ))}
             <tr key={rawData?.length + 1}>
-              <td></td>
+              {props.showCheckBoxes && <td></td>}
               <td></td>
               <td></td>
               <td></td>
@@ -200,14 +200,19 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                 <div className={totalRowLabel}>Total units: </div>
               </td>
               <td>
-                <div className={`${totalRowValue} ${number}`}>{tableData.reduce((unit, obj) => unit + obj.data.noOfUnits, 0).toFixed(3)}</div>
+                <div className={`${totalRowValue} ${number}`}>
+                  {tableData
+                    .filter(getFilter())
+                    .reduce((unit, obj) => unit + obj.data.noOfUnits, 0)
+                    .toFixed(3)}
+                </div>
               </td>
               <td></td>
               <td>
                 <div className={totalRowLabel}>Total cost:</div>
               </td>
               <td>
-                <div className={totalRowValue}>{convertToCurrency(tableData.reduce((cost, obj) => cost + obj.data.cost, 0))}</div>
+                <div className={totalRowValue}>{convertToCurrency(tableData.filter(getFilter()).reduce((cost, obj) => cost + obj.data.cost, 0))}</div>
               </td>
 
               <td></td>
