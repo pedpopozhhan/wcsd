@@ -15,7 +15,7 @@ const NavBar: React.FC<INavBarProps> = (props: INavBarProps) => {
   const isCurrent = (link: INavBarLink) => {
     const currentPath = window.location.pathname;
 
-    return link.path === currentPath || (link.isDefault ? currentPath === '/' : false);
+    return currentPath.includes(link.path) || (link.isDefault ? currentPath === '/' : false);
   };
 
   return (
