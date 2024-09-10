@@ -80,7 +80,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
     }),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     tap((action) => {
-      navigateTo(`/invoice/${invoice.invoiceNumber}`);
+      navigateTo(`/invoicing/invoice/${invoice.invoiceNumber}`);
     }),
     catchError((error) => {
       console.error(error);

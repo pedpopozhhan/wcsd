@@ -322,7 +322,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       clearErrors();
 
       // Navigate to invoice detail page
-      navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
+      navigate(`/invoicing/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
       invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
@@ -395,7 +395,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => { }}
+                    onBlur={() => {}}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {

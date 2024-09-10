@@ -11,7 +11,6 @@ import OneGxContractDetailDataPanel from './onegx-contractdetail-data-view-panel
 import OneGxContractDetailDataEditPanel from './onegx-contractdetail-data-edit-panel';
 const { mainContainer, contractDetailRoot, contractDetailMain, main, tabGroupContainer, tabList, tabContainer, linksToEditAndSave } = styles;
 
-
 export default function OneGxContractProcessing() {
   const [loading, setIsLoading] = useState<boolean>();
   const auth = useConditionalAuth();
@@ -56,7 +55,7 @@ export default function OneGxContractProcessing() {
   }
 
   function BackToContractHomeClick() {
-    navigate('/contractmanagement');
+    navigate('/contracts');
   }
 
   return (
@@ -85,16 +84,21 @@ export default function OneGxContractProcessing() {
               </div>
               {/* onClick={() => openContractClick(props.contractDetails)} */}
               <div className={tabContainer}>
-
                 {tabIndex === 1 && (
-                  <div className={linksToEditAndSave} >
-                    <GoAButton type='tertiary' onClick={() => setTabIndex(3)}>Edit</GoAButton>
+                  <div className={linksToEditAndSave}>
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(3)}>
+                      Edit
+                    </GoAButton>
                   </div>
                 )}
                 {tabIndex === 3 && (
-                  <div className={linksToEditAndSave} >
-                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>Cancel</GoAButton>
-                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>Save</GoAButton>
+                  <div className={linksToEditAndSave}>
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>
+                      Cancel
+                    </GoAButton>
+                    <GoAButton type='tertiary' onClick={() => setTabIndex(1)}>
+                      Save
+                    </GoAButton>
                   </div>
                 )}
                 {tabIndex === 1 && <OneGxContractDetailDataPanel contractDetails={contract} />}
@@ -105,6 +109,6 @@ export default function OneGxContractProcessing() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
