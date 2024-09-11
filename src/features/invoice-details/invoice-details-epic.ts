@@ -28,7 +28,7 @@ export const invoiceDetailsEpic = (actions$: Observable<Action>, state$: StateOb
     ),
     switchMap((action: Action) => {
       if (getInvoiceDetails.match(action)) {
-        return handleGetInvoiceDetails(action);
+        return handleGetInvoiceDetails(action, state$);
       } else if (getCustomLists.match(action)) {
         return handleGetCustomLists(action);
       } else if (saveDraftInvoice.match(action)) {

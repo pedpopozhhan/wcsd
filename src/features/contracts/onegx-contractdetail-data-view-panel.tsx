@@ -1,5 +1,4 @@
-import { GoAButton } from '@abgov/react-components';
-import styles from '@/features/contracts/onegx-contract-side-panel.module.scss';
+import styles from '@/features/contracts/onegx-contractdetail-data-view-panel.module.scss';
 import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { yearMonthDay } from '@/common/dates';
 import { convertToCurrency } from '@/common/currency';
@@ -8,8 +7,8 @@ interface IContractSidePanelProps {
   contractDetails: IOneGxContractDetail;
 }
 
-const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
-  const { main, container, child, row, label, value, contractHeader, headerContentWithoutPadding, headerContentWithPadding } = styles;
+const OneGxContractDetailDataViewPanel: React.FC<IContractSidePanelProps> = (props) => {
+  const { main, container, row, label, value } = styles;
 
   function getDisplayValue(value: string | null): string {
     if (value === null || value.trim() === '') {
@@ -25,31 +24,9 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
     return convertToCurrency(value);
   }
 
-  function openContractClick(selectedVendor: IOneGxContractDetail) {
-    if (selectedVendor.contractNumber) {
-      window.open(`/contracts/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
-    }
-  }
-
   return (
     <div className={main}>
       <div>
-        <div className={!props.contractDetails ? headerContentWithPadding : headerContentWithoutPadding}>
-          <GoAButton type='primary' trailingIcon='open' disabled={!props.contractDetails} onClick={() => openContractClick(props.contractDetails)}>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Open contract &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </GoAButton>
-        </div>
-
-        {props.contractDetails && (
-          <div className={contractHeader}>
-            <label className={child}>{getDisplayValue(props.contractDetails.contractNumber)}</label>
-          </div>
-        )}
-        {!props.contractDetails && (
-          <div className={headerContentWithPadding}>
-            <label className={child}>No contract selected</label>
-          </div>
-        )}
         {props.contractDetails && (
           <div className={container}>
             <div className={row}>
@@ -74,7 +51,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
             </div>
             <div className={row}>
               <div className={label}>Holdback amount</div>
-              <div className={value}>{}--</div>
+              <div className={value}>{ }--</div>
             </div>
             <div className={row}>
               <div className={label}>Purchasing unit</div>
@@ -132,11 +109,11 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
               <div className={label}></div>
               <div className={value}></div>
             </div>
-          </div>
-        )}
+
+          </div>)}
       </div>
     </div>
   );
 };
 
-export default OneGxContractSidePanel;
+export default OneGxContractDetailDataViewPanel;

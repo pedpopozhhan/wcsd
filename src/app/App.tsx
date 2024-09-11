@@ -20,10 +20,10 @@ export function App() {
   };
   const links = import.meta.env.VITE_FINANCE_NAV_ENABLED
     ? [
-        { label: 'Contracts', path: '/contractmanagement' },
-        { label: 'Invoicing', path: '/invoices' },
+        { label: 'Invoicing', path: '/invoicing', isDefault: true },
+        { label: 'Contracts', path: '/contracts' },
       ]
-    : [{ label: 'Invoices', path: '/invoices' }];
+    : [{ label: 'Invoices', path: '/invoicing' }];
   const headerTitle = 'Wildfire Finance';
   const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();

@@ -4,7 +4,6 @@ import styles from '@/features/contracts/onegx-contract.module.scss';
 import { ContractType, typeItems } from '@/common/types/contract-type';
 import searchService from '@/services/contract-management.services';
 import { failedToPerform, publishToast } from '@/common/toast';
-// import { useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import OneGxContractSearchResults from './onegx-contract-search-result';
@@ -20,7 +19,6 @@ export default function OneGxContract() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
-  // const vendorForReconciliation = useAppSelector((state) => state.app.contractForReconciliation);
   const [selectedContract, setSelectedContract] = useState<IOneGxContractDetail | null>(null);
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({

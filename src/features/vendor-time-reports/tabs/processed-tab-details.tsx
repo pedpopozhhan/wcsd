@@ -140,7 +140,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   function invoiceNumberClick(invoiceId: string) {
     if (invoiceId) {
-      navigate(`/processed-invoice/${invoiceId}/${contractNumber}`);
+      navigate(`/invoicing/processed-invoice/${invoiceId}/${contractNumber}`);
     }
   }
 
