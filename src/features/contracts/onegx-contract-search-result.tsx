@@ -85,7 +85,7 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
 
   function oneGxContractClick(selectedVendor: IOneGxContract) {
     if (selectedVendor.contractNumber) {
-      window.open(`/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
+      window.open(`/contracts/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 

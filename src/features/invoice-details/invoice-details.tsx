@@ -70,8 +70,8 @@ export default function InvoiceDetails() {
 
     const otherTotal = otherCostData
       ? otherCostData.reduce((acc, cur) => {
-        return acc + cur.cost;
-      }, 0)
+          return acc + cur.cost;
+        }, 0)
       : 0;
     setReconciledAmount(total + otherTotal);
   }, [rowData, otherCostData]);
@@ -96,7 +96,7 @@ export default function InvoiceDetails() {
     dispatch(setOtherCostData([]));
     dispatch(setRowData([]));
     // navigate to time reports page
-    navigate(`/invoice-processing/${invoiceData.ContractNumber}`);
+    navigate(`/invoicing/invoice-processing/${invoiceData.ContractNumber}`);
   }
   function onNextClicked() {
     const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
@@ -106,7 +106,7 @@ export default function InvoiceDetails() {
     dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
     dispatch(setFlightReportIds(flightReportIds));
 
-    navigate(`/invoice-process/${invoiceData.InvoiceNumber}`);
+    navigate(`/invoicing/invoice-process/${invoiceData.InvoiceNumber}`);
   }
 
   function onDelete() {
