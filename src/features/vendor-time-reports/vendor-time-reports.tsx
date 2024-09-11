@@ -25,7 +25,7 @@ const InvoiceProcessing = () => {
   const dispatch = useAppDispatch();
 
   function BackToContractReconciliationClick() {
-    navigate('/invoices');
+    navigate('/invoicing');
   }
 
   useEffect(() => {
