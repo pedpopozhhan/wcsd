@@ -28,7 +28,7 @@ export const invoiceDetailsSlice = createSlice({
       state.lists = action.payload;
     },
     deleteDraftInvoiceSuccess: (state, action: PayloadAction<{ contractNumber: string }>) => {
-      navigateTo(`/invoice-processing/${action.payload.contractNumber}`);
+      navigateTo(`/invoicing/invoice-processing/${action.payload.contractNumber}`);
     },
   },
 });

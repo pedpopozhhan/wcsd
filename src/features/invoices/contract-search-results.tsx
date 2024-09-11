@@ -89,7 +89,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     dispatch(setTab(SourceTab.Approved));
     dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
-      navigate(`/invoice-processing/${selectedVendor.contractNumber}`, {
+      navigate(`/invoicing/invoice-processing/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,
       });
     }

@@ -89,7 +89,7 @@ export default function ProcessInvoice() {
 
   function navigateToReconcile() {
     dispatch(setInvoiceChanged(false));
-    navigate(`/invoice/${invoiceData.InvoiceNumber}`, {
+    navigate(`/invoicing/invoice/${invoiceData.InvoiceNumber}`, {
       state: invoiceData.InvoiceNumber,
     });
   }
@@ -98,7 +98,7 @@ export default function ProcessInvoice() {
     dispatch(setInvoiceChanged(false));
     dispatch(resetState());
     dispatch(setTab(SourceTab.Processed));
-    navigate(`/invoice-processing/${contractDetails.contractNumber}`, {
+    navigate(`/invoicing/invoice-processing/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
   }
