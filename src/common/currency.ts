@@ -1,6 +1,6 @@
-import numeral from 'numeral';
-
 export function convertToCurrency(value: number | string) {
-  const dollars = numeral(value).format('$0,0.00');
-  return dollars;
+  const formattedValue = Number(value).toFixed(2);
+  const parts = formattedValue.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `$${parts.join('.')}`;
 }
