@@ -10,6 +10,7 @@ import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.mod
 import { navigateTo } from '@/common/navigate';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
 import { resetState, setFlightReportIds } from '@/app/app-slice';
+import { convertToCurrency } from '@/common/currency';
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -168,11 +169,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     }
   };
 
-  const formatter = new Intl.NumberFormat('default', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
   const onChange = (name: string, value: string) => {
     setSearchVal(value);
     if (value.length < 3) {
@@ -265,7 +261,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td className={roboto}>{formatter.format(record?.remainingCost)}</td>
+                      <td className={roboto}>{convertToCurrency(record?.remainingCost)}</td>
                     </tr>
                   ))
                 ) : (
