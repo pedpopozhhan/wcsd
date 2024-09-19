@@ -22,15 +22,12 @@
 
 .container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr;
   gap: $goa-space-xs;
 }
 
-.leftColumn {
-
-  padding-bottom: $goa-space-s;
-}
-
-.rightColumn {
-  padding-bottom: $goa-space-s;
+.dropdownContainer {
+  display: inline-block;
+  margin-right: $goa-space-m;
+  position: relative;
 }

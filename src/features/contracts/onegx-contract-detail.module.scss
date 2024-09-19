@@ -1,7 +1,7 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 
 .mainContainer {
-  width: 80%;
+  width: 60%;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -16,12 +16,13 @@
 
 .contractDetailMain {
   height: 100%;
-  width: 75%;
+  width: 50%;
 }
 
 .linksToEditAndSave {
   display: flex;
   justify-content: right;
+  padding-right: $goa-space-xs;
 }
 
 .main {
@@ -68,6 +69,7 @@
 
     .tabContainer {
       overflow: hidden;
+      padding-top: $goa-space-m;
     }
   }
 }
