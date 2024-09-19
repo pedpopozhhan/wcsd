@@ -5,7 +5,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { GoAButton } from '@abgov/react-components';
 import OneGxContractDetailDataPanel from './onegx-contractdetail-data-view-panel';
 import OneGxContractDetailDataEditPanel from './onegx-contractdetail-data-edit-panel';
@@ -19,6 +19,7 @@ export default function OneGxContractProcessing() {
   const [contract, setContract] = useState<IOneGxContractDetail>();
   const [retry, setRetry] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [readChangesFromEditTab, setReadChangesFromEditTab] = useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState<number>(1);
   const navigate = useNavigate();
 
@@ -52,35 +53,35 @@ export default function OneGxContractProcessing() {
     }
   }, [id, retry]);
 
-  if (loading) {
-    return null;
-  }
-
-  function BackToContractHomeClick() {
-    navigate('/contracts');
-  }
-
-  function CancelEdit() {
-    setOpenModal(true);
-  }
+  if (loading) { return null; }
+  function BackToContractHomeClick() { navigate('/contracts'); }
+  function CancelEdit() { setOpenModal(true); }
 
 
   function CloseFromConfirmationModal() {
     setOpenModal(false);
+    setReadChangesFromEditTab(false);
     setTabIndex(1);
   }
 
-  function ContinueEditingFromConfirmationModal() {
-    setOpenModal(false);
-  }
+  function ContinueEditingFromConfirmationModal() { setOpenModal(false); }
+  function SaveDetails() { setReadChangesFromEditTab(true); }
+  function EditContractDetail() { setTabIndex(3); }
 
-  function SaveDetails() {
-    setTabIndex(1);
-  }
-
-  function EditContractDetail() {
-    setTabIndex(3);
-  }
+  const handleUpdateOfAdditionalInfo = (value: IOneGxContractAdditionalInfo) => {
+    try {
+      if (readChangesFromEditTab) {
+        console.log(value.contractNumber);
+        //alert('Called from parent -- handleUpdateOfAdditionalInfo ' + value.contractNumber + ' --' + value.contractWorkspace + '---' + value.relatedContractId);
+        publishToast({ type: 'success', message: 'Contact details saved.' });
+        setReadChangesFromEditTab(false);
+        setTabIndex(1);
+      }
+    }
+    catch (error) {
+      publishToast({ type: 'error', message: `Other Cost update failed with error: # ${error}` });
+    }
+  };
 
   return (
     <>
@@ -128,7 +129,7 @@ export default function OneGxContractProcessing() {
                   )}
                   {tabIndex === 1 && <OneGxContractDetailDataPanel contractDetails={contract} />}
                   {tabIndex === 2}
-                  {tabIndex === 3 && <OneGxContractDetailDataEditPanel contractToUpdate={contract} />}
+                  {tabIndex === 3 && <OneGxContractDetailDataEditPanel readChanges={readChangesFromEditTab} contractToUpdate={contract} onUpdate={handleUpdateOfAdditionalInfo} />}
                 </div>
               </div>
             </div>

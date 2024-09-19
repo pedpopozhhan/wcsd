@@ -32,6 +32,16 @@ export interface IOneGxContractWorkspace {
   contractType: string;
 }
 
+export interface IOneGxContractAdditionalInfo {
+  contractWorkspace: string;
+  contractNumber: string;
+  contractManager: string;
+  corporateRegion: string;
+  purchasingUnit: string;
+  holdbackAmount: string;
+  relatedContractId: string;
+}
+
 export interface IOneGxContractsSearchResponse {
   count: number;
   data: IOneGxContract[];
@@ -48,4 +58,5 @@ export interface IOneGxContractDetail {
   supplierid: string;
   supplierName: string;
   workspace: IOneGxContractWorkspace;
+  additionalInfo: IOneGxContractAdditionalInfo
 }
