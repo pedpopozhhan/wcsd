@@ -33,6 +33,7 @@ export interface IOneGxContractWorkspace {
 }
 
 export interface IOneGxContractAdditionalInfo {
+  oneGxContractId?: string;
   contractWorkspace: string;
   contractNumber: string;
   contractManager: string;
@@ -58,5 +59,5 @@ export interface IOneGxContractDetail {
   supplierid: string;
   supplierName: string;
   workspace: IOneGxContractWorkspace;
-  additionalInfo: IOneGxContractAdditionalInfo
+  oneGxContractDetail: IOneGxContractAdditionalInfo
 }

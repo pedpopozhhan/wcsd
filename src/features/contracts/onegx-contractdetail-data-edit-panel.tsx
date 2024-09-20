@@ -11,6 +11,7 @@ import { IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces
 import { holdbackAmountOption, holdbackAmountItems } from '@/common/types/OneGxContract-types';
 import { convertToCurrency } from '@/common/currency';
 import { yearMonthDay } from '@/common/dates';
+import { EmptyGuid } from '@/common/types/invoice';
 
 interface IOneGxContractDetailDataEditPanel {
   readChanges: boolean;
@@ -20,14 +21,14 @@ interface IOneGxContractDetailDataEditPanel {
 const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPanel) => {
   const [vendorName] = useState<string>(getDisplayValue(props.contractToUpdate.supplierName));
   const [vendorId] = useState<string>(getDisplayValue(props.contractToUpdate.supplierid));
-  const [relatedContractId, setRelatedContractId] = useState<string>('');
+  const [relatedContractId, setRelatedContractId] = useState<string>(props.contractToUpdate.oneGxContractDetail?.relatedContractId);
   const [currentContractValue] = useState<string>(getDisplayCurrency(props.contractToUpdate.workspace?.currContractValue));
   const [currency] = useState<string>(getDisplayValue(props.contractToUpdate.workspace?.currencyType));
 
-  const [holdBackAmount, setholdBackAmount] = useState('none' as holdbackAmountOption);
-  const [purchasingUnit, setPurchasingUnit] = useState<string>('');
-  const [contractManager, setContractManager] = useState<string>('');
-  const [corporateRegion, setCorporateRegion] = useState<string>('');
+  const [holdBackAmount, setholdBackAmount] = useState(props.contractToUpdate.oneGxContractDetail?.holdbackAmount);
+  const [purchasingUnit, setPurchasingUnit] = useState<string>(props.contractToUpdate.oneGxContractDetail?.purchasingUnit);
+  const [contractManager, setContractManager] = useState<string>(props.contractToUpdate.oneGxContractDetail?.contractManager);
+  const [corporateRegion, setCorporateRegion] = useState<string>(props.contractToUpdate.oneGxContractDetail?.corporateRegion);
   const [businessArea] = useState<string>(getDisplayValue(props.contractToUpdate.businessArea));
   const [supplierId] = useState<string>(getDisplayValue(props.contractToUpdate.supplierid));
   const [supplierName] = useState<string>(getDisplayValue(props.contractToUpdate.supplierName));
@@ -50,6 +51,7 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
 
   function invokeSave() {
     const additionalInfo: IOneGxContractAdditionalInfo = {
+      oneGxContractId: props.contractToUpdate.oneGxContractDetail === null ? EmptyGuid : props.contractToUpdate.oneGxContractDetail.oneGxContractId,
       contractNumber: props.contractToUpdate.contractNumber,
       contractWorkspace: props.contractToUpdate.workspace.contractWorkspace,
       relatedContractId: relatedContractId,
@@ -61,15 +63,15 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
     props.onUpdate(additionalInfo);
   }
 
-  function getDisplayValue(value: string | null): string {
-    if (value === null || value.trim() === '') {
+  function getDisplayValue(value: string | null | undefined): string {
+    if (value === null || value === undefined || value.trim() === '') {
       return '--';
     }
     return value;
   }
 
-  function getDisplayCurrency(value: number | null): string {
-    if (value === null || value === 0) {
+  function getDisplayCurrency(value: number | null | undefined): string {
+    if (value === null || value === undefined || value === 0) {
       return '--';
     }
     return convertToCurrency(value);

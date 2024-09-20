@@ -24,6 +24,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: $goa-space-xs;
+  padding-left: $goa-space-s;
 }
 
 .dropdownContainer {
