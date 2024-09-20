@@ -1,5 +1,6 @@
 import {
   IOneGxContract,
+  IOneGxContractAdditionalInfo,
   IOneGxContractDetail,
   IOneGxContractsSearchResponse,
   IOneGxGetContractRequest
@@ -49,6 +50,22 @@ class ContractManagementService {
         }),
       );
   }
+
+  saveOneGxContractDetail(token: string, oneGxContractDetail: IOneGxContractAdditionalInfo) {
+    return axios
+      .request<IOneGxContractAdditionalInfo>({
+        method: 'post',
+        url: this.baseUrl + '/SaveOneGxContractDetail',
+        headers: getHeaders(token),
+        data: oneGxContractDetail,
+      })
+      .pipe(
+        map((x) => {
+          return x.data;
+        }),
+      );
+  }
+
 
 }
 
