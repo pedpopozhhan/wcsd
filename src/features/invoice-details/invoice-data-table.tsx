@@ -87,11 +87,12 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
         ),
       );
     } else if (filteredRecords.length < rawData?.length) {
+      const allSelectedAlready = filteredRecords.filter(item => item.isSelected == true).length === filteredRecords.length;
       dispatch(
         setRowData(
           rawData.map((r) => {
             const exists = filteredRecords.some((obj) => obj === r);
-            return r.isAdded ? r : { ...r, isSelected: exists && !r.isSelected ? true : false };
+            return r.isAdded ? r : { ...r, isSelected: exists && !allSelectedAlready ? true : false };
           }),
         ),
       );
