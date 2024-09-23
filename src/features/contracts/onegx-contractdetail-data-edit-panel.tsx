@@ -37,7 +37,7 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   const [purchasingUnit, setPurchasingUnit] = useState<string>(props.contractToUpdate.oneGxContractDetail?.purchasingUnit);
   const [contractManager, setContractManager] = useState<string>(props.contractToUpdate.oneGxContractDetail?.contractManager);
   const [corporateRegion, setCorporateRegion] = useState<string | string[]>(props.contractToUpdate.oneGxContractDetail?.corporateRegion === null ?
-    '' : props.contractToUpdate.oneGxContractDetail?.corporateRegionName);
+    '' : props.contractToUpdate.oneGxContractDetail?.corporateRegion);
   const [corporateRegionName] = useState<string>(props.contractToUpdate.oneGxContractDetail?.corporateRegionName);
   const [corporateRegionList] = useState<ICorporateRegion[]>(props.corporateRegions);
   const [businessArea] = useState<string>(getDisplayValue(props.contractToUpdate.businessArea));
