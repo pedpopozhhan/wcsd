@@ -51,12 +51,14 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   }, [props.readChanges]);
 
   function invokeSave() {
-    if (!validateEmail(contractManager)) {
-      setContractManagerErrorLabel(contractManagerErrorLabelText);
-      return;
-    }
-    else {
-      setContractManagerErrorLabel('');
+    if (contractManager.length > 0) {
+      if (!validateEmail(contractManager)) {
+        setContractManagerErrorLabel(contractManagerErrorLabelText);
+        return;
+      }
+      else {
+        setContractManagerErrorLabel('');
+      }
     }
 
     const additionalInfo: IOneGxContractAdditionalInfo = {
@@ -97,16 +99,21 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   }
 
   function onBlurofContractManager(name: string, value: string) {
-    if (!validateEmail(value)) {
-      setContractManagerErrorLabel(contractManagerErrorLabelText);
-      return;
-    }
-    else {
-      setContractManagerErrorLabel('');
+    if (!(value === undefined) && value.length > 0) {
+      if (!validateEmail(value)) {
+        setContractManagerErrorLabel(contractManagerErrorLabelText);
+        return;
+      }
+      else {
+        setContractManagerErrorLabel('');
+      }
     }
     setContractManager(value);
   }
   function onChangeofContractManager(name: string, value: string) {
+    if (value === undefined || value.length === 0) {
+      setContractManagerErrorLabel('');
+    }
     setContractManager(value);
   }
 
