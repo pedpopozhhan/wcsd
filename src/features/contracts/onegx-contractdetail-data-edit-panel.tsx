@@ -39,8 +39,9 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   const [solicitationType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.solicitationType));
   const [contractType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.contractType));
   const [description] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.description));
-  //const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+  const [contractManagerErrorLabel, setContractManagerErrorLabel] = useState<string>('');
+  const contractManagerErrorLabelText = 'Please provide a valid email address';
 
   const { main, container, dropdownContainer } = Styles;
   const lg = '350px';
@@ -50,6 +51,14 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   }, [props.readChanges]);
 
   function invokeSave() {
+    if (!validateEmail(contractManager)) {
+      setContractManagerErrorLabel(contractManagerErrorLabelText);
+      return;
+    }
+    else {
+      setContractManagerErrorLabel('');
+    }
+
     const additionalInfo: IOneGxContractAdditionalInfo = {
       oneGxContractId: props.contractToUpdate.oneGxContractDetail === null ? EmptyGuid : props.contractToUpdate.oneGxContractDetail.oneGxContractId,
       contractNumber: props.contractToUpdate.contractNumber,
@@ -87,6 +96,16 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
     setRelatedContractId(value);
   }
 
+  function onBlurofContractManager(name: string, value: string) {
+    if (!validateEmail(value)) {
+      setContractManagerErrorLabel(contractManagerErrorLabelText);
+      return;
+    }
+    else {
+      setContractManagerErrorLabel('');
+    }
+    setContractManager(value);
+  }
   function onChangeofContractManager(name: string, value: string) {
     setContractManager(value);
   }
@@ -98,6 +117,11 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   function onChangeofCorporateRegion(name: string, value: string) {
     setCorporateRegion(value);
   }
+
+  const validateEmail = (email: string): boolean => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  };
 
 
   return (
@@ -132,8 +156,8 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
           <GoAFormItem label='Purchasing unit'> <GoAInput name='purchasingUnit' value={purchasingUnit} width={lg} onChange={onChangeofPurchasingUnit} /> </GoAFormItem>
         </div>
         <div>
-          <GoAFormItem label='Contract manager'>
-            <GoAInput name='contractManager' value={contractManager} width={lg} onChange={onChangeofContractManager} />
+          <GoAFormItem label='Contract manager' error={contractManagerErrorLabel}>
+            <GoAInput name='contractManager' value={contractManager} width={lg} onChange={onChangeofContractManager} onBlur={onBlurofContractManager} />
           </GoAFormItem>
         </div>
         <div>
