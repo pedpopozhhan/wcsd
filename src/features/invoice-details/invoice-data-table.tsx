@@ -24,9 +24,21 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
   const [sortBy, setSortBy] = useState<string>('flightReportDate');
   const [sortDir, setSortDir] = useState<number>(-1);
   const [tableData, setTableData] = useState<IDetailsTableRow[]>([]);
+  const [selectAllState, setSelectAllState] = useState<boolean>(false);
+
   useEffect(() => {
     sortData(sortBy, sortDir);
   }, [JSON.stringify(props.rateTypeFilter), rawData]);
+
+  useEffect(() => {
+    const filteredRecords = rawData?.filter(filterByRateType).filter(getFilter());
+    if (filteredRecords.length === rawData.length) {
+      setSelectAllState(rawData.filter((x) => !x.isAdded).every((x) => x.isSelected));
+    }
+    else if (filteredRecords.length < rawData?.length) {
+      setSelectAllState(filteredRecords.filter((x) => !x.isAdded).every((x) => x.isSelected));
+    }
+  }, [selectAllState]);
 
   function sortData(sortBy: string, sortDir: number) {
     setSortDir(sortDir);
@@ -62,6 +74,8 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
     );
   }
   function checkClicked(row: IDetailsTableRow, checked: boolean) {
+    const existingVal = selectAllState;
+    setSelectAllState(!existingVal);
     dispatch(
       setRowData(
         rawData.map((r) => {
@@ -74,6 +88,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
       ),
     );
   }
+
 
   function checkAll() {
     const filteredRecords = rawData?.filter(filterByRateType).filter(getFilter());
@@ -114,7 +129,7 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
                   <div className={checkboxWrapper}>
                     <GoACheckbox
                       name={''}
-                      checked={rawData.filter((x) => !x.isAdded).every((x) => x.isSelected)}
+                      checked={selectAllState}
                       disabled={rawData.every((x) => x.isAdded)}
                       onChange={() => checkAll()}
                     ></GoACheckbox>
