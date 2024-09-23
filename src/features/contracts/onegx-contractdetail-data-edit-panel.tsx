@@ -7,28 +7,39 @@ import {
 } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import Styles from '@/features/contracts/onegx-contractdetail-data-edit-panel.module.scss';
-import { IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { ICorporateRegion, IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { holdbackAmountOption, holdbackAmountItems } from '@/common/types/OneGxContract-types';
 import { convertToCurrency } from '@/common/currency';
 import { yearMonthDay } from '@/common/dates';
 import { EmptyGuid } from '@/common/types/invoice';
+// import { useConditionalAuth } from '@/app/hooks';
+// import dropDownListsService from '@/services/drop-down-lists.service';
+// import { navigateTo } from '@/common/navigate';
+// import { failedToPerform, publishToast } from '@/common/toast';
 
 interface IOneGxContractDetailDataEditPanel {
   readChanges: boolean;
   contractToUpdate: IOneGxContractDetail | undefined;
   onUpdate: (value: IOneGxContractAdditionalInfo) => void;
+  corporateRegions: ICorporateRegion[];
 }
 const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPanel) => {
+  // const auth = useConditionalAuth();
   const [vendorName] = useState<string>(getDisplayValue(props.contractToUpdate.supplierName));
   const [vendorId] = useState<string>(getDisplayValue(props.contractToUpdate.supplierid));
   const [relatedContractId, setRelatedContractId] = useState<string>(props.contractToUpdate.oneGxContractDetail?.relatedContractId);
   const [currentContractValue] = useState<string>(getDisplayCurrency(props.contractToUpdate.workspace?.currContractValue));
   const [currency] = useState<string>(getDisplayValue(props.contractToUpdate.workspace?.currencyType));
 
-  const [holdBackAmount, setholdBackAmount] = useState(props.contractToUpdate.oneGxContractDetail?.holdbackAmount);
+  const [holdBackAmount, setholdBackAmount] = useState(props.contractToUpdate.oneGxContractDetail?.holdbackAmount === null ?
+    '' : props.contractToUpdate.oneGxContractDetail?.holdbackAmount);
+
   const [purchasingUnit, setPurchasingUnit] = useState<string>(props.contractToUpdate.oneGxContractDetail?.purchasingUnit);
   const [contractManager, setContractManager] = useState<string>(props.contractToUpdate.oneGxContractDetail?.contractManager);
-  const [corporateRegion, setCorporateRegion] = useState<string>(props.contractToUpdate.oneGxContractDetail?.corporateRegion);
+  const [corporateRegion, setCorporateRegion] = useState<string | string[]>(props.contractToUpdate.oneGxContractDetail?.corporateRegion === null ?
+    '' : props.contractToUpdate.oneGxContractDetail?.corporateRegionName);
+  const [corporateRegionName] = useState<string>(props.contractToUpdate.oneGxContractDetail?.corporateRegionName);
+  const [corporateRegionList] = useState<ICorporateRegion[]>(props.corporateRegions);
   const [businessArea] = useState<string>(getDisplayValue(props.contractToUpdate.businessArea));
   const [supplierId] = useState<string>(getDisplayValue(props.contractToUpdate.supplierid));
   const [supplierName] = useState<string>(getDisplayValue(props.contractToUpdate.supplierName));
@@ -39,8 +50,10 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   const [solicitationType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.solicitationType));
   const [contractType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.contractType));
   const [description] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.description));
-  //const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // const [retry, setRetry] = useState<boolean>(false);
 
+  const [contractManagerErrorLabel, setContractManagerErrorLabel] = useState<string>('');
+  const contractManagerErrorLabelText = 'Please provide a valid email address';
 
   const { main, container, dropdownContainer } = Styles;
   const lg = '350px';
@@ -49,7 +62,17 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
     invokeSave();
   }, [props.readChanges]);
 
+
   function invokeSave() {
+    if (!(contractManager === undefined || contractManager === null) && contractManager.length > 0) {
+      if (!validateEmail(contractManager)) {
+        setContractManagerErrorLabel(contractManagerErrorLabelText);
+        return;
+      }
+      else {
+        setContractManagerErrorLabel('');
+      }
+    }
     const additionalInfo: IOneGxContractAdditionalInfo = {
       oneGxContractId: props.contractToUpdate.oneGxContractDetail === null ? EmptyGuid : props.contractToUpdate.oneGxContractDetail.oneGxContractId,
       contractNumber: props.contractToUpdate.contractNumber,
@@ -58,7 +81,8 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
       holdbackAmount: holdBackAmount,
       contractManager: contractManager,
       purchasingUnit: purchasingUnit,
-      corporateRegion: corporateRegion
+      corporateRegion: corporateRegion,
+      corporateRegionName: corporateRegionName
     };
     props.onUpdate(additionalInfo);
   }
@@ -87,7 +111,22 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
     setRelatedContractId(value);
   }
 
+  function onBlurofContractManager(name: string, value: string) {
+    if (!(value === undefined) && value.length > 0) {
+      if (!validateEmail(value)) {
+        setContractManagerErrorLabel(contractManagerErrorLabelText);
+        return;
+      }
+      else {
+        setContractManagerErrorLabel('');
+      }
+    }
+    setContractManager(value);
+  }
   function onChangeofContractManager(name: string, value: string) {
+    if (value === undefined || value.length === 0) {
+      setContractManagerErrorLabel('');
+    }
     setContractManager(value);
   }
 
@@ -95,9 +134,14 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
     setPurchasingUnit(value);
   }
 
-  function onChangeofCorporateRegion(name: string, value: string) {
+  function onChangeofCorporateRegion(name: string, value: string | string[]) {
     setCorporateRegion(value);
   }
+
+  const validateEmail = (email: string): boolean => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  };
 
 
   return (
@@ -122,8 +166,8 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
           <GoAFormItem label='Holdback amount'></GoAFormItem>
         </div>
         <div className={dropdownContainer}>
-          <GoADropdown name='holdbackAmount' value={holdBackAmount} onChange={onChangeHoldbackAmount}>
-            {holdbackAmountItems.map((type, idx) => (
+          <GoADropdown name='holdbackAmount' placeholder='-----Select-----' value={holdBackAmount} onChange={onChangeHoldbackAmount}>
+            {holdbackAmountItems?.map((type, idx) => (
               <GoADropdownItem key={idx} value={type.value} label={type.label} />
             ))}
           </GoADropdown>
@@ -132,12 +176,18 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
           <GoAFormItem label='Purchasing unit'> <GoAInput name='purchasingUnit' value={purchasingUnit} width={lg} onChange={onChangeofPurchasingUnit} /> </GoAFormItem>
         </div>
         <div>
-          <GoAFormItem label='Contract manager'>
-            <GoAInput name='contractManager' value={contractManager} width={lg} onChange={onChangeofContractManager} />
+          <GoAFormItem label='Contract manager' error={contractManagerErrorLabel}>
+            <GoAInput name='contractManager' value={contractManager} width={lg} onChange={onChangeofContractManager} onBlur={onBlurofContractManager} />
           </GoAFormItem>
         </div>
-        <div>
-          <GoAFormItem label='Corporate region'> <GoAInput name='corporateRegion' value={corporateRegion} width={lg} onChange={onChangeofCorporateRegion} /> </GoAFormItem>
+        <div className={dropdownContainer}>
+          <GoAFormItem label='Corporate region'>
+            <GoADropdown placeholder='----Select-----' name='corporateRegion' value={corporateRegion} onChange={onChangeofCorporateRegion} width={lg} maxHeight="125px">
+              {corporateRegionList.map((x, i) => {
+                return <GoADropdownItem key={i} value={x.corporateRegionId} label={x.regionName} />;
+              })}
+            </GoADropdown>
+          </GoAFormItem>
         </div>
         <div>
           <GoAFormItem label='Business area'> <GoAInput name='businessArea' value={businessArea} width={lg} disabled onChange={() => { }} /> </GoAFormItem>

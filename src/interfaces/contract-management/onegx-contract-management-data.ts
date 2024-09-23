@@ -37,7 +37,8 @@ export interface IOneGxContractAdditionalInfo {
   contractWorkspace: string;
   contractNumber: string;
   contractManager: string;
-  corporateRegion: string;
+  corporateRegion: string | string[];
+  corporateRegionName: string;
   purchasingUnit: string;
   holdbackAmount: string;
   relatedContractId: string;
@@ -60,4 +61,15 @@ export interface IOneGxContractDetail {
   supplierName: string;
   workspace: IOneGxContractWorkspace;
   oneGxContractDetail: IOneGxContractAdditionalInfo
+}
+
+
+export interface ICorporateRegions {
+  corporateRegions: ICorporateRegion[];
+}
+
+
+export interface ICorporateRegion {
+  corporateRegionId: string;
+  regionName: string;
 }

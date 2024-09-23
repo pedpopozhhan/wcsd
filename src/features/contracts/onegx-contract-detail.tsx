@@ -5,23 +5,26 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { ICorporateRegion, IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
 import { GoAButton } from '@abgov/react-components';
 import OneGxContractDetailDataPanel from './onegx-contractdetail-data-view-panel';
 import OneGxContractDetailDataEditPanel from './onegx-contractdetail-data-edit-panel';
 import OneGxContractDetailConfirmationModal from './onegx-contractdetail-confirmation-modal';
 import { Subscription } from 'rxjs';
+import dropDownListsService from '@/services/drop-down-lists.service';
 const { mainContainer, contractDetailRoot, contractDetailMain, main, tabGroupContainer, tabList, tabContainer, linksToEditAndSave } = styles;
 
 export default function OneGxContractProcessing() {
-  const [loading, setIsLoading] = useState<boolean>();
   const auth = useConditionalAuth();
+  const [loading, setIsLoading] = useState<boolean>();
+
   const { id } = useParams();
   const [contract, setContract] = useState<IOneGxContractDetail>();
   const [oneGxContractAI, setOneGxContractAI] = useState<IOneGxContractAdditionalInfo>();
   const [retry, setRetry] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [readChangesFromEditTab, setReadChangesFromEditTab] = useState<boolean>(false);
+  const [corporateRegionList, setCorporateRegionList] = useState<ICorporateRegion[]>([]);
   const [tabIndex, setTabIndex] = useState<number>(1);
   const navigate = useNavigate();
   let oneGxContractDetailSubscription: Subscription;
@@ -56,6 +59,31 @@ export default function OneGxContractProcessing() {
       };
     }
   }, [id, retry]);
+
+  useEffect(() => {
+    const subscription = dropDownListsService.getCorporateRegion(auth?.user?.access_token).subscribe({
+      next: (searchResults) => {
+        setCorporateRegionList(searchResults.corporateRegions);
+      },
+      error: (error) => {
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Load Contracts', error.response.data),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [retry]);
 
   if (loading) { return null; }
   function BackToContractHomeClick() { navigate('/contracts'); }
@@ -154,7 +182,12 @@ export default function OneGxContractProcessing() {
                   )}
                   {tabIndex === 1 && <OneGxContractDetailDataPanel contractDetails={contract} />}
                   {tabIndex === 2}
-                  {tabIndex === 3 && <OneGxContractDetailDataEditPanel readChanges={readChangesFromEditTab} contractToUpdate={contract} onUpdate={handleUpdateOfAdditionalInfo} />}
+                  {tabIndex === 3 && <OneGxContractDetailDataEditPanel
+                    readChanges={readChangesFromEditTab}
+                    contractToUpdate={contract}
+                    onUpdate={handleUpdateOfAdditionalInfo}
+                    corporateRegions={corporateRegionList}
+                  />}
                 </div>
               </div>
             </div>
