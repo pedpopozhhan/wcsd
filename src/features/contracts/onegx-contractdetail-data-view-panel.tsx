@@ -63,7 +63,7 @@ const OneGxContractDetailDataViewPanel: React.FC<IContractSidePanelProps> = (pro
             </div>
             <div className={row}>
               <div className={label}>Corporate region</div>
-              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.corporateRegion)}</div>
+              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.corporateRegionName)}</div>
             </div>
             <div className={row}>
               <div className={label}>Business area</div>
