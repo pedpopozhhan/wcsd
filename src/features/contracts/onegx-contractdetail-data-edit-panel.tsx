@@ -12,10 +12,6 @@ import { holdbackAmountOption, holdbackAmountItems } from '@/common/types/OneGxC
 import { convertToCurrency } from '@/common/currency';
 import { yearMonthDay } from '@/common/dates';
 import { EmptyGuid } from '@/common/types/invoice';
-// import { useConditionalAuth } from '@/app/hooks';
-// import dropDownListsService from '@/services/drop-down-lists.service';
-// import { navigateTo } from '@/common/navigate';
-// import { failedToPerform, publishToast } from '@/common/toast';
 
 interface IOneGxContractDetailDataEditPanel {
   readChanges: boolean;
@@ -24,7 +20,6 @@ interface IOneGxContractDetailDataEditPanel {
   corporateRegions: ICorporateRegion[];
 }
 const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPanel) => {
-  // const auth = useConditionalAuth();
   const [vendorName] = useState<string>(getDisplayValue(props.contractToUpdate.supplierName));
   const [vendorId] = useState<string>(getDisplayValue(props.contractToUpdate.supplierid));
   const [relatedContractId, setRelatedContractId] = useState<string>(props.contractToUpdate.oneGxContractDetail?.relatedContractId);
@@ -50,8 +45,6 @@ const OneGxContractDetailDataEditPanel = (props: IOneGxContractDetailDataEditPan
   const [solicitationType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.solicitationType));
   const [contractType] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.contractType));
   const [description] = useState<string>(getDisplayValue(props.contractToUpdate.workspace.description));
-  // const [retry, setRetry] = useState<boolean>(false);
-
   const [contractManagerErrorLabel, setContractManagerErrorLabel] = useState<string>('');
   const contractManagerErrorLabelText = 'Please provide a valid email address';
 
