@@ -12,7 +12,7 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
   const { main, container, child, row, label, value, contractHeader, headerContentWithoutPadding, headerContentWithPadding } = styles;
 
   function getDisplayValue(value: string | null): string {
-    if (value === null || value.trim() === '') {
+    if (value === undefined || value === null || value.trim() === '') {
       return '--';
     }
     return value;
@@ -62,7 +62,8 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
             </div>
             <div className={row}>
               <div className={label}>Related contract ID</div>
-              <div className={value}>{getDisplayValue('')}</div>
+              <div className={value}>{getDisplayValue(
+                props.contractDetails.oneGxContractDetail?.relatedContractId)}</div>
             </div>
             <div className={row}>
               <div className={label}>Current value</div>
@@ -74,19 +75,19 @@ const OneGxContractSidePanel: React.FC<IContractSidePanelProps> = (props) => {
             </div>
             <div className={row}>
               <div className={label}>Holdback amount</div>
-              <div className={value}>{}--</div>
+              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.holdbackAmount)}</div>
             </div>
             <div className={row}>
               <div className={label}>Purchasing unit</div>
-              <div className={value}>--</div>
+              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.purchasingUnit)}</div>
             </div>
             <div className={row}>
               <div className={label}>Contract manager</div>
-              <div className={value}>--</div>
+              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.contractManager)}</div>
             </div>
             <div className={row}>
               <div className={label}>Corporate region</div>
-              <div className={value}>--</div>
+              <div className={value}>{getDisplayValue(props.contractDetails.oneGxContractDetail?.corporateRegionName)}</div>
             </div>
             <div className={row}>
               <div className={label}>Business area</div>
