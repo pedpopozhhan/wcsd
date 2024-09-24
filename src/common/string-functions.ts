@@ -10,4 +10,8 @@ function convertToPascalCase(value: string, symbol: string): string {
     .join(symbol);
 }
 
-export { escapeRegularExpression, convertToPascalCase };
+function replaceSpacesWithNonBreaking(input: string): string {
+  return input.replace(/ /g, '\u00A0');
+}
+
+export { escapeRegularExpression, convertToPascalCase, replaceSpacesWithNonBreaking };

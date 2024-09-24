@@ -18,6 +18,7 @@ import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.mo
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
 import { navigateTo } from '@/common/navigate';
 import { Subscription } from 'rxjs';
+import { replaceSpacesWithNonBreaking } from '@/common/string-functions';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -314,7 +315,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           type='tertiary'
                           onClick={() => invoiceNumberClick(record?.invoiceId)}
                         >
-                          {record.invoiceNumber}
+                          {replaceSpacesWithNonBreaking(record.invoiceNumber)}
                         </GoAButton>
                       </td>
                       <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>
