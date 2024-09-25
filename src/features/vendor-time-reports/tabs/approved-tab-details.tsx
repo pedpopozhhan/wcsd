@@ -59,7 +59,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
         const rows = response.rows.map((x, i) => {
           return { isChecked: false, row: i + 1, ...x };
         });
-        const sortedData = sort('flightReportDate', 1, rows);
+        const sortedData = sort('flightReportDate', -1, rows);
         setRawData(sortedData);
         setData(sortedData);
         setPageData(sortedData.slice(0, perPage));

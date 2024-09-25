@@ -28,17 +28,19 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
 
   useEffect(() => {
     sortData(sortBy, sortDir);
-  }, [JSON.stringify(props.rateTypeFilter), rawData]);
 
-  useEffect(() => {
+    if (tableData.length == 0) {
+      setSelectAllState(false);
+    }
+
     const filteredRecords = rawData?.filter(filterByRateType).filter(getFilter());
     if (filteredRecords.length === rawData.length) {
-      setSelectAllState(rawData.filter((x) => !x.isAdded).every((x) => x.isSelected));
+      rawData.filter((x) => !x.isAdded).every((x) => x.isSelected) ? setSelectAllState(true) : setSelectAllState(false);
     }
     else if (filteredRecords.length < rawData?.length) {
-      setSelectAllState(filteredRecords.filter((x) => !x.isAdded).every((x) => x.isSelected));
+      filteredRecords.filter((x) => !x.isAdded).every((x) => x.isSelected) ? setSelectAllState(true) : setSelectAllState(false);
     }
-  }, [selectAllState]);
+  }, [JSON.stringify(props.rateTypeFilter), rawData]);
 
   function sortData(sortBy: string, sortDir: number) {
     setSortDir(sortDir);
@@ -74,8 +76,6 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
     );
   }
   function checkClicked(row: IDetailsTableRow, checked: boolean) {
-    const existingVal = selectAllState;
-    setSelectAllState(!existingVal);
     dispatch(
       setRowData(
         rawData.map((r) => {
@@ -89,11 +89,19 @@ const InvoiceDataTable: React.FC<IDetailsTabProps> = (props) => {
     );
   }
 
-
   function checkAll() {
     const filteredRecords = rawData?.filter(filterByRateType).filter(getFilter());
+    const allSelected = rawData.filter((x) => !x.isAdded).every((x) => x.isSelected);
+
+    if (filteredRecords.length == 0) {
+      setSelectAllState(!selectAllState);
+      return;
+    }
+
+    if (!allSelected && selectAllState)
+      setSelectAllState(false);
+
     if (filteredRecords.length === rawData.length) {
-      const allSelected = rawData.filter((x) => !x.isAdded).every((x) => x.isSelected);
       dispatch(
         setRowData(
           rawData.map((r) => {

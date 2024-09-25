@@ -1,4 +1,4 @@
-import { GoATable, GoAButton, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton } from '@abgov/react-components';
+import { GoATable, GoABlock, GoASpacer, GoAPagination, GoATableSortHeader, GoAIconButton, GoAButton } from '@abgov/react-components';
 import * as React from 'react';
 import PageLoader from '@/common/page-loader';
 import { yearMonthDay } from '@/common/dates';
@@ -11,6 +11,7 @@ import { convertToCurrency } from '@/common/currency';
 import { IInvoice } from '@/interfaces/process-invoice/process-invoice-data';
 import { clickOnDraftInvoice } from '@/features/invoice-details/invoice-details-actions';
 import { setFlightReportIds } from '@/app/app-slice';
+import { replaceSpacesWithNonBreaking } from '@/common/string-functions';
 const { headerRow, roboto } = styles;
 
 interface IRowItem extends IInvoice {
@@ -155,7 +156,7 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
                           type='tertiary'
                           onClick={() => invoiceNumberClick(record)}
                         >
-                          {record.invoiceNumber}
+                          {replaceSpacesWithNonBreaking(record.invoiceNumber)}
                         </GoAButton>
                       </td>
                       <td className={roboto}>{convertToCurrency(record.invoiceAmount)}</td>
