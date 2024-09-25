@@ -48,7 +48,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
       next: (response) => {
         const sortedData = sort(
           'flightReportDate',
-          1,
+          -1,
           response.rows.map((x, i) => {
             return { row: i + 1, ...x };
           }),
