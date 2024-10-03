@@ -5,9 +5,25 @@ import Toast from '@/common/toast';
 import { useEffect, useState } from 'react';
 import { useConditionalAuth } from './hooks';
 import { NAVIGATE_EVENT } from '@/common/navigate';
+import VersionBar from '@/features/version-bar/version-bar';
+import NavBar from './navbar';
 
-const { mainContainer, outletContainer, account } = styles;
+const { mainContainer, padding, outletContainer, account } = styles;
 export function App() {
+  const env = import.meta.env.VITE_ENVIRONMENT;
+  const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
+  const version = import.meta.env.VITE_WEB_VERSION;
+  const labels: { [key: string]: string } = {
+    dev: 'DEV',
+    test: 'TST',
+    uat: 'UAT',
+  };
+  const links = import.meta.env.VITE_FINANCE_NAV_ENABLED
+    ? [
+      { label: 'Invoicing', path: '/invoicing', isDefault: true },
+      { label: 'Contracts', path: '/contracts' },
+    ]
+    : [{ label: 'Invoices', path: '/invoicing' }];
   const headerTitle = 'Wildfire Finance';
   const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();
@@ -57,9 +73,18 @@ export function App() {
     <>
       {!auth.isLoading && (
         <div className={mainContainer}>
-
+          {env !== 'prod' && (
+            <VersionBar
+              environment={env}
+              environmentLabel={labels[env]}
+              versionLabel={`Release ${version}`}
+              buildLabel={`build ${buildNumber}`}
+            ></VersionBar>
+          )}
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
+              <NavBar links={links} />
+              <div className={padding} />
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
               </GoAPopover>

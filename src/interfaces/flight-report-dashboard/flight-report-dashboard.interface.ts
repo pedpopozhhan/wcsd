@@ -1,4 +1,5 @@
-export interface IFlightReportDashboard {
+import { IRowIndicator } from '@/interfaces/common/row-indicator.interface';
+export interface IFlightReportDashboard extends IRowIndicator {
   flightReportDashboardId: string;
   flightReportId?: number;
   corporateRegionId?: string;

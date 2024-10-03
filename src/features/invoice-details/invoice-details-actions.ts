@@ -8,14 +8,7 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import dropDownListService from '@/services/drop-down-lists.service';
 import { IInvoice, IProcessInvoiceData } from '@/interfaces/process-invoice/process-invoice-data';
 import processInvoiceService from '@/services/process-invoice.service';
-import {
-  setInvoiceChanged,
-  setInvoiceData,
-  setInvoiceId,
-  setInvoiceStatus,
-  setOtherCostData,
-  setRowData,
-} from '@/app/app-slice';
+import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setOtherCostData, setRowData } from '@/app/app-slice';
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import { deleteDraftInvoiceSuccess, setLists } from './invoice-details-slice';
@@ -87,7 +80,7 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
     }),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     tap((action) => {
-      navigateTo(`/invoice/${invoice.invoiceNumber}`);
+      navigateTo(`/invoicing/invoice/${invoice.invoiceNumber}`);
     }),
     catchError((error) => {
       console.error(error);
@@ -103,20 +96,24 @@ export function handleDraftInvoiceClicked(action: PayloadAction<{ token: string;
   );
 }
 
-export function handleGetInvoiceDetails(action: PayloadAction<IGetInvoiceDetailsPayLoad>) {
+export function handleGetInvoiceDetails(action: PayloadAction<IGetInvoiceDetailsPayLoad>, state$: StateObservable<RootState>) {
   const getTimeReportDetailsPayLoad = {
     token: action.payload.token,
     timeReportIds: action.payload.ids,
     invoiceID: action.payload.invoiceID,
   };
+  const rowData = state$.value.app.rowData;
   return timeReportDetailsService.getTimeReportDetails(getTimeReportDetailsPayLoad).pipe(
     mergeMap((timeReportResults) => {
       const data = timeReportResults.rows.slice().map((x, i) => {
+        const existing = rowData.find((y) => {
+          return y.data.flightReportCostDetailsId === x.flightReportCostDetailsId;
+        });
         return {
           index: i,
           data: x,
           isAdded: x.invoiceID !== EmptyGuid ? true : false,
-          isSelected: false,
+          isSelected: existing ? existing.isSelected : false,
         };
       });
       return of(setRowData(data));

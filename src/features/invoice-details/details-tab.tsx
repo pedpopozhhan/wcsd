@@ -71,7 +71,7 @@ const DetailsTab: React.FC<IDetailsTabProps> = () => {
 
         />
       </div>
-      <InvoiceDataTable showCheckBoxes rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
+      <InvoiceDataTable showCheckBoxes showRowIndicator rateTypeFilter={selectedRateTypes?.map((x) => x.value)} />
     </div>
   );
 };

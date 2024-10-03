@@ -4,17 +4,30 @@ import contractManagementService from '@/services/contract-management.services';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
-import { useParams } from 'react-router-dom';
-import { IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { yearMonthDay } from '@/common/dates';
-const { container, header, topHeader, twoColContainer } = styles;
+import { useNavigate, useParams } from 'react-router-dom';
+import { ICorporateRegion, IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { GoAButton } from '@abgov/react-components';
+import OneGxContractDetailDataPanel from './onegx-contractdetail-data-view-panel';
+import OneGxContractDetailDataEditPanel from './onegx-contractdetail-data-edit-panel';
+import OneGxContractDetailConfirmationModal from './onegx-contractdetail-confirmation-modal';
+import { Subscription } from 'rxjs';
+import dropDownListsService from '@/services/drop-down-lists.service';
+const { mainContainer, contractDetailRoot, contractDetailMain, main, tabGroupContainer, tabList, tabContainer, linksToEditAndSave } = styles;
 
 export default function OneGxContractProcessing() {
-  const [loading, setIsLoading] = useState<boolean>();
   const auth = useConditionalAuth();
+  const [loading, setIsLoading] = useState<boolean>();
+
   const { id } = useParams();
   const [contract, setContract] = useState<IOneGxContractDetail>();
+  const [oneGxContractAI, setOneGxContractAI] = useState<IOneGxContractAdditionalInfo>();
   const [retry, setRetry] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [readChangesFromEditTab, setReadChangesFromEditTab] = useState<boolean>(false);
+  const [corporateRegionList, setCorporateRegionList] = useState<ICorporateRegion[]>([]);
+  const [tabIndex, setTabIndex] = useState<number>(1);
+  const navigate = useNavigate();
+  let oneGxContractDetailSubscription: Subscription;
 
   useEffect(() => {
     if (Number(id)) {
@@ -23,6 +36,7 @@ export default function OneGxContractProcessing() {
         next: (searchResults) => {
           const data = searchResults;
           setContract(data);
+          setOneGxContractAI(data.oneGxContractDetail);
           setIsLoading(false);
         },
         error: (error) => {
@@ -46,37 +60,141 @@ export default function OneGxContractProcessing() {
     }
   }, [id, retry]);
 
-  if (loading) {
-    return null;
+  useEffect(() => {
+    const subscription = dropDownListsService.getCorporateRegion(auth?.user?.access_token).subscribe({
+      next: (searchResults) => {
+        setCorporateRegionList(searchResults.corporateRegions);
+      },
+      error: (error) => {
+        console.error(error);
+        if (error.response && error.response.status === 403) {
+          navigateTo('unauthorized');
+        }
+        publishToast({
+          type: 'error',
+          message: failedToPerform('Load Contracts', error.response.data),
+          callback: () => {
+            setRetry(!retry);
+          },
+        });
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [retry]);
+
+  if (loading) { return null; }
+  function BackToContractHomeClick() { navigate('/contracts'); }
+  function CancelEdit() { setOpenModal(true); }
+
+
+  function CloseFromConfirmationModal() {
+    setOpenModal(false);
+    setReadChangesFromEditTab(false);
+    setTabIndex(1);
   }
 
+  function ContinueEditingFromConfirmationModal() { setOpenModal(false); }
+  function SaveDetails() { setReadChangesFromEditTab(true); }
+  function EditContractDetail() { setTabIndex(3); }
+
+  const handleUpdateOfAdditionalInfo = (value: IOneGxContractAdditionalInfo) => {
+    if (readChangesFromEditTab) {
+      setIsLoading(true);
+      if (oneGxContractDetailSubscription) {
+        oneGxContractDetailSubscription.unsubscribe();
+      }
+      oneGxContractDetailSubscription = contractManagementService.saveOneGxContractDetail(auth?.user?.access_token, value).subscribe({
+        next: (results) => {
+          const result: IOneGxContractAdditionalInfo = results;
+          setOneGxContractAI(result);
+          contract.oneGxContractDetail = oneGxContractAI;
+          publishToast({ type: 'success', message: `Contact details saved for contract: # ${result.contractNumber}` });
+          setIsLoading(false);
+          setRetry(!retry);
+        },
+        error: (error) => {
+          setIsLoading(false);
+          console.error(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('Save OneGxContract Detail:', error.response.data),
+            callback: () => {
+              setRetry(!retry);
+            },
+          });
+        },
+      });
+      setReadChangesFromEditTab(false);
+      setTabIndex(1);
+    }
+  };
+
+
   return (
-    <div>
-      <div className={topHeader}></div>
-      <h2 className={header}>{contract?.contractNumber}</h2>
-      <h3 className={header}>{contract?.contractWorkspaceRef}</h3>
-      <div className={container}>
-        <div>
-          <div>Vendor</div>
-          <div>{contract?.supplierid}</div>
-        </div>
-        <div>
-          <div>
-            <label>Vendor ID</label>
+    <>
+      <div className={mainContainer}>
+        <div className={contractDetailRoot}>
+          <div className={contractDetailMain}>
+            <GoAButton
+              {...{ style: '"padding: 0 10px 0 10px;height: 60px;"' }}
+              size='compact'
+              type='tertiary'
+              leadingIcon='chevron-back'
+              onClick={() => BackToContractHomeClick()}
+            >
+              {'Back'}
+            </GoAButton>
+            <h2>Contract {contract?.contractNumber}</h2>
+            <div className={main}>
+              <div className={tabGroupContainer}>
+                <div className={tabList}>
+                  <button id='details' role='tab' aria-selected={tabIndex === 1 || tabIndex === 3} onClick={() => setTabIndex(1)}>
+                    <span>Details</span>
+                  </button>
+                  <button id='tab2' role='tab' aria-selected={tabIndex === 2} onClick={() => setTabIndex(2)}>
+                    <span>Tab2</span>
+                  </button>
+                </div>
+                {/* onClick={() => openContractClick(props.contractDetails)} */}
+                <div className={tabContainer}>
+                  {tabIndex === 1 && (
+                    <div className={linksToEditAndSave}>
+                      <GoAButton type='tertiary' onClick={() => EditContractDetail()}>
+                        Edit
+                      </GoAButton>
+                    </div>
+                  )}
+                  {tabIndex === 3 && (
+                    <div className={linksToEditAndSave}>
+                      <GoAButton type='tertiary' onClick={() => CancelEdit()}>
+                        Cancel
+                      </GoAButton>
+                      <GoAButton type='tertiary' onClick={() => SaveDetails()}>
+                        Save
+                      </GoAButton>
+                    </div>
+                  )}
+                  {tabIndex === 1 && <OneGxContractDetailDataPanel contractDetails={contract} />}
+                  {tabIndex === 2}
+                  {tabIndex === 3 && <OneGxContractDetailDataEditPanel
+                    readChanges={readChangesFromEditTab}
+                    contractToUpdate={contract}
+                    onUpdate={handleUpdateOfAdditionalInfo}
+                    corporateRegions={corporateRegionList}
+                  />}
+                </div>
+              </div>
+            </div>
           </div>
-          <div>{contract?.supplierName}</div>
         </div>
       </div>
-      <div className={twoColContainer}>
-        <div>
-          <div>Effective Date</div>
-          <div>{yearMonthDay(contract?.workspace?.effectivedate)}</div>
-        </div>
-        <div>
-          <div>Expiry Date</div>
-          <div>{yearMonthDay(contract?.workspace?.currExpirationdate)}</div>
-        </div>
-      </div>
-    </div>
+      <OneGxContractDetailConfirmationModal open={openModal} onClose={CloseFromConfirmationModal} onUpdate={ContinueEditingFromConfirmationModal}></OneGxContractDetailConfirmationModal>
+    </>
   );
 }

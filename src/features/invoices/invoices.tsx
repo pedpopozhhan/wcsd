@@ -1,6 +1,6 @@
 import { GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
-import styles from './contracts.module.scss';
+import styles from './invoices.module.scss';
 import { ContractType, typeItems } from '@/common/types/contract-type';
 import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import searchService from '@/services/contract-search.service';
@@ -11,7 +11,7 @@ import { navigateTo } from '@/common/navigate';
 
 const { dropdownContainer, toolbar, spacer } = styles;
 
-export default function Contracts() {
+export default function Invoices() {
   const auth = useConditionalAuth();
   const header = 'Contracts';
   const [searchResults, setSearchResults] = useState([] as IContractSearchResult[]);
@@ -49,7 +49,7 @@ export default function Contracts() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [JSON.stringify(allData), retry]);
+  }, [retry]);
 
   function onChangeContractType(name: string, type: string | string[]) {
     const _contractType = type as ContractType;
@@ -82,7 +82,6 @@ export default function Contracts() {
         x.contractNumber.toUpperCase().includes(upper)
       );
     });
-    console.dir(searched);
     setSearchResults(searched);
   };
 

@@ -47,7 +47,10 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function sortData(sortBy: string, sortDir: number) {
@@ -86,7 +89,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
     dispatch(setTab(SourceTab.Approved));
     dispatch(setContractForReconciliation(selectedVendor));
     if (selectedVendor.contractNumber) {
-      navigate(`/invoice-processing/${selectedVendor.contractNumber}`, {
+      navigate(`/invoicing/invoice-processing/${selectedVendor.contractNumber}`, {
         state: selectedVendor.contractNumber,
       });
     }
@@ -106,6 +109,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
       <GoATable onSort={sortData} mb='xl' width='100%'>
         <thead>
           <tr>
+            <th></th>
             <th style={{ verticalAlign: 'middle' }}>
               <GoATableSortHeader name={contractSearchResultColumns[0].value} direction='asc'>
                 {contractSearchResultColumns[0].label}
@@ -132,6 +136,7 @@ const ContractSearchResults: React.FC<IContractSearchResultsProps> = (props) => 
         <tbody>
           {pageResults?.map((result, idx) => (
             <tr key={idx}>
+              <td>{result.row}</td>
               <td>{result.vendorName}</td>
               <td className={number}>{result.businessId}</td>
               <td className={number}>

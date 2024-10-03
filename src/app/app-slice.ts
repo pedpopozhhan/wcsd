@@ -122,15 +122,17 @@ export const appSlice = createSlice({
 
     setRowData: (state: IAppSliceState, action: PayloadAction<IDetailsTableRow[]>) => {
       const hasChanged = hasDetailsTableRowArrayChanged(action.payload, state.rowData);
+
+      const rows = action.payload.slice();
       state.invoiceChanged = state.invoiceChanged || hasChanged;
       if (
         !state.timeReportDataBeforeEditingPayables ||
         state.timeReportDataBeforeEditingPayables.length === undefined ||
         state.timeReportDataBeforeEditingPayables.length === 0
       ) {
-        state.rowData = action.payload;
+        state.rowData = rows;
       } else {
-        state.rowData = markIsAddedStatusIfpreviouslyAdded(action.payload, state.timeReportDataBeforeEditingPayables);
+        state.rowData = markIsAddedStatusIfpreviouslyAdded(rows, state.timeReportDataBeforeEditingPayables);
         state.timeReportDataBeforeEditingPayables = [];
       }
     },

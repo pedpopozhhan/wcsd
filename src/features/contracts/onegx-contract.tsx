@@ -7,8 +7,9 @@ import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import OneGxContractSearchResults from './onegx-contract-search-result';
-import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
-const { dropdownContainer, toolbar, spacer } = styles;
+import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import OneGxContractSidePanel from './onegx-contract-side-panel';
+const { dropdownContainer, toolbar, spacer, oneGxContractsMain, oneGxContractsRoot, main } = styles;
 
 export default function OneGxContract() {
   const auth = useConditionalAuth();
@@ -18,6 +19,7 @@ export default function OneGxContract() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [contractType, setContractType] = useState('all' as ContractType);
   const [retry, setRetry] = useState<boolean>(false);
+  const [selectedContract, setSelectedContract] = useState<IOneGxContractDetail | null>(null);
   useEffect(() => {
     const subscription = searchService.getAll(auth?.user?.access_token).subscribe({
       next: (searchResults) => {
@@ -76,31 +78,38 @@ export default function OneGxContract() {
     setSearchResults(searched);
   };
 
-  return (
-    <main>
-      <div>
-        <h2>{header}</h2>
-        <div className={toolbar}>
-          <div className={spacer}></div>
-          <div className={dropdownContainer}>
-            <GoADropdown name='contractType' value={contractType} onChange={onChangeContractType}>
-              {typeItems.map((type, idx) => (
-                <GoADropdownItem key={idx} value={type.value} label={type.label} />
-              ))}
-            </GoADropdown>
-          </div>
-          <GoAInput
-            type='search'
-            name='search'
-            value={searchTerm}
-            onChange={onChange}
-            leadingIcon='search'
-            placeholder='Search Vendor or Contract'
-          ></GoAInput>
-        </div>
-      </div>
 
-      <OneGxContractSearchResults searchResults={searchResults}></OneGxContractSearchResults>
-    </main>
+  const setContractForSidePanel = (contractToDisplay: IOneGxContractDetail) => {
+    setSelectedContract(contractToDisplay);
+  };
+
+  return (
+    <div className={oneGxContractsRoot}>
+      <div className={oneGxContractsMain}>
+        <h2>{header}</h2>
+        <div className={main}>
+          <div className={toolbar}>
+            <div className={spacer}></div>
+            <div className={dropdownContainer}>
+              <GoADropdown name='contractType' value={contractType} onChange={onChangeContractType}>
+                {typeItems.map((type, idx) => (
+                  <GoADropdownItem key={idx} value={type.value} label={type.label} />
+                ))}
+              </GoADropdown>
+            </div>
+            <GoAInput
+              type='search'
+              name='search'
+              value={searchTerm}
+              onChange={onChange}
+              leadingIcon='search'
+              placeholder='Search Vendor or Contract'
+            ></GoAInput>
+          </div>
+        </div>
+        <OneGxContractSearchResults searchResults={searchResults} onContractChange={setContractForSidePanel}></OneGxContractSearchResults>
+      </div>
+      <OneGxContractSidePanel contractDetails={selectedContract} />
+    </div>
   );
 }

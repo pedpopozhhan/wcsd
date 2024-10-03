@@ -23,8 +23,10 @@ import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks'
 import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
 import { getInvoiceDetails } from './invoice-details-actions';
+// import { setAddedTimeReportData, setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
 import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
 import { publishToast } from '@/common/toast';
+import { convertToCurrency } from '@/common/currency';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -39,7 +41,13 @@ interface IEditPayableModalDialog {
   searchValue: string;
 }
 
-const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({ contractNumber, invoiceID, searchValue, show, showEditPayableDialog }) => {
+const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({
+  contractNumber,
+  invoiceID,
+  searchValue,
+  show,
+  showEditPayableDialog,
+}) => {
   const [cancelButtonlabel] = useState<string>('Cancel');
   const [cancelButtonType] = useState<GoAButtonType>('tertiary');
   const [updateButtonlabel] = useState<string>('Update');
@@ -118,19 +126,18 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     const request = {
       contractNumber: contractNumber,
       status: 'approved',
-      invoiceID: invoiceID
+      invoiceID: invoiceID,
     };
 
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        const rows = response.rows
-          .map((x) => {
-            if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
-              return { isChecked: true, ...x };
-            } else {
-              return { isChecked: false, ...x };
-            }
-          });
+        const rows = response.rows.map((x) => {
+          if (flighReportIds.find((element) => element === x.flightReportId) !== undefined) {
+            return { isChecked: true, ...x };
+          } else {
+            return { isChecked: false, ...x };
+          }
+        });
 
         const sortedData = sort('flightReportDate', 1, rows);
         setRawData(sortedData);
@@ -211,11 +218,6 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       setData(selectedTimeReports);
     }
   };
-
-  const formatter = new Intl.NumberFormat('default', {
-    style: 'currency',
-    currency: 'USD',
-  });
 
   const onChange = (name: string, value: string) => {
     setSearchVal(value);
@@ -357,7 +359,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td className={roboto}>{formatter.format(record?.totalCost)}</td>
+                      <td className={roboto}>{convertToCurrency(record?.totalCost)}</td>
                     </tr>
                   ))
                 ) : (

@@ -10,6 +10,7 @@ import styles from '@/features/vendor-time-reports/tabs/approved-tab-details.mod
 import { navigateTo } from '@/common/navigate';
 import { getInvoiceDetails } from '@/features/invoice-details/invoice-details-actions';
 import { resetState, setFlightReportIds } from '@/app/app-slice';
+import { convertToCurrency } from '@/common/currency';
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer, roboto } = styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -51,15 +52,14 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const request = {
       contractNumber: contractNumber,
       status: 'approved',
-      invoiceID: ''
+      invoiceID: '',
     };
     const subscription = flightReportDashboardService.getSearch(auth?.user?.access_token, request).subscribe({
       next: (response) => {
-        const rows = response.rows
-          .map((x) => {
-            return { isChecked: false, ...x };
-          });
-        const sortedData = sort('flightReportDate', 1, rows);
+        const rows = response.rows.map((x, i) => {
+          return { isChecked: false, row: i + 1, ...x };
+        });
+        const sortedData = sort('flightReportDate', -1, rows);
         setRawData(sortedData);
         setData(sortedData);
         setPageData(sortedData.slice(0, perPage));
@@ -99,7 +99,10 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function sortData(sortBy: string, sortDir: number) {
@@ -133,11 +136,13 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     });
 
     if (trItems.length > 0) {
-      dispatch(getInvoiceDetails({
-        token: auth?.user?.access_token,
-        ids: trItems,
-        invoiceID: ''
-      }));
+      dispatch(
+        getInvoiceDetails({
+          token: auth?.user?.access_token,
+          ids: trItems,
+          invoiceID: '',
+        }),
+      );
       dispatch(setFlightReportIds(trItems));
     }
     if (trItems.length == 0) {
@@ -164,11 +169,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     }
   };
 
-  const formatter = new Intl.NumberFormat('default', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
   const onChange = (name: string, value: string) => {
     setSearchVal(value);
     if (value.length < 3) {
@@ -179,6 +179,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const upper = value.toUpperCase();
     const results = rawData.filter((x) => x.contractRegistrationName.toUpperCase().includes(upper));
     setData(results);
+    setPage(1);
   };
 
   return (
@@ -211,6 +212,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
+                <th></th>
                 <th className={headerRow}>
                   <GoATableSortHeader name='flightReportDate' direction='asc'>
                     Report Date
@@ -246,6 +248,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                           checked={record?.isChecked || false}
                         ></input>
                       </td>
+                      <td>{record.row}</td>
                       <td>{yearMonthDay(record.flightReportDate as string)}</td>
                       <td className={roboto}>
                         <a
@@ -258,7 +261,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
                       </td>
                       <td>{record.ao02Number}</td>
                       <td>{record?.contractRegistrationName}</td>
-                      <td className={roboto}>{formatter.format(record?.remainingCost)}</td>
+                      <td className={roboto}>{convertToCurrency(record?.remainingCost)}</td>
                     </tr>
                   ))
                 ) : (

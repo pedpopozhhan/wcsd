@@ -158,9 +158,9 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   }
 
   useEffect(() => {
-    const re = /^[a-zA-Z0-9\b]+$/;
+    const re = /^[a-zA-Z0-9 _-]+$/;
     if (!re.test(invoiceNumber)) {
-      setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9]/gi, ''));
+      setInvoiceNumber(invoiceNumber.replace(/[^a-zA-Z0-9 _-]/gi, ''));
     }
   });
   useEffect(() => {
@@ -322,7 +322,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
       clearErrors();
 
       // Navigate to invoice detail page
-      navigate(`/invoice/${invoiceNumber}`, { state: invoiceNumber });
+      navigate(`/invoicing/invoice/${invoiceNumber}`, { state: invoiceNumber });
     } else {
       invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
@@ -395,7 +395,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                     maxLength={16}
                     value={invoiceNumber}
                     error={invoiceNumberError}
-                    onBlur={() => {}}
+                    onBlur={() => { }}
                     onChange={(key, value) => {
                       setInvoiceNumber(value.trim());
                       if (!value) {

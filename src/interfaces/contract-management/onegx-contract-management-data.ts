@@ -1,8 +1,10 @@
+import { IRowIndicator } from '@/interfaces/common/row-indicator.interface';
+
 export interface IOneGxGetContractRequest {
   contractID: number;
 }
 
-export interface IOneGxContract {
+export interface IOneGxContract extends IRowIndicator {
   index: number;
   id: number;
   contractWorkspaceID: number;
@@ -30,6 +32,18 @@ export interface IOneGxContractWorkspace {
   contractType: string;
 }
 
+export interface IOneGxContractAdditionalInfo {
+  oneGxContractId?: string;
+  contractWorkspace: string;
+  contractNumber: string;
+  contractManager: string;
+  corporateRegion: string | string[];
+  corporateRegionName: string;
+  purchasingUnit: string;
+  holdbackAmount: string;
+  relatedContractId: string;
+}
+
 export interface IOneGxContractsSearchResponse {
   count: number;
   data: IOneGxContract[];
@@ -46,4 +60,16 @@ export interface IOneGxContractDetail {
   supplierid: string;
   supplierName: string;
   workspace: IOneGxContractWorkspace;
+  oneGxContractDetail: IOneGxContractAdditionalInfo
+}
+
+
+export interface ICorporateRegions {
+  corporateRegions: ICorporateRegion[];
+}
+
+
+export interface ICorporateRegion {
+  corporateRegionId: string;
+  regionName: string;
 }

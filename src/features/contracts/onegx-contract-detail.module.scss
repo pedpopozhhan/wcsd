@@ -1,82 +1,75 @@
 @import '@abgov/design-tokens/dist/tokens.scss';
 
-.topHeader {
-  margin-bottom: $goa-line-height-5;
+.mainContainer {
+  width: 65%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.header {
-  padding-left: $goa-line-height-7;
-  margin-bottom: 0px;
-  margin-top: 0px;
-}
-
-main {
+.contractDetailRoot {
+  display: flex;
   height: 100%;
   width: 100%;
-  overflow-y: auto;
+  margin-left: 10px;
+}
+
+.contractDetailMain {
+  height: 100%;
+  width: 50%;
+}
+
+.linksToEditAndSave {
   display: flex;
-  flex-direction: column;
-  padding-right: $goa-space-m;
-  padding-left: $goa-space-m;
+  justify-content: right;
+  padding-right: $goa-space-xs;
 }
 
-.container {
-  display: grid;
-  padding: 0 $goa-space-m;
-  grid-template-columns: 1fr;
-  row-gap: $goa-space-s;
-  padding-left: $goa-line-height-7;
-  margin-top: $goa-line-height-5;
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow: hidden;
 
-  >div {
-    word-break: break-all;
+  // this is all to make the tabs have a hidden scroll. the goa component wont work that way
+  .tabGroupContainer {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-    div:first-child {
-      color: $goa-color-text-default;
-      font: $goa-typography-body-m;
-      line-height: $goa-line-height-5;
-      font-weight: $goa-font-weight-bold;
+    .tabList {
+      border-bottom: $goa-border-width-s solid $goa-color-greyscale-200;
+      display: flex;
+      width: fit-content;
+      gap: $goa-space-xl;
+
+      [role='tab'] {
+        padding: $goa-space-s $goa-space-m;
+
+        background: none;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        border: none;
+        font: $goa-typography-body-m;
+        color: $goa-color-text-default;
+        letter-spacing: 0.03125rem;
+        border-bottom: 4px solid transparent;
+
+        &:hover:not([aria-selected='true']) {
+          border-bottom: 4px solid $goa-color-greyscale-200;
+        }
+
+        &[aria-selected='true'] {
+          border-bottom: 4px solid $goa-color-interactive-default;
+          font: $goa-typography-heading-s;
+        }
+      }
     }
 
-    div:nth-child(2) {
-      color: $goa-color-text-secondary;
-      font: $goa-typography-body-s;
-      line-height: $goa-line-height-1;
+    .tabContainer {
+      overflow: hidden;
+      padding-top: $goa-space-m;
     }
-  }
-
-  a {
-    text-decoration: underline;
-  }
-}
-
-.twoColContainer {
-  display: grid;
-  padding: 0 $goa-space-s;
-  grid-template-columns: 1fr 1fr;
-  row-gap: $goa-space-m;
-  padding-left: $goa-line-height-7;
-  padding-top: $goa-line-height-1;
-  column-gap: $goa-space-xl;
-
-  >div {
-    word-break: break-all;
-
-    div:first-child {
-      color: $goa-color-text-default;
-      font: $goa-typography-body-m;
-      line-height: $goa-line-height-5;
-      font-weight: $goa-font-weight-bold;
-    }
-
-    div:nth-child(2) {
-      color: $goa-color-text-secondary;
-      font: $goa-typography-body-s;
-      line-height: $goa-line-height-1;
-    }
-  }
-
-  a {
-    text-decoration: underline;
   }
 }

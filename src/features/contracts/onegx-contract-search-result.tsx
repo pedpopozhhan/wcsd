@@ -1,29 +1,38 @@
-import { IOneGxContract } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { GoABlock, GoAButton, GoASpacer, GoATable, } from '@abgov/react-components';
+import { IOneGxContract, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
+import { GoABlock, GoAButton, GoAIconButton, GoASpacer, GoATable } from '@abgov/react-components';
 import React, { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract-search-result.module.scss';
-import { useNavigate } from 'react-router-dom';
-const { number, tableContainer } = styles;
+import contractManagementService from '@/services/contract-management.services';
+import { useConditionalAuth } from '@/app/hooks';
+import { failedToPerform, publishToast } from '@/common/toast';
+import { navigateTo } from '@/common/navigate';
+
+const { number, tableContainer, chevron } = styles;
 
 interface IOneGxContractSearchResultsProps {
   searchResults: IOneGxContract[];
+  onContractChange: (contract: IOneGxContractDetail) => void;
 }
 const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (props) => {
+  const auth = useConditionalAuth();
+  const [loading, setIsLoading] = useState<boolean>();
   const [results, setResults] = useState(props.searchResults);
   const [pageResults, setPageResults] = useState<IOneGxContract[]>([]);
-
-  const navigate = useNavigate();
+  const [retry, setRetry] = useState<boolean>(false);
+  const [selectedDetail, setSelectedDetail] = useState<IOneGxContractDetail>();
+  const [clickedRowId, setClickedRowId] = useState<number | null>(null);
 
   const contractSearchResultColumns: { value: string; label: string }[] = [
     { value: 'vendor', label: 'Vendor' },
     { value: 'businessId', label: 'Business ID.' },
-    { value: 'contractNumber', label: 'Contract No.' }
+    { value: 'contractNumber', label: 'Contract No.' },
   ];
 
   useEffect(() => {
     setResults(props.searchResults);
     setPageResults(props.searchResults?.slice(0, perPage));
     setPage(1);
+    setSelectedDetail(null);
   }, [props.searchResults]);
 
   function sortData(sortBy: string, sortDir: number) {
@@ -76,12 +85,50 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
 
   function oneGxContractClick(selectedVendor: IOneGxContract) {
     if (selectedVendor.contractNumber) {
-      navigate(`/contract-processing/${selectedVendor.id}`, {
-        state: selectedVendor.id,
-      });
+      window.open(`/contracts/contract-processing/${selectedVendor.id}`, '_blank', 'noopener,noreferrer');
     }
   }
 
+  const onRowClick = (rowData: IOneGxContract, rowNumber: number) => {
+    if (Number(rowData.id)) {
+      setIsLoading(true);
+      const subscription = contractManagementService.getOneGxContract(auth?.user?.access_token, Number(rowData.id)).subscribe({
+        next: (searchResults) => {
+          const data = searchResults;
+          //setContract(data);
+          setSelectedDetail(data);
+          props.onContractChange(data);
+          console.info(rowNumber);
+          setClickedRowId(rowNumber);
+          setIsLoading(false);
+        },
+        error: (error) => {
+          setIsLoading(false);
+          console.error(error);
+          if (error.response && error.response.status === 403) {
+            navigateTo('unauthorized');
+          }
+          publishToast({
+            type: 'error',
+            message: failedToPerform('Load OneGxContract', error.response.data),
+            callback: () => {
+              setRetry(!retry);
+            },
+          });
+        },
+      });
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+    if (selectedDetail) {
+      props.onContractChange(selectedDetail);
+    }
+  };
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className={tableContainer}>
@@ -91,14 +138,22 @@ const OneGxContractSearchResults: React.FC<IOneGxContractSearchResultsProps> = (
             <th style={{ verticalAlign: 'middle', width: '40%' }}>{contractSearchResultColumns[0].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[1].label}</th>
             <th style={{ verticalAlign: 'middle' }}>{contractSearchResultColumns[2].label}</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {pageResults?.map((result, idx) => (
-            <tr key={idx}>
-              <td><a onClick={() => oneGxContractClick(result)}>{result.supplierName}</a></td>
+            <tr key={idx} onClick={() => onRowClick(result, idx)} className={`${styles.tableRow} ${clickedRowId === idx ? styles.clicked : ''}`}>
+              <td>{result.supplierName}</td>
               <td className={number}>{result.supplierid}</td>
-              <td className={number}><a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a></td>
+              <td className={number}>
+                <a onClick={() => oneGxContractClick(result)}>{result.contractNumber}</a>
+              </td>
+              <td>
+                <div className={chevron}>
+                  <GoAIconButton icon='chevron-forward' onClick={() => oneGxContractClick(result)} />
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

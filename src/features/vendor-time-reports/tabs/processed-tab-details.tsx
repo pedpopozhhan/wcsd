@@ -18,6 +18,7 @@ import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.mo
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
 import { navigateTo } from '@/common/navigate';
 import { Subscription } from 'rxjs';
+import { replaceSpacesWithNonBreaking } from '@/common/string-functions';
 
 interface IProcessedTabDetailsAllProps {
   contractNumber: string | undefined;
@@ -25,6 +26,7 @@ interface IProcessedTabDetailsAllProps {
 
 interface IRowItem extends IProcessedInvoiceTableRowData {
   isChecked: boolean;
+  row: number;
 }
 
 const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps> = ({ contractNumber }) => {
@@ -60,8 +62,8 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     setIsLoading(true);
     const subscription = processedInvoicesService.getInvoices(auth?.user?.access_token, String(contractID)).subscribe({
       next: (results) => {
-        const rows = results.invoices.map((x) => {
-          return { isChecked: false, ...x };
+        const rows = results.invoices.map((x, i) => {
+          return { isChecked: false, row: i + 1, ...x };
         });
         const sortedData = sort('invoiceDate', 1, rows);
         setRawData(sortedData);
@@ -113,7 +115,10 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
       }
       return (varA > varB ? 1 : -1) * sortDir;
     });
-    return rows.slice();
+    return rows.slice().map((x, i) => {
+      x.row = i + 1;
+      return x;
+    });
   }
 
   function getTotalPages() {
@@ -136,7 +141,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
   function invoiceNumberClick(invoiceId: string) {
     if (invoiceId) {
-      navigate(`/processed-invoice/${invoiceId}/${contractNumber}`);
+      navigate(`/invoicing/processed-invoice/${invoiceId}/${contractNumber}`);
     }
   }
 
@@ -213,7 +218,11 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
 
     const upper = value.toUpperCase();
     const results = rawData.filter((x) => x.invoiceNumber.toUpperCase().includes(upper));
-    setData(results);
+    const rows = results.map((x, i) => {
+      return { ...x, row: i + 1 };
+    });
+    setData(rows);
+    setPage(1);
   };
   return (
     <>
@@ -255,6 +264,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                     onChange={handleCheckBoxChange}
                   ></input>
                 </th>
+                <th></th>
                 <th style={{ maxWidth: '15%' }}>
                   <GoATableSortHeader name='invoiceDate' direction='asc'>
                     Invoice Date
@@ -295,6 +305,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           disabled={record?.chargeExtractId?.length > 0 || record?.uniqueServiceSheetName?.trim().length === 0 ? true : false}
                         ></input>
                       </td>
+                      <td>{record.row}</td>
 
                       <td>{yearMonthDay(record.invoiceDate)}</td>
                       <td>
@@ -304,7 +315,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
                           type='tertiary'
                           onClick={() => invoiceNumberClick(record?.invoiceId)}
                         >
-                          {record.invoiceNumber}
+                          {replaceSpacesWithNonBreaking(record.invoiceNumber)}
                         </GoAButton>
                       </td>
                       <td className={invoiceAmountLabel}>{convertToCurrency(record?.invoiceAmount)}</td>

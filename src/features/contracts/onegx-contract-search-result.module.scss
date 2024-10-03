@@ -34,3 +34,12 @@ th {
   flex-direction: row;
   justify-content: space-between;
 }
+
+.tableRow {
+  cursor: auto;
+  transition: background-color 0.3s ease-out;
+}
+
+.clicked {
+  background-color: rgb(247, 247, 242);
+}

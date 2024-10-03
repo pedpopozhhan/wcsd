@@ -53,6 +53,7 @@ export default function ProcessInvoice() {
           // need to map this to detailstablerow
           const data = results.invoice.invoiceTimeReportCostDetails.slice().map((x, i) => {
             return {
+              // row:i+1,
               index: i,
               data: x,
               isAdded: false,
@@ -88,7 +89,7 @@ export default function ProcessInvoice() {
 
   function navigateToReconcile() {
     dispatch(setInvoiceChanged(false));
-    navigate(`/invoice/${invoiceData.InvoiceNumber}`, {
+    navigate(`/invoicing/invoice/${invoiceData.InvoiceNumber}`, {
       state: invoiceData.InvoiceNumber,
     });
   }
@@ -97,7 +98,7 @@ export default function ProcessInvoice() {
     dispatch(setInvoiceChanged(false));
     dispatch(resetState());
     dispatch(setTab(SourceTab.Processed));
-    navigate(`/invoice-processing/${contractDetails.contractNumber}`, {
+    navigate(`/invoicing/invoice-processing/${contractDetails.contractNumber}`, {
       state: contractDetails.contractNumber,
     });
   }
