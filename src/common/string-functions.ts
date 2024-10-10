@@ -14,4 +14,8 @@ function replaceSpacesWithNonBreaking(input: string): string {
   return input.replace(/ /g, '\u00A0');
 }
 
-export { escapeRegularExpression, convertToPascalCase, replaceSpacesWithNonBreaking };
+function stringToBool(value: string): boolean {
+  return value.toLowerCase() === 'true';
+}
+
+export { escapeRegularExpression, convertToPascalCase, replaceSpacesWithNonBreaking, stringToBool };

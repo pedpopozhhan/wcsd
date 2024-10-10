@@ -7,23 +7,27 @@ import { useConditionalAuth } from './hooks';
 import { NAVIGATE_EVENT } from '@/common/navigate';
 import VersionBar from '@/features/version-bar/version-bar';
 import NavBar from './navbar';
+import { stringToBool } from '@/common/string-functions';
 
 const { mainContainer, padding, outletContainer, account } = styles;
 export function App() {
   const env = import.meta.env.VITE_ENVIRONMENT;
   const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
   const version = import.meta.env.VITE_WEB_VERSION;
+  const financeNavigationEnable = stringToBool(import.meta.env.VITE_FINANCE_NAV_ENABLED);
   const labels: { [key: string]: string } = {
     dev: 'DEV',
     test: 'TST',
     uat: 'UAT',
   };
-  const links = import.meta.env.VITE_FINANCE_NAV_ENABLED
+
+  const links = financeNavigationEnable
     ? [
       { label: 'Invoicing', path: '/invoicing', isDefault: true },
       { label: 'Contracts', path: '/contracts' },
     ]
     : [{ label: 'Invoices', path: '/invoicing' }];
+
   const headerTitle = 'Wildfire Finance';
   const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
   const auth = useConditionalAuth();
@@ -83,7 +87,7 @@ export function App() {
           )}
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-              <NavBar links={links} />
+              {financeNavigationEnable && <NavBar links={links} />}
               <div className={padding} />
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>
