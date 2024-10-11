@@ -41,7 +41,6 @@ export function App() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     document.addEventListener(NAVIGATE_EVENT, processNavigateToEvent);
 
     return () => {
