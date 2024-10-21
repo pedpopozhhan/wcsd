@@ -34,7 +34,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   //Loader
   const [loading, setIsLoading] = useState(true);
 
-  const [searchVal, setSearchVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>('');
 
   // page number
   const [page, setPage] = useState(1);
@@ -169,10 +169,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   };
 
   const onChange = (name: string, value: string) => {
+    if (value === '' && searchVal === '')
+      return;
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
-      changePage(1);
       return;
     }
     const upper = value.toUpperCase();
