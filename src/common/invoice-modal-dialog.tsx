@@ -311,6 +311,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       setInvoiceReceivedDateError(false);
       setInvoiceReceivedMaxDateErrorLabel('');
+      setPageHasError(false);
     }
 
     if (pageHasError) return;
@@ -434,6 +435,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setDateOfInvoice(str);
+                        setDateOfInvoiceError(false);
+                        setDateOfInvoiceErrorLabel('');
                       }
                     }}
                   />
@@ -515,6 +518,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setPeriodEndingDate(str);
+                        setPeriodEndingDateError(false);
                       }
                     }}
                   />
@@ -543,6 +547,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setInvoiceReceivedDate(str);
+                        setInvoiceReceivedDateError(false);
                       }
                     }}
                   />

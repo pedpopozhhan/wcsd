@@ -101,7 +101,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     const sortedData = sort(sortBy, sortDir, data);
     setData(sortedData.slice());
     setPageData(sortedData.slice(0, perPage));
-    setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
 
