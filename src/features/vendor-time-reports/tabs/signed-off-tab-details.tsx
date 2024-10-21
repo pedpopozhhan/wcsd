@@ -25,7 +25,7 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   const [loading, setIsLoading] = React.useState(true);
 
   // Searching
-  const [searchVal, setSearchVal] = React.useState<string>();
+  const [searchVal, setSearchVal] = React.useState<string>('');
 
   //Pagination
   const [pageData, setPageData] = React.useState<IFlightReportDashboard[]>([]);
@@ -134,10 +134,11 @@ const SignedOffTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ c
   }
 
   const onChange = (name: string, value: string) => {
+    if (value === '' && searchVal === '')
+      return;
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
-      changePage(1);
       return;
     }
     const upper = value.toUpperCase();

@@ -37,7 +37,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   //Data set
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
-  const [searchVal, setSearchVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>('');
   const [refreshInvoices, setRefreshInvoices] = useState<boolean | undefined>();
 
   //Loader
@@ -208,10 +208,12 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   };
 
   const onChange = (name: string, value: string) => {
+    if (value === '' && searchVal === '')
+      return;
+
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
-      changePage(1);
       return;
     }
 
