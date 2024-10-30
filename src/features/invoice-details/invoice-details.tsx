@@ -170,16 +170,16 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={onNextClicked} disabled={!isReconciled()}>
+        <GoAButton type='primary' onClick={onNextClicked} disabled={!isReconciled()} testId='btnNext'>
           <div className={icon}>
             <GoAIcon type='download'></GoAIcon>
           </div>
           Next
         </GoAButton>
-        <GoAButton type='secondary' onClick={save}>
+        <GoAButton type='secondary' onClick={save} testId='btnSave'>
           Save
         </GoAButton>
-        <GoAButton type='tertiary' onClick={cancel}>
+        <GoAButton type='tertiary' onClick={cancel} testId='btnClose'>
           Close
         </GoAButton>
         <div className={spacer}></div>

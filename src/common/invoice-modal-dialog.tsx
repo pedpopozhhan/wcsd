@@ -379,11 +379,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         maxWidth={modalDialogWidth}
         actions={
           <GoAButtonGroup alignment='end'>
-            <GoAButton type='secondary' onClick={() => hideModalDialog()}>
+            <GoAButton type='secondary' onClick={() => hideModalDialog()} testId='btnCancel'>
               Cancel
             </GoAButton>
 
-            <GoAButton type='primary' onClick={() => setInvoice()}>
+            <GoAButton type='primary' onClick={() => setInvoice()} testId='btnSaveAndContinue'>
               {getButtonLabel()}
             </GoAButton>
           </GoAButtonGroup>
