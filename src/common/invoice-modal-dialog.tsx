@@ -33,6 +33,7 @@ interface InvoiceModalProps {
   contract?: string;
   onClose?: () => void;
   onOpen?: () => void;
+  onBeforeSave?: () => void;
 }
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
@@ -327,11 +328,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
-      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
-        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
-      } else {
-        publishToast({ type: 'info', message: 'Invoice updated.' });
-      }
+      onBeforeSave();
+      dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
       clearErrors();
       setIsVisible(false);
       if (props.onClose) {
@@ -342,6 +340,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
 
   function getHelperText() {
     return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
+  }
+
+  function onBeforeSave() {
+    if (props.onBeforeSave) {
+      props.onBeforeSave();
+    }
   }
 
   function onOpen() {
@@ -355,7 +359,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     return props.isNew ? 'Create invoice' : 'Update invoice';
   }
   function getButtonLabel() {
-    return props.isNew ? 'Continue' : 'Update';
+    return props.isNew ? 'Continue' : 'Save';
   }
   return (
     <>
@@ -375,11 +379,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         maxWidth={modalDialogWidth}
         actions={
           <GoAButtonGroup alignment='end'>
-            <GoAButton type='secondary' onClick={() => hideModalDialog()}>
+            <GoAButton type='secondary' onClick={() => hideModalDialog()} testId='btnCancel'>
               Cancel
             </GoAButton>
 
-            <GoAButton type='primary' onClick={() => setInvoice()}>
+            <GoAButton type='primary' onClick={() => setInvoice()} testId='btnSaveAndContinue'>
               {getButtonLabel()}
             </GoAButton>
           </GoAButtonGroup>

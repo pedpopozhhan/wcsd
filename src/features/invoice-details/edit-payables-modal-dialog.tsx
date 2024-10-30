@@ -22,10 +22,11 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
-import { getInvoiceDetails } from './invoice-details-actions';
+// import { getInvoiceDetails, saveDraftInvoice } from './invoice-details-actions';
+import { getInvoiceDetails, saveDraftInvoice } from './invoice-details-actions';
 // import { setAddedTimeReportData, setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
 import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
-import { publishToast } from '@/common/toast';
+// import { publishToast } from '@/common/toast';
 import { convertToCurrency } from '@/common/currency';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
@@ -50,7 +51,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 }) => {
   const [cancelButtonlabel] = useState<string>('Cancel');
   const [cancelButtonType] = useState<GoAButtonType>('tertiary');
-  const [updateButtonlabel] = useState<string>('Update');
+  const [updateButtonlabel] = useState<string>('Save');
   const [updateButtonType] = useState<GoAButtonType>('primary');
   const [respMessageType] = useState<GoABadgeType>('light');
   const [respMessageContent] = useState('');
@@ -109,15 +110,16 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
     if (trItems.length > 0) {
       dispatch(setFlightReportIds(trItems));
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
-      showEditPayableDialog(false);
+      dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
     } else if (trItems.length == 0) {
       dispatch(setFlightReportIds([]));
       dispatch(setAddedTimeReportData([]));
       dispatch(setRowData([]));
-      showEditPayableDialog(false);
+      dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
     }
-    publishToast({ type: 'success', message: 'Updated Payables' });
+
+    showEditPayableDialog(false);
+    dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     setSelectionType('Available' as SelectionType);
   };
 
@@ -267,7 +269,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
             <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
               {cancelButtonlabel}
             </GoAButton>
-            <GoAButton type={updateButtonType} onClick={UpdatePayables}>
+            <GoAButton type={updateButtonType} onClick={UpdatePayables} testId='btnSave' >
               {updateButtonlabel}
             </GoAButton>
           </GoAButtonGroup>
