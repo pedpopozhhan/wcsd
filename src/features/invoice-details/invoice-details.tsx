@@ -114,8 +114,16 @@ export default function InvoiceDetails() {
   }
   const showEditPayableModal = () => {
     setParentShowModal(true);
+    setDataBeforeSave();
     dispatch(setTimeReportDataBeforeEditingPayables(rowData.filter((x) => x.isAdded)));
   };
+
+  const setDataBeforeSave = () => {
+    dispatch(setInvoiceData(invoiceData));
+    dispatch(setOtherCostData(otherCostData));
+    dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
+  };
+
 
   return (
     <div className={container}>
@@ -126,7 +134,7 @@ export default function InvoiceDetails() {
               <h2>Invoice</h2>
             </div>
             <div>
-              <InvoiceModalDialog />
+              <InvoiceModalDialog onBeforeSave={setDataBeforeSave} />
             </div>
           </div>
 
