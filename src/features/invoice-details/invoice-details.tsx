@@ -124,6 +124,12 @@ export default function InvoiceDetails() {
     dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
   };
 
+  // const onAfterSaveOfEditPayable = () => {
+  //   const flightReportIds = rowData.map((x) => x.data.flightReportId).filter((obj, index, self) => index === self.findIndex((o) => o === obj));
+  //   dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: flightReportIds, invoiceID: invoiceData.InvoiceID }));
+  //   //dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+  // };
+
 
   return (
     <div className={container}>
@@ -191,6 +197,7 @@ export default function InvoiceDetails() {
         show={parentShowModal}
         showEditPayableDialog={setParentShowModal}
         searchValue=''
+      //onAfterChanges={onAfterSaveOfEditPayable}
       />
     </div>
   );

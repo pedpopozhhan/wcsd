@@ -263,6 +263,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   }
 
   function processFields() {
+    onBeforeSave();
     if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null) {
       setInvoiceAmountError(true);
       setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
@@ -328,7 +329,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
-      onBeforeSave();
+
       dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
       clearErrors();
       setIsVisible(false);
