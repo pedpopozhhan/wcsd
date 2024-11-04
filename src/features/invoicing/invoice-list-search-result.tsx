@@ -35,7 +35,7 @@ const InvoiceListSearchResults: React.FC<IInvoiceListSearchResultsProps> = (prop
     const sortedData = sort(contractSearchResultColumns[0].value, 0, props.searchResults);
     setResults(sortedData);
     setPageResults(sortedData?.slice(0, recordsPerPage));
-
+    setPage(1);
   }, [props.searchResults, recordsPerPage]);
 
   function sort(sortBy: string, sortDir: number, rows: IInvoiceListSearchResult[]): IInvoiceListSearchResult[] {
