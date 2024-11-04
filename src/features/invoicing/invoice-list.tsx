@@ -102,51 +102,17 @@ export default function InvoiceList() {
   function onChangeOfInvoiceAgeOption(name: string, type: string | string[]) {
     const _invoiceAgeOption = type as InvoiceAgeOption;
     setInvoiceAgeOption(_invoiceAgeOption as InvoiceAgeOption);
-    // rerun the search, sometimes it is the term, sometimes it is an item with a separator
-    // const filtered = allData.filter((x) => _invoiceAgeOption === 'All ages' ? _invoiceAgeOption === 'All ages' : _invoiceAgeOption === '1-30' ?
-    //   x.invoiceAge < 30 : _invoiceAgeOption === '30-60' ? x.invoiceAge > 29 && x.invoiceAge < 61 : x.invoiceAge > 60);
-    // const upper = searchTerm.toUpperCase();
-    // const searched = filtered.filter((x) => {
-    //   return (
-    //     x.vendorName.toString().toUpperCase().includes(upper) ||
-    //     x.invoiceNumber.toUpperCase().includes(upper) ||
-    //     x.uniqueServiceSheetName.toUpperCase().includes(upper)
-    //   );
-    // });
-    // setSearchResults(searched);
   }
 
   const onSearchTermChange = (name: string, value: string) => {
     if (value === '' && searchTerm === '')
       return;
-    setSearchTerm(value);
-
-    // if (value.length < 3) {
-    //   setSearchResults(allData.filter((x) => invoiceAgeOption === 'All ages' ? invoiceAgeOption === 'All ages' : x.invoiceNumber === invoiceAgeOption));
-    //   return;
-    // }
-    // const filtered = allData.filter((x) => invoiceAgeOption === 'All ages' ? invoiceAgeOption === 'All ages' : x.invoiceNumber === invoiceAgeOption);
-    // const upper = value.toUpperCase();
-    // const searched = filtered.filter((x) => {
-    //   return (
-    //     x.vendorName.toString().toUpperCase().includes(upper) ||
-    //     x.invoiceNumber.toUpperCase().includes(upper) ||
-    //     x.uniqueServiceSheetName.toUpperCase().includes(upper)
-    //   );
-    // });
-    // setSearchResults(searched);
+    setSearchTerm(value);   
   };
 
 
   const handleMultiSelectChange = (selectedOptions: IOptionType[]) => {
-    setSelectedStatuses(selectedOptions);
-    // const invoiceStatusFilter = selectedStatuses.map((x) => x.value);
-    // const filterByStatus = (x: IInvoiceListSearchResult) => {
-    //   return invoiceStatusFilter && invoiceStatusFilter.length !== 0 ? invoiceStatusFilter.includes(x.invoiceStatus) : true;
-    // };
-    // const filteredRecords = allData?.filter(filterByStatus).filter(getFilter());
-    // console.log(filteredRecords.length);
-    // setSearchResults(filteredRecords);
+    setSelectedStatuses(selectedOptions);    
   };
 
   function getFilter() {
@@ -172,14 +138,6 @@ export default function InvoiceList() {
 
             />
           </div>
-          {/* <div className={dropdownContainer}>
-            <GoADropdown name='InvoiceStatusOption' value={invoiceStatusOption} onChange={onChangeOfInvoiceAgeOption}>
-              {InvoiceStatusOptionItems.map((type, idx) => (
-                <GoADropdownItem key={idx} value={type.value} label={type.label} />
-              ))}
-            </GoADropdown>
-          </div> */}
-
           <div className={dropdownContainer}>
             <GoADropdown name='InvoiceAgeOption' value={invoiceAgeOption} onChange={onChangeOfInvoiceAgeOption}>
               {InvoiceAgeOptionItems.map((type, idx) => (
