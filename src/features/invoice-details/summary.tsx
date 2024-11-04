@@ -4,7 +4,7 @@ import { GoAIcon } from '@abgov/react-components';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { useEffect, useState } from 'react';
 import SheetNameModal from './sheet-name-modal';
-import { EmptyGuid } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 import { convertToPascalCase } from '@/common/string-functions';
 import { saveDraftInvoice } from './invoice-details-actions';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';

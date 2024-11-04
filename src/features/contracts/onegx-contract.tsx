@@ -1,7 +1,7 @@
 import { GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from '@/features/contracts/onegx-contract.module.scss';
-import { ContractType, typeItems } from '@/common/types/contract-type';
+import { ContractType, typeItems } from '@/common/types/custom-types';
 import searchService from '@/services/contract-management.services';
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useConditionalAuth } from '@/app/hooks';

@@ -8,10 +8,10 @@ import {
 import { useEffect, useState } from 'react';
 import Styles from '@/features/contracts/onegx-contractdetail-data-edit-panel.module.scss';
 import { ICorporateRegion, IOneGxContractAdditionalInfo, IOneGxContractDetail } from '@/interfaces/contract-management/onegx-contract-management-data';
-import { holdbackAmountOption, holdbackAmountItems } from '@/common/types/OneGxContract-types';
+import { holdbackAmountOption, holdbackAmountItems } from '@/common/types/custom-types';
 import { convertToCurrency } from '@/common/currency';
 import { yearMonthDay } from '@/common/dates';
-import { EmptyGuid } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 
 interface IOneGxContractDetailDataEditPanel {
   readChanges: boolean;

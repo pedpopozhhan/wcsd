@@ -22,7 +22,7 @@ const DeleteInvoiceModal: React.FC<IDeleteInvoiceModalProps> = (props) => {
   }
   return (
     <>
-      <GoAButton type='secondary' onClick={() => setOpenModal(true)}>
+      <GoAButton type='secondary' onClick={() => setOpenModal(true)} testId='btnDeleteDraftInvoice'>
         Delete
       </GoAButton>
       <GoAModal
