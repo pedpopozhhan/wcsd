@@ -22,9 +22,9 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
-// import { getInvoiceDetails, saveDraftInvoice } from './invoice-details-actions';
-import { saveDraftInvoice } from './invoice-details-actions';
+import { getInvoiceDetails } from './invoice-details-actions';
 import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
+
 import { convertToCurrency } from '@/common/currency';
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
@@ -38,7 +38,8 @@ interface IEditPayableModalDialog {
   showEditPayableDialog: (value: boolean) => void;
   show: boolean;
   searchValue: string;
-  //onAfterChanges?: () => void;
+  // onAfterChanges?: (flightReports: number[]) => void;
+  onAfterChanges?: () => void;
 }
 
 const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({
@@ -47,7 +48,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   searchValue,
   show,
   showEditPayableDialog,
-  //onAfterChanges
+  onAfterChanges
 }) => {
   const [cancelButtonlabel] = useState<string>('Cancel');
   const [cancelButtonType] = useState<GoAButtonType>('tertiary');
@@ -111,19 +112,22 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
 
     if (trItems.length > 0) {
       dispatch(setFlightReportIds(trItems));
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     } else if (trItems.length == 0) {
       dispatch(setFlightReportIds([]));
       dispatch(setAddedTimeReportData([]));
       dispatch(setRowData([]));
+      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     }
 
-
     setSelectionType('Available' as SelectionType);
+    //dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+    //dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     showEditPayableDialog(false);
-    dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
-    // if (onAfterChanges) {
-    //   onAfterChanges();
-    // }
+
+    if (onAfterChanges) {
+      onAfterChanges();
+    }
   };
 
 
