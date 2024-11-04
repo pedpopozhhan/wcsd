@@ -60,7 +60,7 @@ const InvoiceListSearchResults: React.FC<IInvoiceListSearchResultsProps> = (prop
     const sortedData = sort(sortBy, sortDir, results);
     setResults(sortedData.slice());
     setPageResults(sortedData.slice(0, recordsPerPage));
-    setPage(1);
+    //setPage(1);
   }
 
   function changePage(newPage: number) {
@@ -184,7 +184,7 @@ const InvoiceListSearchResults: React.FC<IInvoiceListSearchResultsProps> = (prop
               </div>
               <span className={footerRecordCount}>of</span>
               <span className={footerRecordCount}>{results?.length} </span>
-              <span className={footerRecordCount}>[items]</span>
+              <span className={footerRecordCount}>items</span>
             </div>
           </div>
           <GoASpacer hSpacing='fill' />
