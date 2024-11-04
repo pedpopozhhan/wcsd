@@ -12,7 +12,7 @@ import chargeExtractService from '@/services/processed-invoice-charge-extract.se
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useConditionalAuth } from '@/app/hooks';
-import { PaymentStatusCleared } from '@/common/types/payment-status';
+import { PaymentStatusCleared } from '@/common/types/custom-types';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;

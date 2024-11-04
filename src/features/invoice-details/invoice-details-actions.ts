@@ -12,7 +12,7 @@ import { setInvoiceChanged, setInvoiceData, setInvoiceId, setInvoiceStatus, setO
 import { IInvoiceData } from '@/common/invoice-modal-dialog';
 import { InvoiceStatus } from '@/interfaces/invoices/invoice.interface';
 import { deleteDraftInvoiceSuccess, setLists } from './invoice-details-slice';
-import { EmptyGuid } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 
 const GET_INVOICE_DETAILS = 'getInvoiceDetails';
 const CLICK_ON_DRAFT_INVOICE = 'clickOnDraftInvoice';

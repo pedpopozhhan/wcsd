@@ -18,6 +18,7 @@ import store, { persistor } from './app/store';
 import { UnAuthorized } from './features/auth/unauthorized';
 import ProtectedRoute from './app/protectec-route';
 import { PERMISSION } from './common/permission';
+import InvoiceList from './features/invoicing/invoice-list';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const authEnabled = import.meta.env.VITE_ENABLE_AUTHORIZATION === 'true';
@@ -68,6 +69,12 @@ root.render(
                       <Route key='10' path='contract-processing/:id' element={<OneGxContractProcessing />} />
                     </Route>
                   </Route>
+                  {/* Routes under /invoices */}
+                  <Route path='/invoices' element={<App />}>
+                    <Route element={<ProtectedRoute permissions={[PERMISSION.FIN_INVOICE_V, PERMISSION.FIN_INVOICE_W]} />}>
+                      <Route key='11' index element={<InvoiceList />} />
+                    </Route>
+                  </Route>
                 </Routes>
               </Router>
             </React.StrictMode>
@@ -103,6 +110,10 @@ root.render(
                 <Route path='/contracts' element={<App />}>
                   <Route key='9' index element={<OneGxContract />} />
                   <Route key='10' path='contract-processing/:id' element={<OneGxContractProcessing />} />
+                </Route>
+
+                <Route path='/invoices' element={<App />}>
+                  <Route key='11' index element={<InvoiceList />} />
                 </Route>
               </Routes>
             </Router>

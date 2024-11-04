@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { clearInvoice, setInvoiceData } from '@/app/app-slice';
 import { failedToPerform, publishToast } from './toast';
-import { EmptyGuid } from './types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 import processInvoiceService from '@/services/process-invoice.service';
 import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
@@ -365,12 +365,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   return (
     <>
       {editMode && (
-        <GoAButton type='tertiary' onClick={() => setIsVisible(true)}>
+        <GoAButton type='tertiary' onClick={() => setIsVisible(true)} testId='btnEditInvoice'>
           Edit
         </GoAButton>
       )}
       {!editMode && (
-        <GoAButton size='normal' type='secondary' onClick={onOpen}>
+        <GoAButton size='normal' type='secondary' onClick={onOpen} testId='btnReconcile'>
           Reconcile
         </GoAButton>
       )}

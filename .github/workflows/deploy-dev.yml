@@ -32,6 +32,7 @@ jobs:
       VITE_WEB_VERSION: "${{ vars.VITE_WEB_VERSION }}"
       VITE_ENVIRONMENT: "dev"
       VITE_FINANCE_NAV_ENABLED: "${{ vars.VITE_FINANCE_NAV_ENABLED }}"
+      VITE_INVOICELIST_NAV_ENABLED: "${{ vars.VITE_INVOICELIST_NAV_ENABLED }}"
     steps:
       - uses: actions/checkout@v3
 

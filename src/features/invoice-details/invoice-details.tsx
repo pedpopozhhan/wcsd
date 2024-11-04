@@ -164,7 +164,7 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showEditPayableModal}>
+              <GoAButton type='tertiary' onClick={showEditPayableModal} testId='btnEditPayables'>
                 Edit Payables
               </GoAButton>
             </div>

@@ -14,19 +14,32 @@ export function App() {
   const env = import.meta.env.VITE_ENVIRONMENT;
   const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
   const version = import.meta.env.VITE_WEB_VERSION;
-  const financeNavigationEnable = stringToBool(import.meta.env.VITE_FINANCE_NAV_ENABLED);
+  const financeNavigationEnabled = stringToBool(import.meta.env.VITE_FINANCE_NAV_ENABLED);
+  const invoiceListNavigationEnabled = stringToBool(import.meta.env.VITE_INVOICELIST_NAV_ENABLED);
   const labels: { [key: string]: string } = {
     dev: 'DEV',
     test: 'TST',
     uat: 'UAT',
   };
 
-  const links = financeNavigationEnable
+  const links = (financeNavigationEnabled && invoiceListNavigationEnabled)
     ? [
-      { label: 'Invoicing', path: '/invoicing', isDefault: true },
       { label: 'Contracts', path: '/contracts' },
+      { label: 'Invoicing', path: '/invoicing', isDefault: true },
+      { label: 'Invoices', path: '/invoices' }
     ]
-    : [{ label: 'Invoices', path: '/invoicing' }];
+    : (financeNavigationEnabled && !invoiceListNavigationEnabled)
+      ? [
+        { label: 'Contracts', path: '/contracts' },
+        { label: 'Invoicing', path: '/invoicing', isDefault: true }
+      ]
+      : (invoiceListNavigationEnabled && !financeNavigationEnabled)
+        ? [
+          { label: 'Invoicing', path: '/invoicing', isDefault: true },
+          { label: 'Invoices', path: '/invoices' }
+        ]
+        :
+        [{ label: 'Invoicing', path: '/invoicing' }];
 
   const headerTitle = 'Wildfire Finance';
   const logoUrl = import.meta.env.VITE_WILDFIRE_PORTAL_URL;
@@ -86,7 +99,7 @@ export function App() {
           )}
           {auth!.isAuthenticated && email && (
             <GoAAppHeader url={logoUrl} heading={headerTitle} maxContentWidth='100%'>
-              {financeNavigationEnable && <NavBar links={links} />}
+              {(financeNavigationEnabled || invoiceListNavigationEnabled) && <NavBar links={links} />}
               <div className={padding} />
               <GoAPopover target={target}>
                 <Link to='logged-out'>Sign out</Link>

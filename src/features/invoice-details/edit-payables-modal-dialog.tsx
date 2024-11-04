@@ -270,7 +270,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
         actions={
           <GoAButtonGroup alignment='end'>
             <GoABadge type={respMessageType} content={respMessageContent} icon={respMessageIcon} />
-            <GoAButton type={cancelButtonType} onClick={hideModalDialog}>
+            <GoAButton type={cancelButtonType} onClick={hideModalDialog} testId='btnCancelEditPayableDialog'>
               {cancelButtonlabel}
             </GoAButton>
             <GoAButton type={updateButtonType} onClick={UpdatePayables} testId='btnSave' >

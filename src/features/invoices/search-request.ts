@@ -1,4 +1,4 @@
-import { ContractType } from '@/common/types/contract-type';
+import { ContractType } from '@/common/types/custom-types';
 
 export class SearchRequest {
   searchTerm: string | undefined;
