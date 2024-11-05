@@ -22,10 +22,10 @@ import flightReportDashboardService from '@/services/flight-report-dashboard.ser
 import { useConditionalAuth, useAppSelector, useAppDispatch } from '@/app/hooks';
 import { navigateTo } from '@/common/navigate';
 import Styles from '@/features/invoice-details/edit-payables-modal-dialog.module.scss';
-import { getInvoiceDetails } from './invoice-details-actions';
+import { getInvoiceDetails, saveDraftInvoice } from './invoice-details-actions';
 import { setAddedTimeReportData, setFlightReportIds, setRowData } from '@/app/app-slice';
-
 import { convertToCurrency } from '@/common/currency';
+
 const { topContainer, checboxHeader, checboxControl, headerRow, roboto, toolbar, searchBar, dropdownContainer } = Styles;
 
 interface IRowItem extends IFlightReportDashboard {
@@ -38,8 +38,6 @@ interface IEditPayableModalDialog {
   showEditPayableDialog: (value: boolean) => void;
   show: boolean;
   searchValue: string;
-  // onAfterChanges?: (flightReports: number[]) => void;
-  onAfterChanges?: () => void;
 }
 
 const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> = ({
@@ -48,7 +46,7 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   searchValue,
   show,
   showEditPayableDialog,
-  onAfterChanges
+
 }) => {
   const [cancelButtonlabel] = useState<string>('Cancel');
   const [cancelButtonType] = useState<GoAButtonType>('tertiary');
@@ -67,14 +65,11 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
   const [pageData, setPageData] = useState<IRowItem[]>([]);
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
-
   const [loading, setIsLoading] = useState(true);
   const [searchVal, setSearchVal] = useState<string>();
-
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(7);
   const [, setPreviousSelectedPerPage] = useState(7);
-
   const dispatch = useAppDispatch();
   const flighReportIds = useAppSelector((state) => state.app.flightReportIds);
 
@@ -102,6 +97,17 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
     showEditPayableDialog(false);
   };
 
+
+  //actual functions need to be changed to promises so that we would not have to use delay
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runWithDelay(trItems: number[], InvoiceID: string) {
+    await sleep(1000);
+    dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: InvoiceID }));
+  }
+
   const UpdatePayables = () => {
     const items = data?.filter((fr: IRowItem) => fr.isChecked === true);
     const trItems: number[] = [];
@@ -109,25 +115,18 @@ const EditPayableModalDialog: React.FunctionComponent<IEditPayableModalDialog> =
       trItems.push(record.flightReportId);
     });
 
-
     if (trItems.length > 0) {
       dispatch(setFlightReportIds(trItems));
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     } else if (trItems.length == 0) {
       dispatch(setFlightReportIds([]));
       dispatch(setAddedTimeReportData([]));
       dispatch(setRowData([]));
-      dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     }
 
     setSelectionType('Available' as SelectionType);
-    //dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
-    //dispatch(getInvoiceDetails({ token: auth?.user?.access_token, ids: trItems, invoiceID: invoiceData.InvoiceID }));
     showEditPayableDialog(false);
-
-    if (onAfterChanges) {
-      onAfterChanges();
-    }
+    dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
+    runWithDelay(trItems, invoiceData.InvoiceID);
   };
 
 
