@@ -1,7 +1,7 @@
 import { GoADropdown, GoADropdownItem, GoAInput } from '@abgov/react-components';
 import { useEffect, useState } from 'react';
 import styles from './invoices.module.scss';
-import { ContractType, typeItems } from '@/common/types/contract-type';
+import { ContractType, typeItems } from '@/common/types/custom-types';
 import { IContractSearchResult } from '@/interfaces/contracts/contract-search-result';
 import searchService from '@/services/contract-search.service';
 import ContractSearchResults from './contract-search-results';
@@ -55,7 +55,7 @@ export default function Invoices() {
     const _contractType = type as ContractType;
     setContractType(_contractType as ContractType);
     // rerun the search, sometimes it is the term, sometimes it is an item with a separator
-    const filtered = allData.filter((x) => _contractType === 'all' || x.contractType === _contractType);
+    const filtered = allData.filter((x) => _contractType === 'all' ? _contractType === 'all' : x.contractType === _contractType);
     const upper = searchTerm.toUpperCase();
     const searched = filtered.filter((x) => {
       return (
@@ -66,14 +66,16 @@ export default function Invoices() {
     });
     setSearchResults(searched);
   }
-  const onChange = (name: string, value: string) => {
+  const onSearchTermChange = (name: string, value: string) => {
+    if (value === '' && searchTerm === '')
+      return;
     setSearchTerm(value);
 
     if (value.length < 3) {
-      setSearchResults(allData.filter((x) => contractType === 'all' || x.contractType === contractType));
+      setSearchResults(allData.filter((x) => contractType === 'all' ? contractType === 'all' : x.contractType === contractType));
       return;
     }
-    const filtered = allData.filter((x) => contractType === 'all' || x.contractType === contractType);
+    const filtered = allData.filter((x) => contractType === 'all' ? contractType === 'all' : x.contractType === contractType);
     const upper = value.toUpperCase();
     const searched = filtered.filter((x) => {
       return (
@@ -102,7 +104,7 @@ export default function Invoices() {
             type='search'
             name='search'
             value={searchTerm}
-            onChange={onChange}
+            onChange={onSearchTermChange}
             leadingIcon='search'
             placeholder='Search Vendor or Contract'
           ></GoAInput>

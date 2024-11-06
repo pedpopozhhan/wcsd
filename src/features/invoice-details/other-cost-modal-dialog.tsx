@@ -20,7 +20,7 @@ import { IDropDownListResponse } from '@/interfaces/common/drop-down-list-respon
 import Select from 'react-select';
 import Styles from './other-cost-modal-dialog.module.scss';
 import './other-cost-modal-dialog.css';
-import { EmptyGuid } from '@/common/types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 
 interface IOtherCostModalDialog {
   onAdd: (item: IOtherCostTableRowData) => void;

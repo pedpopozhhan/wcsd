@@ -114,8 +114,16 @@ export default function InvoiceDetails() {
   }
   const showEditPayableModal = () => {
     setParentShowModal(true);
+    setDataBeforeSave();
     dispatch(setTimeReportDataBeforeEditingPayables(rowData.filter((x) => x.isAdded)));
   };
+
+  const setDataBeforeSave = () => {
+    dispatch(setInvoiceData(invoiceData));
+    dispatch(setOtherCostData(otherCostData));
+    dispatch(setAddedTimeReportData(rowData.filter((x) => x.isAdded)));
+  };
+
 
   return (
     <div className={container}>
@@ -126,7 +134,7 @@ export default function InvoiceDetails() {
               <h2>Invoice</h2>
             </div>
             <div>
-              <InvoiceModalDialog />
+              <InvoiceModalDialog onBeforeSave={setDataBeforeSave} />
             </div>
           </div>
 
@@ -150,7 +158,7 @@ export default function InvoiceDetails() {
                   <span>Reconciled</span>
                 </button>
               </div>
-              <GoAButton type='tertiary' onClick={showEditPayableModal}>
+              <GoAButton type='tertiary' onClick={showEditPayableModal} testId='btnEditPayables'>
                 Edit Payables
               </GoAButton>
             </div>
@@ -162,16 +170,16 @@ export default function InvoiceDetails() {
         </div>
       </div>
       <div className={footer}>
-        <GoAButton type='primary' onClick={onNextClicked} disabled={!isReconciled()}>
+        <GoAButton type='primary' onClick={onNextClicked} disabled={!isReconciled()} testId='btnNext'>
           <div className={icon}>
             <GoAIcon type='download'></GoAIcon>
           </div>
           Next
         </GoAButton>
-        <GoAButton type='secondary' onClick={save}>
+        <GoAButton type='secondary' onClick={save} testId='btnSave'>
           Save
         </GoAButton>
-        <GoAButton type='tertiary' onClick={cancel}>
+        <GoAButton type='tertiary' onClick={cancel} testId='btnClose'>
           Close
         </GoAButton>
         <div className={spacer}></div>

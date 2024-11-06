@@ -75,7 +75,6 @@ const DraftsTabDetails: React.FunctionComponent<IDraftsTabDetailsProps> = ({ con
     const sortedData = sort(sortBy, sortDir, data);
     setData(sortedData.slice());
     setPageData(sortedData.slice(0, perPage));
-    setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
   function sort(sortBy: string, sortDir: number, rows: IRowItem[]): IRowItem[] {

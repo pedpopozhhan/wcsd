@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector, useConditionalAuth } from '@/app/hooks';
 import { clearInvoice, setInvoiceData } from '@/app/app-slice';
 import { failedToPerform, publishToast } from './toast';
-import { EmptyGuid } from './types/invoice';
+import { EmptyGuid } from '@/common/types/custom-types';
 import processInvoiceService from '@/services/process-invoice.service';
 import { navigateTo } from './navigate';
 import { Subscription } from 'rxjs';
@@ -33,6 +33,7 @@ interface InvoiceModalProps {
   contract?: string;
   onClose?: () => void;
   onOpen?: () => void;
+  onBeforeSave?: () => void;
 }
 
 const InvoiceModalDialog = (props: InvoiceModalProps) => {
@@ -262,6 +263,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
   }
 
   function processFields() {
+    onBeforeSave();
     if (Number.isNaN(invoiceAmount) || invoiceAmount <= 0 || invoiceAmount === null) {
       setInvoiceAmountError(true);
       setInvoiceAmountErrorLabel(invoiceAmountErrorLabelText);
@@ -311,6 +313,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       setInvoiceReceivedDateError(false);
       setInvoiceReceivedMaxDateErrorLabel('');
+      setPageHasError(false);
     }
 
     if (pageHasError) return;
@@ -326,11 +329,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     } else {
       invoiceForContext.InvoiceID = invoiceData.InvoiceID;
       dispatch(setInvoiceData(invoiceForContext));
-      if (invoiceData.InvoiceStatus === InvoiceStatus.Draft) {
-        dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
-      } else {
-        publishToast({ type: 'info', message: 'Invoice updated.' });
-      }
+
+      dispatch(saveDraftInvoice({ token: auth?.user?.access_token }));
       clearErrors();
       setIsVisible(false);
       if (props.onClose) {
@@ -341,6 +341,12 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
 
   function getHelperText() {
     return invoiceNumberErrorLabel ? '' : 'Number on invoice. Must be unique.';
+  }
+
+  function onBeforeSave() {
+    if (props.onBeforeSave) {
+      props.onBeforeSave();
+    }
   }
 
   function onOpen() {
@@ -354,17 +360,17 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
     return props.isNew ? 'Create invoice' : 'Update invoice';
   }
   function getButtonLabel() {
-    return props.isNew ? 'Continue' : 'Update';
+    return props.isNew ? 'Continue' : 'Save';
   }
   return (
     <>
       {editMode && (
-        <GoAButton type='tertiary' onClick={() => setIsVisible(true)}>
+        <GoAButton type='tertiary' onClick={() => setIsVisible(true)} testId='btnEditInvoice'>
           Edit
         </GoAButton>
       )}
       {!editMode && (
-        <GoAButton size='normal' type='secondary' onClick={onOpen}>
+        <GoAButton size='normal' type='secondary' onClick={onOpen} testId='btnReconcile'>
           Reconcile
         </GoAButton>
       )}
@@ -374,11 +380,11 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
         maxWidth={modalDialogWidth}
         actions={
           <GoAButtonGroup alignment='end'>
-            <GoAButton type='secondary' onClick={() => hideModalDialog()}>
+            <GoAButton type='secondary' onClick={() => hideModalDialog()} testId='btnCancel'>
               Cancel
             </GoAButton>
 
-            <GoAButton type='primary' onClick={() => setInvoice()}>
+            <GoAButton type='primary' onClick={() => setInvoice()} testId='btnSaveAndContinue'>
               {getButtonLabel()}
             </GoAButton>
           </GoAButtonGroup>
@@ -434,6 +440,8 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setDateOfInvoice(str);
+                        setDateOfInvoiceError(false);
+                        setDateOfInvoiceErrorLabel('');
                       }
                     }}
                   />
@@ -515,6 +523,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setPeriodEndingDate(str);
+                        setPeriodEndingDateError(false);
                       }
                     }}
                   />
@@ -543,6 +552,7 @@ const InvoiceModalDialog = (props: InvoiceModalProps) => {
                         const propertyValue: Date = new Date(value);
                         const str = convertDate(propertyValue);
                         setInvoiceReceivedDate(str);
+                        setInvoiceReceivedDateError(false);
                       }
                     }}
                   />

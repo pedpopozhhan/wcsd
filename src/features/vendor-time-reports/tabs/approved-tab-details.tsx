@@ -34,7 +34,7 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   //Loader
   const [loading, setIsLoading] = useState(true);
 
-  const [searchVal, setSearchVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>('');
 
   // page number
   const [page, setPage] = useState(1);
@@ -109,7 +109,6 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
     const sortedData = sort(sortBy, sortDir, data);
     setData(sortedData.slice());
     setPageData(sortedData.slice(0, perPage));
-    setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
   function getTotalPages() {
@@ -170,10 +169,11 @@ const ApprovedTabDetails: React.FunctionComponent<IFlightReportAllProps> = ({ co
   };
 
   const onChange = (name: string, value: string) => {
+    if (value === '' && searchVal === '')
+      return;
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
-      changePage(1);
       return;
     }
     const upper = value.toUpperCase();

@@ -12,7 +12,7 @@ import chargeExtractService from '@/services/processed-invoice-charge-extract.se
 import { failedToPerform, publishToast } from '@/common/toast';
 import { useNavigate } from 'react-router-dom';
 import { useConditionalAuth } from '@/app/hooks';
-import { PaymentStatusCleared } from '@/common/types/payment-status';
+import { PaymentStatusCleared } from '@/common/types/custom-types';
 import styles from '@/features/vendor-time-reports/tabs/processed-tab-details.module.scss';
 
 const { checboxHeader, checboxControl, headerRow, toolbar, spacer } = styles;
@@ -37,7 +37,7 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   //Data set
   const [rawData, setRawData] = useState<IRowItem[]>([]);
   const [data, setData] = useState<IRowItem[]>([]);
-  const [searchVal, setSearchVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>('');
   const [refreshInvoices, setRefreshInvoices] = useState<boolean | undefined>();
 
   //Loader
@@ -101,7 +101,6 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
     const sortedData = sort(sortBy, sortDir, data);
     setData(sortedData.slice());
     setPageData(sortedData.slice(0, perPage));
-    setPage(1);
     setPreviousSelectedPerPage(perPage);
   }
 
@@ -209,10 +208,12 @@ const ProcessedTabDetails: React.FunctionComponent<IProcessedTabDetailsAllProps>
   };
 
   const onChange = (name: string, value: string) => {
+    if (value === '' && searchVal === '')
+      return;
+
     setSearchVal(value);
     if (value.length < 3) {
       setData(rawData);
-      changePage(1);
       return;
     }
 
